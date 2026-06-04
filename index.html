@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayora Gold FX — Premium Gold Trading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Josefin+Sans:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   ROOT VARIABLES
+═══════════════════════════════════════ */
+:root {
+  --gold: #D4AF37;
+  --gold-light: #F0D060;
+  --gold-dark: #AA771C;
+  --gold-dim: rgba(212,175,55,0.15);
+  --gold-border: rgba(212,175,55,0.25);
+  --bg: #09090C;
+  --bg-2: #0F0F14;
+  --bg-3: #141419;
+  --bg-4: #1A1A21;
+  --text: #EDE8DA;
+  --text-muted: #8A8577;
+  --text-dim: #4A4840;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: rgba(212,175,55,0.15);
+  --border-h: rgba(212,175,55,0.4);
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Josefin Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-weight:300}
+a{text-decoration:none;color:inherit}
+input,select,textarea,button{font-family:inherit;outline:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:4px}
+
+/* ═══════════════════════════════════════
+   PARTICLES CANVAS
+═══════════════════════════════════════ */
+#particle-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5}
+
+/* ═══════════════════════════════════════
+   LOADING SCREEN
+═══════════════════════════════════════ */
+#loading-screen{
+  position:fixed;inset:0;background:var(--bg);z-index:9000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  transition:opacity .5s;
+}
+.loading-logo{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:500;letter-spacing:.2em;color:var(--text)}
+.loading-logo span{color:var(--gold)}
+.loading-bar-wrap{width:180px;height:1px;background:rgba(212,175,55,0.1)}
+.loading-bar{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));width:0%;transition:width .35s ease}
+.loading-txt{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim)}
+
+/* ═══════════════════════════════════════
+   AUTH SCREEN
+═══════════════════════════════════════ */
+#auth-screen{
+  position:fixed;inset:0;background:var(--bg);z-index:8000;
+  display:none;align-items:center;justify-content:center;padding:16px;
+}
+.auth-wrap{width:100%;max-width:420px}
+.auth-logo{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;letter-spacing:.2em;text-align:center;margin-bottom:4px}
+.auth-logo span{color:var(--gold)}
+.auth-sub{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin-bottom:36px}
+.auth-card{background:var(--bg-3);border:1px solid var(--border);padding:28px}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:24px}
+.auth-tab{flex:1;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);padding:10px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.auth-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.auth-form{display:none}.auth-form.active{display:block}
+.auth-group{margin-bottom:14px}
+.auth-label{display:block;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px}
+.auth-input{width:100%;background:var(--bg-4);border:1px solid var(--border);color:var(--text);font-size:.82rem;padding:10px 12px;transition:border-color .2s}
+.auth-input::placeholder{color:var(--text-dim)}
+.auth-input:focus{border-color:var(--gold)}
+.auth-btn{
+  width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:var(--bg);font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  border:none;padding:13px;cursor:pointer;transition:opacity .2s;margin-top:8px;
+  display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px
+}
+.auth-btn:hover{opacity:.9}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+.auth-err{font-size:.65rem;color:var(--red);letter-spacing:.05em;margin-top:8px;min-height:14px;line-height:1.5}
+.auth-ok{font-size:.65rem;color:var(--green);margin-top:8px}
+.auth-info{font-size:.65rem;color:var(--text-dim);text-align:center;margin-top:16px;line-height:2;letter-spacing:.05em}
+.auth-info span{color:var(--gold);opacity:.6}
+.spinner-sm{width:14px;height:14px;border:2px solid rgba(0,0,0,0.2);border-top-color:var(--bg);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  transition:all .35s;
+}
+#navbar.scrolled{
+  background:rgba(9,9,12,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:12px 32px;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-logo-mark{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--bg);
+  box-shadow:0 0 12px rgba(212,175,55,0.35);
+}
+.nav-logo-text .top{font-size:.65rem;letter-spacing:.25em;font-weight:600;color:var(--gold)}
+.nav-logo-text .bot{font-size:.55rem;letter-spacing:.25em;color:var(--text-dim);line-height:1}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-link{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);transition:color .2s;position:relative}
+.nav-link::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--gold);transition:width .3s}
+.nav-link:hover{color:var(--gold)}
+.nav-link:hover::after{width:100%}
+.nav-cta{
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:var(--bg);font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  border:none;padding:9px 18px;cursor:pointer;
+  animation:pulseGlow 2.5s ease-in-out infinite;
+}
+.nav-user-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text-muted);
+  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .2s
+}
+.nav-user-btn:hover{border-color:var(--gold);color:var(--gold)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:1px;background:var(--gold);transition:all .3s}
+@keyframes pulseGlow{
+  0%,100%{box-shadow:0 0 10px rgba(212,175,55,0.4),0 0 20px rgba(212,175,55,0.15)}
+  50%{box-shadow:0 0 20px rgba(212,175,55,0.7),0 0 40px rgba(212,175,55,0.3)}
+}
+
+/* Mobile menu */
+#mobile-menu{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);
+  z-index:490;display:none;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+}
+#mobile-menu.open{display:flex}
+.mob-link{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;letter-spacing:.12em;color:var(--text);transition:color .2s}
+.mob-link:hover{color:var(--gold)}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero{
+  min-height:100vh;display:flex;align-items:center;position:relative;
+  background:radial-gradient(ellipse 90% 70% at 50% -10%,rgba(212,175,55,0.06) 0%,transparent 65%);
+  padding-top:80px;
+}
+.hero-inner{max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.eyebrow-line{width:24px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+.eyebrow-line.r{background:linear-gradient(90deg,var(--gold),transparent)}
+.eyebrow-text{font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,6vw,5rem);
+  font-weight:600;line-height:1.08;
+  letter-spacing:-.01em;
+  margin-bottom:20px;
+}
+.hero-title .gold{
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold-dark) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-size:.85rem;color:var(--text-muted);line-height:1.9;
+  max-width:480px;margin-bottom:36px;font-weight:300;letter-spacing:.04em
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.btn-primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold-dark));
+  color:var(--bg);font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  border:none;padding:14px 32px;cursor:pointer;animation:pulseGlow 2.5s ease-in-out infinite;transition:transform .2s
+}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-secondary{
+  background:transparent;border:1px solid var(--gold-border);color:var(--gold);
+  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:14px 24px;cursor:pointer;transition:all .2s
+}
+.btn-secondary:hover{background:rgba(212,175,55,0.05)}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap}
+.stat-item .val{
+  font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;line-height:1;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.stat-item .lbl{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-top:5px}
+
+/* Decorative coin */
+.hero-deco{
+  position:absolute;right:-60px;top:50%;transform:translateY(-50%);
+  width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle at 38% 35%,rgba(240,208,96,0.12) 0%,rgba(212,175,55,0.04) 50%,transparent 70%);
+  border:1px solid rgba(212,175,55,0.06);
+  animation:floatY 5s ease-in-out infinite;
+  pointer-events:none;display:none
+}
+@media(min-width:1000px){.hero-deco{display:block}}
+@keyframes floatY{0%,100%{transform:translateY(-50%)}50%{transform:translateY(calc(-50% - 14px))}}
+.hero-ring{
+  position:absolute;right:-80px;top:50%;transform:translateY(-50%);
+  width:520px;height:520px;border-radius:50%;
+  border:1px solid rgba(212,175,55,0.04);
+  animation:rotateRing 30s linear infinite;pointer-events:none;display:none
+}
+@media(min-width:1000px){.hero-ring{display:block}}
+@keyframes rotateRing{from{transform:translateY(-50%) rotate(0deg)}to{transform:translateY(-50%) rotate(360deg)}}
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.4}
+.scroll-hint span{font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold)}
+.scroll-line{width:1px;height:32px;background:linear-gradient(180deg,var(--gold),transparent)}
+
+/* ═══════════════════════════════════════
+   SECTIONS SHARED
+═══════════════════════════════════════ */
+.section{padding:100px 32px;position:relative}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-eyebrow{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.8rem,3.5vw,3rem);font-weight:600;line-height:1.2;
+  text-align:center;margin-bottom:12px
+}
+.section-sub{font-size:.8rem;color:var(--text-muted);text-align:center;max-width:480px;margin:0 auto 60px;line-height:1.9;letter-spacing:.03em}
+.gold-txt{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold-dark));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+
+/* ═══════════════════════════════════════
+   ABOUT CARDS
+═══════════════════════════════════════ */
+.about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.about-card{
+  background:rgba(20,20,25,0.6);border:1px solid var(--border);
+  padding:32px 28px;backdrop-filter:blur(12px);
+  transition:all .35s;position:relative;overflow:hidden
+}
+.about-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .35s
+}
+.about-card:hover{transform:translateY(-5px);border-color:var(--border-h)}
+.about-card:hover::before{opacity:1}
+.card-icon{
+  width:44px;height:44px;border:1px solid rgba(212,175,55,0.2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--gold)
+}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;margin-bottom:10px}
+.card-desc{font-size:.75rem;color:var(--text-muted);line-height:1.9;letter-spacing:.03em}
+
+/* ═══════════════════════════════════════
+   VIP SECTION
+═══════════════════════════════════════ */
+#vip-section{background:var(--bg-2)}
+.vip-card{
+  max-width:820px;margin:0 auto;
+  background:linear-gradient(145deg,rgba(20,20,28,0.9),rgba(9,9,12,0.98));
+  border:1px solid rgba(212,175,55,0.3);
+  box-shadow:0 0 60px rgba(212,175,55,0.07),0 40px 80px rgba(0,0,0,0.5);
+  overflow:hidden;
+}
+.vip-ribbon{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold-dark));
+  padding:12px 32px;text-align:center;
+  font-size:.6rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--bg)
+}
+.vip-body{padding:48px 40px}
+.vip-price{text-align:center;margin-bottom:40px}
+.vip-price-label{font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+.vip-price-val{
+  font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:600;line-height:1;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.vip-price-note{font-size:.8rem;letter-spacing:.1em;color:var(--text-muted);margin-top:6px}
+.vip-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:36px}
+.vip-benefit{
+  display:flex;align-items:flex-start;gap:14px;padding:16px;
+  background:rgba(212,175,55,0.02);border:1px solid rgba(212,175,55,0.08);
+  transition:border-color .25s
+}
+.vip-benefit:hover{border-color:rgba(212,175,55,0.3)}
+.vip-benefit-icon{
+  width:34px;height:34px;flex-shrink:0;
+  background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.15);
+  display:flex;align-items:center;justify-content:center;color:var(--gold)
+}
+.vib-title{font-size:.85rem;font-weight:400;letter-spacing:.04em;margin-bottom:3px}
+.vib-desc{font-size:.68rem;color:var(--text-dim);line-height:1.6;letter-spacing:.02em}
+.vip-cta{text-align:center}
+.wa-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:#fff;font-size:.65rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  border:none;padding:15px 36px;cursor:pointer;
+  animation:pulseGlow 2.5s ease-in-out infinite;transition:transform .2s
+}
+.wa-btn:hover{transform:translateY(-2px)}
+.vip-cta-note{font-size:.65rem;color:var(--text-dim);margin-top:12px;letter-spacing:.05em}
+.stars{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:10px;color:var(--gold);font-size:.6rem}
+
+/* ═══════════════════════════════════════
+   TESTIMONIALS
+═══════════════════════════════════════ */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.testi-card{
+  background:rgba(14,14,19,0.7);border:1px solid var(--border);padding:24px;
+  backdrop-filter:blur(10px);transition:all .3s
+}
+.testi-card:hover{border-color:var(--border-h);transform:translateY(-4px)}
+.testi-stars{color:var(--gold);font-size:.6rem;margin-bottom:12px;letter-spacing:3px}
+.testi-text{font-size:.78rem;color:var(--text-muted);line-height:1.85;font-style:italic;margin-bottom:16px;letter-spacing:.02em}
+.testi-name{font-size:.8rem;font-weight:400;letter-spacing:.06em}
+.testi-role{font-size:.6rem;color:var(--gold);margin-top:2px;letter-spacing:.12em;text-transform:uppercase}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{background:rgba(5,5,7,1);border-top:1px solid var(--border);padding:60px 32px 32px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.footer-brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.footer-brand-desc{font-size:.72rem;color:var(--text-dim);line-height:1.9;max-width:240px;letter-spacing:.03em}
+.footer-col-title{font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.footer-link{display:block;font-size:.72rem;color:var(--text-dim);margin-bottom:10px;transition:color .2s;letter-spacing:.04em}
+.footer-link:hover{color:var(--gold)}
+.disclaimer{
+  background:rgba(212,175,55,0.02);border:1px solid rgba(212,175,55,0.07);
+  padding:18px 20px;margin-bottom:28px
+}
+.disclaimer-title{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.disclaimer-text{font-size:.68rem;color:var(--text-dim);line-height:1.85;letter-spacing:.02em}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:20px;border-top:1px solid rgba(212,175,55,0.07)}
+.footer-copy{font-size:.6rem;color:var(--text-dim);letter-spacing:.1em}
+.footer-craft{font-size:.55rem;color:var(--text-dim);letter-spacing:.12em}
+.footer-craft span{color:var(--gold)}
+
+/* ═══════════════════════════════════════
+   APP (JOURNAL)
+═══════════════════════════════════════ */
+#app{display:none}
+.app-header{
+  background:rgba(9,9,12,0.96);border-bottom:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  position:sticky;top:0;z-index:400;backdrop-filter:blur(20px)
+}
+.app-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.app-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;letter-spacing:.15em}
+.app-title span{color:var(--gold)}
+.app-subtitle{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim)}
+.app-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.live-badge{
+  display:flex;align-items:center;gap:6px;
+  font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);
+  border:1px solid var(--border);padding:5px 10px
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#4A9E6A;flex-shrink:0}
+.btn-log-trade{
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:var(--bg);font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  border:none;padding:9px 16px;cursor:pointer;transition:opacity .2s
+}
+.btn-log-trade:hover{opacity:.85}
+.user-info{display:flex;align-items:center;gap:8px}
+.user-avatar{
+  width:28px;height:28px;border:1px solid var(--border);background:var(--bg-4);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:.85rem;color:var(--gold)
+}
+.user-name-txt{font-size:.62rem;color:var(--text-muted);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vip-badge-pill{
+  font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;
+  background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold)
+}
+.btn-logout-sm{
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;cursor:pointer;transition:all .2s
+}
+.btn-logout-sm:hover{border-color:rgba(192,80,80,0.4);color:var(--red)}
+.save-status{font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:5px}
+.save-dot{width:5px;height:5px;border-radius:50%;background:var(--text-dim);transition:background .3s}
+.save-status.saved .save-dot{background:#4A9E6A}
+.save-status.saving .save-dot{background:var(--gold);animation:pulseDot 1s infinite}
+.save-status.error .save-dot{background:var(--red)}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Price ticker */
+.price-ticker{
+  background:rgba(9,9,12,0.95);border-bottom:1px solid var(--border);
+  padding:7px 24px;display:flex;gap:18px;overflow-x:auto;scrollbar-width:none
+}
+.price-ticker::-webkit-scrollbar{display:none}
+.ticker-item{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.ticker-sym{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+.ticker-price{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
+.ticker-chg{font-size:.6rem}
+.up{color:var(--green)}.dn{color:var(--red)}
+
+/* App tabs */
+.app-tabs{display:flex;background:var(--bg-2);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;scrollbar-width:none}
+.app-tabs::-webkit-scrollbar{display:none}
+.app-tab{
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);
+  padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0
+}
+.app-tab:hover{color:var(--text-muted)}
+.app-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* App pages */
+.app-page{display:none}.app-page.active{display:block}
+.app-main{padding:24px;max-width:1400px;margin:0 auto}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.stat-card{
+  background:var(--bg-3);border:1px solid var(--border);
+  padding:18px 16px 14px;position:relative;overflow:hidden;transition:border-color .3s
+}
+.stat-card:hover{border-color:var(--border-h)}
+.stat-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:var(--gold);opacity:0;transition:opacity .3s
+}
+.stat-card:hover::after{opacity:.4}
+.scard-label{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.scard-val{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;line-height:1}
+.scard-val.pos{color:var(--green)}.scard-val.neg{color:var(--red)}
+.scard-sub{font-size:.62rem;color:var(--text-dim);margin-top:6px;letter-spacing:.04em}
+
+/* Section label */
+.sec-lbl{
+  font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px
+}
+.sec-lbl::before{content:'';width:16px;height:1px;background:var(--gold);opacity:.5}
+
+/* Table */
+.tbl-wrap{background:var(--bg-3);border:1px solid var(--border);overflow:hidden;margin-bottom:24px}
+.tbl-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.tbl-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400}
+.tbl-filters{display:flex;gap:6px;flex-wrap:wrap}
+.filt-btn{
+  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:5px 10px;cursor:pointer;transition:all .2s
+}
+.filt-btn.active,.filt-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tbl-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th{
+  font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);
+  padding:11px 16px;text-align:left;border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap
+}
+th:last-child{text-align:right}
+td{font-size:.75rem;color:var(--text-muted);padding:12px 16px;border-bottom:1px solid rgba(212,175,55,0.05);transition:background .2s;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(212,175,55,0.03)}
+td:last-child{text-align:right}
+.td-sym{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text)}
+
+/* Badges */
+.badge{display:inline-block;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 7px;font-weight:600}
+.badge.long{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.25)}
+.badge.short{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
+.badge.open{background:rgba(212,175,55,0.08);color:var(--gold);border:1px solid var(--border)}
+.badge.tp-hit{background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.35)}
+.badge.sl-hit{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.35)}
+.badge.limit{background:rgba(212,175,55,0.06);color:var(--gold-dark);border:1px solid rgba(212,175,55,0.18)}
+.pnl-pos{color:var(--green)}.pnl-neg{color:var(--red)}.pnl-neut{color:var(--text-muted)}
+
+.row-actions{display:flex;gap:5px;justify-content:flex-end}
+.act-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;cursor:pointer;transition:all .2s
+}
+.act-btn:hover{border-color:var(--border-h);color:var(--text)}
+.act-btn.del:hover{border-color:rgba(192,80,80,0.4);color:var(--red)}
+
+/* Bottom grid */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart-box,.bkd-box{background:var(--bg-3);border:1px solid var(--border);padding:20px}
+.chart-lbl{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px}
+.equity-svg{width:100%;height:120px}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.bk-row:last-child{border-bottom:none}
+.bk-sym{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--text)}
+.bk-bar-wrap{flex:1;margin:0 10px;height:3px;background:rgba(212,175,55,0.08)}
+.bk-bar{height:100%}
+.bk-val{font-size:.7rem;min-width:48px;text-align:right}
+
+/* Progress */
+.prog-wrap{width:68px}
+.prog-bar{width:100%;height:3px;background:rgba(212,175,55,0.1);margin-top:3px}
+.prog-fill{height:100%;transition:width .5s}
+.prog-txt{font-size:.55rem;color:var(--text-dim);margin-top:2px}
+
+/* Notes */
+.notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.note-card{background:var(--bg-3);border:1px solid var(--border);padding:16px;transition:border-color .3s}
+.note-card:hover{border-color:var(--border-h)}
+.note-sym{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text);margin-bottom:4px}
+.note-date{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.note-txt{font-size:.72rem;color:var(--text-muted);line-height:1.75}
+.note-tag{font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-top:10px;opacity:.7}
+
+/* Account */
+.acc-section{background:var(--bg-3);border:1px solid var(--border);padding:20px;margin-bottom:14px}
+.acc-sec-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:16px;font-weight:400}
+.acc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.acc-row:last-child{border-bottom:none}
+.acc-key{font-size:.68rem;letter-spacing:.08em;color:var(--text-muted)}
+.acc-val{font-size:.68rem;color:var(--text-dim)}
+.btn-danger{
+  background:transparent;border:1px solid rgba(192,80,80,0.25);color:var(--red);
+  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;cursor:pointer;transition:all .2s
+}
+.btn-danger:hover{background:rgba(192,80,80,0.08);border-color:rgba(192,80,80,0.5)}
+
+/* VIP lock overlay */
+.vip-lock{
+  background:var(--bg-3);border:1px solid var(--border);
+  padding:60px 32px;text-align:center;margin-top:24px
+}
+.vip-lock-icon{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);opacity:.2;margin-bottom:16px}
+.vip-lock-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:10px}
+.vip-lock-sub{font-size:.72rem;color:var(--text-dim);margin-bottom:24px;line-height:1.9;letter-spacing:.04em}
+.vip-lock-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:var(--bg);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  border:none;padding:12px 28px;cursor:pointer;animation:pulseGlow 2.5s ease-in-out infinite
+}
+
+/* Modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:600;align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.modal{background:var(--bg-2);border:1px solid var(--border);width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400}
+.modal-close{background:transparent;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:2px 6px}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:20px 24px}
+.form-group{margin-bottom:13px}
+.form-label{display:block;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.form-input{
+  width:100%;background:var(--bg-3);border:1px solid var(--border);color:var(--text);
+  font-size:.78rem;font-weight:300;padding:9px 11px;transition:border-color .2s;appearance:none
+}
+.form-input::placeholder{color:var(--text-dim)}
+.form-input:focus{border-color:var(--gold)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-foot{padding:12px 24px 18px;display:flex;gap:8px;justify-content:flex-end}
+.btn-cancel{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:9px 14px;cursor:pointer;transition:all .2s}
+.btn-cancel:hover{border-color:var(--border-h);color:var(--text)}
+.btn-save{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--bg);font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;border:none;padding:9px 22px;cursor:pointer;transition:opacity .2s}
+.btn-save:hover{opacity:.88}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:800;
+  background:var(--bg-3);border:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;gap:10px;
+  opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;max-width:260px
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.toast-sym{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
+.toast-msg{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-top:2px}
+
+/* Empty states */
+.empty-state{text-align:center;padding:40px;color:var(--text-dim)}
+.empty-icon{font-family:'Cormorant Garamond',serif;font-size:2.5rem;opacity:.15;margin-bottom:10px;color:var(--gold)}
+
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:900px){
+  .about-grid,.testi-grid{grid-template-columns:1fr}
+  .vip-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .stats-row .stat-card:last-child{grid-column:1/-1}
+  .bottom-grid{grid-template-columns:1fr}
+  .notes-grid{grid-template-columns:1fr}
+  .hero-sub{max-width:100%}
+}
+@media(max-width:640px){
+  .nav-links,.nav-cta,.nav-user-btn{display:none}
+  .hamburger{display:flex}
+  #navbar{padding:12px 20px}
+  .section{padding:72px 20px}
+  .hero-inner{padding:0 20px}
+  .hero-stats{gap:24px}
+  .vip-body{padding:28px 20px}
+  .app-main{padding:16px}
+  .stats-row{grid-template-columns:1fr}
+  .stats-row .stat-card:last-child{grid-column:auto}
+  .form-row-2{grid-template-columns:1fr}
+  .modal-body{padding:14px 16px}
+  .modal-hdr{padding:14px 16px 12px}
+  .modal-foot{padding:10px 16px 14px}
+  .toast{bottom:14px;right:12px;left:12px;max-width:none}
+  .user-name-txt{display:none}
+  .save-status{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="loading-logo">MAYORA <span>GOLD FX</span></div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
+  <div class="loading-txt" id="loading-txt">Initializing</div>
+</div>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo">MAYORA <span>GOLD FX</span></div>
+    <div class="auth-sub">Member Portal — VIP Access</div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <div class="auth-tab active" onclick="switchAuthTab('login')">Sign In</div>
+        <div class="auth-tab" onclick="switchAuthTab('register')">Register</div>
+      </div>
+      <div class="auth-form active" id="form-login">
+        <div class="auth-group">
+          <label class="auth-label">Email</label>
+          <input class="auth-input" id="login-email" type="email" placeholder="email@kamu.com" autocomplete="email">
+        </div>
+        <div class="auth-group">
+          <label class="auth-label">Password</label>
+          <input class="auth-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div class="auth-err" id="login-err"></div>
+        <button class="auth-btn" id="login-btn" onclick="doLogin()"><span>Sign In →</span></button>
+      </div>
+      <div class="auth-form" id="form-register">
+        <div class="auth-group">
+          <label class="auth-label">Nama</label>
+          <input class="auth-input" id="reg-name" type="text" placeholder="Nama kamu">
+        </div>
+        <div class="auth-group">
+          <label class="auth-label">Email</label>
+          <input class="auth-input" id="reg-email" type="email" placeholder="email@kamu.com" autocomplete="email">
+        </div>
+        <div class="auth-group">
+          <label class="auth-label">Password</label>
+          <input class="auth-input" id="reg-pass" type="password" placeholder="min 6 karakter" autocomplete="new-password">
+        </div>
+        <div class="auth-err" id="reg-err"></div>
+        <button class="auth-btn" id="reg-btn" onclick="doRegister()"><span>Buat Akun →</span></button>
+      </div>
+    </div>
+    <div class="auth-info"><span>✦</span> Data tersimpan di cloud · Login dari device manapun<br>Akun VIP diaktifkan oleh Admin setelah join grup</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     LANDING PAGE
+════════════════════════════ -->
+<div id="landing">
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-logo" onclick="scrollToSection('hero')">
+      <div class="nav-logo-mark">M</div>
+      <div class="nav-logo-text">
+        <div class="top">MAYORA</div>
+        <div class="bot">GOLD FX</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="#about">Tentang Kami</a>
+      <a class="nav-link" href="#features">Fitur</a>
+      <a class="nav-link" href="#vip-section">VIP</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="nav-user-btn" id="nav-login-btn" onclick="showAuthFromLanding()">Login Member</button>
+      <button class="nav-cta" onclick="scrollToSection('vip-section')">JOIN VIP GRATIS ✦</button>
+    </div>
+    <div class="hamburger" id="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mobile-menu">
+    <a class="mob-link" href="#about" onclick="toggleMobile()">Tentang</a>
+    <a class="mob-link" href="#features" onclick="toggleMobile()">Fitur</a>
+    <a class="mob-link" href="#vip-section" onclick="toggleMobile()">VIP</a>
+    <button class="btn-primary" onclick="showAuthFromLanding();toggleMobile()">Login Member →</button>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-ring"></div>
+    <div class="hero-deco"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Premium Gold Trading</span>
+        <div class="eyebrow-line r"></div>
+      </div>
+      <h1 class="hero-title">
+        Level Up Your<br>
+        <span class="gold">Trading</span> with<br>
+        Mayora Gold FX
+      </h1>
+      <p class="hero-sub">Ekosistem trading emas premium — sinyal akurasi tinggi, edukasi eksklusif, jurnal otomatis, dan komunitas VIP yang bisa kamu akses gratis.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="scrollToSection('vip-section')">JOIN VIP GRATIS ✦</button>
+        <a class="btn-secondary" href="#features">Lihat Fitur ↓</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="val">87%</div><div class="lbl">Win Rate</div></div>
+        <div class="stat-item"><div class="val">500+</div><div class="lbl">Member Aktif</div></div>
+        <div class="stat-item"><div class="val">2 Thn</div><div class="lbl">Track Record</div></div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">
+          <div class="eyebrow-line"></div>
+          <span class="eyebrow-text">Tentang Kami</span>
+          <div class="eyebrow-line r"></div>
+        </div>
+        <h2 class="section-title">Dibangun untuk <span class="gold-txt">Trader Sejati</span></h2>
+        <p class="section-sub">Mayora Gold FX hadir sebagai ekosistem trading emas yang menggabungkan analitik premium, komunitas elite, dan edukasi berkelanjutan dalam satu platform.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-card reveal" style="transition-delay:.05s">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="card-title">Transparansi Penuh</div>
+          <div class="card-desc">Setiap sinyal dan analisa kami didokumentasikan dengan rekam jejak yang bisa diverifikasi. Tidak ada janji kosong — hanya data nyata.</div>
+        </div>
+        <div class="about-card reveal" style="transition-delay:.12s">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div class="card-title">Analitik Akurasi Tinggi</div>
+          <div class="card-desc">Metodologi kami menggabungkan analisa teknikal multi-timeframe, market structure, dan Smart Money Concept untuk presisi entri & exit.</div>
+        </div>
+        <div class="about-card reveal" style="transition-delay:.2s">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="card-title">Pemberdayaan Trader</div>
+          <div class="card-desc">Dari newbie hingga professional — kurikulum kami dirancang untuk mempercepat kurva belajar Anda dengan mentorship langsung.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES PREVIEW -->
+  <section class="section" id="features" style="background:var(--bg-2)">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">
+          <div class="eyebrow-line"></div>
+          <span class="eyebrow-text">Fitur Utama</span>
+          <div class="eyebrow-line r"></div>
+        </div>
+        <h2 class="section-title">Trading Journal <span class="gold-txt">Sempurna</span></h2>
+        <p class="section-sub">Lacak setiap trade dengan presisi. Analisa performa, temukan pola, dan tingkatkan edge trading Anda — eksklusif untuk member VIP.</p>
+      </div>
+      <!-- Journal mockup -->
+      <div class="reveal" style="transition-delay:.1s">
+        <div style="background:var(--bg-3);border:1px solid var(--border);overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.5)">
+          <!-- mock top bar -->
+          <div style="background:rgba(212,175,55,0.03);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:7px">
+              <div style="width:11px;height:11px;border-radius:50%;background:rgba(248,113,113,0.5)"></div>
+              <div style="width:11px;height:11px;border-radius:50%;background:rgba(250,204,21,0.5)"></div>
+              <div style="width:11px;height:11px;border-radius:50%;background:rgba(74,222,128,0.5)"></div>
+              <span style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-left:8px">MAYORA JOURNAL PRO — VIP EXCLUSIVE</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px"><div style="width:5px;height:5px;border-radius:50%;background:var(--green)"></div><span style="font-size:.55rem;color:var(--green)">LIVE</span></div>
+          </div>
+          <div style="padding:20px">
+            <!-- Mini stats -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
+                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">WIN RATE</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--green)">87.5%</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
+                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">TOTAL PROFIT</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold)">$4,821</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
+                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">TOTAL TRADES</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text)">64</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
+                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">DAILY GROWTH</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--green)">+3.2%</div>
+              </div>
+            </div>
+            <!-- Sparkline -->
+            <div style="background:rgba(255,255,255,0.01);border:1px solid rgba(212,175,55,0.07);padding:14px;margin-bottom:12px">
+              <div style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px">EQUITY CURVE — XAU/USD</div>
+              <svg viewBox="0 0 500 70" width="100%" height="70">
+                <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D4AF37" stop-opacity=".25"/><stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/></linearGradient></defs>
+                <polyline points="0,60 40,48 80,54 120,36 160,22 200,30 240,12 280,8 320,18 360,6 400,10 500,2" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round"/>
+                <polygon points="0,70 0,60 40,48 80,54 120,36 160,22 200,30 240,12 280,8 320,18 360,6 400,10 500,2 500,70" fill="url(#sg)"/>
+              </svg>
+            </div>
+            <!-- Mini table -->
+            <div style="border:1px solid rgba(212,175,55,0.07);overflow:hidden">
+              <div style="background:rgba(212,175,55,0.03);border-bottom:1px solid rgba(212,175,55,0.07);padding:8px 14px;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)">RECENT TRADES</div>
+              <table style="width:100%;border-collapse:collapse;font-size:.7rem">
+                <thead><tr style="border-bottom:1px solid rgba(212,175,55,0.06)">
+                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">PAIR</th>
+                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">TYPE</th>
+                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">ENTRY</th>
+                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">PNL</th>
+                </tr></thead>
+                <tbody>
+                  <tr style="border-bottom:1px solid rgba(212,175,55,0.04)"><td style="padding:8px 14px;font-family:'Cormorant Garamond',serif;color:var(--gold)">XAU/USD</td><td style="padding:8px 14px;color:var(--green);font-size:.6rem">BUY</td><td style="padding:8px 14px;color:var(--text-muted)">2318.50</td><td style="padding:8px 14px;color:var(--green);font-weight:500">+$157</td></tr>
+                  <tr style="border-bottom:1px solid rgba(212,175,55,0.04)"><td style="padding:8px 14px;font-family:'Cormorant Garamond',serif;color:var(--gold)">XAU/USD</td><td style="padding:8px 14px;color:var(--red);font-size:.6rem">SELL</td><td style="padding:8px 14px;color:var(--text-muted)">2340.00</td><td style="padding:8px 14px;color:var(--green);font-weight:500">+$82</td></tr>
+                  <tr><td style="padding:8px 14px;font-family:'Cormorant Garamond',serif;color:var(--gold)">XAU/USD</td><td style="padding:8px 14px;color:var(--green);font-size:.6rem">BUY</td><td style="padding:8px 14px;color:var(--text-muted)">2295.00</td><td style="padding:8px 14px;color:var(--green);font-weight:500">+$230</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div style="padding:10px 18px;text-align:center;background:rgba(212,175,55,0.02);border-top:1px solid rgba(212,175,55,0.08);font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">✦ Fitur ini eksklusif untuk member VIP — bergabung gratis hari ini ✦</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIP SECTION -->
+  <section class="section" id="vip-section">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">
+          <div class="eyebrow-line"></div>
+          <span class="eyebrow-text">Bergabung Sekarang</span>
+          <div class="eyebrow-line r"></div>
+        </div>
+        <h2 class="section-title">Akses <span class="gold-txt">VIP Eksklusif</span></h2>
+      </div>
+      <div class="vip-card reveal" style="transition-delay:.1s">
+        <div class="vip-ribbon">✦ MAYORA GOLD FX — VIP MEMBERSHIP ✦</div>
+        <div class="vip-body">
+          <div class="vip-price">
+            <div class="vip-price-label">Investasi Anda</div>
+            <div class="vip-price-val">RP 0</div>
+            <div class="vip-price-note">GRATIS SELAMANYA</div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+          </div>
+          <div class="vip-grid">
+            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div><div class="vib-title">Daily Gold Signals</div><div class="vib-desc">Sinyal XAU/USD harian dengan entry, TP, & SL presisi</div></div></div>
+            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div><div><div class="vib-title">Live Trading Session</div><div class="vib-desc">Sesi trading live bersama trader berpengalaman</div></div></div>
+            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><div class="vib-title">Exclusive Webinars</div><div class="vib-desc">Webinar mingguan tentang analisa pasar & strategi</div></div></div>
+            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div><div class="vib-title">Trading Journal Otomatis</div><div class="vib-desc">Sistem jurnal premium untuk tracking performa</div></div></div>
+            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div><div class="vib-title">Market Analysis Premium</div><div class="vib-desc">Analisa mendalam market structure & Smart Money</div></div></div>
+            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 6v2M12 16v2M9 9h1.5a1.5 1.5 0 0 1 0 3H9m0 0h1.5a1.5 1.5 0 0 1 0 3H9m0-9v9"/></svg></div><div><div class="vib-title">Komunitas VIP Eksklusif</div><div class="vib-desc">Akses grup VIP dengan ratusan trader elite</div></div></div>
+          </div>
+          <div class="vip-cta">
+            <a href="https://wa.me/your-number-here?text=Halo%20Admin%20Mayora%20Gold%20FX,%20saya%20ingin%20join%20grup%20VIP%20Gratis!" target="_blank" rel="noopener noreferrer" class="wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Hubungi Admin via WhatsApp
+            </a>
+            <p class="vip-cta-note">Klik → chat otomatis terbuka → Admin siap membantu 24/7</p>
+          </div>
+        </div>
+      </div>
+      <!-- Testimonials -->
+      <div class="testi-grid">
+        <div class="testi-card reveal" style="transition-delay:.05s">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Win rate saya naik dari 50% ke 83% dalam 2 bulan setelah join komunitas ini."</p>
+          <div class="testi-name">Rizky A.</div>
+          <div class="testi-role">Trader Jakarta</div>
+        </div>
+        <div class="testi-card reveal" style="transition-delay:.12s">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Sinyal hariannya sangat akurat, jurnal otomatisnya bantu saya evaluasi trading setiap hari."</p>
+          <div class="testi-name">Dewi S.</div>
+          <div class="testi-role">Trader Surabaya</div>
+        </div>
+        <div class="testi-card reveal" style="transition-delay:.2s">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Live session-nya luar biasa. Langsung lihat cara baca market dari trader pro secara real-time."</p>
+          <div class="testi-name">Farhan M.</div>
+          <div class="testi-role">Trader Bandung</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-logo">
+            <div class="nav-logo-mark">M</div>
+            <div class="nav-logo-text"><div class="top">MAYORA</div><div class="bot">GOLD FX</div></div>
+          </div>
+          <p class="footer-brand-desc">Ekosistem trading emas premium untuk trader Indonesia yang serius membangun wealth melalui pasar keuangan.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Navigasi</div>
+          <a class="footer-link" href="#about">Tentang Kami</a>
+          <a class="footer-link" href="#features">Fitur Jurnal</a>
+          <a class="footer-link" href="#vip-section">VIP Gratis</a>
+        </div>
+        <div>
+          <div class="footer-col-title">Hubungi Kami</div>
+          <a href="https://wa.me/your-number-here" target="_blank" class="footer-link">WhatsApp Admin</a>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <div class="disclaimer-title">⚠ Disclaimer Risiko</div>
+        <p class="disclaimer-text">Trading forex, emas (XAU/USD), dan instrumen keuangan lainnya mengandung <strong>risiko kerugian yang signifikan</strong> dan mungkin tidak cocok untuk semua investor. Nilai investasi dapat turun maupun naik. Kinerja masa lalu bukan merupakan indikasi hasil masa depan. Konten di platform ini bersifat edukatif dan bukan merupakan saran investasi profesional.</p>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© <span id="year"></span> Mayora Gold FX. All rights reserved.</span>
+        <span class="footer-craft">Crafted with <span>✦</span> for Elite Traders</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════
+     JOURNAL APP
+════════════════════════════ -->
+<div id="app">
+  <div class="app-header">
+    <div class="app-logo" onclick="backToLanding()">
+      <div class="nav-logo-mark">M</div>
+      <div>
+        <div class="app-title">MAYORA <span>GOLD FX</span></div>
+        <div class="app-subtitle">Trading Journal</div>
+      </div>
+    </div>
+    <div class="app-right">
+      <div class="save-status" id="save-status"><div class="save-dot"></div><span id="save-label">—</span></div>
+      <div class="live-badge"><div class="live-dot" id="live-dot"></div><span id="live-label">Connecting</span></div>
+      <button class="btn-log-trade" onclick="openModal()" id="btn-log-trade" style="display:none">+ Log Trade</button>
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">—</div>
+        <div class="user-name-txt" id="user-name-display">—</div>
+        <div class="vip-badge-pill" id="vip-badge" style="display:none">VIP ✦</div>
+      </div>
+      <button class="btn-logout-sm" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="price-ticker" id="price-ticker"></div>
+  <div class="app-tabs">
+    <div class="app-tab active" onclick="switchPage('dashboard',this)">Dashboard</div>
+    <div class="app-tab" onclick="switchPage('history',this)">Trade History</div>
+    <div class="app-tab" onclick="switchPage('notes',this)">Journal Notes</div>
+    <div class="app-tab" onclick="switchPage('account',this)">Account</div>
+  </div>
+
+  <!-- Dashboard Page -->
+  <div class="app-page active" id="page-dashboard">
+    <div class="app-main">
+      <div class="stats-row" id="stats-row"></div>
+      <!-- VIP lock or content -->
+      <div id="dash-vip-lock" class="vip-lock" style="display:none">
+        <div class="vip-lock-icon">✦</div>
+        <div class="vip-lock-title">Fitur VIP Terkunci</div>
+        <div class="vip-lock-sub">Trading Journal hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div>
+        <a href="https://wa.me/your-number-here?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vip-lock-btn">Hubungi Admin untuk VIP →</a>
+      </div>
+      <div id="dash-vip-content" style="display:none">
+        <div class="sec-lbl">Live Positions</div>
+        <div class="tbl-wrap">
+          <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Current</th><th>SL / TP</th><th>Size</th><th>Open P&L</th><th>Progress</th><th>Status</th><th></th></tr></thead>
+            <tbody id="open-tbody"></tbody>
+          </table>
+          </div>
+        </div>
+        <div class="bottom-grid">
+          <div class="chart-box"><div class="chart-lbl">Equity Curve</div><svg class="equity-svg" id="equity-svg" viewBox="0 0 440 120" fill="none"></svg></div>
+          <div class="bkd-box"><div class="chart-lbl">P&L by Symbol</div><div id="breakdown-list"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Page -->
+  <div class="app-page" id="page-history">
+    <div class="app-main">
+      <div id="hist-vip-lock" class="vip-lock" style="display:none">
+        <div class="vip-lock-icon">✦</div>
+        <div class="vip-lock-title">Fitur VIP Terkunci</div>
+        <div class="vip-lock-sub">Trade History hanya tersedia untuk member VIP.</div>
+        <a href="https://wa.me/your-number-here?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vip-lock-btn">Hubungi Admin untuk VIP →</a>
+      </div>
+      <div id="hist-vip-content" style="display:none">
+        <div class="tbl-wrap">
+          <div class="tbl-head">
+            <div class="tbl-title">Closed Trades</div>
+            <div class="tbl-filters">
+              <button class="filt-btn active" onclick="filterHistory('all',this)">All</button>
+              <button class="filt-btn" onclick="filterHistory('win',this)">Winners</button>
+              <button class="filt-btn" onclick="filterHistory('loss',this)">Losers</button>
+            </div>
+          </div>
+          <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Date</th><th>Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&L</th><th>R</th><th></th></tr></thead>
+            <tbody id="hist-tbody"></tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes Page -->
+  <div class="app-page" id="page-notes">
+    <div class="app-main">
+      <div id="notes-vip-lock" class="vip-lock" style="display:none">
+        <div class="vip-lock-icon">✦</div>
+        <div class="vip-lock-title">Fitur VIP Terkunci</div>
+        <div class="vip-lock-sub">Journal Notes hanya tersedia untuk member VIP.</div>
+        <a href="https://wa.me/your-number-here?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vip-lock-btn">Hubungi Admin untuk VIP →</a>
+      </div>
+      <div id="notes-vip-content" style="display:none">
+        <div class="sec-lbl">Journal Notes</div>
+        <div class="notes-grid" id="notes-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Page -->
+  <div class="app-page" id="page-account">
+    <div class="app-main">
+      <div class="sec-lbl">Account & Settings</div>
+      <div class="acc-section">
+        <div class="acc-sec-title">Account Info</div>
+        <div class="acc-row"><span class="acc-key">Email</span><span class="acc-val" id="acc-email">—</span></div>
+        <div class="acc-row"><span class="acc-key">Display Name</span><span class="acc-val" id="acc-dispname">—</span></div>
+        <div class="acc-row"><span class="acc-key">Status Akun</span><span class="acc-val" id="acc-vip-status">—</span></div>
+        <div class="acc-row"><span class="acc-key">Total Trades</span><span class="acc-val" id="acc-tradecount">—</span></div>
+        <div class="acc-row"><span class="acc-key">Last Saved</span><span class="acc-val" id="acc-lastsave">—</span></div>
+      </div>
+      <div class="acc-section">
+        <div class="acc-sec-title">Reset Password</div>
+        <p style="font-size:.7rem;color:var(--text-dim);margin-bottom:14px;line-height:1.8;letter-spacing:.03em">Email reset akan dikirim ke alamat email akun kamu.</p>
+        <button class="btn-save" onclick="doResetPassword()">Kirim Reset Email →</button>
+        <div class="auth-ok" id="reset-ok" style="display:none;margin-top:8px">✓ Email reset dikirim! Cek inbox.</div>
+      </div>
+      <div class="acc-section" id="danger-zone-vip" style="display:none">
+        <div class="acc-sec-title">Danger Zone</div>
+        <div class="acc-row">
+          <div><div class="acc-key">Clear All Trade Data</div><div class="acc-val" style="margin-top:3px">Hapus semua trade — tidak bisa dibatalkan</div></div>
+          <button class="btn-danger" onclick="clearAllTrades()">Clear Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRADE MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="modal-title-txt">Log New Trade</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-idx" value="">
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label">Symbol</label>
+          <select class="form-input" id="f-symbol">
+            <optgroup label="Gold / Spot">
+              <option value="XAUUSD">XAU/USD Spot</option>
+              <option value="XAUTUSDT">XAUT/USDT</option>
+            </optgroup>
+            <optgroup label="Crypto">
+              <option value="BTCUSDT">BTC/USDT</option><option value="ETHUSDT">ETH/USDT</option>
+              <option value="SOLUSDT">SOL/USDT</option><option value="BNBUSDT">BNB/USDT</option>
+              <option value="XRPUSDT">XRP/USDT</option><option value="DOGEUSDT">DOGE/USDT</option>
+              <option value="ADAUSDT">ADA/USDT</option><option value="AVAXUSDT">AVAX/USDT</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Direction</label>
+          <select class="form-input" id="f-dir"><option value="Long">Long</option><option value="Short">Short</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Order Type</label>
+        <select class="form-input" id="f-type"><option value="market">Market</option><option value="limit">Limit Order</option></select>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group"><label class="form-label">Entry Price</label><input class="form-input" id="f-entry" type="number" placeholder="0.00" step="any"></div>
+        <div class="form-group"><label class="form-label">Exit Price (kosong = open)</label><input class="form-input" id="f-exit" type="number" placeholder="0.00" step="any"></div>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group"><label class="form-label">Stop Loss</label><input class="form-input" id="f-sl" type="number" placeholder="0.00" step="any"></div>
+        <div class="form-group"><label class="form-label">Take Profit</label><input class="form-input" id="f-tp" type="number" placeholder="0.00" step="any"></div>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group"><label class="form-label">Size</label><input class="form-input" id="f-size" type="number" placeholder="1" step="any"></div>
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="f-date" type="date"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="f-notes" rows="3" placeholder="Setup, rationale, market conditions..."></textarea></div>
+      <div class="form-group"><label class="form-label">Strategy Tag</label><input class="form-input" id="f-tag" placeholder="e.g. Breakout, SMC, Mean Reversion"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveTrade()">Save Trade →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-dot" id="toast-dot"></div>
+  <div><div class="toast-sym" id="toast-sym"></div><div class="toast-msg" id="toast-msg"></div></div>
+</div>
+
+<!-- ════════════════════════════
+     SCRIPTS
+════════════════════════════ -->
+<script>
+/* ── year ── */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ── Particles ── */
+(function(){
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles, raf;
+  function init(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    particles = Array.from({length:70},()=>({
+      x:Math.random()*w,y:Math.random()*h,
+      r:Math.random()*1.5+0.3,
+      dx:(Math.random()-.5)*.35,dy:(Math.random()-.5)*.35,
+      a:Math.random()
+    }));
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.x<0||p.x>w) p.dx*=-1;
+      if(p.y<0||p.y>h) p.dy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(212,175,55,${p.a*.6})`;ctx.fill();
+    });
+    for(let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(212,175,55,${.1*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}
+    }
+    raf=requestAnimationFrame(draw);
+  }
+  init(); draw();
+  window.addEventListener('resize',()=>{ cancelAnimationFrame(raf); init(); draw(); });
+})();
+
+/* ── Reveal on scroll ── */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.12});
+revealEls.forEach(el=>revealObs.observe(el));
+
+/* ── Navbar scroll ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+});
+
+/* ── Mobile menu ── */
+window.toggleMobile = function(){
+  document.getElementById('mobile-menu').classList.toggle('open');
+};
+window.scrollToSection = function(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+};
+
+/* ── Landing nav login btn ── */
+window.showAuthFromLanding = function(){
+  document.getElementById('auth-screen').style.display='flex';
+};
+window.backToLanding = function(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('landing').style.display='block';
+  if(tickInterval){clearInterval(tickInterval);tickInterval=null;}
+};
+</script>
+
+<script type="module">
+/* ════════════════════════════
+   FIREBASE CONFIG
+════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
+  authDomain: "journal-97254.firebaseapp.com",
+  projectId: "journal-97254",
+  storageBucket: "journal-97254.firebasestorage.app",
+  messagingSenderId: "101188824456",
+  appId: "1:101188824456:web:a0ca25a26e63704b361e3d",
+};
+
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile }
+  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const app  = initializeApp(FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ── Loading helpers ── */
+function setProgress(pct, txt){
+  const b=document.getElementById('loading-bar'), t=document.getElementById('loading-txt');
+  if(b) b.style.width=pct+'%'; if(t) t.textContent=txt;
+}
+function hideLoading(){
+  const el=document.getElementById('loading-screen');
+  el.style.opacity='0'; setTimeout(()=>el.style.display='none',500);
+}
+
+setProgress(20,'Checking auth...');
+
+/* ── State ── */
+let trades=[], nextId=1, currentUser=null, isVip=false;
+let saveDebounce=null, tickInterval=null, histFilter='all';
+
+/* ── Auth state ── */
+onAuthStateChanged(auth, async user=>{
+  setProgress(70,'Loading data...');
+  if(user){
+    currentUser=user;
+    await loadUserData(user.uid);
+    showApp(user);
+    setProgress(100,'Ready');
+    setTimeout(hideLoading,300);
+  } else {
+    currentUser=null; isVip=false;
+    setProgress(100,'');
+    setTimeout(()=>{
+      hideLoading();
+      document.getElementById('auth-screen').style.display='none';
+      document.getElementById('app').style.display='none';
+      document.getElementById('landing').style.display='block';
+    },300);
+  }
+});
+
+/* ── Auth tab switch ── */
+window.switchAuthTab = tab=>{
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='login'?0:1)));
+  document.getElementById('form-login').classList.toggle('active',tab==='login');
+  document.getElementById('form-register').classList.toggle('active',tab==='register');
+  document.getElementById('login-err').textContent='';
+  document.getElementById('reg-err').textContent='';
+};
+
+function setBtnLoading(id,loading,txt){
+  const b=document.getElementById(id); b.disabled=loading;
+  b.innerHTML=loading?'<div class="spinner-sm"></div>':`<span>${txt}</span>`;
+}
+
+function fireMsg(code){
+  return({
+    'auth/user-not-found':'Akun tidak ditemukan.',
+    'auth/wrong-password':'Password salah.',
+    'auth/invalid-credential':'Email atau password salah.',
+    'auth/email-already-in-use':'Email sudah terdaftar.',
+    'auth/invalid-email':'Format email tidak valid.',
+    'auth/weak-password':'Password terlalu lemah (min 6 karakter).',
+    'auth/too-many-requests':'Terlalu banyak percobaan. Tunggu sebentar.',
+    'auth/network-request-failed':'Masalah koneksi.',
+  })[code]||'Error: '+code;
+}
+
+window.doLogin = async()=>{
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const errEl=document.getElementById('login-err');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='Email dan password diperlukan.';return;}
+  setBtnLoading('login-btn',true,'Sign In →');
+  try{ await signInWithEmailAndPassword(auth,email,pass); }
+  catch(e){ errEl.textContent=fireMsg(e.code); setBtnLoading('login-btn',false,'Sign In →'); }
+};
+
+window.doRegister = async()=>{
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const pass=document.getElementById('reg-pass').value;
+  const errEl=document.getElementById('reg-err');
+  errEl.textContent='';
+  if(!name||!email||!pass){errEl.textContent='Semua field harus diisi.';return;}
+  if(pass.length<6){errEl.textContent='Password minimal 6 karakter.';return;}
+  setBtnLoading('reg-btn',true,'Buat Akun →');
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await updateProfile(cred.user,{displayName:name});
+    await setDoc(doc(db,'users',cred.user.uid),{
+      displayName:name,email,vip:false,
+      trades:[],nextId:1,createdAt:serverTimestamp()
+    });
+  }catch(e){ errEl.textContent=fireMsg(e.code); setBtnLoading('reg-btn',false,'Buat Akun →'); }
+};
+
+window.doLogout = async()=>{
+  await persistTrades();
+  await signOut(auth);
+};
+
+window.doResetPassword = async()=>{
+  const email=currentUser?.email||document.getElementById('login-email').value.trim();
+  if(!email){showToast('MGF','Masukkan email dulu','#f87171');return;}
+  try{
+    await sendPasswordResetEmail(auth,email);
+    const ok=document.getElementById('reset-ok');
+    if(ok){ok.style.display='block';setTimeout(()=>ok.style.display='none',5000);}
+    showToast('MGF','Reset email dikirim!','#4ade80');
+  }catch(e){showToast('MGF',fireMsg(e.code),'#f87171');}
+};
+
+/* ── Data load/save ── */
+async function loadUserData(uid){
+  try{
+    const snap=await getDoc(doc(db,'users',uid));
+    if(snap.exists()){
+      const d=snap.data();
+      trades=d.trades||[];
+      nextId=d.nextId||(trades.length?Math.max(...trades.map(t=>t.id))+1:1);
+      isVip=d.vip===true;
+      const ts=d.updatedAt?.toDate();
+      if(ts) document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');
+    } else { trades=[]; nextId=1; isVip=false; }
+  }catch(e){ console.error('Load error:',e); trades=[]; nextId=1; isVip=false; }
+}
+
+async function persistTrades(){
+  if(!currentUser) return;
+  setSaveStatus('saving');
+  try{
+    await setDoc(doc(db,'users',currentUser.uid),{
+      trades,nextId,updatedAt:serverTimestamp()
+    },{merge:true});
+    setSaveStatus('saved');
+    document.getElementById('acc-tradecount').textContent=trades.length+' trades';
+    document.getElementById('acc-lastsave').textContent=new Date().toLocaleString('id-ID');
+  }catch(e){ console.error('Save error:',e); setSaveStatus('error'); }
+}
+
+function triggerSave(){
+  setSaveStatus('saving'); clearTimeout(saveDebounce);
+  saveDebounce=setTimeout(persistTrades,1200);
+}
+
+function setSaveStatus(s){
+  const el=document.getElementById('save-status'),lbl=document.getElementById('save-label');
+  el.className='save-status '+s;
+  lbl.textContent=s==='saved'?'Saved':s==='saving'?'Saving...':s==='error'?'Error':'—';
+}
+
+/* ── Show app ── */
+function showApp(user){
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('landing').style.display='none';
+  document.getElementById('app').style.display='block';
+  const name=user.displayName||user.email.split('@')[0];
+  document.getElementById('user-avatar').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('user-name-display').textContent=name;
+  document.getElementById('acc-email').textContent=user.email;
+  document.getElementById('acc-dispname').textContent=name;
+  document.getElementById('acc-tradecount').textContent=trades.length+' trades';
+  document.getElementById('acc-vip-status').innerHTML=isVip
+    ?'<span style="color:var(--gold)">✦ VIP Member</span>'
+    :'<span style="color:var(--text-dim)">Regular (hubungi admin untuk upgrade)</span>';
+  // VIP badge + log trade btn
+  document.getElementById('vip-badge').style.display=isVip?'block':'none';
+  document.getElementById('btn-log-trade').style.display=isVip?'block':'none';
+  // Danger zone
+  document.getElementById('danger-zone-vip').style.display=isVip?'block':'none';
+  // VIP content/lock
+  ['dash','hist','notes'].forEach(k=>{
+    document.getElementById(k+'-vip-lock').style.display=isVip?'none':'block';
+    document.getElementById(k+'-vip-content').style.display=isVip?'block':'none';
+  });
+  setSaveStatus('saved');
+  renderAll();
+  if(!tickInterval) tickInterval=setInterval(tick,8000);
+  tick();
+}
+
+/* ════════════════════════════
+   PRICE FETCHING
+════════════════════════════ */
+const SYMS=['XAUUSD','XAUTUSDT','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
+const SYM_D={
+  XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',
+  BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',
+  BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',
+  ADAUSDT:'ADA/USDT',AVAXUSDT:'AVAX/USDT'
+};
+const CRYPTO_SYMS=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT','AVAXUSDT'];
+const XAU_OFFSET=-2;
+let livePrices={}, prevPrices={};
+
+async function fetchGoldAPI(){
+  const r=await fetch('https://api.gold-api.com/price/XAU',{signal:AbortSignal.timeout(6000)});
+  if(!r.ok) throw new Error('gold-api '+r.status);
+  const d=await r.json();
+  if(!d.price) throw new Error('no price');
+  return parseFloat(d.price)+XAU_OFFSET;
+}
+async function fetchGoldPriceZ(){
+  const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});
+  if(!r.ok) throw new Error('goldpricez '+r.status);
+  const d=await r.json();
+  const p=d?.items?.[0]?.xauPrice;
+  if(!p) throw new Error('no price');
+  return parseFloat(p)+XAU_OFFSET;
+}
+async function fetchXauSpot(){
+  for(const fn of [fetchGoldAPI,fetchGoldPriceZ]){
+    try{
+      const p=await fn();
+      if(p>100&&p<100000){ livePrices['XAUUSD']=p; livePrices['XAUTUSDT']=p; return; }
+    }catch(e){}
+  }
+}
+async function fetchBinance(){
+  const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(CRYPTO_SYMS))}`,{signal:AbortSignal.timeout(5000)});
+  if(!r.ok) throw new Error('binance');
+  const data=await r.json();
+  const prices={};
+  data.forEach(d=>{ prices[d.symbol]=parseFloat(d.lastPrice); });
+  return prices;
+}
+async function fetchCoinGecko(){
+  const cgIds={BTCUSDT:'bitcoin',ETHUSDT:'ethereum',SOLUSDT:'solana',BNBUSDT:'binancecoin',XRPUSDT:'ripple',DOGEUSDT:'dogecoin',ADAUSDT:'cardano',AVAXUSDT:'avalanche-2'};
+  const ids=Object.values(cgIds).join(',');
+  const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`,{signal:AbortSignal.timeout(7000)});
+  if(!r.ok) throw new Error('coingecko');
+  const data=await r.json();
+  const prices={};
+  Object.entries(cgIds).forEach(([sym,id])=>{ if(data[id]?.usd) prices[sym]=data[id].usd; });
+  if(!Object.keys(prices).length) throw new Error('empty');
+  return prices;
+}
+async function fetchCrypto(){
+  for(const fn of [fetchBinance,fetchCoinGecko]){
+    try{
+      const prices=await fn();
+      Object.entries(prices).forEach(([k,v])=>{ if(v&&!isNaN(v)) livePrices[k]=v; });
+      return;
+    }catch(e){}
+  }
+}
+async function fetchPrices(){
+  prevPrices={...livePrices};
+  await Promise.allSettled([fetchXauSpot(),fetchCrypto()]);
+  const has=Object.keys(livePrices).length>0;
+  document.getElementById('live-dot').style.background=has?'#4A9E6A':'#f87171';
+  document.getElementById('live-label').textContent=has?'Live':'Offline';
+}
+
+function renderTicker(){
+  document.getElementById('price-ticker').innerHTML=SYMS.map(sym=>{
+    const p=livePrices[sym],prev=prevPrices[sym]||p; if(!p) return '';
+    const up=p>=(prev||p),chg=prev?((p-prev)/prev*100):0;
+    const dec=sym==='XAUUSD'||sym==='XAUTUSDT'?2:(p<1?4:2);
+    return `<div class="ticker-item"><span class="ticker-sym">${SYM_D[sym]}</span><span class="ticker-price">${p.toFixed(dec)}</span><span class="ticker-chg ${up?'up':'dn'}">${up?'▲':'▼'} ${Math.abs(chg).toFixed(2)}%</span></div>`;
+  }).join('');
+}
+
+/* ════════════════════════════
+   TRADE HELPERS
+════════════════════════════ */
+const calcPnl=t=>!t.exit?null:+((t.dir==='Long'?(t.exit-t.entry):(t.entry-t.exit))*t.size).toFixed(2);
+const calcOpenPnl=t=>{const cp=livePrices[t.symbol];return cp?((t.dir==='Long'?(cp-t.entry):(t.entry-cp))*t.size):null;};
+const calcR=t=>{if(!t.exit||!t.sl)return null;const risk=Math.abs(t.entry-t.sl)*t.size,pnl=calcPnl(t);return(!risk||pnl===null)?null:+(pnl/risk).toFixed(2);};
+const calcProg=t=>{const cp=livePrices[t.symbol];if(!cp||!t.sl||!t.tp)return null;const range=t.dir==='Long'?t.tp-t.sl:t.sl-t.tp;return range<=0?null:Math.min(100,Math.max(0,((t.dir==='Long'?cp-t.sl:t.sl-cp)/range)*100));};
+const fmtMoney=n=>{if(n===null||isNaN(n))return'—';const a=Math.abs(n),s=a>=1000?'$'+(a/1000).toFixed(2)+'K':'$'+a.toFixed(2);return(n<0?'-':'')+s;};
+const fmtPct=n=>n===null||isNaN(n)?'—':(n>0?'+':'')+n.toFixed(2)+'%';
+const symDec=sym=>(sym==='XAUUSD'||sym==='XAUTUSDT')?2:((livePrices[sym]||0)<1?4:2);
+const fmtPrice=(n,sym)=>n===null||isNaN(n)?'—':n.toFixed(symDec(sym));
+
+function autoCheck(){
+  let changed=false;
+  trades.forEach(t=>{
+    if(t.exit!==null) return;
+    const cp=livePrices[t.symbol]; if(!cp) return;
+    if(t.type==='limit'&&!t.activated){
+      if(t.dir==='Long'?cp<=t.entry:cp>=t.entry){t.activated=true;showToast(t.symbol,'Limit triggered','#D4AF37');changed=true;}
+      else return;
+    }
+    if(t.sl&&(t.dir==='Long'?cp<=t.sl:cp>=t.sl)){t.exit=t.sl;t.closedReason='SL';t.date_close=new Date().toISOString().slice(0,10);showToast(t.symbol,'Stop Loss hit','#f87171');changed=true;}
+    if(!t.exit&&t.tp&&(t.dir==='Long'?cp>=t.tp:cp<=t.tp)){t.exit=t.tp;t.closedReason='TP';t.date_close=new Date().toISOString().slice(0,10);showToast(t.symbol,'Take Profit hit','#4ade80');changed=true;}
+  });
+  return changed;
+}
+
+/* ════════════════════════════
+   RENDER FUNCTIONS
+════════════════════════════ */
+function renderStats(){
+  const closed=trades.filter(t=>t.exit!==null);
+  const open=trades.filter(t=>t.exit===null&&(t.type!=='limit'||t.activated));
+  const wins=closed.filter(t=>calcPnl(t)>0),losses=closed.filter(t=>calcPnl(t)<=0);
+  const totalPnl=closed.reduce((a,t)=>a+calcPnl(t),0);
+  const winRate=closed.length?(wins.length/closed.length*100):0;
+  const avgR=closed.length?closed.reduce((a,t)=>{const r=calcR(t);return a+(r||0);},0)/closed.length:0;
+  const openPnl=open.reduce((a,t)=>{const p=calcOpenPnl(t);return a+(p||0);},0);
+  document.getElementById('stats-row').innerHTML=[
+    {lbl:'Total P&L',val:fmtMoney(totalPnl),cls:totalPnl>=0?'pos':'neg',sub:closed.length+' closed trades'},
+    {lbl:'Win Rate',val:winRate.toFixed(0)+'%',cls:winRate>=50?'pos':'neg',sub:wins.length+'W / '+losses.length+'L'},
+    {lbl:'Avg R Multiple',val:(avgR>0?'+':'')+avgR.toFixed(2)+'R',cls:avgR>=1?'pos':'neg',sub:'Risk-adjusted'},
+    {lbl:'Open Positions',val:open.length,cls:'',sub:fmtMoney(openPnl)+' unrealized'},
+    {lbl:'Total Trades',val:trades.length,cls:'',sub:closed.length+' closed'},
+  ].map(s=>`<div class="stat-card"><div class="scard-label">${s.lbl}</div><div class="scard-val ${s.cls}">${s.val}</div><div class="scard-sub">${s.sub}</div></div>`).join('');
+}
+
+function renderOpen(){
+  const open=trades.filter(t=>t.exit===null);
+  const tbody=document.getElementById('open-tbody');
+  if(!open.length){tbody.innerHTML=`<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">✦</div>No open positions</div></td></tr>`;return;}
+  tbody.innerHTML=open.map(t=>{
+    const cp=livePrices[t.symbol],isLim=t.type==='limit'&&!t.activated;
+    const pnl=isLim?null:calcOpenPnl(t),pnlPct=(pnl!==null&&t.entry&&t.size)?(pnl/(t.entry*t.size)*100):null;
+    const prog=!isLim?calcProg(t):null,pc=prog!==null?(prog>66?'#4ade80':prog>33?'#D4AF37':'#f87171'):'var(--text-dim)';
+    return `<tr>
+      <td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td>
+      <td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td>
+      <td>${fmtPrice(t.entry,t.symbol)}</td>
+      <td style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text)">${cp?fmtPrice(cp,t.symbol):'—'}</td>
+      <td><span style="color:var(--red)">${t.sl?fmtPrice(t.sl,t.symbol):'—'}</span> <span style="color:var(--text-dim)">/</span> <span style="color:var(--green)">${t.tp?fmtPrice(t.tp,t.symbol):'—'}</span></td>
+      <td>${t.size}</td>
+      <td class="${pnl===null?'':pnl>=0?'pnl-pos':'pnl-neg'}">${pnl===null?`<span style="color:var(--text-dim)">Pending</span>`:fmtMoney(pnl)+` <span style="opacity:.5;font-size:.6rem">(${fmtPct(pnlPct)})</span>`}</td>
+      <td>${prog!==null?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${prog.toFixed(0)}%;background:${pc}"></div></div><div class="prog-txt">${prog.toFixed(0)}% to TP</div></div>`:isLim?`<span style="font-size:.6rem;color:var(--text-dim)">Waiting</span>`:'—'}</td>
+      <td>${isLim?'<span class="badge limit">Limit</span>':'<span class="badge open">Open</span>'}</td>
+      <td><div class="row-actions"><button class="act-btn" onclick="window.__editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window.__deleteTrade(${t.id})">Del</button></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderHistory(){
+  let data=trades.filter(t=>t.exit!==null);
+  if(histFilter==='win') data=data.filter(t=>calcPnl(t)>0);
+  if(histFilter==='loss') data=data.filter(t=>calcPnl(t)<=0);
+  const tbody=document.getElementById('hist-tbody');
+  if(!data.length){tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">✦</div>No trades found</div></td></tr>`;return;}
+  tbody.innerHTML=[...data].reverse().map(t=>{
+    const pnl=calcPnl(t),r=calcR(t);
+    const rb=t.closedReason?`<span class="badge ${t.closedReason==='TP'?'tp-hit':'sl-hit'}" style="margin-left:4px">${t.closedReason}</span>`:'';
+    return `<tr>
+      <td>${t.date_close||t.date}</td>
+      <td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td>
+      <td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td>
+      <td>${fmtPrice(t.entry,t.symbol)}</td>
+      <td>${fmtPrice(t.exit,t.symbol)}${rb}</td>
+      <td>${t.size}</td>
+      <td class="${pnl>0?'pnl-pos':'pnl-neg'}">${fmtMoney(pnl)}</td>
+      <td class="${r&&r>=1?'pnl-pos':r&&r<0?'pnl-neg':'pnl-neut'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td>
+      <td><div class="row-actions"><button class="act-btn" onclick="window.__editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window.__deleteTrade(${t.id})">Del</button></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderEquity(){
+  const closed=trades.filter(t=>t.exit!==null).sort((a,b)=>(a.date_close||a.date).localeCompare(b.date_close||b.date));
+  let cum=0; const pts=[{v:0}]; closed.forEach(t=>{cum+=calcPnl(t);pts.push({v:cum});});
+  if(pts.length<2){document.getElementById('equity-svg').innerHTML='';return;}
+  const vals=pts.map(p=>p.v),mn=Math.min(...vals),mx=Math.max(...vals),range=mx-mn||1;
+  const W=440,H=120,pad=16,xS=(W-2*pad)/(pts.length-1),yS=(H-2*pad)/range;
+  const pstr=pts.map((p,i)=>`${pad+i*xS},${H-pad-(p.v-mn)*yS}`).join(' ');
+  const lx=pad+(pts.length-1)*xS,ly=H-pad-(pts[pts.length-1].v-mn)*yS;
+  document.getElementById('equity-svg').innerHTML=`
+    <defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D4AF37" stop-opacity=".2"/><stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/></linearGradient></defs>
+    <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="rgba(212,175,55,.1)" stroke-width="1"/>
+    <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="rgba(212,175,55,.1)" stroke-width="1"/>
+    <path d="M${pad},${H-pad-(pts[0].v-mn)*yS} L${pstr} L${lx},${H-pad} L${pad},${H-pad} Z" fill="url(#eg)"/>
+    <polyline points="${pstr}" stroke="#D4AF37" stroke-width="2" fill="none"/>
+    <circle cx="${lx}" cy="${ly}" r="3.5" fill="#D4AF37"/>`;
+}
+
+function renderBreakdown(){
+  const syms={}; trades.filter(t=>t.exit).forEach(t=>{const p=calcPnl(t);syms[t.symbol]=(syms[t.symbol]||0)+p;});
+  const arr=Object.entries(syms).sort((a,b)=>b[1]-a[1]);
+  if(!arr.length){document.getElementById('breakdown-list').innerHTML='<div class="empty-state" style="padding:20px">No closed trades</div>';return;}
+  const maxA=Math.max(...arr.map(a=>Math.abs(a[1])));
+  document.getElementById('breakdown-list').innerHTML=arr.map(([sym,pnl])=>`
+    <div class="bk-row"><span class="bk-sym">${SYM_D[sym]||sym}</span>
+    <div class="bk-bar-wrap"><div class="bk-bar" style="width:${(Math.abs(pnl)/maxA*100).toFixed(1)}%;background:${pnl>=0?'#4ade80':'#f87171'}"></div></div>
+    <span class="bk-val ${pnl>=0?'pnl-pos':'pnl-neg'}">${fmtMoney(pnl)}</span></div>`).join('');
+}
+
+function renderNotes(){
+  const notes=trades.filter(t=>t.notes),grid=document.getElementById('notes-grid');
+  if(!notes.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div>No journal notes yet</div>`;return;}
+  grid.innerHTML=[...notes].reverse().map(t=>`
+    <div class="note-card">
+      <div class="note-sym">${SYM_D[t.symbol]||t.symbol}</div>
+      <div class="note-date">${t.date} · ${t.dir}</div>
+      <div class="note-txt">${t.notes}</div>
+      ${t.tag?`<div class="note-tag">✦ ${t.tag}</div>`:''}
+    </div>`).join('');
+}
+
+function renderAll(){ renderStats();renderOpen();renderHistory();renderEquity();renderBreakdown();renderNotes(); }
+
+/* ── Page switch ── */
+window.switchPage=(name,el)=>{
+  document.querySelectorAll('.app-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+};
+
+window.filterHistory=(f,btn)=>{
+  histFilter=f;
+  document.querySelectorAll('.filt-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHistory();
+};
+
+/* ── Modal ── */
+window.openModal=(t=null)=>{
+  if(!isVip){showToast('MGF','Fitur VIP — hubungi admin','#D4AF37');return;}
+  document.getElementById('modal-title-txt').textContent=t?'Edit Trade':'Log New Trade';
+  document.getElementById('edit-idx').value=t?t.id:'';
+  ['symbol','dir','type'].forEach(f=>document.getElementById('f-'+f).value=t?t[f]:(f==='symbol'?'XAUUSD':f==='dir'?'Long':'market'));
+  document.getElementById('f-entry').value=t?t.entry:'';
+  document.getElementById('f-exit').value=t&&t.exit?t.exit:'';
+  document.getElementById('f-sl').value=t&&t.sl?t.sl:'';
+  document.getElementById('f-tp').value=t&&t.tp?t.tp:'';
+  document.getElementById('f-size').value=t?t.size:'';
+  document.getElementById('f-date').value=t?t.date:new Date().toISOString().slice(0,10);
+  document.getElementById('f-notes').value=t?t.notes:'';
+  document.getElementById('f-tag').value=t?t.tag:'';
+  document.getElementById('overlay').classList.add('open');
+};
+window.closeModal=()=>document.getElementById('overlay').classList.remove('open');
+
+window.__editTrade=id=>window.openModal(trades.find(t=>t.id===id));
+window.__deleteTrade=id=>{
+  if(!confirm('Delete this trade?')) return;
+  trades=trades.filter(t=>t.id!==id); renderAll(); triggerSave();
+};
+
+window.saveTrade=()=>{
+  if(!isVip) return;
+  const sym=document.getElementById('f-symbol').value,entry=parseFloat(document.getElementById('f-entry').value);
+  if(!sym||!entry){alert('Symbol dan Entry harus diisi.');return;}
+  const exitVal=document.getElementById('f-exit').value;
+  const existing=trades.find(t=>t.id===parseInt(document.getElementById('edit-idx').value));
+  const obj={
+    id:document.getElementById('edit-idx').value?parseInt(document.getElementById('edit-idx').value):nextId++,
+    symbol:sym,dir:document.getElementById('f-dir').value,type:document.getElementById('f-type').value,
+    activated:existing?.activated||false,entry,exit:exitVal?parseFloat(exitVal):null,
+    size:parseFloat(document.getElementById('f-size').value)||1,
+    sl:parseFloat(document.getElementById('f-sl').value)||null,tp:parseFloat(document.getElementById('f-tp').value)||null,
+    date:document.getElementById('f-date').value||new Date().toISOString().slice(0,10),
+    notes:document.getElementById('f-notes').value.trim(),tag:document.getElementById('f-tag').value.trim(),
+    closedReason:existing?.closedReason||null,date_close:existing?.date_close||null,
+  };
+  if(document.getElementById('edit-idx').value) trades=trades.map(t=>t.id===obj.id?obj:t);
+  else trades.push(obj);
+  closeModal(); renderAll(); triggerSave();
+};
+
+window.clearAllTrades=async()=>{
+  if(!isVip) return;
+  if(!confirm('Hapus semua data trade? Tidak bisa dibatalkan!')) return;
+  trades=[]; nextId=1; await persistTrades(); renderAll(); showToast('MGF','Semua trade dihapus','#f87171');
+};
+
+/* ── Toast ── */
+let toastTimer=null;
+function showToast(sym,msg,color){
+  document.getElementById('toast-dot').style.background=color;
+  document.getElementById('toast-sym').textContent=SYM_D[sym]||sym;
+  document.getElementById('toast-msg').textContent=msg;
+  const el=document.getElementById('toast'); el.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),4000);
+}
+
+/* ── Modal overlay click ── */
+document.getElementById('overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('overlay')) window.closeModal();
+});
+
+/* ── Tick ── */
+async function tick(){
+  await fetchPrices(); renderTicker();
+  const changed=autoCheck();
+  if(changed){renderAll();triggerSave();}
+  else{renderOpen();renderStats();}
+}
+</script>
+</body>
+</html>
