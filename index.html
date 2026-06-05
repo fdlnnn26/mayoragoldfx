@@ -360,9 +360,7 @@ td:last-child{text-align:right}
 .prog-fill{height:100%;border-radius:2px}
 .prog-txt{font-size:.52rem;color:var(--text3);margin-top:2px}
 
-/* ═══════════════════════════
-   ADMIN DASHBOARD
-═══════════════════════════ */
+/* ADMIN */
 #page-admin{padding-top:var(--nav-h)}
 .admin-header{background:rgba(6,6,10,0.96);border-bottom:1px solid var(--card-border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:var(--nav-h);z-index:300;backdrop-filter:blur(20px)}
 .admin-htitle{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400}
@@ -375,7 +373,6 @@ td:last-child{text-align:right}
 .admin-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .admin-page{display:none}.admin-page.on{display:block}
 
-/* News Form */
 .news-form-wrap{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:28px;margin-bottom:24px}
 .news-form-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
 .nf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
@@ -395,8 +392,9 @@ td:last-child{text-align:right}
 .btn-cancel-news{background:none;border:1px solid var(--card-border);color:var(--text2);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:10px 16px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
 .btn-cancel-news:hover{border-color:rgba(201,168,76,0.3);color:var(--gold)}
 .btn-add-news{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.62rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:8px 18px;cursor:pointer;border-radius:var(--radius)}
-
-/* News list admin */
+.upload-progress{width:100%;height:3px;background:rgba(201,168,76,0.1);border-radius:2px;margin-top:6px;display:none}
+.upload-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width .3s}
+.admin-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
 .admin-news-list{display:flex;flex-direction:column;gap:12px}
 .admin-news-item{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:border-color .25s}
 .admin-news-item:hover{border-color:rgba(201,168,76,0.3)}
@@ -414,11 +412,8 @@ td:last-child{text-align:right}
 .btn-del-n:hover{background:rgba(224,90,90,0.08)}
 .btn-feat-n{background:none;border:1px solid rgba(201,168,76,0.2);color:var(--gold);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
 .btn-feat-n:hover{background:rgba(201,168,76,0.08)}
-.upload-progress{width:100%;height:3px;background:rgba(201,168,76,0.1);border-radius:2px;margin-top:6px;display:none}
-.upload-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width .3s}
-.admin-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
 
-/* User management */
+/* User list */
 .user-list{display:flex;flex-direction:column;gap:8px}
 .user-item{background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:border-color .25s}
 .user-item:hover{border-color:rgba(201,168,76,0.25)}
@@ -805,10 +800,10 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       <div id="vip-lock-dash" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trading Journal hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vll-btn">Hubungi Admin →</a></div>
       <div id="vip-cnt-dash" style="display:none">
         <div class="sec-label">Live Positions</div>
-        <div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Current</th><th>SL / TP</th><th>Size</th><th>Open P&L</th><th>Progress</th><th>Status</th><th></th></tr></thead><tbody id="open-tbody"></tbody></table></div></div>
+        <div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Current</th><th>SL / TP</th><th>Size</th><th>Open P&amp;L</th><th>Progress</th><th>Status</th><th></th></tr></thead><tbody id="open-tbody"></tbody></table></div></div>
         <div class="bottom-grid">
           <div class="chart-box"><div class="chart-l">Equity Curve</div><svg class="eq-svg" id="eq-svg" viewBox="0 0 440 120" fill="none"></svg></div>
-          <div class="bkd-box"><div class="chart-l">P&L by Symbol</div><div id="bkd-list"></div></div>
+          <div class="bkd-box"><div class="chart-l">P&amp;L by Symbol</div><div id="bkd-list"></div></div>
         </div>
       </div>
     </div>
@@ -819,7 +814,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       <div id="vip-cnt-hist" style="display:none">
         <div class="tbl-wrap">
           <div class="tbl-head"><div class="tbl-ttl">Closed Trades</div><div class="flt-btns"><button class="flt-btn on" onclick="fltHist('all',this)">All</button><button class="flt-btn" onclick="fltHist('win',this)">Winners</button><button class="flt-btn" onclick="fltHist('loss',this)">Losers</button></div></div>
-          <div class="tbl-scroll"><table><thead><tr><th>Date</th><th>Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&L</th><th>R</th><th></th></tr></thead><tbody id="hist-tbody"></tbody></table></div>
+          <div class="tbl-scroll"><table><thead><tr><th>Date</th><th>Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&amp;L</th><th>R</th><th></th></tr></thead><tbody id="hist-tbody"></tbody></table></div>
         </div>
       </div>
     </div>
@@ -832,7 +827,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   </div>
   <div class="journal-page" id="jp-account">
     <div class="jmain">
-      <div class="sec-label">Account & Settings</div>
+      <div class="sec-label">Account &amp; Settings</div>
       <div class="acc-sec"><div class="acc-sec-t">Account Info</div>
         <div class="acc-row"><span class="acc-k">Email</span><span class="acc-v" id="acc-email">—</span></div>
         <div class="acc-row"><span class="acc-k">Display Name</span><span class="acc-v" id="acc-name">—</span></div>
@@ -871,15 +866,12 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <button class="admin-tab" onclick="admTab('stats',this)">Statistik</button>
   </div>
 
-  <!-- Tab: Berita -->
   <div class="admin-page on" id="adm-news">
     <div class="admin-main">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
         <div class="sec-label" style="margin-bottom:0">Manajemen Berita</div>
         <button class="btn-add-news" onclick="showNewsForm()">+ Tambah Berita</button>
       </div>
-
-      <!-- Form tambah/edit -->
       <div class="news-form-wrap" id="news-form-wrap" style="display:none">
         <div class="news-form-title">
           <span id="nf-title-lbl">Tambah Berita Baru</span>
@@ -941,15 +933,12 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           </button>
         </div>
       </div>
-
-      <!-- List berita -->
       <div class="admin-news-list" id="admin-news-list">
         <div class="empty-state"><div class="empty-icon">✦</div>Memuat berita...</div>
       </div>
     </div>
   </div>
 
-  <!-- Tab: Users -->
   <div class="admin-page" id="adm-users">
     <div class="admin-main">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
@@ -962,7 +951,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     </div>
   </div>
 
-  <!-- Tab: Stats -->
   <div class="admin-page" id="adm-stats">
     <div class="admin-main">
       <div class="sec-label">Statistik Platform</div>
@@ -1050,8 +1038,8 @@ function goPage(p){
   ['home','berita','vip'].forEach(n=>{const el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p)});
   document.getElementById('mob-nav').classList.remove('open');
   window.scrollTo(0,0);
-  if(p==='berita') renderNews();
-  if(p==='admin') loadAdminData();
+  if(p==='berita') window._renderNews&&window._renderNews();
+  if(p==='admin') window._loadAdminData&&window._loadAdminData();
 }
 window.goPage=goPage;
 
@@ -1060,14 +1048,14 @@ window.requireVipNav=()=>{
   goPage('journal');
 };
 
-/* Admin tabs */
+/* ─── Admin tabs ─── FIX: use window.* wrappers, safe if module not ready yet */
 window.admTab=(n,el)=>{
   document.querySelectorAll('.admin-page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('adm-'+n).classList.add('on');
   el.classList.add('on');
-  if(n==='users') loadUsers();
-  if(n==='stats') loadStats();
+  if(n==='users' && window._loadUsers) window._loadUsers();
+  if(n==='stats' && window._loadStats) window._loadStats();
 };
 
 /* Journal tabs */
@@ -1076,7 +1064,7 @@ window.jTab=(n,el)=>{
   document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('jp-'+n).classList.add('on');el.classList.add('on');
 };
-window.fltHist=(f,btn)=>{window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderHistory();};
+window.fltHist=(f,btn)=>{window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');window._renderHistory&&window._renderHistory();};
 window._histFlt='all';
 
 /* News admin UI helpers */
@@ -1121,7 +1109,7 @@ function toast(sym,msg,color){
 }
 window.toast=toast;
 
-/* Ticker */
+/* Ticker / Price display */
 const SYM_D={XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',ADAUSDT:'ADA/USDT'};
 const TICK_SYMS=['XAUUSD','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
 window._lp={};window._prevLp={};
@@ -1130,11 +1118,14 @@ function renderTicker(){
   const items=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="ticker-item"><span class="ti-sym">${SYM_D[s]}</span><span class="ti-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span><span class="ti-sep">|</span></div>`}).join('');
   document.getElementById('ticker-wrap').innerHTML=`<div class="ticker-inner">${items+items}</div>`;
 }
+window.renderTicker=renderTicker;
+
 function renderPricebar(){
   document.getElementById('pricebar').innerHTML=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="pb-item"><span class="pb-sym">${SYM_D[s]}</span><span class="pb-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span></div>`}).join('');
 }
+window.renderPricebar=renderPricebar;
 
-/* Hero chart */
+/* Hero chart — fix: build SVG path correctly */
 const xauHistory=[];
 function updateHeroCard(p,prev){
   if(!p)return;
@@ -1147,10 +1138,14 @@ function updateHeroCard(p,prev){
   if(xauHistory.length>1){
     const mn=Math.min(...xauHistory),mx=Math.max(...xauHistory),rng=mx-mn||1;
     const W=400,H=80,pad=8,xS=(W-2*pad)/(xauHistory.length-1),yS=(H-2*pad)/rng;
-    const pts=xauHistory.map((v,i)=>`${pad+i*xS},${H-pad-(v-mn)*yS}`).join(' ');
-    const lx=pad+(xauHistory.length-1)*xS,ly=H-pad-(xauHistory[xauHistory.length-1]-mn)*yS;
+    const coords=xauHistory.map((v,i)=>`${(pad+i*xS).toFixed(1)},${(H-pad-(v-mn)*yS).toFixed(1)}`);
+    const pts=coords.join(' ');
+    /* Build fill path correctly */
+    const firstX=(pad).toFixed(1), firstY=(H-pad).toFixed(1);
+    const lastX=(pad+(xauHistory.length-1)*xS).toFixed(1), lastY=(H-pad).toFixed(1);
+    const dPath=`M${firstX},${firstY} L${coords.join(' L')} L${lastX},${lastY} Z`;
     document.getElementById('hcc-line').setAttribute('points',pts);
-    document.getElementById('hcc-fill').setAttribute('d',`M${pad},${H-pad} L${pts.replace(/,/g,' L').split(' L').join(' L')} L${lx},${H-pad} Z`);
+    document.getElementById('hcc-fill').setAttribute('d',dPath);
   }
   const mn=Math.min(...xauHistory),mx=Math.max(...xauHistory);
   document.getElementById('hcc-high').textContent=mx.toFixed(2);
@@ -1158,23 +1153,28 @@ function updateHeroCard(p,prev){
   document.getElementById('hcc-pct').textContent=(chgPct>=0?'+':'')+chgPct.toFixed(2)+'%';
   document.getElementById('hcc-pct').className='hcc-metric-v '+(chgPct>=0?'up':'dn');
 }
+window.updateHeroCard=updateHeroCard;
 </script>
 
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-// Firebase Storage tidak digunakan (pakai base64 di Firestore)
 
 /*
-=== FIRESTORE SECURITY RULES ===
-Buka: Firebase Console → Firestore → Rules → Paste ini → Publish:
-
+=== FIRESTORE RULES ===
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /users/{userId} {
+      allow read: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+      allow write: if request.auth != null &&
+        (request.auth.uid == userId ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true);
     }
     match /news/{newsId} {
       allow read: if true;
@@ -1183,10 +1183,9 @@ service cloud.firestore {
     }
   }
 }
-
-(Tidak perlu Storage Rules — foto disimpan sebagai base64 di Firestore)
-================================
+=====================
 */
+
 const FB={
   apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
   authDomain:"journal-97254.firebaseapp.com",
@@ -1196,7 +1195,6 @@ const FB={
   appId:"1:101188824456:web:a0ca25a26e63704b361e3d"
 };
 
-/* ── ADMIN CREDENTIALS (bootstrap) ── */
 const ADMIN_EMAIL='adminmayoragold@mayora.com';
 const ADMIN_PASS='tradingsehat';
 const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
@@ -1223,7 +1221,6 @@ function setBtnLoad(id,loading,txt){const b=document.getElementById(id);if(!b)re
 onAuthStateChanged(auth,async user=>{
   if(user){
     window._curUser=user;
-    // Kalau ini admin bootstrap (akun baru dibuat), tulis Firestore sekarang
     if(window._adminBootstrap&&user.email===ADMIN_EMAIL){
       window._adminBootstrap=false;
       try{
@@ -1231,7 +1228,7 @@ onAuthStateChanged(auth,async user=>{
           displayName:'Admin Mayora Gold FX',email:ADMIN_EMAIL,
           vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()
         });
-      }catch(e){console.warn('Admin setDoc error:',e.message);}
+      }catch(e){console.warn('Admin setDoc:',e.message);}
     }
     await loadData(user.uid);
     showLoggedIn(user);
@@ -1281,7 +1278,7 @@ function showLoggedIn(user){
   tick();
 }
 
-/* ─ Login/Register ─ */
+/* ─ Login / Register ─ */
 window.doLogin=async()=>{
   const email=document.getElementById('li-email').value.trim(),pass=document.getElementById('li-pass').value;
   const err=document.getElementById('li-err');
@@ -1290,16 +1287,12 @@ window.doLogin=async()=>{
   setBtnLoad('li-btn',true,'Sign In →');
   try{
     await signInWithEmailAndPassword(auth,email,pass);
-    // onAuthStateChanged handle redirect
   }catch(e){
-    // Bootstrap: kalau akun admin belum ada di Auth, buat dulu
     if((e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')&&email===ADMIN_EMAIL&&pass===ADMIN_PASS){
       try{
-        // Set flag dulu sebelum createUser agar onAuthStateChanged tahu ini admin bootstrap
         window._adminBootstrap=true;
         const cred=await createUserWithEmailAndPassword(auth,ADMIN_EMAIL,ADMIN_PASS);
         await updateProfile(cred.user,{displayName:'Admin Mayora Gold FX'});
-        // Firestore ditulis di onAuthStateChanged setelah user confirmed
         return;
       }catch(e2){
         window._adminBootstrap=false;
@@ -1324,7 +1317,6 @@ window.doRegister=async()=>{
     const cred=await createUserWithEmailAndPassword(auth,email,pass);
     await updateProfile(cred.user,{displayName:name});
     await setDoc(doc(db,'users',cred.user.uid),{displayName:name,email,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()});
-    // onAuthStateChanged handle sisanya
   }catch(e){
     document.getElementById('ri-err').textContent=fmsg(e.code);
     setBtnLoad('ri-btn',false,'Buat Akun →');
@@ -1357,25 +1349,21 @@ async function loadData(uid){
       trades=d.trades||[];
       nextId=d.nextId||(trades.length?Math.max(...trades.map(t=>t.id))+1:1);
       isVip=d.vip===true;
-      // Pastikan admin email selalu punya flag admin:true
       const emailCheck=window._curUser?.email||'';
       isAdmin=d.admin===true||emailCheck===ADMIN_EMAIL;
       if(emailCheck===ADMIN_EMAIL&&!d.admin){
-        // Fix: pastikan flag admin tersimpan
         setDoc(doc(db,'users',uid),{admin:true,vip:true},{merge:true}).catch(()=>{});
       }
       const ts=d.updatedAt?.toDate();
       if(ts)document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');
     }else{
-      // Dokumen belum ada — buat baru
       trades=[];nextId=1;isVip=false;
       const emailCheck=window._curUser?.email||'';
       isAdmin=emailCheck===ADMIN_EMAIL;
-      if(isAdmin){
-        try{await setDoc(doc(db,'users',uid),{displayName:'Admin Mayora Gold FX',email:emailCheck,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()});}catch(_){}
-      }else{
-        try{await setDoc(doc(db,'users',uid),{displayName:window._curUser?.displayName||'',email:emailCheck,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()});}catch(_){}
-      }
+      const newDoc=isAdmin
+        ?{displayName:'Admin Mayora Gold FX',email:emailCheck,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()}
+        :{displayName:window._curUser?.displayName||'',email:emailCheck,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()};
+      try{await setDoc(doc(db,'users',uid),newDoc);}catch(_){}
     }
   }catch(e){trades=[];nextId=1;isVip=false;isAdmin=(window._curUser?.email===ADMIN_EMAIL);}
 }
@@ -1393,9 +1381,9 @@ async function persistTrades(){
 function triggerSave(){setSaveStatus('saving');clearTimeout(saveDebounce);saveDebounce=setTimeout(persistTrades,1200);}
 function setSaveStatus(s){const el=document.getElementById('save-status'),lb=document.getElementById('save-lbl');el.className='save-status '+s;lb.textContent=s==='saved'?'Saved':s==='saving'?'Saving...':s==='error'?'Error':'—';}
 
-/* ════════════════════════
+/* ────────────────────────
    NEWS — Firestore
-════════════════════════ */
+──────────────────────── */
 async function loadNewsFromDB(){
   try{
     const q=query(collection(db,'news'),orderBy('createdAt','desc'));
@@ -1405,7 +1393,6 @@ async function loadNewsFromDB(){
     allNewsCache=arr;
     return arr;
   }catch(e){
-    // fallback static
     return getStaticNews();
   }
 }
@@ -1421,9 +1408,9 @@ function getStaticNews(){
 }
 
 function fmtDate(ts){
-  if(!ts) return '';
-  if(typeof ts==='string') return ts;
-  if(ts.toDate) return ts.toDate().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+  if(!ts)return'';
+  if(typeof ts==='string')return ts;
+  if(ts.toDate)return ts.toDate().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
   return new Date(ts).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 }
 
@@ -1458,21 +1445,22 @@ async function renderNews(){
   main.innerHTML=html;
 
   const pw=document.getElementById('price-widget');
-  const pRows=[['XAU/USD',window._lp?.XAUUSD||'—','up'],['BTC/USDT',window._lp?.BTCUSDT||'—','up'],['ETH/USDT',window._lp?.ETHUSDT||'—','dn']];
-  pw.innerHTML=`<div class="pw-header">Live Prices</div>`+pRows.map(([s,p,c])=>`<div class="pw-row"><span class="pw-sym">${s}</span><span class="pw-price">${typeof p==='number'?p.toFixed(2):p}</span><span class="pw-chg ${c}">${c==='up'?'▲':'▼'}</span></div>`).join('');
+  const pRows=[['XAU/USD',window._lp?.XAUUSD,'up'],['BTC/USDT',window._lp?.BTCUSDT,'up'],['ETH/USDT',window._lp?.ETHUSDT,'dn']];
+  pw.innerHTML=`<div class="pw-header">Live Prices</div>`+pRows.map(([s,p,c])=>`<div class="pw-row"><span class="pw-sym">${s}</span><span class="pw-price">${typeof p==='number'?p.toFixed(2):'—'}</span><span class="pw-chg ${c}">${c==='up'?'▲':'▼'}</span></div>`).join('');
 
   const aside=document.getElementById('news-aside');
   aside.innerHTML=`<div class="nsc-header">Artikel Terpopuler</div>`+newsData.slice(0,4).map(a=>`<div class="nsc-item"><div class="nsc-title">${a.title}</div><div class="nsc-meta">${fmtDate(a.date||a.createdAt)}</div></div>`).join('');
 }
-window.renderNews=renderNews;
+/* ── Expose to global scope so goPage() can call it ── */
+window._renderNews=renderNews;
 
-/* ════════════════════════
+/* ────────────────────────
    ADMIN — News CRUD
-════════════════════════ */
+──────────────────────── */
 async function loadAdminData(){
   await renderAdminNewsList();
 }
-window.loadAdminData=loadAdminData;
+window._loadAdminData=loadAdminData;
 
 async function renderAdminNewsList(){
   const list=document.getElementById('admin-news-list');
@@ -1487,15 +1475,15 @@ async function renderAdminNewsList(){
         <div class="ani-title">${n.title}</div>
         <div class="ani-date">${fmtDate(n.date||n.createdAt)}</div>
         <div class="ani-actions">
-          <button class="btn-edit-n" onclick="editNews('${n.id}')">✎ Edit</button>
-          <button class="btn-feat-n" onclick="toggleFeatured('${n.id}',${!n.featured})">${n.featured?'★ Unfeatured':'☆ Set Featured'}</button>
-          <button class="btn-del-n" onclick="deleteNews('${n.id}','${n.imageUrl||''}')">✕ Hapus</button>
+          <button class="btn-edit-n" onclick="window._editNews('${n.id}')">✎ Edit</button>
+          <button class="btn-feat-n" onclick="window._toggleFeatured('${n.id}',${!n.featured})">${n.featured?'★ Unfeatured':'☆ Set Featured'}</button>
+          <button class="btn-del-n" onclick="window._deleteNews('${n.id}')">✕ Hapus</button>
         </div>
       </div>
     </div>`).join('');
 }
 
-window.editNews=async(id)=>{
+window._editNews=async(id)=>{
   const n=allNewsCache.find(x=>x.id===id);if(!n)return;
   document.getElementById('news-form-wrap').style.display='block';
   document.getElementById('nf-title-lbl').textContent='Edit Berita';
@@ -1516,9 +1504,8 @@ window.editNews=async(id)=>{
   window.scrollTo(0,0);
 };
 
-window.toggleFeatured=async(id,val)=>{
+window._toggleFeatured=async(id,val)=>{
   try{
-    // Kalau set featured, un-featured yang lain dulu
     if(val){
       const q=query(collection(db,'news'));
       const snap=await getDocs(q);
@@ -1532,17 +1519,16 @@ window.toggleFeatured=async(id,val)=>{
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
-window.deleteNews=async(id,imgUrl)=>{
+window._deleteNews=async(id)=>{
   if(!confirm('Hapus berita ini?'))return;
   try{
     await deleteDoc(doc(db,'news',id));
-    // Foto disimpan sebagai base64 di Firestore, tidak perlu hapus storage
     toast('Admin','Berita dihapus','#E05A5A');
     await renderAdminNewsList();
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
-/* Helper: kompres gambar jadi base64 kecil untuk disimpan di Firestore */
+/* Kompres gambar → base64 */
 function compressImage(file,maxPx,quality,onProgress){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
@@ -1587,20 +1573,16 @@ window.saveNews=async()=>{
   const file=fileInput.files[0];
 
   try{
-    // Upload foto: kompres jadi base64 lalu simpan di Firestore (tanpa Storage)
     if(file){
       const prog=document.getElementById('upload-prog');
       const progBar=document.getElementById('upload-prog-bar');
       prog.style.display='block';progBar.style.width='10%';
-      // Kompres gambar ke max 800px, kualitas 75%
       imageUrl=await compressImage(file,800,0.75,(p)=>{progBar.style.width=p+'%';});
       prog.style.display='none';
     }
 
-    // Kalau featured, un-featured yang lain
     if(featured){
-      const q=query(collection(db,'news'));
-      const snap=await getDocs(q);
+      const snap=await getDocs(query(collection(db,'news')));
       const editId=document.getElementById('nf-edit-id').value;
       const batch=[];
       snap.forEach(d=>{if(d.id!==editId&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});
@@ -1630,7 +1612,10 @@ window.saveNews=async()=>{
   }
 };
 
-/* ── User management ── */
+/* ────────────────────────
+   USER MANAGEMENT
+   *** FIX: exposed as window._loadUsers & window._loadStats ***
+──────────────────────── */
 async function loadUsers(){
   const list=document.getElementById('user-list');
   list.innerHTML='<div class="empty-state">Memuat user...</div>';
@@ -1649,17 +1634,22 @@ async function loadUsers(){
         </div>
         <div class="user-badges">
           ${u.admin?'<span class="admin-pill">ADMIN</span>':''}
-          <button class="toggle-vip ${u.vip?'is-vip':'not-vip'}" onclick="toggleUserVip('${u.uid}',${!u.vip})">${u.vip?'✦ VIP — Cabut':'Jadikan VIP'}</button>
+          <button class="toggle-vip ${u.vip?'is-vip':'not-vip'}" onclick="window._toggleUserVip('${u.uid}',${!u.vip})">${u.vip?'✦ VIP — Cabut':'Jadikan VIP'}</button>
         </div>
       </div>`).join('');
-  }catch(e){list.innerHTML='<div class="empty-state">Gagal memuat user</div>';}
+  }catch(e){
+    list.innerHTML=`<div class="empty-state">Gagal memuat user: ${e.message}</div>`;
+  }
 }
+/* ★★★ KUNCI FIX: expose loadUsers ke window ★★★ */
+window._loadUsers=loadUsers;
 
-window.toggleUserVip=async(uid,val)=>{
+window._toggleUserVip=async(uid,val)=>{
   try{
     await setDoc(doc(db,'users',uid),{vip:val},{merge:true});
     toast('Admin',(val?'User dijadikan VIP':'VIP dicabut'),'#3DBA7A');
-    loadUsers();loadStats();
+    await loadUsers();
+    await loadStats();
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
@@ -1673,21 +1663,50 @@ async function loadStats(){
     document.getElementById('stat-users').textContent=users.length;
     document.getElementById('stat-vip').textContent=vips.length;
     document.getElementById('stat-reg').textContent=users.length-vips.length;
-  }catch(e){}
+  }catch(e){console.error('loadStats:',e);}
+}
+/* ★★★ KUNCI FIX: expose loadStats ke window ★★★ */
+window._loadStats=loadStats;
+
+/* ────────────────────────
+   PRICES
+──────────────────────── */
+const CRYPTO=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT'];
+
+async function fetchXau(){
+  /* Try gold-api.com first */
+  try{
+    const r=await fetch('https://api.gold-api.com/price/XAU',{signal:AbortSignal.timeout(6000)});
+    const d=await r.json();
+    if(d.price){const p=parseFloat(d.price)-2;window._lp.XAUUSD=p;window._lp.XAUTUSDT=p;return;}
+  }catch(_){}
+  /* Fallback: goldprice.org */
+  try{
+    const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});
+    const d=await r.json();
+    const p=d?.items?.[0]?.xauPrice;
+    if(p){const v=parseFloat(p)-2;window._lp.XAUUSD=v;window._lp.XAUTUSDT=v;}
+  }catch(_){}
 }
 
-/* ══════════════════════
-   PRICES
-══════════════════════ */
-const CRYPTO=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT'];
-async function fetchXau(){
-  try{const r=await fetch('https://api.gold-api.com/price/XAU',{signal:AbortSignal.timeout(6000)});const d=await r.json();if(d.price){const p=parseFloat(d.price)-2;window._lp.XAUUSD=p;window._lp.XAUTUSDT=p;return;}}catch(_){}
-  try{const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});const d=await r.json();const p=d?.items?.[0]?.xauPrice;if(p){const v=parseFloat(p)-2;window._lp.XAUUSD=v;window._lp.XAUTUSDT=v;}}catch(_){}
-}
 async function fetchCrypto(){
-  try{const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(CRYPTO))}`,{signal:AbortSignal.timeout(5000)});const data=await r.json();data.forEach(d=>{window._lp[d.symbol]=parseFloat(d.lastPrice)});return;}catch(_){}
-  try{const cgIds={BTCUSDT:'bitcoin',ETHUSDT:'ethereum',SOLUSDT:'solana',BNBUSDT:'binancecoin',XRPUSDT:'ripple',DOGEUSDT:'dogecoin',ADAUSDT:'cardano'};const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(cgIds).join(',')}&vs_currencies=usd`,{signal:AbortSignal.timeout(7000)});const d=await r.json();Object.entries(cgIds).forEach(([s,id])=>{if(d[id]?.usd)window._lp[s]=d[id].usd;});}catch(_){}
+  /* Binance — try proxy first to avoid CORS issues, then direct */
+  try{
+    const r=await fetch(`https://api.binance.com/api/v3/ticker/price`,{signal:AbortSignal.timeout(5000)});
+    const data=await r.json();
+    const lookup={};data.forEach(d=>lookup[d.symbol]=parseFloat(d.price));
+    CRYPTO.forEach(s=>{if(lookup[s])window._lp[s]=lookup[s];});
+    return;
+  }catch(_){}
+  /* CoinGecko fallback — only if Binance fails */
+  try{
+    const cgIds={BTCUSDT:'bitcoin',ETHUSDT:'ethereum',SOLUSDT:'solana',BNBUSDT:'binancecoin',XRPUSDT:'ripple',DOGEUSDT:'dogecoin',ADAUSDT:'cardano'};
+    const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(cgIds).join(',')}&vs_currencies=usd`,{signal:AbortSignal.timeout(8000)});
+    const d=await r.json();
+    Object.entries(cgIds).forEach(([s,id])=>{if(d[id]?.usd)window._lp[s]=d[id].usd;});
+  }catch(_){}
 }
+
 async function fetchPrices(){
   window._prevLp={...window._lp};
   await Promise.allSettled([fetchXau(),fetchCrypto()]);
@@ -1696,9 +1715,9 @@ async function fetchPrices(){
   if(dot){dot.className='live-dot'+(has?' on':'');document.getElementById('ap-live').textContent=has?'Live':'Offline';}
 }
 
-/* ══════════════════════
+/* ────────────────────────
    TRADE HELPERS
-══════════════════════ */
+──────────────────────── */
 const calcPnl=t=>!t.exit?null:+((t.dir==='Long'?(t.exit-t.entry):(t.entry-t.exit))*t.size).toFixed(2);
 const calcOpnl=t=>{const cp=window._lp[t.symbol];return cp?((t.dir==='Long'?(cp-t.entry):(t.entry-cp))*t.size):null;};
 const calcR=t=>{if(!t.exit||!t.sl)return null;const risk=Math.abs(t.entry-t.sl)*t.size,pnl=calcPnl(t);return(!risk||pnl===null)?null:+(pnl/risk).toFixed(2);};
@@ -1719,9 +1738,9 @@ function autoCheck(){
   });return changed;
 }
 
-/* ══════════════════════
+/* ────────────────────────
    RENDER
-══════════════════════ */
+──────────────────────── */
 function renderStats(){
   const closed=trades.filter(t=>t.exit!==null),open=trades.filter(t=>t.exit===null&&(t.type!=='limit'||t.activated));
   const wins=closed.filter(t=>calcPnl(t)>0),totalPnl=closed.reduce((a,t)=>a+calcPnl(t),0);
@@ -1740,24 +1759,27 @@ function renderOpen(){
   const open=trades.filter(t=>t.exit===null);
   const tb=document.getElementById('open-tbody');
   if(!open.length){tb.innerHTML=`<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">✦</div>No open positions</div></td></tr>`;return;}
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   tb.innerHTML=open.map(t=>{
     const cp=window._lp[t.symbol],isLim=t.type==='limit'&&!t.activated;
     const pnl=isLim?null:calcOpnl(t),pnlPct=(pnl!==null&&t.entry&&t.size)?(pnl/(t.entry*t.size)*100):null;
     const prog=!isLim?calcProg(t):null,pc=prog!==null?(prog>66?'#3DBA7A':prog>33?'#C9A84C':'#E05A5A'):'var(--text3)';
-    return`<tr><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td style="font-family:'Cormorant Garamond',serif;font-size:1rem">${cp?fmtP(cp,t.symbol):'—'}</td><td><span style="color:var(--red)">${t.sl?fmtP(t.sl,t.symbol):'—'}</span>/<span style="color:var(--green)">${t.tp?fmtP(t.tp,t.symbol):'—'}</span></td><td>${t.size}</td><td class="${pnl===null?'':pnl>=0?'p-pos':'p-neg'}">${pnl===null?`<span style="color:var(--text3)">${isLim?'Pending':'—'}</span>`:fmtM(pnl)+` <span style="opacity:.5;font-size:.6rem">(${fmtPct(pnlPct)})</span>`}</td><td>${prog!==null?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${prog.toFixed(0)}%;background:${pc}"></div></div><div class="prog-txt">${prog.toFixed(0)}%</div></div>`:isLim?`<span style="font-size:.6rem;color:var(--text3)">Waiting</span>`:'—'}</td><td>${isLim?'<span class="badge lim">Limit</span>':'<span class="badge open">Open</span>'}</td><td><div class="row-actions"><button class="act-btn" onclick="editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="delTrade(${t.id})">Del</button></div></td></tr>`;
+    return`<tr><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td style="font-family:'Cormorant Garamond',serif;font-size:1rem">${cp?fmtP(cp,t.symbol):'—'}</td><td><span style="color:var(--red)">${t.sl?fmtP(t.sl,t.symbol):'—'}</span>/<span style="color:var(--green)">${t.tp?fmtP(t.tp,t.symbol):'—'}</span></td><td>${t.size}</td><td class="${pnl===null?'':pnl>=0?'p-pos':'p-neg'}">${pnl===null?`<span style="color:var(--text3)">${isLim?'Pending':'—'}</span>`:fmtM(pnl)+` <span style="opacity:.5;font-size:.6rem">(${fmtPct(pnlPct)})</span>`}</td><td>${prog!==null?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${prog.toFixed(0)}%;background:${pc}"></div></div><div class="prog-txt">${prog.toFixed(0)}%</div></div>`:isLim?`<span style="font-size:.6rem;color:var(--text3)">Waiting</span>`:'—'}</td><td>${isLim?'<span class="badge lim">Limit</span>':'<span class="badge open">Open</span>'}</td><td><div class="row-actions"><button class="act-btn" onclick="window._editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window._delTrade(${t.id})">Del</button></div></td></tr>`;
   }).join('');
 }
 
 function renderHistory(){
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   let data=trades.filter(t=>t.exit!==null);
   if(window._histFlt==='win')data=data.filter(t=>calcPnl(t)>0);
   if(window._histFlt==='loss')data=data.filter(t=>calcPnl(t)<=0);
   const tb=document.getElementById('hist-tbody');
   if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">✦</div>No trades found</div></td></tr>`;return;}
   tb.innerHTML=[...data].reverse().map(t=>{const pnl=calcPnl(t),r=calcR(t),rb=t.closedReason?`<span class="badge ${t.closedReason==='TP'?'tp':'sl'}" style="margin-left:4px">${t.closedReason}</span>`:'';
-    return`<tr><td>${t.date_close||t.date}</td><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td>${fmtP(t.exit,t.symbol)}${rb}</td><td>${t.size}</td><td class="${pnl>0?'p-pos':'p-neg'}">${fmtM(pnl)}</td><td class="${r&&r>=1?'p-pos':r&&r<0?'p-neg':'p-neu'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td><td><div class="row-actions"><button class="act-btn" onclick="editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="delTrade(${t.id})">Del</button></div></td></tr>`;
+    return`<tr><td>${t.date_close||t.date}</td><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td>${fmtP(t.exit,t.symbol)}${rb}</td><td>${t.size}</td><td class="${pnl>0?'p-pos':'p-neg'}">${fmtM(pnl)}</td><td class="${r&&r>=1?'p-pos':r&&r<0?'p-neg':'p-neu'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td><td><div class="row-actions"><button class="act-btn" onclick="window._editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window._delTrade(${t.id})">Del</button></div></td></tr>`;
   }).join('');
 }
+window._renderHistory=renderHistory;
 
 function renderEquity(){
   const closed=trades.filter(t=>t.exit!==null).sort((a,b)=>(a.date_close||a.date).localeCompare(b.date_close||b.date));
@@ -1765,12 +1787,13 @@ function renderEquity(){
   if(pts.length<2){document.getElementById('eq-svg').innerHTML='';return;}
   const vals=pts.map(p=>p.v),mn=Math.min(...vals),mx=Math.max(...vals),rng=mx-mn||1;
   const W=440,H=120,pad=16,xS=(W-2*pad)/(pts.length-1),yS=(H-2*pad)/rng;
-  const pstr=pts.map((p,i)=>`${pad+i*xS},${H-pad-(p.v-mn)*yS}`).join(' ');
-  const lx=pad+(pts.length-1)*xS,ly=H-pad-(pts[pts.length-1].v-mn)*yS;
-  document.getElementById('eq-svg').innerHTML=`<defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".2"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="rgba(201,168,76,.08)" stroke-width="1"/><line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="rgba(201,168,76,.08)" stroke-width="1"/><path d="M${pad},${H-pad-(pts[0].v-mn)*yS} L${pstr} L${lx},${H-pad} L${pad},${H-pad} Z" fill="url(#eqg)"/><polyline points="${pstr}" stroke="#C9A84C" stroke-width="2" fill="none"/><circle cx="${lx}" cy="${ly}" r="3.5" fill="#C9A84C"/>`;
+  const pstr=pts.map((p,i)=>`${(pad+i*xS).toFixed(1)},${(H-pad-(p.v-mn)*yS).toFixed(1)}`).join(' ');
+  const lx=(pad+(pts.length-1)*xS).toFixed(1),ly=(H-pad-(pts[pts.length-1].v-mn)*yS).toFixed(1);
+  document.getElementById('eq-svg').innerHTML=`<defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".2"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs><polyline points="${pstr}" stroke="#C9A84C" stroke-width="2" fill="none"/><circle cx="${lx}" cy="${ly}" r="3.5" fill="#C9A84C"/>`;
 }
 
 function renderBkd(){
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   const syms={};trades.filter(t=>t.exit).forEach(t=>{const p=calcPnl(t);syms[t.symbol]=(syms[t.symbol]||0)+p;});
   const arr=Object.entries(syms).sort((a,b)=>b[1]-a[1]);
   if(!arr.length){document.getElementById('bkd-list').innerHTML='<div class="empty-state" style="padding:20px">No closed trades</div>';return;}
@@ -1779,6 +1802,7 @@ function renderBkd(){
 }
 
 function renderNotes(){
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   const notes=trades.filter(t=>t.notes),g=document.getElementById('notes-grid');
   if(!notes.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div>No journal notes yet</div>`;return;}
   g.innerHTML=[...notes].reverse().map(t=>`<div class="note-card"><div class="note-sym">${SYM_D[t.symbol]||t.symbol}</div><div class="note-date">${t.date} · ${t.dir}</div><div class="note-txt">${t.notes}</div>${t.tag?`<div class="note-tag">✦ ${t.tag}</div>`:''}</div>`).join('');
@@ -1804,8 +1828,8 @@ window.openModal=(t=null)=>{
 };
 window.closeModal=()=>document.getElementById('overlay').classList.remove('open');
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))window.closeModal();});
-window.editTrade=id=>window.openModal(trades.find(t=>t.id===id));
-window.delTrade=id=>{if(!confirm('Delete this trade?'))return;trades=trades.filter(t=>t.id!==id);renderAll();triggerSave();};
+window._editTrade=id=>window.openModal(trades.find(t=>t.id===id));
+window._delTrade=id=>{if(!confirm('Delete this trade?'))return;trades=trades.filter(t=>t.id!==id);renderAll();triggerSave();};
 
 window.saveTrade=()=>{
   if(!isVip&&!isAdmin)return;
@@ -1836,15 +1860,22 @@ window.clearAll=async()=>{
 /* ── Tick ── */
 async function tick(){
   await fetchPrices();
-  renderTicker();renderPricebar();
+  renderTicker();
+  renderPricebar();
   updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);
   const changed=autoCheck();
   if(changed){renderAll();triggerSave();}else{renderOpen();renderStats();}
 }
 
-// Initial price fetch for landing page
-fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,null);});
-setInterval(()=>fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);}),15000);
+/* Initial price fetch */
+fetchPrices().then(()=>{
+  renderTicker();
+  updateHeroCard(window._lp.XAUUSD,null);
+});
+setInterval(()=>fetchPrices().then(()=>{
+  renderTicker();
+  updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);
+}),15000);
 </script>
 </body>
 </html>
