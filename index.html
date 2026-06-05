@@ -1164,8 +1164,29 @@ function updateHeroCard(p,prev){
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import{getStorage,ref,uploadBytesResumable,getDownloadURL,deleteObject}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+// Firebase Storage tidak digunakan (pakai base64 di Firestore)
 
+/*
+=== FIRESTORE SECURITY RULES ===
+Buka: Firebase Console → Firestore → Rules → Paste ini → Publish:
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /news/{newsId} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+    }
+  }
+}
+
+(Tidak perlu Storage Rules — foto disimpan sebagai base64 di Firestore)
+================================
+*/
 const FB={
   apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
   authDomain:"journal-97254.firebaseapp.com",
@@ -1178,7 +1199,7 @@ const FB={
 /* ── ADMIN CREDENTIALS (bootstrap) ── */
 const ADMIN_EMAIL='adminmayoragold@mayora.com';
 const ADMIN_PASS='tradingsehat';
-const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
+const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
 
 let trades=[],nextId=1,isVip=false,isAdmin=false,saveDebounce,tickInterval;
 window._curUser=null;
@@ -1202,9 +1223,18 @@ function setBtnLoad(id,loading,txt){const b=document.getElementById(id);if(!b)re
 onAuthStateChanged(auth,async user=>{
   if(user){
     window._curUser=user;
+    // Kalau ini admin bootstrap (akun baru dibuat), tulis Firestore sekarang
+    if(window._adminBootstrap&&user.email===ADMIN_EMAIL){
+      window._adminBootstrap=false;
+      try{
+        await setDoc(doc(db,'users',user.uid),{
+          displayName:'Admin Mayora Gold FX',email:ADMIN_EMAIL,
+          vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()
+        });
+      }catch(e){console.warn('Admin setDoc error:',e.message);}
+    }
     await loadData(user.uid);
     showLoggedIn(user);
-    // Jika sebelumnya di halaman auth, pindah ke home dulu
     const activePage=document.querySelector('.page.active');
     if(activePage&&activePage.id==='page-auth'){
       if(isAdmin) goPage('admin');
@@ -1217,7 +1247,6 @@ onAuthStateChanged(auth,async user=>{
     document.getElementById('nl-admin').style.display='none';
     document.getElementById('mob-admin-link').style.display='none';
   }
-  // Selalu hide loader di akhir — page tetap di beranda (default)
   document.getElementById('loader').classList.add('out');
 });
 
@@ -1261,15 +1290,23 @@ window.doLogin=async()=>{
   setBtnLoad('li-btn',true,'Sign In →');
   try{
     await signInWithEmailAndPassword(auth,email,pass);
+    // onAuthStateChanged handle redirect
   }catch(e){
-    // Bootstrap: jika akun admin belum ada, buat otomatis
+    // Bootstrap: kalau akun admin belum ada di Auth, buat dulu
     if((e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')&&email===ADMIN_EMAIL&&pass===ADMIN_PASS){
       try{
+        // Set flag dulu sebelum createUser agar onAuthStateChanged tahu ini admin bootstrap
+        window._adminBootstrap=true;
         const cred=await createUserWithEmailAndPassword(auth,ADMIN_EMAIL,ADMIN_PASS);
         await updateProfile(cred.user,{displayName:'Admin Mayora Gold FX'});
-        await setDoc(doc(db,'users',cred.user.uid),{displayName:'Admin Mayora Gold FX',email:ADMIN_EMAIL,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()});
-        return; // onAuthStateChanged handle
-      }catch(e2){err.textContent='Gagal buat akun admin: '+e2.message;setBtnLoad('li-btn',false,'Sign In →');return;}
+        // Firestore ditulis di onAuthStateChanged setelah user confirmed
+        return;
+      }catch(e2){
+        window._adminBootstrap=false;
+        err.textContent='Gagal buat akun admin: '+e2.message;
+        setBtnLoad('li-btn',false,'Sign In →');
+        return;
+      }
     }
     err.textContent=fmsg(e.code);
     setBtnLoad('li-btn',false,'Sign In →');
@@ -1330,11 +1367,14 @@ async function loadData(uid){
       const ts=d.updatedAt?.toDate();
       if(ts)document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');
     }else{
+      // Dokumen belum ada — buat baru
       trades=[];nextId=1;isVip=false;
       const emailCheck=window._curUser?.email||'';
       isAdmin=emailCheck===ADMIN_EMAIL;
       if(isAdmin){
-        setDoc(doc(db,'users',uid),{displayName:'Admin Mayora Gold FX',email:emailCheck,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()}).catch(()=>{});
+        try{await setDoc(doc(db,'users',uid),{displayName:'Admin Mayora Gold FX',email:emailCheck,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()});}catch(_){}
+      }else{
+        try{await setDoc(doc(db,'users',uid),{displayName:window._curUser?.displayName||'',email:emailCheck,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()});}catch(_){}
       }
     }
   }catch(e){trades=[];nextId=1;isVip=false;isAdmin=(window._curUser?.email===ADMIN_EMAIL);}
@@ -1496,11 +1536,39 @@ window.deleteNews=async(id,imgUrl)=>{
   if(!confirm('Hapus berita ini?'))return;
   try{
     await deleteDoc(doc(db,'news',id));
-    if(imgUrl){try{await deleteObject(ref(storage,imgUrl));}catch(_){}}
+    // Foto disimpan sebagai base64 di Firestore, tidak perlu hapus storage
     toast('Admin','Berita dihapus','#E05A5A');
     await renderAdminNewsList();
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
+
+/* Helper: kompres gambar jadi base64 kecil untuk disimpan di Firestore */
+function compressImage(file,maxPx,quality,onProgress){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        onProgress&&onProgress(40);
+        const canvas=document.createElement('canvas');
+        let w=img.width,h=img.height;
+        if(w>maxPx){h=Math.round(h*maxPx/w);w=maxPx;}
+        if(h>maxPx){w=Math.round(w*maxPx/h);h=maxPx;}
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        onProgress&&onProgress(80);
+        const dataUrl=canvas.toDataURL('image/jpeg',quality);
+        onProgress&&onProgress(100);
+        resolve(dataUrl);
+      };
+      img.onerror=reject;
+      img.src=e.target.result;
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 window.saveNews=async()=>{
   const judul=document.getElementById('nf-judul').value.trim();
@@ -1519,21 +1587,13 @@ window.saveNews=async()=>{
   const file=fileInput.files[0];
 
   try{
-    // Upload foto jika ada
+    // Upload foto: kompres jadi base64 lalu simpan di Firestore (tanpa Storage)
     if(file){
-      const storagePath=`news/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g,'_')}`;
-      const storageRef=ref(storage,storagePath);
       const prog=document.getElementById('upload-prog');
       const progBar=document.getElementById('upload-prog-bar');
-      prog.style.display='block';progBar.style.width='0%';
-      await new Promise((res,rej)=>{
-        const task=uploadBytesResumable(storageRef,file);
-        task.on('state_changed',
-          snap=>{const pct=(snap.bytesTransferred/snap.totalBytes*100).toFixed(0);progBar.style.width=pct+'%';},
-          rej,
-          async()=>{imageUrl=await getDownloadURL(task.snapshot.ref);res();}
-        );
-      });
+      prog.style.display='block';progBar.style.width='10%';
+      // Kompres gambar ke max 800px, kualitas 75%
+      imageUrl=await compressImage(file,800,0.75,(p)=>{progBar.style.width=p+'%';});
       prog.style.display='none';
     }
 
