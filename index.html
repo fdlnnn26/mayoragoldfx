@@ -5,918 +5,852 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mayora Gold FX — Premium Gold Trading</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Josefin+Sans:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:wght@200;300;400;500&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════
-   ROOT VARIABLES
-═══════════════════════════════════════ */
-:root {
-  --gold: #D4AF37;
-  --gold-light: #F0D060;
-  --gold-dark: #AA771C;
-  --gold-dim: rgba(212,175,55,0.15);
-  --gold-border: rgba(212,175,55,0.25);
-  --bg: #09090C;
-  --bg-2: #0F0F14;
-  --bg-3: #141419;
-  --bg-4: #1A1A21;
-  --text: #EDE8DA;
-  --text-muted: #8A8577;
-  --text-dim: #4A4840;
-  --green: #4ade80;
-  --red: #f87171;
-  --border: rgba(212,175,55,0.15);
-  --border-h: rgba(212,175,55,0.4);
+:root{
+  --gold:#C9A84C;--gold-l:#E8C96A;--gold-d:#8B6914;--gold-xd:#5A4209;
+  --gold-glow:rgba(201,168,76,0.18);--gold-border:rgba(201,168,76,0.22);
+  --bg:#06060A;--bg2:#0C0C12;--bg3:#111118;--bg4:#181820;--bg5:#1E1E28;
+  --text:#F0EAD6;--text2:#A09880;--text3:#5A5448;
+  --green:#3DBA7A;--red:#E05A5A;
+  --card-border:rgba(201,168,76,0.14);
+  --nav-h:64px;
+  --radius:4px;
 }
-
-/* ═══════════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Josefin Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-weight:300}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-weight:300}
 a{text-decoration:none;color:inherit}
-input,select,textarea,button{font-family:inherit;outline:none}
-::-webkit-scrollbar{width:3px}
+button,input,select,textarea{font-family:inherit;outline:none}
+::selection{background:rgba(201,168,76,0.25);color:var(--text)}
+::-webkit-scrollbar{width:2px}
 ::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:4px}
+::-webkit-scrollbar-thumb{background:var(--gold-d)}
 
-/* ═══════════════════════════════════════
-   PARTICLES CANVAS
-═══════════════════════════════════════ */
-#particle-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5}
+/* ──────────────────────────
+   CANVAS BACKGROUND
+────────────────────────── */
+#bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4}
 
-/* ═══════════════════════════════════════
-   LOADING SCREEN
-═══════════════════════════════════════ */
-#loading-screen{
-  position:fixed;inset:0;background:var(--bg);z-index:9000;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
-  transition:opacity .5s;
+/* ──────────────────────────
+   LOADING
+────────────────────────── */
+#loader{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+  transition:opacity .6s,visibility .6s;
 }
-.loading-logo{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:500;letter-spacing:.2em;color:var(--text)}
-.loading-logo span{color:var(--gold)}
-.loading-bar-wrap{width:180px;height:1px;background:rgba(212,175,55,0.1)}
-.loading-bar{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));width:0%;transition:width .35s ease}
-.loading-txt{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim)}
-
-/* ═══════════════════════════════════════
-   AUTH SCREEN
-═══════════════════════════════════════ */
-#auth-screen{
-  position:fixed;inset:0;background:var(--bg);z-index:8000;
-  display:none;align-items:center;justify-content:center;padding:16px;
+#loader.out{opacity:0;visibility:hidden}
+.loader-mark{
+  width:64px;height:64px;border-radius:50%;
+  border:1px solid var(--gold-border);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  animation:rotateMark 3s linear infinite;
 }
-.auth-wrap{width:100%;max-width:420px}
-.auth-logo{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;letter-spacing:.2em;text-align:center;margin-bottom:4px}
-.auth-logo span{color:var(--gold)}
-.auth-sub{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);text-align:center;margin-bottom:36px}
-.auth-card{background:var(--bg-3);border:1px solid var(--border);padding:28px}
-.auth-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:24px}
-.auth-tab{flex:1;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);padding:10px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
-.auth-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.auth-form{display:none}.auth-form.active{display:block}
-.auth-group{margin-bottom:14px}
-.auth-label{display:block;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px}
-.auth-input{width:100%;background:var(--bg-4);border:1px solid var(--border);color:var(--text);font-size:.82rem;padding:10px 12px;transition:border-color .2s}
-.auth-input::placeholder{color:var(--text-dim)}
-.auth-input:focus{border-color:var(--gold)}
-.auth-btn{
-  width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-  color:var(--bg);font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
-  border:none;padding:13px;cursor:pointer;transition:opacity .2s;margin-top:8px;
-  display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px
+.loader-mark::before{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid transparent;border-top-color:var(--gold);
+  animation:rotateMark 1.4s linear infinite reverse;
 }
-.auth-btn:hover{opacity:.9}
-.auth-btn:disabled{opacity:.5;cursor:not-allowed}
-.auth-err{font-size:.65rem;color:var(--red);letter-spacing:.05em;margin-top:8px;min-height:14px;line-height:1.5}
-.auth-ok{font-size:.65rem;color:var(--green);margin-top:8px}
-.auth-info{font-size:.65rem;color:var(--text-dim);text-align:center;margin-top:16px;line-height:2;letter-spacing:.05em}
-.auth-info span{color:var(--gold);opacity:.6}
-.spinner-sm{width:14px;height:14px;border:2px solid rgba(0,0,0,0.2);border-top-color:var(--bg);border-radius:50%;animation:spin .6s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.loader-m{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:600;color:var(--gold);line-height:1}
+.loader-name{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--text2)}
+.loader-line{width:120px;height:1px;background:rgba(201,168,76,0.1);position:relative;overflow:hidden}
+.loader-line::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  animation:scanLine 1.4s ease-in-out infinite;
+}
+@keyframes rotateMark{to{transform:rotate(360deg)}}
+@keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
-/* ═══════════════════════════════════════
+/* ──────────────────────────
    NAVBAR
-═══════════════════════════════════════ */
-#navbar{
+────────────────────────── */
+#nav{
   position:fixed;top:0;left:0;right:0;z-index:500;
-  padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  height:var(--nav-h);padding:0 40px;
+  display:flex;align-items:center;justify-content:space-between;
   transition:all .35s;
 }
-#navbar.scrolled{
-  background:rgba(9,9,12,0.92);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  padding:12px 32px;
+#nav.solid{
+  background:rgba(6,6,10,0.94);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--card-border);
 }
-.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
-.nav-logo-mark{
-  width:34px;height:34px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+.nav-logo{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
+.nav-mark{
+  width:36px;height:36px;border-radius:50%;
+  background:conic-gradient(from 0deg,var(--gold-d),var(--gold),var(--gold-l),var(--gold),var(--gold-d));
   display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--bg);
-  box-shadow:0 0 12px rgba(212,175,55,0.35);
+  font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--bg);
+  position:relative;flex-shrink:0;
 }
-.nav-logo-text .top{font-size:.65rem;letter-spacing:.25em;font-weight:600;color:var(--gold)}
-.nav-logo-text .bot{font-size:.55rem;letter-spacing:.25em;color:var(--text-dim);line-height:1}
-.nav-links{display:flex;align-items:center;gap:28px}
-.nav-link{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);transition:color .2s;position:relative}
-.nav-link::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--gold);transition:width .3s}
-.nav-link:hover{color:var(--gold)}
-.nav-link:hover::after{width:100%}
-.nav-cta{
-  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-  color:var(--bg);font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  border:none;padding:9px 18px;cursor:pointer;
-  animation:pulseGlow 2.5s ease-in-out infinite;
+.nav-mark::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid var(--gold-border)}
+.nav-brandname{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.15em;font-weight:500}
+.nav-brandname b{color:var(--gold)}
+.nav-center{display:flex;align-items:center;gap:6px}
+.nav-link{
+  font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);
+  padding:7px 14px;border-radius:2px;
+  cursor:pointer;transition:color .2s;position:relative;border:none;background:none;
 }
-.nav-user-btn{
-  background:transparent;border:1px solid var(--border);color:var(--text-muted);
-  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .2s
+.nav-link::after{content:'';position:absolute;left:14px;right:14px;bottom:4px;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s;transform-origin:center}
+.nav-link:hover,.nav-link.active{color:var(--gold)}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-btn-login{
+  background:transparent;border:1px solid var(--gold-border);color:var(--text2);
+  font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:8px 16px;
+  cursor:pointer;transition:all .25s;border-radius:var(--radius);
 }
-.nav-user-btn:hover{border-color:var(--gold);color:var(--gold)}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
-.hamburger span{display:block;width:22px;height:1px;background:var(--gold);transition:all .3s}
-@keyframes pulseGlow{
-  0%,100%{box-shadow:0 0 10px rgba(212,175,55,0.4),0 0 20px rgba(212,175,55,0.15)}
-  50%{box-shadow:0 0 20px rgba(212,175,55,0.7),0 0 40px rgba(212,175,55,0.3)}
+.nav-btn-login:hover{border-color:var(--gold);color:var(--gold)}
+.nav-btn-vip{
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  border:none;color:var(--bg);font-size:.62rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;
+  padding:8px 18px;cursor:pointer;border-radius:var(--radius);
+  box-shadow:0 0 20px rgba(201,168,76,0.3);transition:all .25s;
 }
+.nav-btn-vip:hover{box-shadow:0 0 32px rgba(201,168,76,0.5);transform:translateY(-1px)}
+.nav-user-wrap{display:flex;align-items:center;gap:8px}
+.nav-avatar{
+  width:32px;height:32px;border-radius:50%;border:1px solid var(--gold-border);
+  background:var(--bg4);display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);cursor:pointer;
+}
+.nav-username{font-size:.7rem;color:var(--text2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vip-pill{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 7px;background:rgba(201,168,76,0.12);border:1px solid var(--gold-border);color:var(--gold);border-radius:2px}
+.btn-logout{background:none;border:1px solid rgba(90,82,72,0.4);color:var(--text3);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.btn-logout:hover{border-color:rgba(224,90,90,0.4);color:var(--red)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:1px;background:var(--gold);transition:.3s}
 
-/* Mobile menu */
-#mobile-menu{
-  position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);
-  z-index:490;display:none;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+/* Mobile nav */
+#mob-nav{
+  display:none;position:fixed;inset:0;top:var(--nav-h);background:rgba(6,6,10,0.97);
+  backdrop-filter:blur(20px);z-index:490;flex-direction:column;align-items:center;justify-content:center;gap:32px;
 }
-#mobile-menu.open{display:flex}
-.mob-link{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;letter-spacing:.12em;color:var(--text);transition:color .2s}
-.mob-link:hover{color:var(--gold)}
+#mob-nav.open{display:flex}
+.mob-link{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--text);cursor:pointer;transition:color .2s}
+.mob-link:hover,.mob-link.active{color:var(--gold)}
 
-/* ═══════════════════════════════════════
-   HERO
-═══════════════════════════════════════ */
-#hero{
-  min-height:100vh;display:flex;align-items:center;position:relative;
-  background:radial-gradient(ellipse 90% 70% at 50% -10%,rgba(212,175,55,0.06) 0%,transparent 65%);
-  padding-top:80px;
-}
-.hero-inner{max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
-.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.eyebrow-line{width:24px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+/* ──────────────────────────
+   PAGES
+────────────────────────── */
+.page{display:none;min-height:100vh;position:relative;z-index:1;padding-top:var(--nav-h)}
+.page.active{display:block}
+
+/* ──────────────────────────
+   SHARED SECTIONS
+────────────────────────── */
+.eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.eyebrow-line{height:1px;width:28px;background:linear-gradient(90deg,transparent,var(--gold))}
 .eyebrow-line.r{background:linear-gradient(90deg,var(--gold),transparent)}
-.eyebrow-text{font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
-.hero-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.8rem,6vw,5rem);
-  font-weight:600;line-height:1.08;
-  letter-spacing:-.01em;
-  margin-bottom:20px;
-}
-.hero-title .gold{
-  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold-dark) 100%);
+.eyebrow-txt{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:500;line-height:1.15;margin-bottom:12px}
+.section-sub{font-size:.82rem;color:var(--text2);line-height:1.95;letter-spacing:.03em}
+.gold-text{
+  background:linear-gradient(120deg,var(--gold-d),var(--gold),var(--gold-l));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.hero-sub{
-  font-size:.85rem;color:var(--text-muted);line-height:1.9;
-  max-width:480px;margin-bottom:36px;font-weight:300;letter-spacing:.04em
-}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px}
-.btn-primary{
-  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold-dark));
-  color:var(--bg);font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  border:none;padding:14px 32px;cursor:pointer;animation:pulseGlow 2.5s ease-in-out infinite;transition:transform .2s
-}
-.btn-primary:hover{transform:translateY(-2px)}
-.btn-secondary{
-  background:transparent;border:1px solid var(--gold-border);color:var(--gold);
-  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:14px 24px;cursor:pointer;transition:all .2s
-}
-.btn-secondary:hover{background:rgba(212,175,55,0.05)}
-.hero-stats{display:flex;gap:40px;flex-wrap:wrap}
-.stat-item .val{
-  font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;line-height:1;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
-}
-.stat-item .lbl{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-top:5px}
 
-/* Decorative coin */
-.hero-deco{
-  position:absolute;right:-60px;top:50%;transform:translateY(-50%);
-  width:480px;height:480px;border-radius:50%;
-  background:radial-gradient(circle at 38% 35%,rgba(240,208,96,0.12) 0%,rgba(212,175,55,0.04) 50%,transparent 70%);
-  border:1px solid rgba(212,175,55,0.06);
-  animation:floatY 5s ease-in-out infinite;
-  pointer-events:none;display:none
-}
-@media(min-width:1000px){.hero-deco{display:block}}
-@keyframes floatY{0%,100%{transform:translateY(-50%)}50%{transform:translateY(calc(-50% - 14px))}}
-.hero-ring{
-  position:absolute;right:-80px;top:50%;transform:translateY(-50%);
-  width:520px;height:520px;border-radius:50%;
-  border:1px solid rgba(212,175,55,0.04);
-  animation:rotateRing 30s linear infinite;pointer-events:none;display:none
-}
-@media(min-width:1000px){.hero-ring{display:block}}
-@keyframes rotateRing{from{transform:translateY(-50%) rotate(0deg)}to{transform:translateY(-50%) rotate(360deg)}}
-.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.4}
-.scroll-hint span{font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold)}
-.scroll-line{width:1px;height:32px;background:linear-gradient(180deg,var(--gold),transparent)}
+/* ──────────────────────────
+   PAGE: BERANDA (HOME)
+────────────────────────── */
 
-/* ═══════════════════════════════════════
-   SECTIONS SHARED
-═══════════════════════════════════════ */
-.section{padding:100px 32px;position:relative}
-.section-inner{max-width:1200px;margin:0 auto}
-.section-eyebrow{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}
-.section-title{
+/* Hero */
+#hero{
+  min-height:calc(100vh - var(--nav-h));
+  display:flex;align-items:center;
+  padding:80px 40px 60px;
+  position:relative;
+  background:radial-gradient(ellipse 80% 60% at 60% -10%,rgba(201,168,76,0.05) 0%,transparent 60%);
+}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.hero-left{}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.hero-kicker{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.85}
+.hero-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.8rem,3.5vw,3rem);font-weight:600;line-height:1.2;
-  text-align:center;margin-bottom:12px
+  font-size:clamp(3rem,5vw,4.8rem);
+  font-weight:600;line-height:1.04;
+  letter-spacing:-.02em;margin-bottom:22px;
 }
-.section-sub{font-size:.8rem;color:var(--text-muted);text-align:center;max-width:480px;margin:0 auto 60px;line-height:1.9;letter-spacing:.03em}
-.gold-txt{
-  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold-dark));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+.hero-desc{font-size:.86rem;color:var(--text2);line-height:2;max-width:440px;margin-bottom:36px;letter-spacing:.02em}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
+.btn-hero-primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold-l),var(--gold-d));
+  border:none;color:var(--bg);
+  font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  padding:14px 36px;cursor:pointer;border-radius:var(--radius);
+  box-shadow:0 0 30px rgba(201,168,76,0.35);
+  transition:all .25s;position:relative;overflow:hidden;
 }
+.btn-hero-primary::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.08);opacity:0;transition:.25s}
+.btn-hero-primary:hover::after{opacity:1}
+.btn-hero-primary:hover{box-shadow:0 0 50px rgba(201,168,76,0.55);transform:translateY(-2px)}
+.btn-hero-sec{
+  background:transparent;border:1px solid var(--gold-border);color:var(--gold);
+  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:14px 28px;cursor:pointer;border-radius:var(--radius);transition:all .25s;
+}
+.btn-hero-sec:hover{background:var(--gold-glow)}
+.hero-stats{display:flex;gap:36px;flex-wrap:wrap}
+.hero-stat .v{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;line-height:1;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat .l{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-top:6px}
 
-/* ═══════════════════════════════════════
-   ABOUT CARDS
-═══════════════════════════════════════ */
+/* Floating price card */
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center}
+.hero-chart-card{
+  width:100%;max-width:440px;
+  background:rgba(17,17,24,0.85);border:1px solid var(--card-border);
+  backdrop-filter:blur(20px);padding:24px;border-radius:8px;
+  box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.06);
+  animation:floatCard 4s ease-in-out infinite;
+}
+@keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hcc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.hcc-sym{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.12em;color:var(--text)}
+.hcc-live{display:flex;align-items:center;gap:6px;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.hcc-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.hcc-price{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;line-height:1;margin-bottom:4px;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hcc-change{font-size:.72rem;letter-spacing:.06em}
+.hcc-svg{width:100%;height:80px;margin:20px 0}
+.hcc-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--card-border)}
+.hcc-metric{background:var(--bg3);padding:12px;text-align:center}
+.hcc-metric-l{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.hcc-metric-v{font-family:'Cormorant Garamond',serif;font-size:.98rem}
+
+/* Marquee ticker */
+.ticker-wrap{background:rgba(12,12,18,0.95);border-top:1px solid var(--card-border);border-bottom:1px solid var(--card-border);padding:9px 0;overflow:hidden;position:relative}
+.ticker-inner{display:flex;animation:tickerMove 30s linear infinite;white-space:nowrap}
+.ticker-inner:hover{animation-play-state:paused}
+.ticker-item{display:flex;align-items:center;gap:8px;padding:0 28px;flex-shrink:0}
+.ti-sym{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.ti-price{font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--text)}
+.ti-sep{color:var(--text3);opacity:.3;font-size:.8rem}
+@keyframes tickerMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* About section */
+#s-about{padding:100px 40px;background:var(--bg2)}
+.about-inner{max-width:1200px;margin:0 auto}
+.about-header{text-align:center;margin-bottom:72px}
 .about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .about-card{
-  background:rgba(20,20,25,0.6);border:1px solid var(--border);
-  padding:32px 28px;backdrop-filter:blur(12px);
-  transition:all .35s;position:relative;overflow:hidden
+  padding:36px 28px;background:var(--bg3);
+  border:1px solid var(--card-border);border-radius:8px;
+  transition:all .35s;position:relative;overflow:hidden;cursor:default;
 }
-.about-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .35s
-}
-.about-card:hover{transform:translateY(-5px);border-color:var(--border-h)}
+.about-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:.35s}
+.about-card:hover{transform:translateY(-6px);border-color:rgba(201,168,76,0.35);background:var(--bg4)}
 .about-card:hover::before{opacity:1}
-.card-icon{
-  width:44px;height:44px;border:1px solid rgba(212,175,55,0.2);
-  display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--gold)
+.ac-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;color:var(--gold);opacity:.15;position:absolute;top:16px;right:20px;line-height:1}
+.ac-icon{
+  width:48px;height:48px;border:1px solid rgba(201,168,76,0.2);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:24px;
+  background:rgba(201,168,76,0.04);color:var(--gold);
 }
-.card-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;margin-bottom:10px}
-.card-desc{font-size:.75rem;color:var(--text-muted);line-height:1.9;letter-spacing:.03em}
+.ac-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500;margin-bottom:10px}
+.ac-desc{font-size:.75rem;color:var(--text2);line-height:1.95;letter-spacing:.02em}
 
-/* ═══════════════════════════════════════
-   VIP SECTION
-═══════════════════════════════════════ */
-#vip-section{background:var(--bg-2)}
-.vip-card{
-  max-width:820px;margin:0 auto;
-  background:linear-gradient(145deg,rgba(20,20,28,0.9),rgba(9,9,12,0.98));
-  border:1px solid rgba(212,175,55,0.3);
-  box-shadow:0 0 60px rgba(212,175,55,0.07),0 40px 80px rgba(0,0,0,0.5);
-  overflow:hidden;
-}
-.vip-ribbon{
-  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold-dark));
-  padding:12px 32px;text-align:center;
-  font-size:.6rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--bg)
-}
-.vip-body{padding:48px 40px}
-.vip-price{text-align:center;margin-bottom:40px}
-.vip-price-label{font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
-.vip-price-val{
-  font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:600;line-height:1;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
-}
-.vip-price-note{font-size:.8rem;letter-spacing:.1em;color:var(--text-muted);margin-top:6px}
-.vip-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:36px}
-.vip-benefit{
-  display:flex;align-items:flex-start;gap:14px;padding:16px;
-  background:rgba(212,175,55,0.02);border:1px solid rgba(212,175,55,0.08);
-  transition:border-color .25s
-}
-.vip-benefit:hover{border-color:rgba(212,175,55,0.3)}
-.vip-benefit-icon{
-  width:34px;height:34px;flex-shrink:0;
-  background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.15);
-  display:flex;align-items:center;justify-content:center;color:var(--gold)
-}
-.vib-title{font-size:.85rem;font-weight:400;letter-spacing:.04em;margin-bottom:3px}
-.vib-desc{font-size:.68rem;color:var(--text-dim);line-height:1.6;letter-spacing:.02em}
-.vip-cta{text-align:center}
-.wa-btn{
-  display:inline-flex;align-items:center;gap:10px;
-  background:linear-gradient(135deg,#25D366,#128C7E);
-  color:#fff;font-size:.65rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
-  border:none;padding:15px 36px;cursor:pointer;
-  animation:pulseGlow 2.5s ease-in-out infinite;transition:transform .2s
-}
-.wa-btn:hover{transform:translateY(-2px)}
-.vip-cta-note{font-size:.65rem;color:var(--text-dim);margin-top:12px;letter-spacing:.05em}
-.stars{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:10px;color:var(--gold);font-size:.6rem}
-
-/* ═══════════════════════════════════════
-   TESTIMONIALS
-═══════════════════════════════════════ */
-.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+/* Testimonials */
+#s-testi{padding:100px 40px}
+.testi-inner{max-width:1200px;margin:0 auto}
+.testi-header{text-align:center;margin-bottom:72px}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .testi-card{
-  background:rgba(14,14,19,0.7);border:1px solid var(--border);padding:24px;
-  backdrop-filter:blur(10px);transition:all .3s
+  padding:28px;background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;
+  transition:all .3s;
 }
-.testi-card:hover{border-color:var(--border-h);transform:translateY(-4px)}
-.testi-stars{color:var(--gold);font-size:.6rem;margin-bottom:12px;letter-spacing:3px}
-.testi-text{font-size:.78rem;color:var(--text-muted);line-height:1.85;font-style:italic;margin-bottom:16px;letter-spacing:.02em}
-.testi-name{font-size:.8rem;font-weight:400;letter-spacing:.06em}
-.testi-role{font-size:.6rem;color:var(--gold);margin-top:2px;letter-spacing:.12em;text-transform:uppercase}
+.testi-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-4px)}
+.testi-stars{color:var(--gold);font-size:.65rem;letter-spacing:3px;margin-bottom:14px}
+.testi-quote{font-size:.78rem;color:var(--text2);line-height:1.9;font-style:italic;margin-bottom:18px;position:relative;padding-left:16px}
+.testi-quote::before{content:'"';position:absolute;left:0;top:-4px;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);opacity:.4;line-height:1}
+.testi-author{font-size:.78rem;font-weight:400}
+.testi-role{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:3px}
 
-/* ═══════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════ */
-footer{background:rgba(5,5,7,1);border-top:1px solid var(--border);padding:60px 32px 32px}
-.footer-inner{max-width:1200px;margin:0 auto}
-.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:48px;margin-bottom:40px}
-.footer-brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.footer-brand-desc{font-size:.72rem;color:var(--text-dim);line-height:1.9;max-width:240px;letter-spacing:.03em}
-.footer-col-title{font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.footer-link{display:block;font-size:.72rem;color:var(--text-dim);margin-bottom:10px;transition:color .2s;letter-spacing:.04em}
-.footer-link:hover{color:var(--gold)}
-.disclaimer{
-  background:rgba(212,175,55,0.02);border:1px solid rgba(212,175,55,0.07);
-  padding:18px 20px;margin-bottom:28px
+/* CTA banner */
+#s-cta{padding:100px 40px;background:var(--bg2)}
+.cta-inner{max-width:900px;margin:0 auto;text-align:center}
+.cta-badge{display:inline-block;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid var(--gold-border);padding:6px 16px;border-radius:2px;margin-bottom:24px}
+.cta-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.8rem);font-weight:600;margin-bottom:16px;line-height:1.15}
+.cta-sub{font-size:.84rem;color:var(--text2);line-height:1.9;max-width:540px;margin:0 auto 40px;letter-spacing:.03em}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.wa-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,#25D366,#1a9e50);color:#fff;
+  font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;
+  border:none;padding:15px 36px;cursor:pointer;border-radius:var(--radius);
+  transition:all .25s;box-shadow:0 0 24px rgba(37,211,102,0.3);
 }
-.disclaimer-title{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-.disclaimer-text{font-size:.68rem;color:var(--text-dim);line-height:1.85;letter-spacing:.02em}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:20px;border-top:1px solid rgba(212,175,55,0.07)}
-.footer-copy{font-size:.6rem;color:var(--text-dim);letter-spacing:.1em}
-.footer-craft{font-size:.55rem;color:var(--text-dim);letter-spacing:.12em}
-.footer-craft span{color:var(--gold)}
+.wa-btn:hover{box-shadow:0 0 40px rgba(37,211,102,0.5);transform:translateY(-2px)}
+.wa-btn-pub{
+  display:inline-flex;align-items:center;gap:12px;
+  background:transparent;border:1px solid rgba(37,211,102,0.35);color:#25D366;
+  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:15px 36px;cursor:pointer;border-radius:var(--radius);transition:all .25s;
+}
+.wa-btn-pub:hover{background:rgba(37,211,102,0.07)}
 
-/* ═══════════════════════════════════════
-   APP (JOURNAL)
-═══════════════════════════════════════ */
-#app{display:none}
+/* ──────────────────────────
+   PAGE: BERITA
+────────────────────────── */
+#page-berita{padding:var(--nav-h) 40px 80px}
+.news-inner{max-width:1200px;margin:0 auto}
+.news-top{padding:60px 0 48px;text-align:center}
+.news-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px}
+.news-main{}
+.news-sidebar{}
+.news-featured{
+  background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden;
+  margin-bottom:16px;cursor:pointer;transition:all .3s;display:flex;flex-direction:column;
+}
+.news-featured:hover{border-color:rgba(201,168,76,0.35);transform:translateY(-3px)}
+.news-featured-thumb{
+  height:220px;background:linear-gradient(135deg,var(--bg4),var(--bg5));
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.nf-thumb-bg{position:absolute;inset:0;opacity:.06}
+.nf-cat{position:absolute;top:16px;left:16px;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;background:rgba(201,168,76,0.9);color:var(--bg);padding:4px 10px;border-radius:2px}
+.news-featured-body{padding:24px}
+.nf-date{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.nf-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:500;margin-bottom:10px;line-height:1.3}
+.nf-excerpt{font-size:.76rem;color:var(--text2);line-height:1.85;letter-spacing:.02em}
+.news-list{display:flex;flex-direction:column;gap:12px}
+.news-card{
+  background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;
+  padding:18px;display:flex;gap:14px;cursor:pointer;transition:all .25s;
+}
+.news-card:hover{border-color:rgba(201,168,76,0.3);background:var(--bg4)}
+.nc-cat-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px}
+.nc-body{flex:1;min-width:0}
+.nc-cat{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.nc-title{font-size:.82rem;font-weight:400;margin-bottom:5px;letter-spacing:.02em;line-height:1.45}
+.nc-date{font-size:.6rem;color:var(--text3)}
+.news-sidebar-card{
+  background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden;margin-bottom:14px;
+}
+.nsc-header{padding:14px 16px;border-bottom:1px solid var(--card-border);font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.nsc-item{
+  padding:14px 16px;border-bottom:1px solid rgba(201,168,76,0.06);
+  cursor:pointer;transition:background .2s;
+}
+.nsc-item:last-child{border-bottom:none}
+.nsc-item:hover{background:var(--bg4)}
+.nsc-title{font-size:.76rem;margin-bottom:4px;color:var(--text)}
+.nsc-meta{font-size:.58rem;color:var(--text3)}
+.price-widget{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden}
+.pw-header{padding:12px 16px;border-bottom:1px solid var(--card-border);font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.pw-row{padding:10px 16px;border-bottom:1px solid rgba(201,168,76,0.06);display:flex;justify-content:space-between;align-items:center}
+.pw-row:last-child{border-bottom:none}
+.pw-sym{font-size:.72rem;color:var(--text2)}
+.pw-price{font-family:'Cormorant Garamond',serif;font-size:.98rem}
+.pw-chg{font-size:.62rem}
+
+/* ──────────────────────────
+   PAGE: VIP
+────────────────────────── */
+#page-vip{padding:var(--nav-h) 0 80px}
+.vip-hero{
+  padding:80px 40px 100px;text-align:center;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(201,168,76,0.06),transparent 65%);
+}
+.vip-hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.07);border:1px solid var(--gold-border);padding:8px 18px;border-radius:2px;margin-bottom:28px}
+.vip-hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5vw,5rem);font-weight:600;line-height:1.08;margin-bottom:18px}
+.vip-hero-sub{font-size:.86rem;color:var(--text2);max-width:500px;margin:0 auto 48px;line-height:1.95}
+.vip-price-card{
+  max-width:860px;margin:0 auto 72px;
+  background:linear-gradient(160deg,rgba(22,22,30,0.98),rgba(12,12,18,0.99));
+  border:1px solid rgba(201,168,76,0.28);border-radius:10px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(201,168,76,0.05),0 60px 100px rgba(0,0,0,0.6);
+}
+.vpc-top{
+  background:linear-gradient(90deg,var(--gold-xd),var(--gold-d),var(--gold),var(--gold-d),var(--gold-xd));
+  padding:14px 32px;text-align:center;
+  font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.3em;color:rgba(240,234,214,0.85);
+}
+.vpc-body{padding:48px 40px}
+.vpc-price-area{text-align:center;margin-bottom:48px}
+.vpc-price-label{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.vpc-price-val{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:600;line-height:1;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.vpc-price-note{font-size:.82rem;color:var(--text3);letter-spacing:.12em;margin-top:8px}
+.vpc-benefits{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:48px}
+.vpc-benefit{
+  display:flex;gap:14px;padding:18px;
+  background:rgba(201,168,76,0.02);border:1px solid rgba(201,168,76,0.09);border-radius:6px;
+  transition:border-color .25s;
+}
+.vpc-benefit:hover{border-color:rgba(201,168,76,0.25)}
+.vpc-benefit-icon{width:36px;height:36px;background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.15);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold);flex-shrink:0}
+.vb-title{font-size:.84rem;letter-spacing:.04em;margin-bottom:3px}
+.vb-desc{font-size:.68rem;color:var(--text3);line-height:1.65}
+.vpc-cta{text-align:center}
+.vpc-note{font-size:.65rem;color:var(--text3);margin-top:12px;letter-spacing:.04em}
+.vpc-wa-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,#25D366,#1a9e50);color:#fff;
+  font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;
+  border:none;padding:17px 44px;cursor:pointer;border-radius:var(--radius);
+  transition:all .25s;box-shadow:0 0 30px rgba(37,211,102,0.35);
+}
+.vpc-wa-btn:hover{box-shadow:0 0 50px rgba(37,211,102,0.55);transform:translateY(-2px)}
+/* Journal preview */
+.vip-preview{padding:0 40px}
+.vip-preview-inner{max-width:1000px;margin:0 auto}
+.vip-preview-label{text-align:center;margin-bottom:40px}
+.journal-mockup{
+  background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.5);
+}
+.jm-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:rgba(201,168,76,0.03);border-bottom:1px solid var(--card-border)}
+.jm-dots{display:flex;gap:7px}
+.jm-dot{width:10px;height:10px;border-radius:50%}
+.jm-title{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3)}
+.jm-badge{font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--green);background:rgba(61,186,122,0.1);border:1px solid rgba(61,186,122,0.2);padding:2px 8px}
+.jm-body{padding:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.jm-stat{background:rgba(255,255,255,0.015);border:1px solid rgba(201,168,76,0.07);padding:14px;border-radius:4px}
+.jm-stat-l{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.jm-stat-v{font-family:'Cormorant Garamond',serif;font-size:1.6rem}
+.jm-chart{margin:0 20px 14px;background:rgba(255,255,255,0.01);border:1px solid rgba(201,168,76,0.07);padding:14px;border-radius:4px}
+.jm-chart-l{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.jm-table{margin:0 20px 20px;border:1px solid rgba(201,168,76,0.07);border-radius:4px;overflow:hidden}
+.jm-table-h{background:rgba(201,168,76,0.04);border-bottom:1px solid rgba(201,168,76,0.07);padding:8px 14px;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.jm-table-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,0.04);font-size:.7rem;color:var(--text2)}
+.jm-table-row:last-child{border-bottom:none}
+.jm-footer{padding:10px 20px;text-align:center;background:rgba(201,168,76,0.02);border-top:1px solid rgba(201,168,76,0.07);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+/* ──────────────────────────
+   AUTH SCREEN
+────────────────────────── */
+#page-auth{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:var(--nav-h) 20px 40px;
+  background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(201,168,76,0.04),transparent 60%);
+}
+.auth-wrap{width:100%;max-width:400px}
+.auth-logo{text-align:center;margin-bottom:32px}
+.auth-logo-mark{width:52px;height:52px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold-d),var(--gold),var(--gold-l),var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.2rem;font-weight:600;color:var(--bg);margin:0 auto 14px;box-shadow:0 0 24px rgba(201,168,76,0.3)}
+.auth-logo-name{font-family:'Cinzel',serif;font-size:.9rem;letter-spacing:.2em;font-weight:500;margin-bottom:4px}
+.auth-logo-name b{color:var(--gold)}
+.auth-logo-sub{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text3)}
+.auth-card{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.4)}
+.auth-tabs{display:flex;border-bottom:1px solid var(--card-border)}
+.auth-tab{flex:1;padding:14px;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border:none;border-bottom:2px solid transparent}
+.auth-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.auth-form{padding:24px;display:none}
+.auth-form.on{display:block}
+.auth-group{margin-bottom:14px}
+.auth-label{display:block;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+.auth-input{
+  width:100%;background:var(--bg4);border:1px solid var(--card-border);color:var(--text);
+  font-size:.8rem;font-weight:300;padding:10px 12px;border-radius:var(--radius);transition:border-color .2s;
+}
+.auth-input::placeholder{color:var(--text3)}
+.auth-input:focus{border-color:var(--gold)}
+.auth-submit{
+  width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);
+  font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  padding:13px;cursor:pointer;border-radius:var(--radius);transition:opacity .2s;margin-top:8px;
+  display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;
+}
+.auth-submit:hover{opacity:.9}
+.auth-submit:disabled{opacity:.5;cursor:not-allowed}
+.auth-err{font-size:.65rem;color:var(--red);margin-top:8px;min-height:16px;line-height:1.5}
+.auth-info{font-size:.65rem;color:var(--text3);text-align:center;padding:16px;line-height:1.9;letter-spacing:.04em}
+.spin{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--bg);border-radius:50%;animation:rotateMark .6s linear infinite}
+
+/* ──────────────────────────
+   APP: JOURNAL
+────────────────────────── */
+#page-journal{padding-top:var(--nav-h)}
 .app-header{
-  background:rgba(9,9,12,0.96);border-bottom:1px solid var(--border);
-  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  position:sticky;top:0;z-index:400;backdrop-filter:blur(20px)
+  background:rgba(6,6,10,0.96);border-bottom:1px solid var(--card-border);
+  padding:12px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  position:sticky;top:var(--nav-h);z-index:300;backdrop-filter:blur(20px);
 }
-.app-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
-.app-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;letter-spacing:.15em}
-.app-title span{color:var(--gold)}
-.app-subtitle{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim)}
-.app-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.live-badge{
-  display:flex;align-items:center;gap:6px;
-  font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);
-  border:1px solid var(--border);padding:5px 10px
-}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#4A9E6A;flex-shrink:0}
-.btn-log-trade{
-  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-  color:var(--bg);font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
-  border:none;padding:9px 16px;cursor:pointer;transition:opacity .2s
-}
-.btn-log-trade:hover{opacity:.85}
-.user-info{display:flex;align-items:center;gap:8px}
-.user-avatar{
-  width:28px;height:28px;border:1px solid var(--border);background:var(--bg-4);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:.85rem;color:var(--gold)
-}
-.user-name-txt{font-size:.62rem;color:var(--text-muted);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vip-badge-pill{
-  font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;
-  background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold)
-}
-.btn-logout-sm{
-  background:transparent;border:1px solid var(--border);color:var(--text-dim);
-  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;cursor:pointer;transition:all .2s
-}
-.btn-logout-sm:hover{border-color:rgba(192,80,80,0.4);color:var(--red)}
-.save-status{font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:5px}
-.save-dot{width:5px;height:5px;border-radius:50%;background:var(--text-dim);transition:background .3s}
-.save-status.saved .save-dot{background:#4A9E6A}
-.save-status.saving .save-dot{background:var(--gold);animation:pulseDot 1s infinite}
+.app-htitle{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400}
+.app-htitle span{color:var(--gold)}
+.app-subtitle{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.app-hright{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text2);border:1px solid var(--card-border);padding:5px 10px;border-radius:var(--radius)}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--text3)}
+.live-dot.on{background:var(--green)}
+.btn-newtrade{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.6rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;border-radius:var(--radius);transition:opacity .2s}
+.btn-newtrade:hover{opacity:.85}
+.save-status{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:5px}
+.save-dot{width:5px;height:5px;border-radius:50%;background:var(--text3)}
+.save-status.saved .save-dot{background:var(--green)}
+.save-status.saving .save-dot{background:var(--gold);animation:pulse 1s infinite}
 .save-status.error .save-dot{background:var(--red)}
-@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* Price ticker */
-.price-ticker{
-  background:rgba(9,9,12,0.95);border-bottom:1px solid var(--border);
-  padding:7px 24px;display:flex;gap:18px;overflow-x:auto;scrollbar-width:none
-}
-.price-ticker::-webkit-scrollbar{display:none}
-.ticker-item{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.ticker-sym{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
-.ticker-price{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
-.ticker-chg{font-size:.6rem}
+/* price bar */
+.pricebar{background:rgba(10,10,16,0.96);border-bottom:1px solid var(--card-border);padding:7px 28px;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;position:sticky;top:calc(var(--nav-h) + 54px);z-index:299}
+.pricebar::-webkit-scrollbar{display:none}
+.pb-item{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.pb-sym{font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.pb-price{font-family:'Cormorant Garamond',serif;font-size:.9rem}
+.pb-chg{font-size:.58rem}
 .up{color:var(--green)}.dn{color:var(--red)}
 
-/* App tabs */
-.app-tabs{display:flex;background:var(--bg-2);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;scrollbar-width:none}
+/* app tabs */
+.app-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--card-border);padding:0 28px;overflow-x:auto;scrollbar-width:none}
 .app-tabs::-webkit-scrollbar{display:none}
-.app-tab{
-  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);
-  padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0
-}
-.app-tab:hover{color:var(--text-muted)}
-.app-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.app-tab{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);padding:14px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;background:none;border:none;border-bottom:2px solid transparent}
+.app-tab:hover{color:var(--text2)}
+.app-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 
-/* App pages */
-.app-page{display:none}.app-page.active{display:block}
-.app-main{padding:24px;max-width:1400px;margin:0 auto}
+/* journal pages */
+.journal-page{display:none}.journal-page.on{display:block}
+.jmain{padding:24px 28px;max-width:1400px;margin:0 auto}
 
-/* Stats row */
+/* stats row */
 .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
-.stat-card{
-  background:var(--bg-3);border:1px solid var(--border);
-  padding:18px 16px 14px;position:relative;overflow:hidden;transition:border-color .3s
-}
-.stat-card:hover{border-color:var(--border-h)}
-.stat-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:var(--gold);opacity:0;transition:opacity .3s
-}
-.stat-card:hover::after{opacity:.4}
-.scard-label{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
-.scard-val{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;line-height:1}
-.scard-val.pos{color:var(--green)}.scard-val.neg{color:var(--red)}
-.scard-sub{font-size:.62rem;color:var(--text-dim);margin-top:6px;letter-spacing:.04em}
+.scard{background:var(--bg3);border:1px solid var(--card-border);padding:18px 16px 14px;border-radius:6px;transition:border-color .3s}
+.scard:hover{border-color:rgba(201,168,76,0.3)}
+.scard-l{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.scard-v{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;line-height:1}
+.scard-v.g{color:var(--green)}.scard-v.r{color:var(--red)}
+.scard-sub{font-size:.6rem;color:var(--text3);margin-top:6px}
+.sec-label{font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:14px;height:1px;background:var(--gold);opacity:.5}
 
-/* Section label */
-.sec-lbl{
-  font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);
-  margin-bottom:14px;display:flex;align-items:center;gap:8px
-}
-.sec-lbl::before{content:'';width:16px;height:1px;background:var(--gold);opacity:.5}
-
-/* Table */
-.tbl-wrap{background:var(--bg-3);border:1px solid var(--border);overflow:hidden;margin-bottom:24px}
-.tbl-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
-.tbl-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400}
-.tbl-filters{display:flex;gap:6px;flex-wrap:wrap}
-.filt-btn{
-  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;
-  background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:5px 10px;cursor:pointer;transition:all .2s
-}
-.filt-btn.active,.filt-btn:hover{border-color:var(--gold);color:var(--gold)}
-.tbl-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-table{width:100%;border-collapse:collapse;min-width:560px}
-th{
-  font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);
-  padding:11px 16px;text-align:left;border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap
-}
+/* table */
+.tbl-wrap{background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;margin-bottom:24px}
+.tbl-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--card-border);flex-wrap:wrap;gap:8px}
+.tbl-ttl{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400}
+.flt-btns{display:flex;gap:6px}
+.flt-btn{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid var(--card-border);color:var(--text3);padding:5px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.flt-btn.on,.flt-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tbl-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--card-border) transparent}
+table{width:100%;border-collapse:collapse;min-width:540px}
+th{font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);padding:11px 16px;text-align:left;border-bottom:1px solid var(--card-border);font-weight:400;white-space:nowrap}
 th:last-child{text-align:right}
-td{font-size:.75rem;color:var(--text-muted);padding:12px 16px;border-bottom:1px solid rgba(212,175,55,0.05);transition:background .2s;vertical-align:middle}
+td{font-size:.74rem;color:var(--text2);padding:12px 16px;border-bottom:1px solid rgba(201,168,76,0.04);transition:background .15s;vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(212,175,55,0.03)}
+tr:hover td{background:rgba(201,168,76,0.025)}
 td:last-child{text-align:right}
 .td-sym{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text)}
-
-/* Badges */
-.badge{display:inline-block;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 7px;font-weight:600}
-.badge.long{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.25)}
-.badge.short{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.25)}
-.badge.open{background:rgba(212,175,55,0.08);color:var(--gold);border:1px solid var(--border)}
-.badge.tp-hit{background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.35)}
-.badge.sl-hit{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.35)}
-.badge.limit{background:rgba(212,175,55,0.06);color:var(--gold-dark);border:1px solid rgba(212,175,55,0.18)}
-.pnl-pos{color:var(--green)}.pnl-neg{color:var(--red)}.pnl-neut{color:var(--text-muted)}
-
+.badge{display:inline-block;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:500}
+.badge.long{background:rgba(61,186,122,0.1);color:var(--green);border:1px solid rgba(61,186,122,0.25)}
+.badge.short{background:rgba(224,90,90,0.1);color:var(--red);border:1px solid rgba(224,90,90,0.25)}
+.badge.open{background:rgba(201,168,76,0.08);color:var(--gold);border:1px solid var(--card-border)}
+.badge.tp{background:rgba(61,186,122,0.15);color:var(--green);border:1px solid rgba(61,186,122,0.3)}
+.badge.sl{background:rgba(224,90,90,0.15);color:var(--red);border:1px solid rgba(224,90,90,0.3)}
+.badge.lim{background:rgba(201,168,76,0.06);color:var(--gold-d);border:1px solid var(--card-border)}
+.p-pos{color:var(--green)}.p-neg{color:var(--red)}.p-neu{color:var(--text2)}
 .row-actions{display:flex;gap:5px;justify-content:flex-end}
-.act-btn{
-  background:transparent;border:1px solid var(--border);color:var(--text-dim);
-  font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;cursor:pointer;transition:all .2s
-}
-.act-btn:hover{border-color:var(--border-h);color:var(--text)}
-.act-btn.del:hover{border-color:rgba(192,80,80,0.4);color:var(--red)}
+.act-btn{background:none;border:1px solid var(--card-border);color:var(--text3);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.act-btn:hover{border-color:rgba(201,168,76,0.35);color:var(--text)}
+.act-btn.del:hover{border-color:rgba(224,90,90,0.4);color:var(--red)}
+.empty-state{text-align:center;padding:40px;color:var(--text3)}
+.empty-icon{font-family:'Cormorant Garamond',serif;font-size:2.5rem;opacity:.12;margin-bottom:10px;color:var(--gold)}
 
-/* Bottom grid */
+/* bottom grid */
 .bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.chart-box,.bkd-box{background:var(--bg-3);border:1px solid var(--border);padding:20px}
-.chart-lbl{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px}
-.equity-svg{width:100%;height:120px}
-.bk-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.chart-box,.bkd-box{background:var(--bg3);border:1px solid var(--card-border);padding:20px;border-radius:6px}
+.chart-l{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.eq-svg{width:100%;height:120px}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(201,168,76,0.05)}
 .bk-row:last-child{border-bottom:none}
-.bk-sym{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--text)}
-.bk-bar-wrap{flex:1;margin:0 10px;height:3px;background:rgba(212,175,55,0.08)}
+.bk-sym{font-family:'Cormorant Garamond',serif;font-size:.94rem;color:var(--text)}
+.bk-bar-wrap{flex:1;margin:0 10px;height:3px;background:rgba(201,168,76,0.07)}
 .bk-bar{height:100%}
-.bk-val{font-size:.7rem;min-width:48px;text-align:right}
+.bk-val{font-size:.68rem;min-width:48px;text-align:right}
 
-/* Progress */
-.prog-wrap{width:68px}
-.prog-bar{width:100%;height:3px;background:rgba(212,175,55,0.1);margin-top:3px}
-.prog-fill{height:100%;transition:width .5s}
-.prog-txt{font-size:.55rem;color:var(--text-dim);margin-top:2px}
-
-/* Notes */
+/* notes */
 .notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.note-card{background:var(--bg-3);border:1px solid var(--border);padding:16px;transition:border-color .3s}
-.note-card:hover{border-color:var(--border-h)}
-.note-sym{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text);margin-bottom:4px}
-.note-date{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
-.note-txt{font-size:.72rem;color:var(--text-muted);line-height:1.75}
-.note-tag{font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-top:10px;opacity:.7}
+.note-card{background:var(--bg3);border:1px solid var(--card-border);padding:16px;border-radius:6px;transition:border-color .25s}
+.note-card:hover{border-color:rgba(201,168,76,0.3)}
+.note-sym{font-family:'Cormorant Garamond',serif;font-size:1.05rem;margin-bottom:4px}
+.note-date{font-size:.54rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.note-txt{font-size:.72rem;color:var(--text2);line-height:1.75}
+.note-tag{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:10px;opacity:.7}
 
-/* Account */
-.acc-section{background:var(--bg-3);border:1px solid var(--border);padding:20px;margin-bottom:14px}
-.acc-sec-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:16px;font-weight:400}
-.acc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+/* acc */
+.acc-sec{background:var(--bg3);border:1px solid var(--card-border);padding:20px;border-radius:6px;margin-bottom:14px}
+.acc-sec-t{font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:16px;font-weight:400}
+.acc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--card-border);flex-wrap:wrap;gap:8px}
 .acc-row:last-child{border-bottom:none}
-.acc-key{font-size:.68rem;letter-spacing:.08em;color:var(--text-muted)}
-.acc-val{font-size:.68rem;color:var(--text-dim)}
-.btn-danger{
-  background:transparent;border:1px solid rgba(192,80,80,0.25);color:var(--red);
-  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;cursor:pointer;transition:all .2s
-}
-.btn-danger:hover{background:rgba(192,80,80,0.08);border-color:rgba(192,80,80,0.5)}
-
-/* VIP lock overlay */
-.vip-lock{
-  background:var(--bg-3);border:1px solid var(--border);
-  padding:60px 32px;text-align:center;margin-top:24px
-}
-.vip-lock-icon{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);opacity:.2;margin-bottom:16px}
-.vip-lock-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:10px}
-.vip-lock-sub{font-size:.72rem;color:var(--text-dim);margin-bottom:24px;line-height:1.9;letter-spacing:.04em}
-.vip-lock-btn{
-  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-  color:var(--bg);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  border:none;padding:12px 28px;cursor:pointer;animation:pulseGlow 2.5s ease-in-out infinite
-}
+.acc-k{font-size:.68rem;color:var(--text2)}
+.acc-v{font-size:.68rem;color:var(--text3)}
+.btn-danger{background:none;border:1px solid rgba(192,80,80,0.25);color:var(--red);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.btn-danger:hover{background:rgba(192,80,80,0.08)}
+.vip-lock-box{background:var(--bg3);border:1px solid var(--card-border);padding:60px 32px;text-align:center;border-radius:8px;margin-top:24px}
+.vll-icon{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);opacity:.2;margin-bottom:16px}
+.vll-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:10px}
+.vll-sub{font-size:.72rem;color:var(--text3);margin-bottom:24px;line-height:1.9}
+.vll-btn{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:12px 28px;cursor:pointer;border-radius:var(--radius)}
 
 /* Modal */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:600;align-items:center;justify-content:center;padding:16px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:700;align-items:center;justify-content:center;padding:16px}
 .overlay.open{display:flex}
-.modal{background:var(--bg-2);border:1px solid var(--border);width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
-.modal-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400}
-.modal-close{background:transparent;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:2px 6px}
-.modal-close:hover{color:var(--text)}
+.modal{background:var(--bg2);border:1px solid var(--card-border);width:100%;max-width:480px;max-height:90vh;overflow-y:auto;border-radius:8px}
+.modal-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--card-border);display:flex;justify-content:space-between;align-items:center}
+.modal-ttl{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400}
+.modal-x{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;padding:2px 6px}
 .modal-body{padding:20px 24px}
 .form-group{margin-bottom:13px}
-.form-label{display:block;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
-.form-input{
-  width:100%;background:var(--bg-3);border:1px solid var(--border);color:var(--text);
-  font-size:.78rem;font-weight:300;padding:9px 11px;transition:border-color .2s;appearance:none
-}
-.form-input::placeholder{color:var(--text-dim)}
+.form-label{display:block;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--card-border);color:var(--text);font-size:.78rem;font-weight:300;padding:9px 11px;border-radius:var(--radius);transition:border-color .2s;appearance:none}
+.form-input::placeholder{color:var(--text3)}
 .form-input:focus{border-color:var(--gold)}
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .modal-foot{padding:12px 24px 18px;display:flex;gap:8px;justify-content:flex-end}
-.btn-cancel{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:9px 14px;cursor:pointer;transition:all .2s}
-.btn-cancel:hover{border-color:var(--border-h);color:var(--text)}
-.btn-save{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--bg);font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;border:none;padding:9px 22px;cursor:pointer;transition:opacity .2s}
-.btn-save:hover{opacity:.88}
+.btn-cancel-m{background:none;border:1px solid var(--card-border);color:var(--text2);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;padding:9px 14px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.btn-save-m{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:9px 22px;cursor:pointer;border-radius:var(--radius);transition:opacity .2s}
+.btn-save-m:hover{opacity:.88}
 
 /* Toast */
-.toast{
-  position:fixed;bottom:24px;right:24px;z-index:800;
-  background:var(--bg-3);border:1px solid var(--border);
-  padding:12px 16px;display:flex;align-items:center;gap:10px;
-  opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;max-width:260px
-}
+.toast{position:fixed;bottom:24px;right:24px;z-index:900;background:var(--bg3);border:1px solid var(--card-border);padding:12px 16px;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;max-width:260px;border-radius:6px}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.toast-sym{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
-.toast-msg{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-top:2px}
+.toast-sym{font-family:'Cormorant Garamond',serif;font-size:.9rem}
+.toast-msg{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-top:2px}
 
-/* Empty states */
-.empty-state{text-align:center;padding:40px;color:var(--text-dim)}
-.empty-icon{font-family:'Cormorant Garamond',serif;font-size:2.5rem;opacity:.15;margin-bottom:10px;color:var(--gold)}
+/* prog */
+.prog-wrap{width:68px}
+.prog-bar{width:100%;height:3px;background:rgba(201,168,76,0.1);margin-top:3px;border-radius:2px}
+.prog-fill{height:100%;border-radius:2px}
+.prog-txt{font-size:.52rem;color:var(--text3);margin-top:2px}
 
-/* Reveal animation */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
+/* ──────────────────────────
+   FOOTER
+────────────────────────── */
+footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:60px 40px 32px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px;text-decoration:none}
+.footer-desc{font-size:.72rem;color:var(--text3);line-height:1.9;max-width:240px}
+.footer-col-t{font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.footer-link{display:block;font-size:.72rem;color:var(--text3);margin-bottom:10px;transition:color .2s;cursor:pointer}
+.footer-link:hover{color:var(--gold)}
+.disclaimer{background:rgba(201,168,76,0.02);border:1px solid rgba(201,168,76,0.07);padding:18px 20px;margin-bottom:28px;border-radius:4px}
+.disclaimer-t{font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.disclaimer-body{font-size:.68rem;color:var(--text3);line-height:1.85}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:20px;border-top:1px solid rgba(201,168,76,0.07)}
+.footer-copy{font-size:.6rem;color:var(--text3);letter-spacing:.08em}
+.footer-craft{font-size:.54rem;color:var(--text3);letter-spacing:.1em}
+.footer-craft span{color:var(--gold)}
 
-/* ═══════════════════════════════════════
+/* ──────────────────────────
+   REVEAL
+────────────────────────── */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+/* ──────────────────────────
    RESPONSIVE
-═══════════════════════════════════════ */
-@media(max-width:900px){
-  .about-grid,.testi-grid{grid-template-columns:1fr}
-  .vip-grid{grid-template-columns:1fr}
-  .footer-grid{grid-template-columns:1fr}
+────────────────────────── */
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .hero-right{display:none}
+  .about-grid,.testi-grid{grid-template-columns:1fr 1fr}
+  .news-grid{grid-template-columns:1fr}
+  .news-sidebar{display:none}
+  .vpc-benefits{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .stats-row .stat-card:last-child{grid-column:1/-1}
+  .stats-row .scard:last-child{grid-column:1/-1}
   .bottom-grid{grid-template-columns:1fr}
-  .notes-grid{grid-template-columns:1fr}
-  .hero-sub{max-width:100%}
+  .notes-grid{grid-template-columns:1fr 1fr}
+  .jm-body{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:640px){
-  .nav-links,.nav-cta,.nav-user-btn{display:none}
+  #nav{padding:0 20px}
+  .nav-center,.nav-btn-vip{display:none}
   .hamburger{display:flex}
-  #navbar{padding:12px 20px}
-  .section{padding:72px 20px}
-  .hero-inner{padding:0 20px}
-  .hero-stats{gap:24px}
-  .vip-body{padding:28px 20px}
-  .app-main{padding:16px}
+  #hero{padding:60px 20px 48px}
+  .about-grid,.testi-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr}
-  .stats-row .stat-card:last-child{grid-column:auto}
-  .form-row-2{grid-template-columns:1fr}
-  .modal-body{padding:14px 16px}
-  .modal-hdr{padding:14px 16px 12px}
-  .modal-foot{padding:10px 16px 14px}
+  .stats-row .scard:last-child{grid-column:auto}
+  .form-row2{grid-template-columns:1fr}
+  .notes-grid{grid-template-columns:1fr}
+  .jm-body{grid-template-columns:1fr 1fr}
+  .vpc-body{padding:28px 20px}
+  .vip-hero{padding:60px 20px 72px}
+  .vip-preview{padding:0 20px}
   .toast{bottom:14px;right:12px;left:12px;max-width:none}
-  .user-name-txt{display:none}
-  .save-status{display:none}
+  .nav-username,.save-status{display:none}
+  #page-berita,#page-vip{padding-left:20px;padding-right:20px}
 }
 </style>
 </head>
 <body>
 
-<!-- PARTICLES -->
-<canvas id="particle-canvas"></canvas>
+<canvas id="bg-canvas"></canvas>
 
-<!-- LOADING SCREEN -->
-<div id="loading-screen">
-  <div class="loading-logo">MAYORA <span>GOLD FX</span></div>
-  <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
-  <div class="loading-txt" id="loading-txt">Initializing</div>
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-mark"><span class="loader-m">M</span></div>
+  <div class="loader-name">MAYORA GOLD FX</div>
+  <div class="loader-line"></div>
 </div>
 
-<!-- AUTH SCREEN -->
-<div id="auth-screen">
-  <div class="auth-wrap">
-    <div class="auth-logo">MAYORA <span>GOLD FX</span></div>
-    <div class="auth-sub">Member Portal — VIP Access</div>
-    <div class="auth-card">
-      <div class="auth-tabs">
-        <div class="auth-tab active" onclick="switchAuthTab('login')">Sign In</div>
-        <div class="auth-tab" onclick="switchAuthTab('register')">Register</div>
-      </div>
-      <div class="auth-form active" id="form-login">
-        <div class="auth-group">
-          <label class="auth-label">Email</label>
-          <input class="auth-input" id="login-email" type="email" placeholder="email@kamu.com" autocomplete="email">
-        </div>
-        <div class="auth-group">
-          <label class="auth-label">Password</label>
-          <input class="auth-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password">
-        </div>
-        <div class="auth-err" id="login-err"></div>
-        <button class="auth-btn" id="login-btn" onclick="doLogin()"><span>Sign In →</span></button>
-      </div>
-      <div class="auth-form" id="form-register">
-        <div class="auth-group">
-          <label class="auth-label">Nama</label>
-          <input class="auth-input" id="reg-name" type="text" placeholder="Nama kamu">
-        </div>
-        <div class="auth-group">
-          <label class="auth-label">Email</label>
-          <input class="auth-input" id="reg-email" type="email" placeholder="email@kamu.com" autocomplete="email">
-        </div>
-        <div class="auth-group">
-          <label class="auth-label">Password</label>
-          <input class="auth-input" id="reg-pass" type="password" placeholder="min 6 karakter" autocomplete="new-password">
-        </div>
-        <div class="auth-err" id="reg-err"></div>
-        <button class="auth-btn" id="reg-btn" onclick="doRegister()"><span>Buat Akun →</span></button>
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" onclick="goPage('home')">
+    <div class="nav-mark">M</div>
+    <div class="nav-brandname">MAYORA <b>GOLD FX</b></div>
+  </a>
+  <div class="nav-center">
+    <button class="nav-link active" id="nl-home" onclick="goPage('home')">Beranda</button>
+    <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
+    <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
+    <button class="nav-link" id="nl-journal" onclick="requireVipNav()">Journal</button>
+  </div>
+  <div class="nav-right">
+    <div id="nav-guest">
+      <div style="display:flex;gap:10px">
+        <button class="nav-btn-login" onclick="goPage('auth')">Login</button>
+        <button class="nav-btn-vip" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
       </div>
     </div>
-    <div class="auth-info"><span>✦</span> Data tersimpan di cloud · Login dari device manapun<br>Akun VIP diaktifkan oleh Admin setelah join grup</div>
+    <div id="nav-loggedin" style="display:none">
+      <div class="nav-user-wrap">
+        <div class="nav-avatar" id="nav-avatar">–</div>
+        <span class="nav-username" id="nav-uname">–</span>
+        <span class="vip-pill" id="nav-vip-pill" style="display:none">VIP ✦</span>
+        <button class="btn-logout" onclick="doLogout()">Keluar</button>
+      </div>
+    </div>
+    <button class="hamburger" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
   </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div id="mob-nav">
+  <span class="mob-link" onclick="goPage('home');toggleMob()">Beranda</span>
+  <span class="mob-link" onclick="goPage('berita');toggleMob()">Berita</span>
+  <span class="mob-link" onclick="goPage('vip');toggleMob()">VIP</span>
+  <span class="mob-link" onclick="requireVipNav();toggleMob()">Journal</span>
+  <button class="btn-hero-primary" style="margin-top:8px" onclick="goPage('auth');toggleMob()">Login Member →</button>
 </div>
 
-<!-- ════════════════════════════
-     LANDING PAGE
-════════════════════════════ -->
-<div id="landing">
-
-  <!-- NAVBAR -->
-  <nav id="navbar">
-    <div class="nav-logo" onclick="scrollToSection('hero')">
-      <div class="nav-logo-mark">M</div>
-      <div class="nav-logo-text">
-        <div class="top">MAYORA</div>
-        <div class="bot">GOLD FX</div>
-      </div>
-    </div>
-    <div class="nav-links">
-      <a class="nav-link" href="#about">Tentang Kami</a>
-      <a class="nav-link" href="#features">Fitur</a>
-      <a class="nav-link" href="#vip-section">VIP</a>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <button class="nav-user-btn" id="nav-login-btn" onclick="showAuthFromLanding()">Login Member</button>
-      <button class="nav-cta" onclick="scrollToSection('vip-section')">JOIN VIP GRATIS ✦</button>
-    </div>
-    <div class="hamburger" id="hamburger" onclick="toggleMobile()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <!-- MOBILE MENU -->
-  <div id="mobile-menu">
-    <a class="mob-link" href="#about" onclick="toggleMobile()">Tentang</a>
-    <a class="mob-link" href="#features" onclick="toggleMobile()">Fitur</a>
-    <a class="mob-link" href="#vip-section" onclick="toggleMobile()">VIP</a>
-    <button class="btn-primary" onclick="showAuthFromLanding();toggleMobile()">Login Member →</button>
-  </div>
+<!-- ═══════════════
+     PAGE: BERANDA
+═══════════════ -->
+<div class="page active" id="page-home">
 
   <!-- HERO -->
   <section id="hero">
-    <div class="hero-ring"></div>
-    <div class="hero-deco"></div>
     <div class="hero-inner">
-      <div class="hero-eyebrow">
-        <div class="eyebrow-line"></div>
-        <span class="eyebrow-text">Premium Gold Trading</span>
-        <div class="eyebrow-line r"></div>
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <div style="width:24px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))"></div>
+          <span class="hero-kicker">Premium Gold Trading Indonesia</span>
+        </div>
+        <h1 class="hero-title">Level Up Your<br><span class="gold-text">Trading</span><br>with Mayora Gold FX</h1>
+        <p class="hero-desc">Ekosistem trading emas premium — sinyal akurasi tinggi, edukasi eksklusif, dan komunitas VIP yang bisa kamu akses gratis.</p>
+        <div class="hero-actions">
+          <button class="btn-hero-primary" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
+          <button class="btn-hero-sec" onclick="goPage('berita')">Baca Berita ↓</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="v" id="h-wr">87%</div><div class="l">Win Rate</div></div>
+          <div class="hero-stat"><div class="v">500+</div><div class="l">Member Aktif</div></div>
+          <div class="hero-stat"><div class="v">2 Thn</div><div class="l">Track Record</div></div>
+        </div>
       </div>
-      <h1 class="hero-title">
-        Level Up Your<br>
-        <span class="gold">Trading</span> with<br>
-        Mayora Gold FX
-      </h1>
-      <p class="hero-sub">Ekosistem trading emas premium — sinyal akurasi tinggi, edukasi eksklusif, jurnal otomatis, dan komunitas VIP yang bisa kamu akses gratis.</p>
-      <div class="hero-btns">
-        <button class="btn-primary" onclick="scrollToSection('vip-section')">JOIN VIP GRATIS ✦</button>
-        <a class="btn-secondary" href="#features">Lihat Fitur ↓</a>
+      <div class="hero-right">
+        <div class="hero-chart-card">
+          <div class="hcc-header">
+            <span class="hcc-sym">XAU/USD SPOT</span>
+            <div class="hcc-live"><div class="hcc-dot"></div>LIVE</div>
+          </div>
+          <div class="hcc-price" id="hcc-price">—</div>
+          <div class="hcc-change up" id="hcc-chg">Loading...</div>
+          <svg class="hcc-svg" id="hcc-svg" viewBox="0 0 400 80" fill="none">
+            <defs><linearGradient id="hcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".2"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs>
+            <polyline id="hcc-line" points="" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linejoin="round"/>
+            <path id="hcc-fill" d="" fill="url(#hcg)"/>
+          </svg>
+          <div class="hcc-metrics">
+            <div class="hcc-metric"><div class="hcc-metric-l">24H High</div><div class="hcc-metric-v up" id="hcc-high">—</div></div>
+            <div class="hcc-metric"><div class="hcc-metric-l">24H Low</div><div class="hcc-metric-v dn" id="hcc-low">—</div></div>
+            <div class="hcc-metric"><div class="hcc-metric-l">24H Chg</div><div class="hcc-metric-v" id="hcc-pct">—</div></div>
+          </div>
+        </div>
       </div>
-      <div class="hero-stats">
-        <div class="stat-item"><div class="val">87%</div><div class="lbl">Win Rate</div></div>
-        <div class="stat-item"><div class="val">500+</div><div class="lbl">Member Aktif</div></div>
-        <div class="stat-item"><div class="val">2 Thn</div><div class="lbl">Track Record</div></div>
-      </div>
-    </div>
-    <div class="scroll-hint">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
     </div>
   </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap" id="ticker-wrap"></div>
 
   <!-- ABOUT -->
-  <section class="section" id="about">
-    <div class="section-inner">
-      <div class="reveal">
-        <div class="section-eyebrow">
-          <div class="eyebrow-line"></div>
-          <span class="eyebrow-text">Tentang Kami</span>
-          <div class="eyebrow-line r"></div>
-        </div>
-        <h2 class="section-title">Dibangun untuk <span class="gold-txt">Trader Sejati</span></h2>
-        <p class="section-sub">Mayora Gold FX hadir sebagai ekosistem trading emas yang menggabungkan analitik premium, komunitas elite, dan edukasi berkelanjutan dalam satu platform.</p>
+  <section id="s-about">
+    <div class="about-inner">
+      <div class="about-header reveal">
+        <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Tentang Kami</span><div class="eyebrow-line r"></div></div>
+        <h2 class="section-title">Dibangun untuk <span class="gold-text">Trader Sejati</span></h2>
+        <p class="section-sub" style="max-width:480px;margin:0 auto">Mayora Gold FX hadir sebagai ekosistem trading emas yang menggabungkan analitik premium, komunitas elite, dan edukasi berkelanjutan.</p>
       </div>
       <div class="about-grid">
-        <div class="about-card reveal" style="transition-delay:.05s">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div class="card-title">Transparansi Penuh</div>
-          <div class="card-desc">Setiap sinyal dan analisa kami didokumentasikan dengan rekam jejak yang bisa diverifikasi. Tidak ada janji kosong — hanya data nyata.</div>
+        <div class="about-card reveal" style="transition-delay:.06s">
+          <div class="ac-num">01</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="ac-title">Transparansi Penuh</div>
+          <p class="ac-desc">Setiap sinyal dan analisa kami didokumentasikan dengan rekam jejak yang bisa diverifikasi. Tidak ada janji kosong — hanya data nyata.</p>
         </div>
-        <div class="about-card reveal" style="transition-delay:.12s">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-          </div>
-          <div class="card-title">Analitik Akurasi Tinggi</div>
-          <div class="card-desc">Metodologi kami menggabungkan analisa teknikal multi-timeframe, market structure, dan Smart Money Concept untuk presisi entri & exit.</div>
+        <div class="about-card reveal" style="transition-delay:.13s">
+          <div class="ac-num">02</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <div class="ac-title">Akurasi Tinggi</div>
+          <p class="ac-desc">Metodologi kami menggabungkan analisa teknikal multi-timeframe, market structure, dan Smart Money Concept untuk presisi entri & exit.</p>
         </div>
         <div class="about-card reveal" style="transition-delay:.2s">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <div class="card-title">Pemberdayaan Trader</div>
-          <div class="card-desc">Dari newbie hingga professional — kurikulum kami dirancang untuk mempercepat kurva belajar Anda dengan mentorship langsung.</div>
+          <div class="ac-num">03</div>
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="ac-title">Pemberdayaan Trader</div>
+          <p class="ac-desc">Dari newbie hingga professional — kurikulum kami dirancang untuk mempercepat kurva belajar Anda dengan mentorship langsung.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FEATURES PREVIEW -->
-  <section class="section" id="features" style="background:var(--bg-2)">
-    <div class="section-inner">
-      <div class="reveal">
-        <div class="section-eyebrow">
-          <div class="eyebrow-line"></div>
-          <span class="eyebrow-text">Fitur Utama</span>
-          <div class="eyebrow-line r"></div>
-        </div>
-        <h2 class="section-title">Trading Journal <span class="gold-txt">Sempurna</span></h2>
-        <p class="section-sub">Lacak setiap trade dengan presisi. Analisa performa, temukan pola, dan tingkatkan edge trading Anda — eksklusif untuk member VIP.</p>
+  <!-- TESTIMONIALS -->
+  <section id="s-testi">
+    <div class="testi-inner">
+      <div class="testi-header reveal">
+        <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Testimoni</span><div class="eyebrow-line r"></div></div>
+        <h2 class="section-title">Yang Mereka <span class="gold-text">Rasakan</span></h2>
       </div>
-      <!-- Journal mockup -->
-      <div class="reveal" style="transition-delay:.1s">
-        <div style="background:var(--bg-3);border:1px solid var(--border);overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.5)">
-          <!-- mock top bar -->
-          <div style="background:rgba(212,175,55,0.03);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;justify-content:space-between">
-            <div style="display:flex;align-items:center;gap:7px">
-              <div style="width:11px;height:11px;border-radius:50%;background:rgba(248,113,113,0.5)"></div>
-              <div style="width:11px;height:11px;border-radius:50%;background:rgba(250,204,21,0.5)"></div>
-              <div style="width:11px;height:11px;border-radius:50%;background:rgba(74,222,128,0.5)"></div>
-              <span style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-left:8px">MAYORA JOURNAL PRO — VIP EXCLUSIVE</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:5px"><div style="width:5px;height:5px;border-radius:50%;background:var(--green)"></div><span style="font-size:.55rem;color:var(--green)">LIVE</span></div>
-          </div>
-          <div style="padding:20px">
-            <!-- Mini stats -->
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
-              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
-                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">WIN RATE</div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--green)">87.5%</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
-                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">TOTAL PROFIT</div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold)">$4,821</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
-                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">TOTAL TRADES</div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text)">64</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(212,175,55,0.08);padding:12px">
-                <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px">DAILY GROWTH</div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--green)">+3.2%</div>
-              </div>
-            </div>
-            <!-- Sparkline -->
-            <div style="background:rgba(255,255,255,0.01);border:1px solid rgba(212,175,55,0.07);padding:14px;margin-bottom:12px">
-              <div style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px">EQUITY CURVE — XAU/USD</div>
-              <svg viewBox="0 0 500 70" width="100%" height="70">
-                <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D4AF37" stop-opacity=".25"/><stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/></linearGradient></defs>
-                <polyline points="0,60 40,48 80,54 120,36 160,22 200,30 240,12 280,8 320,18 360,6 400,10 500,2" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round"/>
-                <polygon points="0,70 0,60 40,48 80,54 120,36 160,22 200,30 240,12 280,8 320,18 360,6 400,10 500,2 500,70" fill="url(#sg)"/>
-              </svg>
-            </div>
-            <!-- Mini table -->
-            <div style="border:1px solid rgba(212,175,55,0.07);overflow:hidden">
-              <div style="background:rgba(212,175,55,0.03);border-bottom:1px solid rgba(212,175,55,0.07);padding:8px 14px;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)">RECENT TRADES</div>
-              <table style="width:100%;border-collapse:collapse;font-size:.7rem">
-                <thead><tr style="border-bottom:1px solid rgba(212,175,55,0.06)">
-                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">PAIR</th>
-                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">TYPE</th>
-                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">ENTRY</th>
-                  <th style="padding:8px 14px;text-align:left;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:400">PNL</th>
-                </tr></thead>
-                <tbody>
-                  <tr style="border-bottom:1px solid rgba(212,175,55,0.04)"><td style="padding:8px 14px;font-family:'Cormorant Garamond',serif;color:var(--gold)">XAU/USD</td><td style="padding:8px 14px;color:var(--green);font-size:.6rem">BUY</td><td style="padding:8px 14px;color:var(--text-muted)">2318.50</td><td style="padding:8px 14px;color:var(--green);font-weight:500">+$157</td></tr>
-                  <tr style="border-bottom:1px solid rgba(212,175,55,0.04)"><td style="padding:8px 14px;font-family:'Cormorant Garamond',serif;color:var(--gold)">XAU/USD</td><td style="padding:8px 14px;color:var(--red);font-size:.6rem">SELL</td><td style="padding:8px 14px;color:var(--text-muted)">2340.00</td><td style="padding:8px 14px;color:var(--green);font-weight:500">+$82</td></tr>
-                  <tr><td style="padding:8px 14px;font-family:'Cormorant Garamond',serif;color:var(--gold)">XAU/USD</td><td style="padding:8px 14px;color:var(--green);font-size:.6rem">BUY</td><td style="padding:8px 14px;color:var(--text-muted)">2295.00</td><td style="padding:8px 14px;color:var(--green);font-weight:500">+$230</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div style="padding:10px 18px;text-align:center;background:rgba(212,175,55,0.02);border-top:1px solid rgba(212,175,55,0.08);font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">✦ Fitur ini eksklusif untuk member VIP — bergabung gratis hari ini ✦</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- VIP SECTION -->
-  <section class="section" id="vip-section">
-    <div class="section-inner">
-      <div class="reveal">
-        <div class="section-eyebrow">
-          <div class="eyebrow-line"></div>
-          <span class="eyebrow-text">Bergabung Sekarang</span>
-          <div class="eyebrow-line r"></div>
-        </div>
-        <h2 class="section-title">Akses <span class="gold-txt">VIP Eksklusif</span></h2>
-      </div>
-      <div class="vip-card reveal" style="transition-delay:.1s">
-        <div class="vip-ribbon">✦ MAYORA GOLD FX — VIP MEMBERSHIP ✦</div>
-        <div class="vip-body">
-          <div class="vip-price">
-            <div class="vip-price-label">Investasi Anda</div>
-            <div class="vip-price-val">RP 0</div>
-            <div class="vip-price-note">GRATIS SELAMANYA</div>
-            <div class="stars">★ ★ ★ ★ ★</div>
-          </div>
-          <div class="vip-grid">
-            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div><div class="vib-title">Daily Gold Signals</div><div class="vib-desc">Sinyal XAU/USD harian dengan entry, TP, & SL presisi</div></div></div>
-            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div><div><div class="vib-title">Live Trading Session</div><div class="vib-desc">Sesi trading live bersama trader berpengalaman</div></div></div>
-            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><div class="vib-title">Exclusive Webinars</div><div class="vib-desc">Webinar mingguan tentang analisa pasar & strategi</div></div></div>
-            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div><div class="vib-title">Trading Journal Otomatis</div><div class="vib-desc">Sistem jurnal premium untuk tracking performa</div></div></div>
-            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div><div class="vib-title">Market Analysis Premium</div><div class="vib-desc">Analisa mendalam market structure & Smart Money</div></div></div>
-            <div class="vip-benefit"><div class="vip-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 6v2M12 16v2M9 9h1.5a1.5 1.5 0 0 1 0 3H9m0 0h1.5a1.5 1.5 0 0 1 0 3H9m0-9v9"/></svg></div><div><div class="vib-title">Komunitas VIP Eksklusif</div><div class="vib-desc">Akses grup VIP dengan ratusan trader elite</div></div></div>
-          </div>
-          <div class="vip-cta">
-            <a href="https://wa.me/your-number-here?text=Halo%20Admin%20Mayora%20Gold%20FX,%20saya%20ingin%20join%20grup%20VIP%20Gratis!" target="_blank" rel="noopener noreferrer" class="wa-btn">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              Hubungi Admin via WhatsApp
-            </a>
-            <p class="vip-cta-note">Klik → chat otomatis terbuka → Admin siap membantu 24/7</p>
-          </div>
-        </div>
-      </div>
-      <!-- Testimonials -->
       <div class="testi-grid">
         <div class="testi-card reveal" style="transition-delay:.05s">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Win rate saya naik dari 50% ke 83% dalam 2 bulan setelah join komunitas ini."</p>
-          <div class="testi-name">Rizky A.</div>
-          <div class="testi-role">Trader Jakarta</div>
+          <p class="testi-quote">Win rate saya naik dari 50% ke 83% dalam 2 bulan setelah join komunitas ini. Sinyal-sinyalnya konsisten dan analitisnya sangat detail.</p>
+          <div class="testi-author">Rizky A.</div><div class="testi-role">Trader · Jakarta</div>
         </div>
-        <div class="testi-card reveal" style="transition-delay:.12s">
+        <div class="testi-card reveal" style="transition-delay:.13s">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Sinyal hariannya sangat akurat, jurnal otomatisnya bantu saya evaluasi trading setiap hari."</p>
-          <div class="testi-name">Dewi S.</div>
-          <div class="testi-role">Trader Surabaya</div>
+          <p class="testi-quote">Jurnal otomatisnya benar-benar mengubah cara saya evaluasi trading. Sekarang saya tahu persis pattern mana yang profitable.</p>
+          <div class="testi-author">Dewi S.</div><div class="testi-role">Trader · Surabaya</div>
         </div>
-        <div class="testi-card reveal" style="transition-delay:.2s">
+        <div class="testi-card reveal" style="transition-delay:.21s">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">"Live session-nya luar biasa. Langsung lihat cara baca market dari trader pro secara real-time."</p>
-          <div class="testi-name">Farhan M.</div>
-          <div class="testi-role">Trader Bandung</div>
+          <p class="testi-quote">Live session-nya luar biasa. Langsung lihat cara baca market dari trader pro secara real-time. Ilmunya tidak ada duanya.</p>
+          <div class="testi-author">Farhan M.</div><div class="testi-role">Trader · Bandung</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="s-cta">
+    <div class="cta-inner reveal">
+      <div class="cta-badge">✦ Bergabung Gratis Sekarang</div>
+      <h2 class="cta-title">Siap Upgrade <span class="gold-text">Trading</span> Kamu?</h2>
+      <p class="cta-sub">Bergabung dengan 500+ trader elite Indonesia di grup VIP kami. Gratis selamanya — hanya butuh komitmen.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/6281234567890?text=Halo%20Admin%20Mayora%20Gold%20FX,%20saya%20ingin%20join%20grup%20VIP%20Gratis!" target="_blank" rel="noopener" class="wa-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Grup VIP (Admin)
+        </a>
+        <a href="https://wa.me/6281234567891?text=Halo,%20saya%20ingin%20join%20grup%20public%20Mayora%20Gold%20FX!" target="_blank" rel="noopener" class="wa-btn-pub">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Grup Public
+        </a>
       </div>
     </div>
   </section>
@@ -926,166 +860,251 @@ td:last-child{text-align:right}
     <div class="footer-inner">
       <div class="footer-grid">
         <div>
-          <div class="footer-brand-logo">
-            <div class="nav-logo-mark">M</div>
-            <div class="nav-logo-text"><div class="top">MAYORA</div><div class="bot">GOLD FX</div></div>
-          </div>
-          <p class="footer-brand-desc">Ekosistem trading emas premium untuk trader Indonesia yang serius membangun wealth melalui pasar keuangan.</p>
+          <div class="footer-logo"><div class="nav-mark" style="width:30px;height:30px;font-size:.85rem">M</div><span class="nav-brandname" style="font-size:.75rem">MAYORA <b>GOLD FX</b></span></div>
+          <p class="footer-desc">Ekosistem trading emas premium untuk trader Indonesia yang serius membangun wealth melalui pasar keuangan.</p>
         </div>
         <div>
-          <div class="footer-col-title">Navigasi</div>
-          <a class="footer-link" href="#about">Tentang Kami</a>
-          <a class="footer-link" href="#features">Fitur Jurnal</a>
-          <a class="footer-link" href="#vip-section">VIP Gratis</a>
+          <div class="footer-col-t">Navigasi</div>
+          <span class="footer-link" onclick="goPage('home')">Beranda</span>
+          <span class="footer-link" onclick="goPage('berita')">Berita</span>
+          <span class="footer-link" onclick="goPage('vip')">VIP Gratis</span>
+          <span class="footer-link" onclick="goPage('auth')">Login Member</span>
         </div>
         <div>
-          <div class="footer-col-title">Hubungi Kami</div>
-          <a href="https://wa.me/your-number-here" target="_blank" class="footer-link">WhatsApp Admin</a>
+          <div class="footer-col-t">Hubungi Kami</div>
+          <a href="https://wa.me/6281234567890" target="_blank" class="footer-link">WhatsApp Admin (VIP)</a>
+          <a href="https://wa.me/6281234567891" target="_blank" class="footer-link">WhatsApp Grup Public</a>
         </div>
       </div>
       <div class="disclaimer">
-        <div class="disclaimer-title">⚠ Disclaimer Risiko</div>
-        <p class="disclaimer-text">Trading forex, emas (XAU/USD), dan instrumen keuangan lainnya mengandung <strong>risiko kerugian yang signifikan</strong> dan mungkin tidak cocok untuk semua investor. Nilai investasi dapat turun maupun naik. Kinerja masa lalu bukan merupakan indikasi hasil masa depan. Konten di platform ini bersifat edukatif dan bukan merupakan saran investasi profesional.</p>
+        <div class="disclaimer-t">⚠ Disclaimer Risiko</div>
+        <p class="disclaimer-body">Trading forex, emas (XAU/USD), dan instrumen keuangan lainnya mengandung <strong>risiko kerugian yang signifikan</strong>. Kinerja masa lalu bukan merupakan indikasi hasil masa depan. Konten di platform ini bersifat edukatif dan bukan merupakan saran investasi profesional.</p>
       </div>
       <div class="footer-bottom">
-        <span class="footer-copy">© <span id="year"></span> Mayora Gold FX. All rights reserved.</span>
+        <span class="footer-copy">© <span id="fyear"></span> Mayora Gold FX. All rights reserved.</span>
         <span class="footer-craft">Crafted with <span>✦</span> for Elite Traders</span>
       </div>
     </div>
   </footer>
 </div>
 
-<!-- ════════════════════════════
-     JOURNAL APP
-════════════════════════════ -->
-<div id="app">
+<!-- ═══════════════
+     PAGE: BERITA
+═══════════════ -->
+<div class="page" id="page-berita">
+  <div class="news-inner">
+    <div class="news-top reveal">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Market Update</span><div class="eyebrow-line r"></div></div>
+      <h1 class="section-title">Berita & <span class="gold-text">Analisa Pasar</span></h1>
+      <p class="section-sub" style="max-width:480px;margin:0 auto">Update terkini seputar emas, forex, dan pasar keuangan global dari tim analis Mayora Gold FX.</p>
+    </div>
+    <div class="news-grid">
+      <div class="news-main" id="news-main">
+        <!-- dynamic news cards injected here -->
+      </div>
+      <div class="news-sidebar">
+        <div class="price-widget" id="price-widget">
+          <div class="pw-header">Live Prices</div>
+        </div>
+        <div class="news-sidebar-card" id="news-aside">
+          <div class="nsc-header">Artikel Terpopuler</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════
+     PAGE: VIP
+═══════════════ -->
+<div class="page" id="page-vip">
+  <div class="vip-hero">
+    <div class="vip-hero-badge">✦ Exclusive Membership</div>
+    <h1 class="vip-hero-title">Akses <span class="gold-text">VIP Eksklusif</span><br>Sepenuhnya Gratis</h1>
+    <p class="vip-hero-sub">Bergabunglah dengan komunitas trader elite Indonesia. Sinyal harian, live session, journal premium, dan lebih banyak lagi.</p>
+    <div class="vip-price-card">
+      <div class="vpc-top">✦ MAYORA GOLD FX — VIP MEMBERSHIP ✦</div>
+      <div class="vpc-body">
+        <div class="vpc-price-area">
+          <div class="vpc-price-label">Investasi Anda</div>
+          <div class="vpc-price-val">Rp 0</div>
+          <div class="vpc-price-note">GRATIS SELAMANYA</div>
+          <div style="color:var(--gold);font-size:.72rem;letter-spacing:4px;margin-top:10px">★ ★ ★ ★ ★</div>
+        </div>
+        <div class="vpc-benefits">
+          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div><div class="vb-title">Daily Gold Signals</div><div class="vb-desc">Sinyal XAU/USD harian dengan entry, TP & SL presisi</div></div></div>
+          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div><div><div class="vb-title">Live Trading Session</div><div class="vb-desc">Sesi trading live bersama trader berpengalaman</div></div></div>
+          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><div class="vb-title">Exclusive Webinars</div><div class="vb-desc">Webinar mingguan analisa pasar & strategi trading</div></div></div>
+          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="vb-title">Trading Journal Otomatis</div><div class="vb-desc">Sistem jurnal premium untuk tracking performa</div></div></div>
+          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div><div class="vb-title">Market Analysis Premium</div><div class="vb-desc">Analisa mendalam market structure & Smart Money</div></div></div>
+          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="vb-title">Komunitas VIP Eksklusif</div><div class="vb-desc">Akses grup VIP dengan ratusan trader elite</div></div></div>
+        </div>
+        <div class="vpc-cta">
+          <a href="https://wa.me/6281234567890?text=Halo%20Admin%20Mayora%20Gold%20FX,%20saya%20ingin%20join%20grup%20VIP%20Gratis!" target="_blank" rel="noopener" class="vpc-wa-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Hubungi Admin via WhatsApp
+          </a>
+          <p class="vpc-note">Klik → chat otomatis terbuka → Admin aktifkan akun kamu</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Journal Preview Mockup -->
+  <div class="vip-preview">
+    <div class="vip-preview-inner">
+      <div class="vip-preview-label">
+        <div class="eyebrow" style="justify-content:center;margin-bottom:10px"><div class="eyebrow-line"></div><span class="eyebrow-txt">Fitur Eksklusif VIP</span><div class="eyebrow-line r"></div></div>
+        <h2 class="section-title" style="text-align:center">Trading Journal <span class="gold-text">Premium</span></h2>
+      </div>
+      <div class="journal-mockup">
+        <div class="jm-bar">
+          <div class="jm-dots"><div class="jm-dot" style="background:rgba(248,113,113,.5)"></div><div class="jm-dot" style="background:rgba(250,204,21,.5)"></div><div class="jm-dot" style="background:rgba(74,222,128,.5)"></div></div>
+          <span class="jm-title">MAYORA JOURNAL — VIP EXCLUSIVE</span>
+          <span class="jm-badge">LIVE</span>
+        </div>
+        <div class="jm-body">
+          <div class="jm-stat"><div class="jm-stat-l">Win Rate</div><div class="jm-stat-v" style="color:var(--green)">87.5%</div></div>
+          <div class="jm-stat"><div class="jm-stat-l">Total Profit</div><div class="jm-stat-v" style="color:var(--gold)">$4,821</div></div>
+          <div class="jm-stat"><div class="jm-stat-l">Total Trades</div><div class="jm-stat-v">64</div></div>
+          <div class="jm-stat"><div class="jm-stat-l">Daily Growth</div><div class="jm-stat-v" style="color:var(--green)">+3.2%</div></div>
+        </div>
+        <div class="jm-chart">
+          <div class="jm-chart-l">EQUITY CURVE — XAU/USD</div>
+          <svg viewBox="0 0 500 70" width="100%" height="70">
+            <defs><linearGradient id="jmg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".25"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs>
+            <polyline points="0,62 40,50 80,56 120,38 160,24 200,32 240,14 280,10 320,20 360,8 400,12 500,4" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linejoin="round"/>
+            <polygon points="0,70 0,62 40,50 80,56 120,38 160,24 200,32 240,14 280,10 320,20 360,8 400,12 500,4 500,70" fill="url(#jmg)"/>
+          </svg>
+        </div>
+        <div class="jm-table">
+          <div class="jm-table-h">RECENT TRADES</div>
+          <div class="jm-table-row"><span style="font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--gold)">XAU/USD</span><span style="color:var(--green)">BUY</span><span>2318.50</span><span>2340.00</span><span style="color:var(--green)">+$157</span></div>
+          <div class="jm-table-row"><span style="font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--gold)">XAU/USD</span><span style="color:var(--red)">SELL</span><span>2340.00</span><span>2322.00</span><span style="color:var(--green)">+$82</span></div>
+          <div class="jm-table-row"><span style="font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--gold)">XAU/USD</span><span style="color:var(--green)">BUY</span><span>2295.00</span><span>2318.00</span><span style="color:var(--green)">+$230</span></div>
+        </div>
+        <div class="jm-footer">✦ Fitur ini eksklusif untuk member VIP — bergabung gratis hari ini ✦</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:40px"></div>
+</div>
+
+<!-- ═══════════════
+     PAGE: AUTH
+═══════════════ -->
+<div class="page" id="page-auth">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="auth-logo-mark">M</div>
+      <div class="auth-logo-name">MAYORA <b>GOLD FX</b></div>
+      <div class="auth-logo-sub">Member Portal</div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab on" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-reg" onclick="switchTab('reg')">Register</button>
+      </div>
+      <div class="auth-form on" id="form-login">
+        <div class="auth-group"><label class="auth-label">Email</label><input class="auth-input" id="li-email" type="email" placeholder="email@kamu.com" autocomplete="email"></div>
+        <div class="auth-group"><label class="auth-label">Password</label><input class="auth-input" id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+        <div class="auth-err" id="li-err"></div>
+        <button class="auth-submit" id="li-btn" onclick="doLogin()"><span>Sign In →</span></button>
+      </div>
+      <div class="auth-form" id="form-reg">
+        <div class="auth-group"><label class="auth-label">Nama</label><input class="auth-input" id="ri-name" type="text" placeholder="Nama lengkap kamu"></div>
+        <div class="auth-group"><label class="auth-label">Email</label><input class="auth-input" id="ri-email" type="email" placeholder="email@kamu.com" autocomplete="email"></div>
+        <div class="auth-group"><label class="auth-label">Password</label><input class="auth-input" id="ri-pass" type="password" placeholder="min 6 karakter" autocomplete="new-password"></div>
+        <div class="auth-err" id="ri-err"></div>
+        <button class="auth-submit" id="ri-btn" onclick="doRegister()"><span>Buat Akun →</span></button>
+      </div>
+      <div class="auth-info">Data tersimpan di cloud · Login dari device manapun<br>Akun VIP diaktifkan Admin setelah join grup</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════
+     PAGE: JOURNAL APP
+═══════════════ -->
+<div class="page" id="page-journal">
   <div class="app-header">
-    <div class="app-logo" onclick="backToLanding()">
-      <div class="nav-logo-mark">M</div>
-      <div>
-        <div class="app-title">MAYORA <span>GOLD FX</span></div>
-        <div class="app-subtitle">Trading Journal</div>
-      </div>
+    <div>
+      <div class="app-htitle">MAYORA <span>GOLD FX</span></div>
+      <div class="app-subtitle">Trading Journal Pro</div>
     </div>
-    <div class="app-right">
-      <div class="save-status" id="save-status"><div class="save-dot"></div><span id="save-label">—</span></div>
-      <div class="live-badge"><div class="live-dot" id="live-dot"></div><span id="live-label">Connecting</span></div>
-      <button class="btn-log-trade" onclick="openModal()" id="btn-log-trade" style="display:none">+ Log Trade</button>
-      <div class="user-info">
-        <div class="user-avatar" id="user-avatar">—</div>
-        <div class="user-name-txt" id="user-name-display">—</div>
-        <div class="vip-badge-pill" id="vip-badge" style="display:none">VIP ✦</div>
+    <div class="app-hright">
+      <div class="save-status" id="save-status"><div class="save-dot"></div><span id="save-lbl">—</span></div>
+      <div class="live-badge"><div class="live-dot" id="ap-dot"></div><span id="ap-live">Connecting</span></div>
+      <button class="btn-newtrade" id="btn-newtrade" onclick="openModal()" style="display:none">+ Log Trade</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="nav-avatar" id="ap-avatar">–</div>
+        <span class="nav-username" id="ap-uname">–</span>
+        <span class="vip-pill" id="ap-vip" style="display:none">VIP ✦</span>
       </div>
-      <button class="btn-logout-sm" onclick="doLogout()">Logout</button>
     </div>
   </div>
-  <div class="price-ticker" id="price-ticker"></div>
+  <div class="pricebar" id="pricebar"></div>
   <div class="app-tabs">
-    <div class="app-tab active" onclick="switchPage('dashboard',this)">Dashboard</div>
-    <div class="app-tab" onclick="switchPage('history',this)">Trade History</div>
-    <div class="app-tab" onclick="switchPage('notes',this)">Journal Notes</div>
-    <div class="app-tab" onclick="switchPage('account',this)">Account</div>
+    <button class="app-tab on" onclick="jTab('dash',this)">Dashboard</button>
+    <button class="app-tab" onclick="jTab('history',this)">Trade History</button>
+    <button class="app-tab" onclick="jTab('notes',this)">Journal Notes</button>
+    <button class="app-tab" onclick="jTab('account',this)">Account</button>
   </div>
 
-  <!-- Dashboard Page -->
-  <div class="app-page active" id="page-dashboard">
-    <div class="app-main">
+  <!-- Dashboard -->
+  <div class="journal-page on" id="jp-dash">
+    <div class="jmain">
       <div class="stats-row" id="stats-row"></div>
-      <!-- VIP lock or content -->
-      <div id="dash-vip-lock" class="vip-lock" style="display:none">
-        <div class="vip-lock-icon">✦</div>
-        <div class="vip-lock-title">Fitur VIP Terkunci</div>
-        <div class="vip-lock-sub">Trading Journal hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div>
-        <a href="https://wa.me/your-number-here?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vip-lock-btn">Hubungi Admin untuk VIP →</a>
-      </div>
-      <div id="dash-vip-content" style="display:none">
-        <div class="sec-lbl">Live Positions</div>
-        <div class="tbl-wrap">
-          <div class="tbl-scroll">
-          <table>
-            <thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Current</th><th>SL / TP</th><th>Size</th><th>Open P&L</th><th>Progress</th><th>Status</th><th></th></tr></thead>
-            <tbody id="open-tbody"></tbody>
-          </table>
-          </div>
-        </div>
+      <div id="vip-lock-dash" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trading Journal hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vll-btn">Hubungi Admin →</a></div>
+      <div id="vip-cnt-dash" style="display:none">
+        <div class="sec-label">Live Positions</div>
+        <div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Current</th><th>SL / TP</th><th>Size</th><th>Open P&L</th><th>Progress</th><th>Status</th><th></th></tr></thead><tbody id="open-tbody"></tbody></table></div></div>
         <div class="bottom-grid">
-          <div class="chart-box"><div class="chart-lbl">Equity Curve</div><svg class="equity-svg" id="equity-svg" viewBox="0 0 440 120" fill="none"></svg></div>
-          <div class="bkd-box"><div class="chart-lbl">P&L by Symbol</div><div id="breakdown-list"></div></div>
+          <div class="chart-box"><div class="chart-l">Equity Curve</div><svg class="eq-svg" id="eq-svg" viewBox="0 0 440 120" fill="none"></svg></div>
+          <div class="bkd-box"><div class="chart-l">P&L by Symbol</div><div id="bkd-list"></div></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- History Page -->
-  <div class="app-page" id="page-history">
-    <div class="app-main">
-      <div id="hist-vip-lock" class="vip-lock" style="display:none">
-        <div class="vip-lock-icon">✦</div>
-        <div class="vip-lock-title">Fitur VIP Terkunci</div>
-        <div class="vip-lock-sub">Trade History hanya tersedia untuk member VIP.</div>
-        <a href="https://wa.me/your-number-here?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vip-lock-btn">Hubungi Admin untuk VIP →</a>
-      </div>
-      <div id="hist-vip-content" style="display:none">
+  <!-- History -->
+  <div class="journal-page" id="jp-history">
+    <div class="jmain">
+      <div id="vip-lock-hist" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trade History hanya tersedia untuk member VIP.</div><a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vll-btn">Hubungi Admin →</a></div>
+      <div id="vip-cnt-hist" style="display:none">
         <div class="tbl-wrap">
-          <div class="tbl-head">
-            <div class="tbl-title">Closed Trades</div>
-            <div class="tbl-filters">
-              <button class="filt-btn active" onclick="filterHistory('all',this)">All</button>
-              <button class="filt-btn" onclick="filterHistory('win',this)">Winners</button>
-              <button class="filt-btn" onclick="filterHistory('loss',this)">Losers</button>
-            </div>
-          </div>
-          <div class="tbl-scroll">
-          <table>
-            <thead><tr><th>Date</th><th>Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&L</th><th>R</th><th></th></tr></thead>
-            <tbody id="hist-tbody"></tbody>
-          </table>
-          </div>
+          <div class="tbl-head"><div class="tbl-ttl">Closed Trades</div><div class="flt-btns"><button class="flt-btn on" onclick="fltHist('all',this)">All</button><button class="flt-btn" onclick="fltHist('win',this)">Winners</button><button class="flt-btn" onclick="fltHist('loss',this)">Losers</button></div></div>
+          <div class="tbl-scroll"><table><thead><tr><th>Date</th><th>Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&L</th><th>R</th><th></th></tr></thead><tbody id="hist-tbody"></tbody></table></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Notes Page -->
-  <div class="app-page" id="page-notes">
-    <div class="app-main">
-      <div id="notes-vip-lock" class="vip-lock" style="display:none">
-        <div class="vip-lock-icon">✦</div>
-        <div class="vip-lock-title">Fitur VIP Terkunci</div>
-        <div class="vip-lock-sub">Journal Notes hanya tersedia untuk member VIP.</div>
-        <a href="https://wa.me/your-number-here?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vip-lock-btn">Hubungi Admin untuk VIP →</a>
-      </div>
-      <div id="notes-vip-content" style="display:none">
-        <div class="sec-lbl">Journal Notes</div>
-        <div class="notes-grid" id="notes-grid"></div>
-      </div>
+  <!-- Notes -->
+  <div class="journal-page" id="jp-notes">
+    <div class="jmain">
+      <div id="vip-lock-notes" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Journal Notes hanya tersedia untuk member VIP.</div><a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vll-btn">Hubungi Admin →</a></div>
+      <div id="vip-cnt-notes" style="display:none"><div class="sec-label">Journal Notes</div><div class="notes-grid" id="notes-grid"></div></div>
     </div>
   </div>
 
-  <!-- Account Page -->
-  <div class="app-page" id="page-account">
-    <div class="app-main">
-      <div class="sec-lbl">Account & Settings</div>
-      <div class="acc-section">
-        <div class="acc-sec-title">Account Info</div>
-        <div class="acc-row"><span class="acc-key">Email</span><span class="acc-val" id="acc-email">—</span></div>
-        <div class="acc-row"><span class="acc-key">Display Name</span><span class="acc-val" id="acc-dispname">—</span></div>
-        <div class="acc-row"><span class="acc-key">Status Akun</span><span class="acc-val" id="acc-vip-status">—</span></div>
-        <div class="acc-row"><span class="acc-key">Total Trades</span><span class="acc-val" id="acc-tradecount">—</span></div>
-        <div class="acc-row"><span class="acc-key">Last Saved</span><span class="acc-val" id="acc-lastsave">—</span></div>
+  <!-- Account -->
+  <div class="journal-page" id="jp-account">
+    <div class="jmain">
+      <div class="sec-label">Account & Settings</div>
+      <div class="acc-sec"><div class="acc-sec-t">Account Info</div>
+        <div class="acc-row"><span class="acc-k">Email</span><span class="acc-v" id="acc-email">—</span></div>
+        <div class="acc-row"><span class="acc-k">Display Name</span><span class="acc-v" id="acc-name">—</span></div>
+        <div class="acc-row"><span class="acc-k">Status Akun</span><span class="acc-v" id="acc-status">—</span></div>
+        <div class="acc-row"><span class="acc-k">Total Trades</span><span class="acc-v" id="acc-trades">—</span></div>
+        <div class="acc-row"><span class="acc-k">Last Saved</span><span class="acc-v" id="acc-lastsave">—</span></div>
       </div>
-      <div class="acc-section">
-        <div class="acc-sec-title">Reset Password</div>
-        <p style="font-size:.7rem;color:var(--text-dim);margin-bottom:14px;line-height:1.8;letter-spacing:.03em">Email reset akan dikirim ke alamat email akun kamu.</p>
-        <button class="btn-save" onclick="doResetPassword()">Kirim Reset Email →</button>
-        <div class="auth-ok" id="reset-ok" style="display:none;margin-top:8px">✓ Email reset dikirim! Cek inbox.</div>
+      <div class="acc-sec"><div class="acc-sec-t">Reset Password</div>
+        <p style="font-size:.7rem;color:var(--text3);margin-bottom:14px;line-height:1.8">Email reset akan dikirim ke alamat email akun kamu.</p>
+        <button class="btn-save-m" onclick="doReset()">Kirim Reset Email →</button>
+        <div style="font-size:.65rem;color:var(--green);margin-top:8px;display:none" id="reset-ok">✓ Email reset dikirim! Cek inbox.</div>
       </div>
-      <div class="acc-section" id="danger-zone-vip" style="display:none">
-        <div class="acc-sec-title">Danger Zone</div>
-        <div class="acc-row">
-          <div><div class="acc-key">Clear All Trade Data</div><div class="acc-val" style="margin-top:3px">Hapus semua trade — tidak bisa dibatalkan</div></div>
-          <button class="btn-danger" onclick="clearAllTrades()">Clear Data</button>
-        </div>
+      <div class="acc-sec" id="danger-vip" style="display:none"><div class="acc-sec-t">Danger Zone</div>
+        <div class="acc-row"><div><div class="acc-k">Clear All Trade Data</div><div class="acc-v" style="margin-top:3px">Hapus semua trade — tidak bisa dibatalkan</div></div><button class="btn-danger" onclick="clearAll()">Clear Data</button></div>
       </div>
     </div>
   </div>
@@ -1094,579 +1113,468 @@ td:last-child{text-align:right}
 <!-- TRADE MODAL -->
 <div class="overlay" id="overlay">
   <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="modal-title-txt">Log New Trade</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
+    <div class="modal-hdr"><div class="modal-ttl" id="modal-ttl">Log New Trade</div><button class="modal-x" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
-      <input type="hidden" id="edit-idx" value="">
-      <div class="form-row-2">
-        <div class="form-group">
-          <label class="form-label">Symbol</label>
-          <select class="form-input" id="f-symbol">
-            <optgroup label="Gold / Spot">
-              <option value="XAUUSD">XAU/USD Spot</option>
-              <option value="XAUTUSDT">XAUT/USDT</option>
-            </optgroup>
-            <optgroup label="Crypto">
-              <option value="BTCUSDT">BTC/USDT</option><option value="ETHUSDT">ETH/USDT</option>
-              <option value="SOLUSDT">SOL/USDT</option><option value="BNBUSDT">BNB/USDT</option>
-              <option value="XRPUSDT">XRP/USDT</option><option value="DOGEUSDT">DOGE/USDT</option>
-              <option value="ADAUSDT">ADA/USDT</option><option value="AVAXUSDT">AVAX/USDT</option>
-            </optgroup>
+      <input type="hidden" id="edit-id">
+      <div class="form-row2">
+        <div class="form-group"><label class="form-label">Symbol</label>
+          <select class="form-input" id="f-sym">
+            <optgroup label="Gold"><option value="XAUUSD">XAU/USD Spot</option><option value="XAUTUSDT">XAUT/USDT</option></optgroup>
+            <optgroup label="Crypto"><option value="BTCUSDT">BTC/USDT</option><option value="ETHUSDT">ETH/USDT</option><option value="SOLUSDT">SOL/USDT</option><option value="BNBUSDT">BNB/USDT</option><option value="XRPUSDT">XRP/USDT</option><option value="DOGEUSDT">DOGE/USDT</option></optgroup>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">Direction</label>
-          <select class="form-input" id="f-dir"><option value="Long">Long</option><option value="Short">Short</option></select>
-        </div>
+        <div class="form-group"><label class="form-label">Direction</label><select class="form-input" id="f-dir"><option value="Long">Long</option><option value="Short">Short</option></select></div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Order Type</label>
-        <select class="form-input" id="f-type"><option value="market">Market</option><option value="limit">Limit Order</option></select>
-      </div>
-      <div class="form-row-2">
+      <div class="form-group"><label class="form-label">Order Type</label><select class="form-input" id="f-type"><option value="market">Market</option><option value="limit">Limit Order</option></select></div>
+      <div class="form-row2">
         <div class="form-group"><label class="form-label">Entry Price</label><input class="form-input" id="f-entry" type="number" placeholder="0.00" step="any"></div>
         <div class="form-group"><label class="form-label">Exit Price (kosong = open)</label><input class="form-input" id="f-exit" type="number" placeholder="0.00" step="any"></div>
       </div>
-      <div class="form-row-2">
+      <div class="form-row2">
         <div class="form-group"><label class="form-label">Stop Loss</label><input class="form-input" id="f-sl" type="number" placeholder="0.00" step="any"></div>
         <div class="form-group"><label class="form-label">Take Profit</label><input class="form-input" id="f-tp" type="number" placeholder="0.00" step="any"></div>
       </div>
-      <div class="form-row-2">
+      <div class="form-row2">
         <div class="form-group"><label class="form-label">Size</label><input class="form-input" id="f-size" type="number" placeholder="1" step="any"></div>
         <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="f-date" type="date"></div>
       </div>
       <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="f-notes" rows="3" placeholder="Setup, rationale, market conditions..."></textarea></div>
       <div class="form-group"><label class="form-label">Strategy Tag</label><input class="form-input" id="f-tag" placeholder="e.g. Breakout, SMC, Mean Reversion"></div>
     </div>
-    <div class="modal-foot">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveTrade()">Save Trade →</button>
-    </div>
+    <div class="modal-foot"><button class="btn-cancel-m" onclick="closeModal()">Cancel</button><button class="btn-save-m" onclick="saveTrade()">Save Trade →</button></div>
   </div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast">
-  <div class="toast-dot" id="toast-dot"></div>
-  <div><div class="toast-sym" id="toast-sym"></div><div class="toast-msg" id="toast-msg"></div></div>
+  <div class="toast-dot" id="tdot"></div>
+  <div><div class="toast-sym" id="tsym"></div><div class="toast-msg" id="tmsg"></div></div>
 </div>
 
-<!-- ════════════════════════════
-     SCRIPTS
-════════════════════════════ -->
 <script>
-/* ── year ── */
-document.getElementById('year').textContent = new Date().getFullYear();
+/* ─── year ─── */
+document.getElementById('fyear').textContent = new Date().getFullYear();
 
-/* ── Particles ── */
-(function(){
-  const canvas = document.getElementById('particle-canvas');
-  const ctx = canvas.getContext('2d');
-  let w, h, particles, raf;
-  function init(){
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-    particles = Array.from({length:70},()=>({
-      x:Math.random()*w,y:Math.random()*h,
-      r:Math.random()*1.5+0.3,
-      dx:(Math.random()-.5)*.35,dy:(Math.random()-.5)*.35,
-      a:Math.random()
-    }));
-  }
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    particles.forEach(p=>{
-      p.x+=p.dx; p.y+=p.dy;
-      if(p.x<0||p.x>w) p.dx*=-1;
-      if(p.y<0||p.y>h) p.dy*=-1;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(212,175,55,${p.a*.6})`;ctx.fill();
-    });
-    for(let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++){
-      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<110){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(212,175,55,${.1*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}
-    }
-    raf=requestAnimationFrame(draw);
-  }
-  init(); draw();
-  window.addEventListener('resize',()=>{ cancelAnimationFrame(raf); init(); draw(); });
+/* ─── Canvas particles ─── */
+(()=>{
+  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  let W,H,pts,raf;
+  function init(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;pts=Array.from({length:55},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,a:Math.random()*.6}))}
+  function draw(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(201,168,76,${p.a})`;ctx.fill()});for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(201,168,76,${.08*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke()}}raf=requestAnimationFrame(draw)}
+  init();draw();window.addEventListener('resize',()=>{cancelAnimationFrame(raf);init();draw()});
 })();
 
-/* ── Reveal on scroll ── */
-const revealEls = document.querySelectorAll('.reveal');
-const revealObs = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-},{threshold:.12});
-revealEls.forEach(el=>revealObs.observe(el));
+/* ─── Reveal on scroll ─── */
+const revEls=document.querySelectorAll('.reveal'),revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.12});
+revEls.forEach(e=>revObs.observe(e));
 
-/* ── Navbar scroll ── */
-window.addEventListener('scroll',()=>{
-  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
-});
+/* ─── Navbar scroll ─── */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',window.scrollY>30));
+document.getElementById('nav').classList.add('solid');
 
-/* ── Mobile menu ── */
-window.toggleMobile = function(){
-  document.getElementById('mobile-menu').classList.toggle('open');
-};
-window.scrollToSection = function(id){
-  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+/* ─── Mobile menu ─── */
+window.toggleMob=()=>document.getElementById('mob-nav').classList.toggle('open');
+
+/* ─── Auth tab ─── */
+window.switchTab=t=>{
+  ['login','reg'].forEach(n=>{document.getElementById('tab-'+n).classList.toggle('on',n===t);document.getElementById('form-'+n).classList.toggle('on',n===t)});
+  document.getElementById('li-err').textContent='';document.getElementById('ri-err').textContent='';
 };
 
-/* ── Landing nav login btn ── */
-window.showAuthFromLanding = function(){
-  document.getElementById('auth-screen').style.display='flex';
+/* ─── Page navigation ─── */
+const pages=['home','berita','vip','auth','journal'];
+function goPage(p){
+  pages.forEach(n=>document.getElementById('page-'+n).classList.toggle('active',n===p));
+  ['home','berita','vip'].forEach(n=>{const el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p)});
+  document.getElementById('mob-nav').classList.remove('open');
+  window.scrollTo(0,0);
+  if(p==='berita') renderNews();
+}
+window.goPage=goPage;
+
+window.requireVipNav=()=>{
+  if(!window._curUser){goPage('auth');return;}
+  goPage('journal');
 };
-window.backToLanding = function(){
-  document.getElementById('app').style.display='none';
-  document.getElementById('landing').style.display='block';
-  if(tickInterval){clearInterval(tickInterval);tickInterval=null;}
+
+/* ─── News content ─── */
+const newsData=[
+  {id:1,cat:'Market Update',title:'Harga Emas Catat Level Tertinggi di Tengah Ketegangan Geopolitik',date:'5 Jun 2026',excerpt:'Harga emas spot menguat signifikan dalam perdagangan sesi Asia, didukung meningkatnya permintaan safe haven akibat ketegangan di kawasan Timur Tengah dan kekhawatiran inflasi global.',featured:true},
+  {id:2,cat:'Analisa Teknikal',title:'XAU/USD: Breakout Struktur Weekly — Potensi Target 2400',date:'4 Jun 2026',excerpt:'Analisa market structure pada timeframe weekly menunjukkan potensi breakout yang valid di atas resistance kunci 2350.'},
+  {id:3,cat:'Edukasi',title:'Memahami Smart Money Concept dalam Trading Emas',date:'3 Jun 2026',excerpt:'Panduan lengkap menggunakan SMC untuk mengidentifikasi order block dan fair value gap pada pair XAU/USD.'},
+  {id:4,cat:'Sinyal',title:'Setup BUY XAU/USD — Konfirmasi Rejection dari OB H4',date:'2 Jun 2026',excerpt:'Tim analis Mayora Gold FX mengidentifikasi setup buy dengan risk-reward 1:3.2 dari order block H4 yang valid.'},
+  {id:5,cat:'Market Update',title:'Fed Pertahankan Suku Bunga — Emas Merespons Positif',date:'1 Jun 2026',excerpt:'Keputusan Federal Reserve mempertahankan suku bunga memberikan sentimen positif terhadap harga emas global.'},
+  {id:6,cat:'Analisa',title:'Review Performa Sinyal Mei 2026: Win Rate 89%',date:'31 Mei 2026',excerpt:'Rekap performa sinyal bulanan Mayora Gold FX — 32 sinyal dengan akurasi 89% dan total gain 847 pips.'},
+];
+
+const popularNews=[
+  {title:'Cara Baca Market Structure XAU/USD',date:'28 Mei 2026'},
+  {title:'Risk Management untuk Swing Trader Emas',date:'25 Mei 2026'},
+  {title:'Tutorial Trading Journal: Step by Step',date:'20 Mei 2026'},
+  {title:'Pola Candlestick Paling Reliable di Gold',date:'15 Mei 2026'},
+];
+
+function renderNews(){
+  const main=document.getElementById('news-main');
+  const featured=newsData.find(n=>n.featured);
+  let html='';
+  if(featured){
+    html+=`<div class="news-featured" onclick="void(0)">
+      <div class="news-featured-thumb">
+        <div class="nf-cat">${featured.cat}</div>
+        <svg viewBox="0 0 200 80" width="100%" height="100%" style="opacity:.06;position:absolute;inset:0"><path d="M0,40 Q50,10 100,40 T200,40" stroke="#C9A84C" stroke-width="2" fill="none"/></svg>
+        <svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="55%" text-anchor="middle" fill="#C9A84C" font-size="20" font-family="Cormorant Garamond,serif">✦</text></svg>
+      </div>
+      <div class="news-featured-body"><div class="nf-date">${featured.date}</div><div class="nf-title">${featured.title}</div><p class="nf-excerpt">${featured.excerpt}</p></div>
+    </div>`;
+  }
+  html+='<div class="news-list">';
+  newsData.filter(n=>!n.featured).forEach(n=>{
+    html+=`<div class="news-card"><div class="nc-cat-dot"></div><div class="nc-body"><div class="nc-cat">${n.cat}</div><div class="nc-title">${n.title}</div><div class="nc-date">${n.date}</div></div></div>`;
+  });
+  html+='</div>';
+  main.innerHTML=html;
+
+  // sidebar prices
+  const pw=document.getElementById('price-widget');
+  const pRows=[['XAU/USD',window._lp?.XAUUSD||'—','up'],['BTC/USDT',window._lp?.BTCUSDT||'—','up'],['ETH/USDT',window._lp?.ETHUSDT||'—','dn']];
+  pw.innerHTML=`<div class="pw-header">Live Prices</div>`+pRows.map(([s,p,c])=>`<div class="pw-row"><span class="pw-sym">${s}</span><span class="pw-price">${typeof p==='number'?p.toFixed(2):p}</span><span class="pw-chg ${c}">${c==='up'?'▲':'▼'}</span></div>`).join('');
+
+  // sidebar popular
+  const aside=document.getElementById('news-aside');
+  aside.innerHTML=`<div class="nsc-header">Artikel Terpopuler</div>`+popularNews.map(a=>`<div class="nsc-item"><div class="nsc-title">${a.title}</div><div class="nsc-meta">${a.date}</div></div>`).join('');
+}
+
+/* ─── Ticker render ─── */
+const SYM_D={XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',ADAUSDT:'ADA/USDT'};
+const TICK_SYMS=['XAUUSD','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
+window._lp={};window._prevLp={};
+
+function renderTicker(){
+  const items=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="ticker-item"><span class="ti-sym">${SYM_D[s]}</span><span class="ti-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span><span class="ti-sep">|</span></div>`}).join('');
+  const doubled=items+items;
+  document.getElementById('ticker-wrap').innerHTML=`<div class="ticker-inner">${doubled}</div>`;
+}
+
+function renderPricebar(){
+  document.getElementById('pricebar').innerHTML=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="pb-item"><span class="pb-sym">${SYM_D[s]}</span><span class="pb-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span></div>`}).join('');
+}
+
+/* ─── Hero chart sparkline ─── */
+const xauHistory=[];
+function updateHeroCard(p,prev){
+  if(!p)return;
+  document.getElementById('hcc-price').textContent=p.toFixed(2);
+  const chgPct=prev?((p-prev)/prev*100):0;
+  const el=document.getElementById('hcc-chg');
+  el.textContent=(chgPct>=0?'▲ +':'▼ ')+Math.abs(chgPct).toFixed(3)+'%';
+  el.className='hcc-change '+(chgPct>=0?'up':'dn');
+  xauHistory.push(p);if(xauHistory.length>40)xauHistory.shift();
+  // sparkline
+  if(xauHistory.length>1){
+    const mn=Math.min(...xauHistory),mx=Math.max(...xauHistory),rng=mx-mn||1;
+    const W=400,H=80,pad=8,xS=(W-2*pad)/(xauHistory.length-1),yS=(H-2*pad)/rng;
+    const pts=xauHistory.map((v,i)=>`${pad+i*xS},${H-pad-(v-mn)*yS}`).join(' ');
+    const lx=pad+(xauHistory.length-1)*xS,ly=H-pad-(xauHistory[xauHistory.length-1]-mn)*yS;
+    document.getElementById('hcc-line').setAttribute('points',pts);
+    document.getElementById('hcc-fill').setAttribute('d',`M${pad},${H-pad} L${pts.replace(/,/g,' L').split(' L').join(' L')} L${lx},${H-pad} Z`);
+  }
+  // high/low from history
+  const mn=Math.min(...xauHistory),mx=Math.max(...xauHistory);
+  document.getElementById('hcc-high').textContent=mx.toFixed(2);
+  document.getElementById('hcc-low').textContent=mn.toFixed(2);
+  document.getElementById('hcc-pct').textContent=(chgPct>=0?'+':'')+chgPct.toFixed(2)+'%';
+  document.getElementById('hcc-pct').className='hcc-metric-v '+(chgPct>=0?'up':'dn');
+}
+
+/* ─── Toast ─── */
+let toastT;
+function toast(sym,msg,color){
+  document.getElementById('tdot').style.background=color;
+  document.getElementById('tsym').textContent=SYM_D[sym]||sym;
+  document.getElementById('tmsg').textContent=msg;
+  const el=document.getElementById('toast');el.classList.add('show');
+  if(toastT)clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),3500);
+}
+window.toast=toast;
+
+/* ─── Journal tabs ─── */
+window.jTab=(n,el)=>{
+  document.querySelectorAll('.journal-page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('jp-'+n).classList.add('on');
+  el.classList.add('on');
 };
+
+window.fltHist=(f,btn)=>{
+  window._histFlt=f;
+  document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderHistory();
+};
+window._histFlt='all';
 </script>
 
 <script type="module">
-/* ════════════════════════════
-   FIREBASE CONFIG
-════════════════════════════ */
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
-  authDomain: "journal-97254.firebaseapp.com",
-  projectId: "journal-97254",
-  storageBucket: "journal-97254.firebasestorage.app",
-  messagingSenderId: "101188824456",
-  appId: "1:101188824456:web:a0ca25a26e63704b361e3d",
+/* ════════════
+   FIREBASE
+════════════ */
+const FB={
+  apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
+  authDomain:"journal-97254.firebaseapp.com",
+  projectId:"journal-97254",
+  storageBucket:"journal-97254.firebasestorage.app",
+  messagingSenderId:"101188824456",
+  appId:"1:101188824456:web:a0ca25a26e63704b361e3d"
 };
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import{getFirestore,doc,getDoc,setDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile }
-  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
-  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+let trades=[],nextId=1,isVip=false,saveDebounce,tickInterval;
+window._curUser=null;
 
-const app  = initializeApp(FIREBASE_CONFIG);
-const auth = getAuth(app);
-const db   = getFirestore(app);
+function fmsg(c){return({
+  'auth/user-not-found':'Akun tidak ditemukan.',
+  'auth/wrong-password':'Password salah.',
+  'auth/invalid-credential':'Email atau password salah.',
+  'auth/email-already-in-use':'Email sudah terdaftar.',
+  'auth/invalid-email':'Format email tidak valid.',
+  'auth/weak-password':'Password terlalu lemah.',
+  'auth/too-many-requests':'Terlalu banyak percobaan. Tunggu sebentar.',
+})[c]||'Error: '+c;}
 
-/* ── Loading helpers ── */
-function setProgress(pct, txt){
-  const b=document.getElementById('loading-bar'), t=document.getElementById('loading-txt');
-  if(b) b.style.width=pct+'%'; if(t) t.textContent=txt;
-}
-function hideLoading(){
-  const el=document.getElementById('loading-screen');
-  el.style.opacity='0'; setTimeout(()=>el.style.display='none',500);
-}
+function setBtnLoad(id,loading,txt){const b=document.getElementById(id);b.disabled=loading;b.innerHTML=loading?'<div class="spin"></div>':`<span>${txt}</span>`;}
 
-setProgress(20,'Checking auth...');
-
-/* ── State ── */
-let trades=[], nextId=1, currentUser=null, isVip=false;
-let saveDebounce=null, tickInterval=null, histFilter='all';
-
-/* ── Auth state ── */
-onAuthStateChanged(auth, async user=>{
-  setProgress(70,'Loading data...');
+/* Auth state */
+onAuthStateChanged(auth,async user=>{
   if(user){
-    currentUser=user;
-    await loadUserData(user.uid);
+    window._curUser=user;
+    await loadData(user.uid);
     showApp(user);
-    setProgress(100,'Ready');
-    setTimeout(hideLoading,300);
-  } else {
-    currentUser=null; isVip=false;
-    setProgress(100,'');
-    setTimeout(()=>{
-      hideLoading();
-      document.getElementById('auth-screen').style.display='none';
-      document.getElementById('app').style.display='none';
-      document.getElementById('landing').style.display='block';
-    },300);
+  }else{
+    window._curUser=null;isVip=false;
+    document.getElementById('nav-guest').style.display='block';
+    document.getElementById('nav-loggedin').style.display='none';
   }
+  document.getElementById('loader').classList.add('out');
 });
 
-/* ── Auth tab switch ── */
-window.switchAuthTab = tab=>{
-  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='login'?0:1)));
-  document.getElementById('form-login').classList.toggle('active',tab==='login');
-  document.getElementById('form-register').classList.toggle('active',tab==='register');
-  document.getElementById('login-err').textContent='';
-  document.getElementById('reg-err').textContent='';
+window.doLogin=async()=>{
+  const email=document.getElementById('li-email').value.trim(),pass=document.getElementById('li-pass').value,err=document.getElementById('li-err');
+  err.textContent='';if(!email||!pass){err.textContent='Email dan password diperlukan.';return;}
+  setBtnLoad('li-btn',true,'Sign In →');
+  try{await signInWithEmailAndPassword(auth,email,pass);}
+  catch(e){err.textContent=fmsg(e.code);setBtnLoad('li-btn',false,'Sign In →');}
 };
 
-function setBtnLoading(id,loading,txt){
-  const b=document.getElementById(id); b.disabled=loading;
-  b.innerHTML=loading?'<div class="spinner-sm"></div>':`<span>${txt}</span>`;
-}
-
-function fireMsg(code){
-  return({
-    'auth/user-not-found':'Akun tidak ditemukan.',
-    'auth/wrong-password':'Password salah.',
-    'auth/invalid-credential':'Email atau password salah.',
-    'auth/email-already-in-use':'Email sudah terdaftar.',
-    'auth/invalid-email':'Format email tidak valid.',
-    'auth/weak-password':'Password terlalu lemah (min 6 karakter).',
-    'auth/too-many-requests':'Terlalu banyak percobaan. Tunggu sebentar.',
-    'auth/network-request-failed':'Masalah koneksi.',
-  })[code]||'Error: '+code;
-}
-
-window.doLogin = async()=>{
-  const email=document.getElementById('login-email').value.trim();
-  const pass=document.getElementById('login-pass').value;
-  const errEl=document.getElementById('login-err');
-  errEl.textContent='';
-  if(!email||!pass){errEl.textContent='Email dan password diperlukan.';return;}
-  setBtnLoading('login-btn',true,'Sign In →');
-  try{ await signInWithEmailAndPassword(auth,email,pass); }
-  catch(e){ errEl.textContent=fireMsg(e.code); setBtnLoading('login-btn',false,'Sign In →'); }
-};
-
-window.doRegister = async()=>{
-  const name=document.getElementById('reg-name').value.trim();
-  const email=document.getElementById('reg-email').value.trim();
-  const pass=document.getElementById('reg-pass').value;
-  const errEl=document.getElementById('reg-err');
-  errEl.textContent='';
-  if(!name||!email||!pass){errEl.textContent='Semua field harus diisi.';return;}
-  if(pass.length<6){errEl.textContent='Password minimal 6 karakter.';return;}
-  setBtnLoading('reg-btn',true,'Buat Akun →');
+window.doRegister=async()=>{
+  const name=document.getElementById('ri-name').value.trim(),email=document.getElementById('ri-email').value.trim(),pass=document.getElementById('ri-pass').value,err=document.getElementById('ri-err');
+  err.textContent='';if(!name||!email||!pass){err.textContent='Semua field harus diisi.';return;}
+  if(pass.length<6){err.textContent='Password minimal 6 karakter.';return;}
+  setBtnLoad('ri-btn',true,'Buat Akun →');
   try{
     const cred=await createUserWithEmailAndPassword(auth,email,pass);
     await updateProfile(cred.user,{displayName:name});
-    await setDoc(doc(db,'users',cred.user.uid),{
-      displayName:name,email,vip:false,
-      trades:[],nextId:1,createdAt:serverTimestamp()
-    });
-  }catch(e){ errEl.textContent=fireMsg(e.code); setBtnLoading('reg-btn',false,'Buat Akun →'); }
+    await setDoc(doc(db,'users',cred.user.uid),{displayName:name,email,vip:false,trades:[],nextId:1,createdAt:serverTimestamp()});
+  }catch(e){document.getElementById('ri-err').textContent=fmsg(e.code);setBtnLoad('ri-btn',false,'Buat Akun →');}
 };
 
-window.doLogout = async()=>{
+window.doLogout=async()=>{
   await persistTrades();
   await signOut(auth);
+  goPage('home');
+  if(tickInterval){clearInterval(tickInterval);tickInterval=null;}
 };
 
-window.doResetPassword = async()=>{
-  const email=currentUser?.email||document.getElementById('login-email').value.trim();
-  if(!email){showToast('MGF','Masukkan email dulu','#f87171');return;}
+window.doReset=async()=>{
+  const email=window._curUser?.email;if(!email)return;
   try{
     await sendPasswordResetEmail(auth,email);
-    const ok=document.getElementById('reset-ok');
-    if(ok){ok.style.display='block';setTimeout(()=>ok.style.display='none',5000);}
-    showToast('MGF','Reset email dikirim!','#4ade80');
-  }catch(e){showToast('MGF',fireMsg(e.code),'#f87171');}
+    const ok=document.getElementById('reset-ok');ok.style.display='block';
+    setTimeout(()=>ok.style.display='none',5000);
+    toast('MGF','Reset email dikirim!','#3DBA7A');
+  }catch(e){toast('MGF',fmsg(e.code),'#E05A5A');}
 };
 
-/* ── Data load/save ── */
-async function loadUserData(uid){
+/* Data */
+async function loadData(uid){
   try{
     const snap=await getDoc(doc(db,'users',uid));
-    if(snap.exists()){
-      const d=snap.data();
-      trades=d.trades||[];
-      nextId=d.nextId||(trades.length?Math.max(...trades.map(t=>t.id))+1:1);
-      isVip=d.vip===true;
-      const ts=d.updatedAt?.toDate();
-      if(ts) document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');
-    } else { trades=[]; nextId=1; isVip=false; }
-  }catch(e){ console.error('Load error:',e); trades=[]; nextId=1; isVip=false; }
+    if(snap.exists()){const d=snap.data();trades=d.trades||[];nextId=d.nextId||(trades.length?Math.max(...trades.map(t=>t.id))+1:1);isVip=d.vip===true;const ts=d.updatedAt?.toDate();if(ts)document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');}
+    else{trades=[];nextId=1;isVip=false;}
+  }catch(e){trades=[];nextId=1;isVip=false;}
 }
 
 async function persistTrades(){
-  if(!currentUser) return;
+  if(!window._curUser)return;
   setSaveStatus('saving');
   try{
-    await setDoc(doc(db,'users',currentUser.uid),{
-      trades,nextId,updatedAt:serverTimestamp()
-    },{merge:true});
+    await setDoc(doc(db,'users',window._curUser.uid),{trades,nextId,updatedAt:serverTimestamp()},{merge:true});
     setSaveStatus('saved');
-    document.getElementById('acc-tradecount').textContent=trades.length+' trades';
+    document.getElementById('acc-trades').textContent=trades.length+' trades';
     document.getElementById('acc-lastsave').textContent=new Date().toLocaleString('id-ID');
-  }catch(e){ console.error('Save error:',e); setSaveStatus('error'); }
+  }catch(e){setSaveStatus('error');}
 }
 
-function triggerSave(){
-  setSaveStatus('saving'); clearTimeout(saveDebounce);
-  saveDebounce=setTimeout(persistTrades,1200);
-}
+function triggerSave(){setSaveStatus('saving');clearTimeout(saveDebounce);saveDebounce=setTimeout(persistTrades,1200);}
 
-function setSaveStatus(s){
-  const el=document.getElementById('save-status'),lbl=document.getElementById('save-label');
-  el.className='save-status '+s;
-  lbl.textContent=s==='saved'?'Saved':s==='saving'?'Saving...':s==='error'?'Error':'—';
-}
+function setSaveStatus(s){const el=document.getElementById('save-status'),lb=document.getElementById('save-lbl');el.className='save-status '+s;lb.textContent=s==='saved'?'Saved':s==='saving'?'Saving...':s==='error'?'Error':'—';}
 
-/* ── Show app ── */
+/* Show app */
 function showApp(user){
-  document.getElementById('auth-screen').style.display='none';
-  document.getElementById('landing').style.display='none';
-  document.getElementById('app').style.display='block';
   const name=user.displayName||user.email.split('@')[0];
-  document.getElementById('user-avatar').textContent=name.charAt(0).toUpperCase();
-  document.getElementById('user-name-display').textContent=name;
+  // nav
+  document.getElementById('nav-guest').style.display='none';
+  document.getElementById('nav-loggedin').style.display='block';
+  document.getElementById('nav-avatar').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('nav-uname').textContent=name;
+  document.getElementById('nav-vip-pill').style.display=isVip?'block':'none';
+  // app header
+  document.getElementById('ap-avatar').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('ap-uname').textContent=name;
+  document.getElementById('ap-vip').style.display=isVip?'block':'none';
+  document.getElementById('btn-newtrade').style.display=isVip?'block':'none';
+  document.getElementById('danger-vip').style.display=isVip?'block':'none';
+  // acc
   document.getElementById('acc-email').textContent=user.email;
-  document.getElementById('acc-dispname').textContent=name;
-  document.getElementById('acc-tradecount').textContent=trades.length+' trades';
-  document.getElementById('acc-vip-status').innerHTML=isVip
-    ?'<span style="color:var(--gold)">✦ VIP Member</span>'
-    :'<span style="color:var(--text-dim)">Regular (hubungi admin untuk upgrade)</span>';
-  // VIP badge + log trade btn
-  document.getElementById('vip-badge').style.display=isVip?'block':'none';
-  document.getElementById('btn-log-trade').style.display=isVip?'block':'none';
-  // Danger zone
-  document.getElementById('danger-zone-vip').style.display=isVip?'block':'none';
-  // VIP content/lock
+  document.getElementById('acc-name').textContent=name;
+  document.getElementById('acc-trades').textContent=trades.length+' trades';
+  document.getElementById('acc-status').innerHTML=isVip?'<span style="color:var(--gold)">✦ VIP Member</span>':'<span style="color:var(--text3)">Regular — hubungi admin untuk upgrade</span>';
+  // vip locks
   ['dash','hist','notes'].forEach(k=>{
-    document.getElementById(k+'-vip-lock').style.display=isVip?'none':'block';
-    document.getElementById(k+'-vip-content').style.display=isVip?'block':'none';
+    document.getElementById('vip-lock-'+k).style.display=isVip?'none':'block';
+    document.getElementById('vip-cnt-'+k).style.display=isVip?'block':'none';
   });
   setSaveStatus('saved');
   renderAll();
-  if(!tickInterval) tickInterval=setInterval(tick,8000);
+  goPage('journal');
+  if(!tickInterval)tickInterval=setInterval(tick,9000);
   tick();
 }
 
-/* ════════════════════════════
-   PRICE FETCHING
-════════════════════════════ */
-const SYMS=['XAUUSD','XAUTUSDT','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
-const SYM_D={
-  XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',
-  BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',
-  BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',
-  ADAUSDT:'ADA/USDT',AVAXUSDT:'AVAX/USDT'
-};
-const CRYPTO_SYMS=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT','AVAXUSDT'];
-const XAU_OFFSET=-2;
-let livePrices={}, prevPrices={};
+/* ─── Prices ─── */
+const CRYPTO=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT'];
+const XAU_OFF=-2;
 
-async function fetchGoldAPI(){
-  const r=await fetch('https://api.gold-api.com/price/XAU',{signal:AbortSignal.timeout(6000)});
-  if(!r.ok) throw new Error('gold-api '+r.status);
-  const d=await r.json();
-  if(!d.price) throw new Error('no price');
-  return parseFloat(d.price)+XAU_OFFSET;
+async function fetchXau(){
+  try{const r=await fetch('https://api.gold-api.com/price/XAU',{signal:AbortSignal.timeout(6000)});const d=await r.json();if(d.price){const p=parseFloat(d.price)+XAU_OFF;window._lp.XAUUSD=p;window._lp.XAUTUSDT=p;return;}}catch(_){}
+  try{const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});const d=await r.json();const p=d?.items?.[0]?.xauPrice;if(p){const v=parseFloat(p)+XAU_OFF;window._lp.XAUUSD=v;window._lp.XAUTUSDT=v;}}catch(_){}
 }
-async function fetchGoldPriceZ(){
-  const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});
-  if(!r.ok) throw new Error('goldpricez '+r.status);
-  const d=await r.json();
-  const p=d?.items?.[0]?.xauPrice;
-  if(!p) throw new Error('no price');
-  return parseFloat(p)+XAU_OFFSET;
-}
-async function fetchXauSpot(){
-  for(const fn of [fetchGoldAPI,fetchGoldPriceZ]){
-    try{
-      const p=await fn();
-      if(p>100&&p<100000){ livePrices['XAUUSD']=p; livePrices['XAUTUSDT']=p; return; }
-    }catch(e){}
-  }
-}
-async function fetchBinance(){
-  const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(CRYPTO_SYMS))}`,{signal:AbortSignal.timeout(5000)});
-  if(!r.ok) throw new Error('binance');
-  const data=await r.json();
-  const prices={};
-  data.forEach(d=>{ prices[d.symbol]=parseFloat(d.lastPrice); });
-  return prices;
-}
-async function fetchCoinGecko(){
-  const cgIds={BTCUSDT:'bitcoin',ETHUSDT:'ethereum',SOLUSDT:'solana',BNBUSDT:'binancecoin',XRPUSDT:'ripple',DOGEUSDT:'dogecoin',ADAUSDT:'cardano',AVAXUSDT:'avalanche-2'};
-  const ids=Object.values(cgIds).join(',');
-  const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`,{signal:AbortSignal.timeout(7000)});
-  if(!r.ok) throw new Error('coingecko');
-  const data=await r.json();
-  const prices={};
-  Object.entries(cgIds).forEach(([sym,id])=>{ if(data[id]?.usd) prices[sym]=data[id].usd; });
-  if(!Object.keys(prices).length) throw new Error('empty');
-  return prices;
-}
+
 async function fetchCrypto(){
-  for(const fn of [fetchBinance,fetchCoinGecko]){
-    try{
-      const prices=await fn();
-      Object.entries(prices).forEach(([k,v])=>{ if(v&&!isNaN(v)) livePrices[k]=v; });
-      return;
-    }catch(e){}
-  }
+  try{
+    const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(CRYPTO))}`,{signal:AbortSignal.timeout(5000)});
+    const data=await r.json();data.forEach(d=>{window._lp[d.symbol]=parseFloat(d.lastPrice)});return;
+  }catch(_){}
+  try{
+    const cgIds={BTCUSDT:'bitcoin',ETHUSDT:'ethereum',SOLUSDT:'solana',BNBUSDT:'binancecoin',XRPUSDT:'ripple',DOGEUSDT:'dogecoin',ADAUSDT:'cardano'};
+    const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(cgIds).join(',')}&vs_currencies=usd`,{signal:AbortSignal.timeout(7000)});
+    const d=await r.json();Object.entries(cgIds).forEach(([s,id])=>{if(d[id]?.usd)window._lp[s]=d[id].usd;});
+  }catch(_){}
 }
+
 async function fetchPrices(){
-  prevPrices={...livePrices};
-  await Promise.allSettled([fetchXauSpot(),fetchCrypto()]);
-  const has=Object.keys(livePrices).length>0;
-  document.getElementById('live-dot').style.background=has?'#4A9E6A':'#f87171';
-  document.getElementById('live-label').textContent=has?'Live':'Offline';
+  window._prevLp={...window._lp};
+  await Promise.allSettled([fetchXau(),fetchCrypto()]);
+  const hasData=Object.keys(window._lp).length>0;
+  const dot=document.getElementById('ap-dot');
+  if(dot){dot.className='live-dot'+(hasData?' on':'');document.getElementById('ap-live').textContent=hasData?'Live':'Offline';}
 }
-
-function renderTicker(){
-  document.getElementById('price-ticker').innerHTML=SYMS.map(sym=>{
-    const p=livePrices[sym],prev=prevPrices[sym]||p; if(!p) return '';
-    const up=p>=(prev||p),chg=prev?((p-prev)/prev*100):0;
-    const dec=sym==='XAUUSD'||sym==='XAUTUSDT'?2:(p<1?4:2);
-    return `<div class="ticker-item"><span class="ticker-sym">${SYM_D[sym]}</span><span class="ticker-price">${p.toFixed(dec)}</span><span class="ticker-chg ${up?'up':'dn'}">${up?'▲':'▼'} ${Math.abs(chg).toFixed(2)}%</span></div>`;
-  }).join('');
-}
-
-/* ════════════════════════════
-   TRADE HELPERS
-════════════════════════════ */
-const calcPnl=t=>!t.exit?null:+((t.dir==='Long'?(t.exit-t.entry):(t.entry-t.exit))*t.size).toFixed(2);
-const calcOpenPnl=t=>{const cp=livePrices[t.symbol];return cp?((t.dir==='Long'?(cp-t.entry):(t.entry-cp))*t.size):null;};
-const calcR=t=>{if(!t.exit||!t.sl)return null;const risk=Math.abs(t.entry-t.sl)*t.size,pnl=calcPnl(t);return(!risk||pnl===null)?null:+(pnl/risk).toFixed(2);};
-const calcProg=t=>{const cp=livePrices[t.symbol];if(!cp||!t.sl||!t.tp)return null;const range=t.dir==='Long'?t.tp-t.sl:t.sl-t.tp;return range<=0?null:Math.min(100,Math.max(0,((t.dir==='Long'?cp-t.sl:t.sl-cp)/range)*100));};
-const fmtMoney=n=>{if(n===null||isNaN(n))return'—';const a=Math.abs(n),s=a>=1000?'$'+(a/1000).toFixed(2)+'K':'$'+a.toFixed(2);return(n<0?'-':'')+s;};
-const fmtPct=n=>n===null||isNaN(n)?'—':(n>0?'+':'')+n.toFixed(2)+'%';
-const symDec=sym=>(sym==='XAUUSD'||sym==='XAUTUSDT')?2:((livePrices[sym]||0)<1?4:2);
-const fmtPrice=(n,sym)=>n===null||isNaN(n)?'—':n.toFixed(symDec(sym));
 
 function autoCheck(){
   let changed=false;
   trades.forEach(t=>{
-    if(t.exit!==null) return;
-    const cp=livePrices[t.symbol]; if(!cp) return;
-    if(t.type==='limit'&&!t.activated){
-      if(t.dir==='Long'?cp<=t.entry:cp>=t.entry){t.activated=true;showToast(t.symbol,'Limit triggered','#D4AF37');changed=true;}
-      else return;
-    }
-    if(t.sl&&(t.dir==='Long'?cp<=t.sl:cp>=t.sl)){t.exit=t.sl;t.closedReason='SL';t.date_close=new Date().toISOString().slice(0,10);showToast(t.symbol,'Stop Loss hit','#f87171');changed=true;}
-    if(!t.exit&&t.tp&&(t.dir==='Long'?cp>=t.tp:cp<=t.tp)){t.exit=t.tp;t.closedReason='TP';t.date_close=new Date().toISOString().slice(0,10);showToast(t.symbol,'Take Profit hit','#4ade80');changed=true;}
-  });
-  return changed;
+    if(t.exit!==null)return;
+    const cp=window._lp[t.symbol];if(!cp)return;
+    if(t.type==='limit'&&!t.activated){if(t.dir==='Long'?cp<=t.entry:cp>=t.entry){t.activated=true;toast(t.symbol,'Limit triggered','#C9A84C');changed=true;}else return;}
+    if(t.sl&&(t.dir==='Long'?cp<=t.sl:cp>=t.sl)){t.exit=t.sl;t.closedReason='SL';t.date_close=new Date().toISOString().slice(0,10);toast(t.symbol,'Stop Loss hit','#E05A5A');changed=true;}
+    if(!t.exit&&t.tp&&(t.dir==='Long'?cp>=t.tp:cp<=t.tp)){t.exit=t.tp;t.closedReason='TP';t.date_close=new Date().toISOString().slice(0,10);toast(t.symbol,'Take Profit hit','#3DBA7A');changed=true;}
+  });return changed;
 }
 
-/* ════════════════════════════
-   RENDER FUNCTIONS
-════════════════════════════ */
+/* ─── Helpers ─── */
+const calcPnl=t=>!t.exit?null:+((t.dir==='Long'?(t.exit-t.entry):(t.entry-t.exit))*t.size).toFixed(2);
+const calcOpnl=t=>{const cp=window._lp[t.symbol];return cp?((t.dir==='Long'?(cp-t.entry):(t.entry-cp))*t.size):null;};
+const calcR=t=>{if(!t.exit||!t.sl)return null;const risk=Math.abs(t.entry-t.sl)*t.size,pnl=calcPnl(t);return(!risk||pnl===null)?null:+(pnl/risk).toFixed(2);};
+const calcProg=t=>{const cp=window._lp[t.symbol];if(!cp||!t.sl||!t.tp)return null;const rng=t.dir==='Long'?t.tp-t.sl:t.sl-t.tp;return rng<=0?null:Math.min(100,Math.max(0,((t.dir==='Long'?cp-t.sl:t.sl-cp)/rng)*100));};
+const fmtM=n=>{if(n===null||isNaN(n))return'—';const a=Math.abs(n),s=a>=1000?'$'+(a/1000).toFixed(2)+'K':'$'+a.toFixed(2);return(n<0?'-':'')+s;};
+const fmtPct=n=>n===null||isNaN(n)?'—':(n>0?'+':'')+n.toFixed(2)+'%';
+const sDec=s=>(s==='XAUUSD'||s==='XAUTUSDT')?2:((window._lp[s]||0)<1?4:2);
+const fmtP=(n,s)=>n===null||isNaN(n)?'—':n.toFixed(sDec(s));
+
+/* ─── Render ─── */
 function renderStats(){
-  const closed=trades.filter(t=>t.exit!==null);
-  const open=trades.filter(t=>t.exit===null&&(t.type!=='limit'||t.activated));
-  const wins=closed.filter(t=>calcPnl(t)>0),losses=closed.filter(t=>calcPnl(t)<=0);
-  const totalPnl=closed.reduce((a,t)=>a+calcPnl(t),0);
-  const winRate=closed.length?(wins.length/closed.length*100):0;
-  const avgR=closed.length?closed.reduce((a,t)=>{const r=calcR(t);return a+(r||0);},0)/closed.length:0;
-  const openPnl=open.reduce((a,t)=>{const p=calcOpenPnl(t);return a+(p||0);},0);
+  const closed=trades.filter(t=>t.exit!==null),open=trades.filter(t=>t.exit===null&&(t.type!=='limit'||t.activated));
+  const wins=closed.filter(t=>calcPnl(t)>0),totalPnl=closed.reduce((a,t)=>a+calcPnl(t),0);
+  const wr=closed.length?(wins.length/closed.length*100):0,avgR=closed.length?closed.reduce((a,t)=>{const r=calcR(t);return a+(r||0);},0)/closed.length:0;
+  const openPnl=open.reduce((a,t)=>{const p=calcOpnl(t);return a+(p||0);},0);
   document.getElementById('stats-row').innerHTML=[
-    {lbl:'Total P&L',val:fmtMoney(totalPnl),cls:totalPnl>=0?'pos':'neg',sub:closed.length+' closed trades'},
-    {lbl:'Win Rate',val:winRate.toFixed(0)+'%',cls:winRate>=50?'pos':'neg',sub:wins.length+'W / '+losses.length+'L'},
-    {lbl:'Avg R Multiple',val:(avgR>0?'+':'')+avgR.toFixed(2)+'R',cls:avgR>=1?'pos':'neg',sub:'Risk-adjusted'},
-    {lbl:'Open Positions',val:open.length,cls:'',sub:fmtMoney(openPnl)+' unrealized'},
-    {lbl:'Total Trades',val:trades.length,cls:'',sub:closed.length+' closed'},
-  ].map(s=>`<div class="stat-card"><div class="scard-label">${s.lbl}</div><div class="scard-val ${s.cls}">${s.val}</div><div class="scard-sub">${s.sub}</div></div>`).join('');
+    {l:'Total P&L',v:fmtM(totalPnl),c:totalPnl>=0?'g':'r',s:closed.length+' closed trades'},
+    {l:'Win Rate',v:wr.toFixed(0)+'%',c:wr>=50?'g':'r',s:wins.length+'W / '+(closed.length-wins.length)+'L'},
+    {l:'Avg R Multiple',v:(avgR>0?'+':'')+avgR.toFixed(2)+'R',c:avgR>=1?'g':'r',s:'Risk-adjusted'},
+    {l:'Open Positions',v:open.length,c:'',s:fmtM(openPnl)+' unrealized'},
+    {l:'Total Trades',v:trades.length,c:'',s:closed.length+' closed'},
+  ].map(s=>`<div class="scard"><div class="scard-l">${s.l}</div><div class="scard-v ${s.c}">${s.v}</div><div class="scard-sub">${s.s}</div></div>`).join('');
 }
 
 function renderOpen(){
   const open=trades.filter(t=>t.exit===null);
-  const tbody=document.getElementById('open-tbody');
-  if(!open.length){tbody.innerHTML=`<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">✦</div>No open positions</div></td></tr>`;return;}
-  tbody.innerHTML=open.map(t=>{
-    const cp=livePrices[t.symbol],isLim=t.type==='limit'&&!t.activated;
-    const pnl=isLim?null:calcOpenPnl(t),pnlPct=(pnl!==null&&t.entry&&t.size)?(pnl/(t.entry*t.size)*100):null;
-    const prog=!isLim?calcProg(t):null,pc=prog!==null?(prog>66?'#4ade80':prog>33?'#D4AF37':'#f87171'):'var(--text-dim)';
-    return `<tr>
-      <td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td>
-      <td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td>
-      <td>${fmtPrice(t.entry,t.symbol)}</td>
-      <td style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text)">${cp?fmtPrice(cp,t.symbol):'—'}</td>
-      <td><span style="color:var(--red)">${t.sl?fmtPrice(t.sl,t.symbol):'—'}</span> <span style="color:var(--text-dim)">/</span> <span style="color:var(--green)">${t.tp?fmtPrice(t.tp,t.symbol):'—'}</span></td>
-      <td>${t.size}</td>
-      <td class="${pnl===null?'':pnl>=0?'pnl-pos':'pnl-neg'}">${pnl===null?`<span style="color:var(--text-dim)">Pending</span>`:fmtMoney(pnl)+` <span style="opacity:.5;font-size:.6rem">(${fmtPct(pnlPct)})</span>`}</td>
-      <td>${prog!==null?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${prog.toFixed(0)}%;background:${pc}"></div></div><div class="prog-txt">${prog.toFixed(0)}% to TP</div></div>`:isLim?`<span style="font-size:.6rem;color:var(--text-dim)">Waiting</span>`:'—'}</td>
-      <td>${isLim?'<span class="badge limit">Limit</span>':'<span class="badge open">Open</span>'}</td>
-      <td><div class="row-actions"><button class="act-btn" onclick="window.__editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window.__deleteTrade(${t.id})">Del</button></div></td>
-    </tr>`;
+  const tb=document.getElementById('open-tbody');
+  if(!open.length){tb.innerHTML=`<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">✦</div>No open positions</div></td></tr>`;return;}
+  tb.innerHTML=open.map(t=>{
+    const cp=window._lp[t.symbol],isLim=t.type==='limit'&&!t.activated;
+    const pnl=isLim?null:calcOpnl(t),pnlPct=(pnl!==null&&t.entry&&t.size)?(pnl/(t.entry*t.size)*100):null;
+    const prog=!isLim?calcProg(t):null,pc=prog!==null?(prog>66?'#3DBA7A':prog>33?'#C9A84C':'#E05A5A'):'var(--text3)';
+    return`<tr><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td style="font-family:'Cormorant Garamond',serif;font-size:1rem">${cp?fmtP(cp,t.symbol):'—'}</td><td><span style="color:var(--red)">${t.sl?fmtP(t.sl,t.symbol):'—'}</span> / <span style="color:var(--green)">${t.tp?fmtP(t.tp,t.symbol):'—'}</span></td><td>${t.size}</td><td class="${pnl===null?'':pnl>=0?'p-pos':'p-neg'}">${pnl===null?`<span style="color:var(--text3)">${isLim?'Pending':'—'}</span>`:fmtM(pnl)+` <span style="opacity:.5;font-size:.6rem">(${fmtPct(pnlPct)})</span>`}</td><td>${prog!==null?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${prog.toFixed(0)}%;background:${pc}"></div></div><div class="prog-txt">${prog.toFixed(0)}% to TP</div></div>`:isLim?`<span style="font-size:.6rem;color:var(--text3)">Waiting</span>`:'—'}</td><td>${isLim?'<span class="badge lim">Limit</span>':'<span class="badge open">Open</span>'}</td><td><div class="row-actions"><button class="act-btn" onclick="editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="delTrade(${t.id})">Del</button></div></td></tr>`;
   }).join('');
 }
 
 function renderHistory(){
   let data=trades.filter(t=>t.exit!==null);
-  if(histFilter==='win') data=data.filter(t=>calcPnl(t)>0);
-  if(histFilter==='loss') data=data.filter(t=>calcPnl(t)<=0);
-  const tbody=document.getElementById('hist-tbody');
-  if(!data.length){tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">✦</div>No trades found</div></td></tr>`;return;}
-  tbody.innerHTML=[...data].reverse().map(t=>{
-    const pnl=calcPnl(t),r=calcR(t);
-    const rb=t.closedReason?`<span class="badge ${t.closedReason==='TP'?'tp-hit':'sl-hit'}" style="margin-left:4px">${t.closedReason}</span>`:'';
-    return `<tr>
-      <td>${t.date_close||t.date}</td>
-      <td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td>
-      <td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td>
-      <td>${fmtPrice(t.entry,t.symbol)}</td>
-      <td>${fmtPrice(t.exit,t.symbol)}${rb}</td>
-      <td>${t.size}</td>
-      <td class="${pnl>0?'pnl-pos':'pnl-neg'}">${fmtMoney(pnl)}</td>
-      <td class="${r&&r>=1?'pnl-pos':r&&r<0?'pnl-neg':'pnl-neut'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td>
-      <td><div class="row-actions"><button class="act-btn" onclick="window.__editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window.__deleteTrade(${t.id})">Del</button></div></td>
-    </tr>`;
+  if(window._histFlt==='win')data=data.filter(t=>calcPnl(t)>0);
+  if(window._histFlt==='loss')data=data.filter(t=>calcPnl(t)<=0);
+  const tb=document.getElementById('hist-tbody');
+  if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">✦</div>No trades found</div></td></tr>`;return;}
+  tb.innerHTML=[...data].reverse().map(t=>{const pnl=calcPnl(t),r=calcR(t),rb=t.closedReason?`<span class="badge ${t.closedReason==='TP'?'tp':'sl'}" style="margin-left:4px">${t.closedReason}</span>`:'';
+    return`<tr><td>${t.date_close||t.date}</td><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td>${fmtP(t.exit,t.symbol)}${rb}</td><td>${t.size}</td><td class="${pnl>0?'p-pos':'p-neg'}">${fmtM(pnl)}</td><td class="${r&&r>=1?'p-pos':r&&r<0?'p-neg':'p-neu'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td><td><div class="row-actions"><button class="act-btn" onclick="editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="delTrade(${t.id})">Del</button></div></td></tr>`;
   }).join('');
 }
 
 function renderEquity(){
   const closed=trades.filter(t=>t.exit!==null).sort((a,b)=>(a.date_close||a.date).localeCompare(b.date_close||b.date));
-  let cum=0; const pts=[{v:0}]; closed.forEach(t=>{cum+=calcPnl(t);pts.push({v:cum});});
-  if(pts.length<2){document.getElementById('equity-svg').innerHTML='';return;}
-  const vals=pts.map(p=>p.v),mn=Math.min(...vals),mx=Math.max(...vals),range=mx-mn||1;
-  const W=440,H=120,pad=16,xS=(W-2*pad)/(pts.length-1),yS=(H-2*pad)/range;
+  let cum=0;const pts=[{v:0}];closed.forEach(t=>{cum+=calcPnl(t);pts.push({v:cum})});
+  if(pts.length<2){document.getElementById('eq-svg').innerHTML='';return;}
+  const vals=pts.map(p=>p.v),mn=Math.min(...vals),mx=Math.max(...vals),rng=mx-mn||1;
+  const W=440,H=120,pad=16,xS=(W-2*pad)/(pts.length-1),yS=(H-2*pad)/rng;
   const pstr=pts.map((p,i)=>`${pad+i*xS},${H-pad-(p.v-mn)*yS}`).join(' ');
   const lx=pad+(pts.length-1)*xS,ly=H-pad-(pts[pts.length-1].v-mn)*yS;
-  document.getElementById('equity-svg').innerHTML=`
-    <defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D4AF37" stop-opacity=".2"/><stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/></linearGradient></defs>
-    <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="rgba(212,175,55,.1)" stroke-width="1"/>
-    <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="rgba(212,175,55,.1)" stroke-width="1"/>
-    <path d="M${pad},${H-pad-(pts[0].v-mn)*yS} L${pstr} L${lx},${H-pad} L${pad},${H-pad} Z" fill="url(#eg)"/>
-    <polyline points="${pstr}" stroke="#D4AF37" stroke-width="2" fill="none"/>
-    <circle cx="${lx}" cy="${ly}" r="3.5" fill="#D4AF37"/>`;
+  document.getElementById('eq-svg').innerHTML=`<defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".2"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="rgba(201,168,76,.08)" stroke-width="1"/><line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="rgba(201,168,76,.08)" stroke-width="1"/><path d="M${pad},${H-pad-(pts[0].v-mn)*yS} L${pstr} L${lx},${H-pad} L${pad},${H-pad} Z" fill="url(#eqg)"/><polyline points="${pstr}" stroke="#C9A84C" stroke-width="2" fill="none"/><circle cx="${lx}" cy="${ly}" r="3.5" fill="#C9A84C"/>`;
 }
 
-function renderBreakdown(){
-  const syms={}; trades.filter(t=>t.exit).forEach(t=>{const p=calcPnl(t);syms[t.symbol]=(syms[t.symbol]||0)+p;});
+function renderBkd(){
+  const syms={};trades.filter(t=>t.exit).forEach(t=>{const p=calcPnl(t);syms[t.symbol]=(syms[t.symbol]||0)+p;});
   const arr=Object.entries(syms).sort((a,b)=>b[1]-a[1]);
-  if(!arr.length){document.getElementById('breakdown-list').innerHTML='<div class="empty-state" style="padding:20px">No closed trades</div>';return;}
+  if(!arr.length){document.getElementById('bkd-list').innerHTML='<div class="empty-state" style="padding:20px">No closed trades</div>';return;}
   const maxA=Math.max(...arr.map(a=>Math.abs(a[1])));
-  document.getElementById('breakdown-list').innerHTML=arr.map(([sym,pnl])=>`
-    <div class="bk-row"><span class="bk-sym">${SYM_D[sym]||sym}</span>
-    <div class="bk-bar-wrap"><div class="bk-bar" style="width:${(Math.abs(pnl)/maxA*100).toFixed(1)}%;background:${pnl>=0?'#4ade80':'#f87171'}"></div></div>
-    <span class="bk-val ${pnl>=0?'pnl-pos':'pnl-neg'}">${fmtMoney(pnl)}</span></div>`).join('');
+  document.getElementById('bkd-list').innerHTML=arr.map(([sym,pnl])=>`<div class="bk-row"><span class="bk-sym">${SYM_D[sym]||sym}</span><div class="bk-bar-wrap"><div class="bk-bar" style="width:${(Math.abs(pnl)/maxA*100).toFixed(1)}%;background:${pnl>=0?'#3DBA7A':'#E05A5A'}"></div></div><span class="bk-val ${pnl>=0?'p-pos':'p-neg'}">${fmtM(pnl)}</span></div>`).join('');
 }
 
 function renderNotes(){
-  const notes=trades.filter(t=>t.notes),grid=document.getElementById('notes-grid');
-  if(!notes.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div>No journal notes yet</div>`;return;}
-  grid.innerHTML=[...notes].reverse().map(t=>`
-    <div class="note-card">
-      <div class="note-sym">${SYM_D[t.symbol]||t.symbol}</div>
-      <div class="note-date">${t.date} · ${t.dir}</div>
-      <div class="note-txt">${t.notes}</div>
-      ${t.tag?`<div class="note-tag">✦ ${t.tag}</div>`:''}
-    </div>`).join('');
+  const notes=trades.filter(t=>t.notes),g=document.getElementById('notes-grid');
+  if(!notes.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div>No journal notes yet</div>`;return;}
+  g.innerHTML=[...notes].reverse().map(t=>`<div class="note-card"><div class="note-sym">${SYM_D[t.symbol]||t.symbol}</div><div class="note-date">${t.date} · ${t.dir}</div><div class="note-txt">${t.notes}</div>${t.tag?`<div class="note-tag">✦ ${t.tag}</div>`:''}</div>`).join('');
 }
 
-function renderAll(){ renderStats();renderOpen();renderHistory();renderEquity();renderBreakdown();renderNotes(); }
+function renderAll(){renderStats();renderOpen();renderHistory();renderEquity();renderBkd();renderNotes();}
 
-/* ── Page switch ── */
-window.switchPage=(name,el)=>{
-  document.querySelectorAll('.app-page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  if(el) el.classList.add('active');
-};
-
-window.filterHistory=(f,btn)=>{
-  histFilter=f;
-  document.querySelectorAll('.filt-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHistory();
-};
-
-/* ── Modal ── */
+/* ─── Modal ─── */
 window.openModal=(t=null)=>{
-  if(!isVip){showToast('MGF','Fitur VIP — hubungi admin','#D4AF37');return;}
-  document.getElementById('modal-title-txt').textContent=t?'Edit Trade':'Log New Trade';
-  document.getElementById('edit-idx').value=t?t.id:'';
-  ['symbol','dir','type'].forEach(f=>document.getElementById('f-'+f).value=t?t[f]:(f==='symbol'?'XAUUSD':f==='dir'?'Long':'market'));
+  if(!isVip){toast('MGF','Fitur VIP — hubungi admin','#C9A84C');return;}
+  document.getElementById('modal-ttl').textContent=t?'Edit Trade':'Log New Trade';
+  document.getElementById('edit-id').value=t?t.id:'';
+  ['sym','dir','type'].forEach(f=>document.getElementById('f-'+f).value=t?t[f]:(f==='sym'?'XAUUSD':f==='dir'?'Long':'market'));
   document.getElementById('f-entry').value=t?t.entry:'';
   document.getElementById('f-exit').value=t&&t.exit?t.exit:'';
   document.getElementById('f-sl').value=t&&t.sl?t.sl:'';
@@ -1678,21 +1586,19 @@ window.openModal=(t=null)=>{
   document.getElementById('overlay').classList.add('open');
 };
 window.closeModal=()=>document.getElementById('overlay').classList.remove('open');
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))window.closeModal();});
 
-window.__editTrade=id=>window.openModal(trades.find(t=>t.id===id));
-window.__deleteTrade=id=>{
-  if(!confirm('Delete this trade?')) return;
-  trades=trades.filter(t=>t.id!==id); renderAll(); triggerSave();
-};
+window.editTrade=id=>window.openModal(trades.find(t=>t.id===id));
+window.delTrade=id=>{if(!confirm('Delete this trade?'))return;trades=trades.filter(t=>t.id!==id);renderAll();triggerSave();};
 
 window.saveTrade=()=>{
-  if(!isVip) return;
-  const sym=document.getElementById('f-symbol').value,entry=parseFloat(document.getElementById('f-entry').value);
+  if(!isVip)return;
+  const sym=document.getElementById('f-sym').value,entry=parseFloat(document.getElementById('f-entry').value);
   if(!sym||!entry){alert('Symbol dan Entry harus diisi.');return;}
   const exitVal=document.getElementById('f-exit').value;
-  const existing=trades.find(t=>t.id===parseInt(document.getElementById('edit-idx').value));
+  const existing=trades.find(t=>t.id===parseInt(document.getElementById('edit-id').value));
   const obj={
-    id:document.getElementById('edit-idx').value?parseInt(document.getElementById('edit-idx').value):nextId++,
+    id:document.getElementById('edit-id').value?parseInt(document.getElementById('edit-id').value):nextId++,
     symbol:sym,dir:document.getElementById('f-dir').value,type:document.getElementById('f-type').value,
     activated:existing?.activated||false,entry,exit:exitVal?parseFloat(exitVal):null,
     size:parseFloat(document.getElementById('f-size').value)||1,
@@ -1701,40 +1607,28 @@ window.saveTrade=()=>{
     notes:document.getElementById('f-notes').value.trim(),tag:document.getElementById('f-tag').value.trim(),
     closedReason:existing?.closedReason||null,date_close:existing?.date_close||null,
   };
-  if(document.getElementById('edit-idx').value) trades=trades.map(t=>t.id===obj.id?obj:t);
-  else trades.push(obj);
-  closeModal(); renderAll(); triggerSave();
+  if(document.getElementById('edit-id').value)trades=trades.map(t=>t.id===obj.id?obj:t);else trades.push(obj);
+  window.closeModal();renderAll();triggerSave();
 };
 
-window.clearAllTrades=async()=>{
-  if(!isVip) return;
-  if(!confirm('Hapus semua data trade? Tidak bisa dibatalkan!')) return;
-  trades=[]; nextId=1; await persistTrades(); renderAll(); showToast('MGF','Semua trade dihapus','#f87171');
+window.clearAll=async()=>{
+  if(!isVip)return;
+  if(!confirm('Hapus semua data trade?'))return;
+  trades=[];nextId=1;await persistTrades();renderAll();toast('MGF','Semua trade dihapus','#E05A5A');
 };
 
-/* ── Toast ── */
-let toastTimer=null;
-function showToast(sym,msg,color){
-  document.getElementById('toast-dot').style.background=color;
-  document.getElementById('toast-sym').textContent=SYM_D[sym]||sym;
-  document.getElementById('toast-msg').textContent=msg;
-  const el=document.getElementById('toast'); el.classList.add('show');
-  if(toastTimer) clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove('show'),4000);
-}
-
-/* ── Modal overlay click ── */
-document.getElementById('overlay').addEventListener('click',e=>{
-  if(e.target===document.getElementById('overlay')) window.closeModal();
-});
-
-/* ── Tick ── */
+/* ─── Tick ─── */
 async function tick(){
-  await fetchPrices(); renderTicker();
+  await fetchPrices();
+  renderTicker();renderPricebar();
+  updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);
   const changed=autoCheck();
-  if(changed){renderAll();triggerSave();}
-  else{renderOpen();renderStats();}
+  if(changed){renderAll();triggerSave();}else{renderOpen();renderStats();}
 }
+
+// Initial tick (no-login, for landing page prices)
+fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,null);});
+setInterval(()=>fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);}),15000);
 </script>
 </body>
 </html>
