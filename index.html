@@ -2,56 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- SEO Primary -->
-<title>Mayora Gold FX — Komunitas Trading Emas & Forex Premium Indonesia</title>
-<meta name="description" content="Mayora Gold FX: Komunitas trading emas XAU/USD premium di Indonesia. Sinyal harian akurasi tinggi, live session, trading journal otomatis, edukasi VIP gratis. 500+ trader aktif.">
-<meta name="keywords" content="trading emas, XAU/USD, sinyal gold, komunitas trader Indonesia, forex premium, trading journal, edukasi trading, smart money concept, mayora gold fx">
-<meta name="author" content="Mayora Gold FX">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://mayoragoldfx.com/">
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://mayoragoldfx.com/">
-<meta property="og:title" content="Mayora Gold FX — Komunitas Trading Emas Premium Indonesia">
-<meta property="og:description" content="Sinyal XAU/USD akurasi tinggi, live session, trading journal, dan edukasi eksklusif. Join VIP gratis bersama 500+ trader elite Indonesia.">
-<meta property="og:image" content="https://mayoragoldfx.com/og-image.jpg">
-<meta property="og:locale" content="id_ID">
-<meta property="og:site_name" content="Mayora Gold FX">
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Mayora Gold FX — Komunitas Trading Emas Premium">
-<meta name="twitter:description" content="Sinyal XAU/USD harian, live trading session, journal pro & edukasi VIP gratis untuk trader Indonesia.">
-<meta name="twitter:image" content="https://mayoragoldfx.com/og-image.jpg">
-<!-- Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Mayora Gold FX",
-  "url": "https://mayoragoldfx.com",
-  "logo": "https://mayoragoldfx.com/logo.jpg",
-  "description": "Komunitas trading emas dan forex premium Indonesia dengan sinyal XAU/USD harian, edukasi, dan journal trading otomatis.",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "customer support",
-    "availableLanguage": "Indonesian"
-  },
-  "sameAs": ["https://wa.me/6282197231712"]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Mayora Gold FX",
-  "url": "https://mayoragoldfx.com",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://mayoragoldfx.com/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayora Gold FX — Premium Gold Trading</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:wght@200;300;400;500&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -74,24 +26,28 @@ button,input,select,textarea{font-family:inherit;outline:none}
 ::-webkit-scrollbar{width:2px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--gold-d)}
+
 #bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4}
+
 /* LOADING */
 #loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .6s,visibility .6s}
 #loader.out{opacity:0;visibility:hidden}
-.loader-logo{width:80px;height:80px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-border);box-shadow:0 0 30px rgba(201,168,76,0.3);animation:rotateMark 4s ease-in-out infinite alternate}
-.loader-logo img{width:100%;height:100%;object-fit:cover}
+.loader-mark{width:64px;height:64px;border-radius:50%;border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;position:relative;animation:rotateMark 3s linear infinite}
+.loader-mark::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid transparent;border-top-color:var(--gold);animation:rotateMark 1.4s linear infinite reverse}
+.loader-m{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:600;color:var(--gold);line-height:1}
 .loader-name{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--text2)}
 .loader-line{width:120px;height:1px;background:rgba(201,168,76,0.1);position:relative;overflow:hidden}
 .loader-line::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:scanLine 1.4s ease-in-out infinite}
-@keyframes rotateMark{0%{transform:scale(1) rotate(-3deg)}100%{transform:scale(1.08) rotate(3deg)}}
+@keyframes rotateMark{to{transform:rotate(360deg)}}
 @keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
 /* NAVBAR */
 #nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nav-h);padding:0 40px;display:flex;align-items:center;justify-content:space-between;transition:all .35s}
 #nav.solid{background:rgba(6,6,10,0.94);backdrop-filter:blur(24px);border-bottom:1px solid var(--card-border)}
-.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
-.nav-logo-img{width:38px;height:38px;border-radius:50%;overflow:hidden;border:1.5px solid var(--gold-border);flex-shrink:0;box-shadow:0 0 12px rgba(201,168,76,0.2)}
-.nav-logo-img img{width:100%;height:100%;object-fit:cover}
-.nav-brandname{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.12em;font-weight:500;line-height:1.3}
+.nav-logo{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
+.nav-mark{width:36px;height:36px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold-d),var(--gold),var(--gold-l),var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--bg);position:relative;flex-shrink:0}
+.nav-mark::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid var(--gold-border)}
+.nav-brandname{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.15em;font-weight:500}
 .nav-brandname b{color:var(--gold)}
 .nav-center{display:flex;align-items:center;gap:6px}
 .nav-link{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);padding:7px 14px;border-radius:2px;cursor:pointer;transition:color .2s;position:relative;border:none;background:none}
@@ -104,7 +60,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .nav-btn-vip{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.62rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:8px 18px;cursor:pointer;border-radius:var(--radius);box-shadow:0 0 20px rgba(201,168,76,0.3);transition:all .25s}
 .nav-btn-vip:hover{box-shadow:0 0 32px rgba(201,168,76,0.5);transform:translateY(-1px)}
 .nav-user-wrap{display:flex;align-items:center;gap:8px}
-.nav-avatar{width:32px;height:32px;border-radius:50%;border:1px solid var(--gold-border);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);cursor:pointer;background:var(--bg4)}
+.nav-avatar{width:32px;height:32px;border-radius:50%;border:1px solid var(--gold-border);background:var(--bg4);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);cursor:pointer}
 .nav-username{font-size:.7rem;color:var(--text2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vip-pill{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 7px;background:rgba(201,168,76,0.12);border:1px solid var(--gold-border);color:var(--gold);border-radius:2px}
 .admin-pill{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 7px;background:rgba(61,186,122,0.1);border:1px solid rgba(61,186,122,0.3);color:var(--green);border-radius:2px}
@@ -112,13 +68,16 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .btn-logout:hover{border-color:rgba(224,90,90,0.4);color:var(--red)}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
 .hamburger span{display:block;width:22px;height:1px;background:var(--gold);transition:.3s}
+
 #mob-nav{display:none;position:fixed;inset:0;top:var(--nav-h);background:rgba(6,6,10,0.97);backdrop-filter:blur(20px);z-index:490;flex-direction:column;align-items:center;justify-content:center;gap:32px}
 #mob-nav.open{display:flex}
 .mob-link{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--text);cursor:pointer;transition:color .2s}
 .mob-link:hover,.mob-link.active{color:var(--gold)}
+
 /* PAGES */
 .page{display:none;min-height:100vh;position:relative;z-index:1;padding-top:var(--nav-h)}
 .page.active{display:block}
+
 /* SHARED */
 .eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .eyebrow-line{height:1px;width:28px;background:linear-gradient(90deg,transparent,var(--gold))}
@@ -127,6 +86,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:500;line-height:1.15;margin-bottom:12px}
 .section-sub{font-size:.82rem;color:var(--text2);line-height:1.95;letter-spacing:.03em}
 .gold-text{background:linear-gradient(120deg,var(--gold-d),var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
 /* HERO */
 #hero{min-height:calc(100vh - var(--nav-h));display:flex;align-items:center;padding:80px 40px 60px;position:relative;background:radial-gradient(ellipse 80% 60% at 60% -10%,rgba(201,168,76,0.05) 0%,transparent 60%)}
 .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
@@ -157,6 +117,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .hcc-metric{background:var(--bg3);padding:12px;text-align:center}
 .hcc-metric-l{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
 .hcc-metric-v{font-family:'Cormorant Garamond',serif;font-size:.98rem}
+
 /* TICKER */
 .ticker-wrap{background:rgba(12,12,18,0.95);border-top:1px solid var(--card-border);border-bottom:1px solid var(--card-border);padding:9px 0;overflow:hidden;position:relative}
 .ticker-inner{display:flex;animation:tickerMove 30s linear infinite;white-space:nowrap}
@@ -166,6 +127,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .ti-price{font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--text)}
 .ti-sep{color:var(--text3);opacity:.3;font-size:.8rem}
 @keyframes tickerMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
 /* ABOUT */
 #s-about{padding:100px 40px;background:var(--bg2)}
 .about-inner{max-width:1200px;margin:0 auto}
@@ -179,6 +141,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .ac-icon{width:48px;height:48px;border:1px solid rgba(201,168,76,0.2);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;background:rgba(201,168,76,0.04);color:var(--gold)}
 .ac-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500;margin-bottom:10px}
 .ac-desc{font-size:.75rem;color:var(--text2);line-height:1.95;letter-spacing:.02em}
+
 /* TESTIMONIALS */
 #s-testi{padding:100px 40px}
 .testi-inner{max-width:1200px;margin:0 auto}
@@ -191,6 +154,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .testi-quote::before{content:'"';position:absolute;left:0;top:-4px;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);opacity:.4;line-height:1}
 .testi-author{font-size:.78rem;font-weight:400}
 .testi-role{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:3px}
+
 /* CTA */
 #s-cta{padding:100px 40px;background:var(--bg2)}
 .cta-inner{max-width:900px;margin:0 auto;text-align:center}
@@ -202,6 +166,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .wa-btn:hover{box-shadow:0 0 40px rgba(37,211,102,0.5);transform:translateY(-2px)}
 .wa-btn-pub{display:inline-flex;align-items:center;gap:12px;background:transparent;border:1px solid rgba(37,211,102,0.35);color:#25D366;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:15px 36px;cursor:pointer;border-radius:var(--radius);transition:all .25s}
 .wa-btn-pub:hover{background:rgba(37,211,102,0.07)}
+
 /* BERITA */
 #page-berita{padding:var(--nav-h) 40px 80px}
 .news-inner{max-width:1200px;margin:0 auto}
@@ -240,6 +205,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .pw-sym{font-size:.72rem;color:var(--text2)}
 .pw-price{font-family:'Cormorant Garamond',serif;font-size:.98rem}
 .pw-chg{font-size:.62rem}
+
 /* VIP */
 #page-vip{padding:var(--nav-h) 0 80px}
 .vip-hero{padding:80px 40px 100px;text-align:center;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(201,168,76,0.06),transparent 65%)}
@@ -263,45 +229,12 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .vpc-note{font-size:.65rem;color:var(--text3);margin-top:12px;letter-spacing:.04em}
 .vpc-wa-btn{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,#25D366,#1a9e50);color:#fff;font-size:.65rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border:none;padding:17px 44px;cursor:pointer;border-radius:var(--radius);transition:all .25s;box-shadow:0 0 30px rgba(37,211,102,0.35)}
 .vpc-wa-btn:hover{box-shadow:0 0 50px rgba(37,211,102,0.55);transform:translateY(-2px)}
-/* EDUKASI */
-#page-edu{padding:var(--nav-h) 40px 80px}
-.edu-inner{max-width:1200px;margin:0 auto}
-.edu-top{padding:60px 0 48px;text-align:center}
-.edu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.edu-card{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .3s}
-.edu-card:hover{border-color:rgba(201,168,76,0.35);transform:translateY(-4px)}
-.edu-thumb{height:160px;overflow:hidden;position:relative;background:var(--bg4);display:flex;align-items:center;justify-content:center}
-.edu-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.edu-card:hover .edu-thumb img{transform:scale(1.05)}
-.edu-thumb-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.25}
-.edu-cat-badge{position:absolute;top:12px;left:12px;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;padding:3px 9px;border-radius:2px;z-index:1}
-.edu-cat-badge.dasar{background:rgba(61,186,122,0.85);color:#fff}
-.edu-cat-badge.teknikal{background:rgba(201,168,76,0.9);color:var(--bg)}
-.edu-cat-badge.lanjutan{background:rgba(224,90,90,0.85);color:#fff}
-.edu-cat-badge.strategi{background:rgba(100,120,255,0.85);color:#fff}
-.edu-level{position:absolute;top:12px;right:12px;font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;background:rgba(6,6,10,0.8);color:var(--gold);padding:3px 8px;border-radius:2px}
-.edu-body{padding:18px}
-.edu-body-cat{font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
-.edu-body-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;margin-bottom:7px;line-height:1.35}
-.edu-body-desc{font-size:.72rem;color:var(--text2);line-height:1.75;margin-bottom:14px}
-.edu-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.edu-meta-item{display:flex;align-items:center;gap:5px;font-size:.6rem;color:var(--text3)}
-.edu-empty{text-align:center;padding:60px;grid-column:1/-1}
-/* EDU MODAL */
-.edu-modal-body{padding:0}
-.edu-modal-img{width:100%;height:220px;object-fit:cover;display:block}
-.edu-modal-img-placeholder{width:100%;height:180px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);opacity:.2}
-.edu-modal-content{padding:24px}
-.edu-modal-cat{font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-.edu-modal-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;margin-bottom:12px;line-height:1.3}
-.edu-modal-meta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--card-border)}
-.edu-modal-text{font-size:.8rem;color:var(--text2);line-height:2;letter-spacing:.02em;white-space:pre-line}
+
 /* AUTH */
 #page-auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--nav-h) 20px 40px;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(201,168,76,0.04),transparent 60%)}
 .auth-wrap{width:100%;max-width:400px}
 .auth-logo{text-align:center;margin-bottom:32px}
-.auth-logo-img{width:72px;height:72px;border-radius:50%;overflow:hidden;border:2px solid var(--gold-border);margin:0 auto 14px;box-shadow:0 0 24px rgba(201,168,76,0.25)}
-.auth-logo-img img{width:100%;height:100%;object-fit:cover}
+.auth-logo-mark{width:52px;height:52px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold-d),var(--gold),var(--gold-l),var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.2rem;font-weight:600;color:var(--bg);margin:0 auto 14px;box-shadow:0 0 24px rgba(201,168,76,0.3)}
 .auth-logo-name{font-family:'Cinzel',serif;font-size:.9rem;letter-spacing:.2em;font-weight:500;margin-bottom:4px}
 .auth-logo-name b{color:var(--gold)}
 .auth-logo-sub{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text3)}
@@ -321,8 +254,8 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .auth-submit:disabled{opacity:.5;cursor:not-allowed}
 .auth-err{font-size:.65rem;color:var(--red);margin-top:8px;min-height:16px;line-height:1.5}
 .auth-info{font-size:.65rem;color:var(--text3);text-align:center;padding:16px;line-height:1.9;letter-spacing:.04em}
-.spin{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--bg);border-radius:50%;animation:spinAnim .6s linear infinite}
-@keyframes spinAnim{to{transform:rotate(360deg)}}
+.spin{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--bg);border-radius:50%;animation:rotateMark .6s linear infinite}
+
 /* JOURNAL APP */
 #page-journal{padding-top:var(--nav-h)}
 .app-header{background:rgba(6,6,10,0.96);border-bottom:1px solid var(--card-border);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:var(--nav-h);z-index:300;backdrop-filter:blur(20px)}
@@ -426,6 +359,7 @@ td:last-child{text-align:right}
 .prog-bar{width:100%;height:3px;background:rgba(201,168,76,0.1);margin-top:3px;border-radius:2px}
 .prog-fill{height:100%;border-radius:2px}
 .prog-txt{font-size:.52rem;color:var(--text3);margin-top:2px}
+
 /* ADMIN */
 #page-admin{padding-top:var(--nav-h)}
 .admin-header{background:rgba(6,6,10,0.96);border-bottom:1px solid var(--card-border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:var(--nav-h);z-index:300;backdrop-filter:blur(20px)}
@@ -438,6 +372,7 @@ td:last-child{text-align:right}
 .admin-tab:hover{color:var(--text2)}
 .admin-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .admin-page{display:none}.admin-page.on{display:block}
+
 .news-form-wrap{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:28px;margin-bottom:24px}
 .news-form-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
 .nf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
@@ -470,13 +405,15 @@ td:last-child{text-align:right}
 .ani-title{font-size:.88rem;font-weight:400;margin-bottom:4px;letter-spacing:.02em}
 .ani-date{font-size:.62rem;color:var(--text3)}
 .ani-featured{display:inline-block;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;background:rgba(201,168,76,0.12);border:1px solid var(--gold-border);color:var(--gold);border-radius:2px;margin-left:6px}
-.ani-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.ani-actions{display:flex;gap:6px;margin-top:8px}
 .btn-edit-n{background:none;border:1px solid var(--card-border);color:var(--text3);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
 .btn-edit-n:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
 .btn-del-n{background:none;border:1px solid rgba(224,90,90,0.2);color:var(--red);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
 .btn-del-n:hover{background:rgba(224,90,90,0.08)}
 .btn-feat-n{background:none;border:1px solid rgba(201,168,76,0.2);color:var(--gold);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
 .btn-feat-n:hover{background:rgba(201,168,76,0.08)}
+
+/* User list */
 .user-list{display:flex;flex-direction:column;gap:8px}
 .user-item{background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:border-color .25s}
 .user-item:hover{border-color:rgba(201,168,76,0.25)}
@@ -489,11 +426,11 @@ td:last-child{text-align:right}
 .toggle-vip.is-vip{background:rgba(201,168,76,0.12);border:1px solid var(--gold-border);color:var(--gold)}
 .toggle-vip.not-vip{background:none;border:1px solid var(--card-border);color:var(--text3)}
 .toggle-vip:hover{border-color:rgba(201,168,76,0.5)}
+
 /* Modal */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:700;align-items:center;justify-content:center;padding:16px}
 .overlay.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--card-border);width:100%;max-width:480px;max-height:90vh;overflow-y:auto;border-radius:8px}
-.modal-wide{max-width:640px}
 .modal-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--card-border);display:flex;justify-content:space-between;align-items:center}
 .modal-ttl{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400}
 .modal-x{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;padding:2px 6px}
@@ -508,19 +445,19 @@ td:last-child{text-align:right}
 .btn-cancel-m{background:none;border:1px solid var(--card-border);color:var(--text2);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;padding:9px 14px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
 .btn-save-m{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:9px 22px;cursor:pointer;border-radius:var(--radius);transition:opacity .2s}
 .btn-save-m:hover{opacity:.88}
+
 /* Toast */
 .toast{position:fixed;bottom:24px;right:24px;z-index:900;background:var(--bg3);border:1px solid var(--card-border);padding:12px 16px;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;max-width:260px;border-radius:6px}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .toast-sym{font-family:'Cormorant Garamond',serif;font-size:.9rem}
 .toast-msg{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-top:2px}
+
 /* FOOTER */
 footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:60px 40px 32px}
 .footer-inner{max-width:1200px;margin:0 auto}
 .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:48px;margin-bottom:40px}
 .footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px;text-decoration:none}
-.footer-logo-img{width:32px;height:32px;border-radius:50%;overflow:hidden;border:1px solid var(--gold-border)}
-.footer-logo-img img{width:100%;height:100%;object-fit:cover}
 .footer-desc{font-size:.72rem;color:var(--text3);line-height:1.9;max-width:240px}
 .footer-col-t{font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
 .footer-link{display:block;font-size:.72rem;color:var(--text3);margin-bottom:10px;transition:color .2s;cursor:pointer}
@@ -532,8 +469,10 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 .footer-copy{font-size:.6rem;color:var(--text3);letter-spacing:.08em}
 .footer-craft{font-size:.54rem;color:var(--text3);letter-spacing:.1em}
 .footer-craft span{color:var(--gold)}
+
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
 .reveal.vis{opacity:1;transform:translateY(0)}
+
 @media(max-width:960px){
   .hero-inner{grid-template-columns:1fr;gap:48px}
   .hero-right{display:none}
@@ -548,7 +487,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   .notes-grid{grid-template-columns:1fr 1fr}
   .nf-grid{grid-template-columns:1fr}
   .admin-stat-row{grid-template-columns:repeat(2,1fr)}
-  .edu-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:640px){
   #nav{padding:0 20px}
@@ -565,29 +503,30 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   .vip-hero{padding:60px 20px 72px}
   .toast{bottom:14px;right:12px;left:12px;max-width:none}
   .nav-username,.save-status{display:none}
-  #page-berita,#page-vip,#page-edu{padding-left:20px;padding-right:20px}
+  #page-berita,#page-vip{padding-left:20px;padding-right:20px}
   .admin-stat-row{grid-template-columns:1fr 1fr}
-  .edu-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
+
 <canvas id="bg-canvas"></canvas>
+
 <div id="loader">
-  <div class="loader-logo"><img src="logomayora.jpeg" alt="Mayora Gold FX Logo"></div>
+  <div class="loader-mark"><span class="loader-m">M</span></div>
   <div class="loader-name">MAYORA GOLD FX</div>
   <div class="loader-line"></div>
 </div>
+
 <nav id="nav">
   <a class="nav-logo" onclick="goPage('home')">
-    <div class="nav-logo-img"><img src="logomayora.jpeg" alt="Mayora Gold FX"></div>
+    <div class="nav-mark">M</div>
     <div class="nav-brandname">MAYORA <b>GOLD FX</b></div>
   </a>
   <div class="nav-center">
     <button class="nav-link active" id="nl-home" onclick="goPage('home')">Beranda</button>
     <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
     <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
-    <button class="nav-link" id="nl-edu" onclick="requireEduNav()">Edukasi</button>
     <button class="nav-link" id="nl-journal" onclick="requireVipNav()">Journal</button>
     <button class="nav-link" id="nl-admin" onclick="goPage('admin')" style="display:none">Admin</button>
   </div>
@@ -610,11 +549,11 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <button class="hamburger" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
   </div>
 </nav>
+
 <div id="mob-nav">
   <span class="mob-link" onclick="goPage('home');toggleMob()">Beranda</span>
   <span class="mob-link" onclick="goPage('berita');toggleMob()">Berita</span>
   <span class="mob-link" onclick="goPage('vip');toggleMob()">VIP</span>
-  <span class="mob-link" onclick="requireEduNav();toggleMob()">Edukasi</span>
   <span class="mob-link" onclick="requireVipNav();toggleMob()">Journal</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
   <button class="btn-hero-primary" style="margin-top:8px" onclick="goPage('auth');toggleMob()">Login Member →</button>
@@ -663,7 +602,9 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
     </div>
   </section>
+
   <div class="ticker-wrap" id="ticker-wrap"></div>
+
   <section id="s-about">
     <div class="about-inner">
       <div class="about-header reveal">
@@ -678,6 +619,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
     </div>
   </section>
+
   <section id="s-testi">
     <div class="testi-inner">
       <div class="testi-header reveal">
@@ -691,6 +633,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
     </div>
   </section>
+
   <section id="s-cta">
     <div class="cta-inner reveal">
       <div class="cta-badge">✦ Bergabung Gratis Sekarang</div>
@@ -708,11 +651,12 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
     </div>
   </section>
+
   <footer>
     <div class="footer-inner">
       <div class="footer-grid">
         <div>
-          <div class="footer-logo"><div class="footer-logo-img"><img src="logomayora.jpeg" alt="Mayora Gold FX"></div><span class="nav-brandname" style="font-size:.75rem">MAYORA <b>GOLD FX</b></span></div>
+          <div class="footer-logo"><div class="nav-mark" style="width:30px;height:30px;font-size:.85rem">M</div><span class="nav-brandname" style="font-size:.75rem">MAYORA <b>GOLD FX</b></span></div>
           <p class="footer-desc">Ekosistem trading emas premium untuk trader Indonesia yang serius membangun wealth melalui pasar keuangan.</p>
         </div>
         <div>
@@ -720,7 +664,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           <span class="footer-link" onclick="goPage('home')">Beranda</span>
           <span class="footer-link" onclick="goPage('berita')">Berita</span>
           <span class="footer-link" onclick="goPage('vip')">VIP Gratis</span>
-          <span class="footer-link" onclick="requireEduNav()">Edukasi VIP</span>
           <span class="footer-link" onclick="goPage('auth')">Login Member</span>
         </div>
         <div>
@@ -777,7 +720,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         <div class="vpc-benefits">
           <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div><div class="vb-title">Daily Gold Signals</div><div class="vb-desc">Sinyal XAU/USD harian dengan entry, TP & SL presisi</div></div></div>
           <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div><div><div class="vb-title">Live Trading Session</div><div class="vb-desc">Sesi trading live bersama trader berpengalaman</div></div></div>
-          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><div class="vb-title">Modul Edukasi VIP</div><div class="vb-desc">Akses modul pembelajaran eksklusif dengan materi lengkap</div></div></div>
+          <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><div class="vb-title">Exclusive Webinars</div><div class="vb-desc">Webinar mingguan analisa pasar & strategi trading</div></div></div>
           <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="vb-title">Trading Journal Otomatis</div><div class="vb-desc">Sistem jurnal premium untuk tracking performa</div></div></div>
           <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div><div class="vb-title">Market Analysis Premium</div><div class="vb-desc">Analisa mendalam market structure & Smart Money</div></div></div>
           <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="vb-title">Komunitas VIP Eksklusif</div><div class="vb-desc">Akses grup VIP dengan ratusan trader elite</div></div></div>
@@ -795,42 +738,11 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div style="padding:40px"></div>
 </div>
 
-<!-- PAGE: EDUKASI VIP -->
-<div class="page" id="page-edu">
-  <div class="edu-inner">
-    <div class="edu-top reveal">
-      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">VIP Exclusive</span><div class="eyebrow-line r"></div></div>
-      <h1 class="section-title">Modul <span class="gold-text">Pembelajaran VIP</span></h1>
-      <p class="section-sub" style="max-width:520px;margin:0 auto">Kurikulum eksklusif dari trader berpengalaman — dari dasar hingga strategi lanjutan khusus untuk member VIP Mayora Gold FX.</p>
-    </div>
-    <div id="edu-vip-lock" style="display:none" class="vip-lock-box">
-      <div class="vll-icon">✦</div>
-      <div class="vll-title">Konten VIP Terkunci</div>
-      <div class="vll-sub">Modul edukasi hanya tersedia untuk member VIP.<br>Hubungi admin untuk aktivasi akun kamu — GRATIS!</div>
-      <a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20akses%20modul%20edukasi%20VIP!" target="_blank" class="vll-btn">Hubungi Admin →</a>
-    </div>
-    <div id="edu-vip-content" style="display:none">
-      <div id="edu-filter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
-        <button class="flt-btn on" onclick="filterEdu('all',this)">Semua</button>
-        <button class="flt-btn" onclick="filterEdu('Dasar',this)">Dasar</button>
-        <button class="flt-btn" onclick="filterEdu('Teknikal',this)">Teknikal</button>
-        <button class="flt-btn" onclick="filterEdu('Lanjutan',this)">Lanjutan</button>
-        <button class="flt-btn" onclick="filterEdu('Strategi',this)">Strategi</button>
-        <button class="flt-btn" onclick="filterEdu('Psikologi',this)">Psikologi</button>
-      </div>
-      <div class="edu-grid" id="edu-grid">
-        <div class="empty-state edu-empty"><div class="empty-icon">✦</div>Memuat modul...</div>
-      </div>
-    </div>
-    <div style="padding:40px 0"></div>
-  </div>
-</div>
-
 <!-- PAGE: AUTH -->
 <div class="page" id="page-auth">
   <div class="auth-wrap">
     <div class="auth-logo">
-      <div class="auth-logo-img"><img src="logomayora.jpeg" alt="Mayora Gold FX Logo"></div>
+      <div class="auth-logo-mark">M</div>
       <div class="auth-logo-name">MAYORA <b>GOLD FX</b></div>
       <div class="auth-logo-sub">Member Portal</div>
     </div>
@@ -885,7 +797,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div class="journal-page on" id="jp-dash">
     <div class="jmain">
       <div class="stats-row" id="stats-row"></div>
-      <div id="vip-lock-dash" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trading Journal hanya tersedia untuk member VIP.</div><a href="https://wa.me/6282197231712" target="_blank" class="vll-btn">Hubungi Admin →</a></div>
+      <div id="vip-lock-dash" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trading Journal hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" class="vll-btn">Hubungi Admin →</a></div>
       <div id="vip-cnt-dash" style="display:none">
         <div class="sec-label">Live Positions</div>
         <div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Current</th><th>SL / TP</th><th>Size</th><th>Open P&amp;L</th><th>Progress</th><th>Status</th><th></th></tr></thead><tbody id="open-tbody"></tbody></table></div></div>
@@ -950,12 +862,10 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   </div>
   <div class="admin-tabs">
     <button class="admin-tab on" onclick="admTab('news',this)">Kelola Berita</button>
-    <button class="admin-tab" onclick="admTab('edu',this)">Kelola Edukasi</button>
     <button class="admin-tab" onclick="admTab('users',this)">Kelola User</button>
     <button class="admin-tab" onclick="admTab('stats',this)">Statistik</button>
   </div>
 
-  <!-- Admin: Berita -->
   <div class="admin-page on" id="adm-news">
     <div class="admin-main">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
@@ -969,84 +879,88 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         </div>
         <input type="hidden" id="nf-edit-id">
         <div class="nf-grid">
-          <div><label class="form-lbl">Judul Berita *</label><input class="form-inp" id="nf-judul" type="text" placeholder="Judul artikel..."></div>
-          <div><label class="form-lbl">Kategori *</label><select class="form-inp" id="nf-kat"><option>Market Update</option><option>Analisa Teknikal</option><option>Sinyal</option><option>Edukasi</option><option>Analisa</option><option>Lainnya</option></select></div>
-          <div><label class="form-lbl">Tanggal *</label><input class="form-inp" id="nf-tgl" type="date"></div>
-          <div style="display:flex;align-items:flex-end;gap:16px"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.72rem;color:var(--text2)"><input type="checkbox" id="nf-featured" style="accent-color:var(--gold)"> Jadikan Featured</label></div>
-          <div class="nf-full"><label class="form-lbl">Excerpt *</label><textarea class="form-inp form-textarea" id="nf-excerpt" rows="2" placeholder="Ringkasan singkat..."></textarea></div>
-          <div class="nf-full"><label class="form-lbl">Konten Lengkap</label><textarea class="form-inp form-textarea" id="nf-konten" rows="5" placeholder="Isi artikel lengkap..."></textarea></div>
-          <div class="nf-full"><label class="form-lbl">Foto Berita</label><input class="form-inp" id="nf-foto" type="file" accept="image/*" onchange="previewImg(this)"><div class="upload-progress" id="upload-prog"><div class="upload-progress-bar" id="upload-prog-bar"></div></div><div class="img-preview-wrap" id="img-preview-wrap"><img id="img-preview" src="" alt="Preview"><div style="margin-top:6px;display:flex;gap:8px;align-items:center"><span style="font-size:.62rem;color:var(--text3)" id="img-current-url"></span><button class="btn-danger" style="font-size:.5rem;padding:3px 8px" onclick="clearImg()">✕ Hapus foto</button></div></div></div>
+          <div>
+            <label class="form-lbl">Judul Berita *</label>
+            <input class="form-inp" id="nf-judul" type="text" placeholder="Judul artikel...">
+          </div>
+          <div>
+            <label class="form-lbl">Kategori *</label>
+            <select class="form-inp" id="nf-kat">
+              <option value="Market Update">Market Update</option>
+              <option value="Analisa Teknikal">Analisa Teknikal</option>
+              <option value="Sinyal">Sinyal</option>
+              <option value="Edukasi">Edukasi</option>
+              <option value="Analisa">Analisa</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-lbl">Tanggal *</label>
+            <input class="form-inp" id="nf-tgl" type="date">
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:16px">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.72rem;color:var(--text2)">
+              <input type="checkbox" id="nf-featured" style="accent-color:var(--gold)">
+              Jadikan Featured (utama)
+            </label>
+          </div>
+          <div class="nf-full">
+            <label class="form-lbl">Excerpt / Ringkasan *</label>
+            <textarea class="form-inp form-textarea" id="nf-excerpt" rows="2" placeholder="Ringkasan singkat artikel..."></textarea>
+          </div>
+          <div class="nf-full">
+            <label class="form-lbl">Konten Lengkap</label>
+            <textarea class="form-inp form-textarea" id="nf-konten" rows="5" placeholder="Isi artikel lengkap..."></textarea>
+          </div>
+          <div class="nf-full">
+            <label class="form-lbl">Foto Berita</label>
+            <input class="form-inp" id="nf-foto" type="file" accept="image/*" onchange="previewImg(this)">
+            <div class="upload-progress" id="upload-prog"><div class="upload-progress-bar" id="upload-prog-bar"></div></div>
+            <div class="img-preview-wrap" id="img-preview-wrap">
+              <img id="img-preview" src="" alt="Preview">
+              <div style="margin-top:6px;display:flex;gap:8px;align-items:center">
+                <span style="font-size:.62rem;color:var(--text3)" id="img-current-url"></span>
+                <button class="btn-danger" style="font-size:.5rem;padding:3px 8px" onclick="clearImg()">✕ Hapus foto</button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="form-actions">
           <button class="btn-cancel-news" onclick="hideNewsForm()">Batal</button>
-          <button class="btn-save-news" id="btn-save-news" onclick="saveNews()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Berita</button>
+          <button class="btn-save-news" id="btn-save-news" onclick="saveNews()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Simpan Berita
+          </button>
         </div>
       </div>
-      <div class="admin-news-list" id="admin-news-list"><div class="empty-state"><div class="empty-icon">✦</div>Memuat berita...</div></div>
+      <div class="admin-news-list" id="admin-news-list">
+        <div class="empty-state"><div class="empty-icon">✦</div>Memuat berita...</div>
+      </div>
     </div>
   </div>
 
-  <!-- Admin: Edukasi -->
-  <div class="admin-page" id="adm-edu">
-    <div class="admin-main">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <div class="sec-label" style="margin-bottom:0">Manajemen Modul Edukasi</div>
-        <button class="btn-add-news" onclick="showEduForm()">+ Tambah Modul</button>
-      </div>
-      <div class="news-form-wrap" id="edu-form-wrap" style="display:none">
-        <div class="news-form-title">
-          <span id="ef-title-lbl">Tambah Modul Edukasi</span>
-          <button class="btn-cancel-news" onclick="hideEduForm()">✕ Batal</button>
-        </div>
-        <input type="hidden" id="ef-edit-id">
-        <div class="nf-grid">
-          <div><label class="form-lbl">Judul Modul *</label><input class="form-inp" id="ef-judul" type="text" placeholder="Judul modul pembelajaran..."></div>
-          <div><label class="form-lbl">Kategori *</label><select class="form-inp" id="ef-kat"><option>Dasar</option><option>Teknikal</option><option>Lanjutan</option><option>Strategi</option><option>Psikologi</option></select></div>
-          <div><label class="form-lbl">Level</label><select class="form-inp" id="ef-level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
-          <div><label class="form-lbl">Durasi Baca</label><input class="form-inp" id="ef-durasi" type="text" placeholder="cth: 15 menit"></div>
-          <div class="nf-full"><label class="form-lbl">Deskripsi Singkat *</label><textarea class="form-inp form-textarea" id="ef-desc" rows="2" placeholder="Deskripsi singkat modul..."></textarea></div>
-          <div class="nf-full"><label class="form-lbl">Konten Lengkap *</label><textarea class="form-inp" id="ef-konten" rows="10" style="resize:vertical;min-height:200px" placeholder="Isi materi pembelajaran lengkap...&#10;&#10;Gunakan baris baru untuk paragraf baru."></textarea></div>
-          <div class="nf-full"><label class="form-lbl">Foto / Gambar Ilustrasi</label><input class="form-inp" id="ef-foto" type="file" accept="image/*" onchange="previewEduImg(this)"><div class="upload-progress" id="edu-upload-prog"><div class="upload-progress-bar" id="edu-upload-prog-bar"></div></div><div class="img-preview-wrap" id="edu-img-preview-wrap"><img id="edu-img-preview" src="" alt="Preview"><div style="margin-top:6px;display:flex;gap:8px;align-items:center"><span style="font-size:.62rem;color:var(--text3)" id="edu-img-current-url"></span><button class="btn-danger" style="font-size:.5rem;padding:3px 8px" onclick="clearEduImg()">✕ Hapus foto</button></div></div></div>
-        </div>
-        <div class="form-actions">
-          <button class="btn-cancel-news" onclick="hideEduForm()">Batal</button>
-          <button class="btn-save-news" id="btn-save-edu" onclick="saveEdu()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Modul</button>
-        </div>
-      </div>
-      <div class="admin-news-list" id="admin-edu-list"><div class="empty-state"><div class="empty-icon">✦</div>Memuat modul...</div></div>
-    </div>
-  </div>
-
-  <!-- Admin: Users -->
   <div class="admin-page" id="adm-users">
     <div class="admin-main">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
         <div class="sec-label" style="margin-bottom:0">Manajemen User</div>
         <span style="font-size:.65rem;color:var(--text3)" id="user-count-lbl">Loading...</span>
       </div>
-      <div class="user-list" id="user-list"><div class="empty-state">Memuat user...</div></div>
+      <div class="user-list" id="user-list">
+        <div class="empty-state"><div class="empty-icon">✦</div>Memuat user...</div>
+      </div>
     </div>
   </div>
 
-  <!-- Admin: Stats -->
   <div class="admin-page" id="adm-stats">
     <div class="admin-main">
       <div class="sec-label">Statistik Platform</div>
       <div class="admin-stat-row">
         <div class="scard"><div class="scard-l">Total Berita</div><div class="scard-v" id="stat-news">—</div></div>
-        <div class="scard"><div class="scard-l">Modul Edukasi</div><div class="scard-v" id="stat-edu">—</div></div>
         <div class="scard"><div class="scard-l">Total User</div><div class="scard-v" id="stat-users">—</div></div>
         <div class="scard"><div class="scard-l">User VIP</div><div class="scard-v g" id="stat-vip">—</div></div>
+        <div class="scard"><div class="scard-l">User Regular</div><div class="scard-v" id="stat-reg">—</div></div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- EDU DETAIL MODAL -->
-<div class="overlay" id="edu-overlay">
-  <div class="modal modal-wide">
-    <div class="modal-hdr"><div class="modal-ttl" id="edu-modal-ttl">Detail Modul</div><button class="modal-x" onclick="closeEduModal()">✕</button></div>
-    <div class="edu-modal-body" id="edu-modal-body"></div>
   </div>
 </div>
 
@@ -1085,12 +999,13 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   </div>
 </div>
 
-<div class="toast" id="toast"><div class="toast-dot" id="tdot"></div><div><div class="toast-sym" id="tsym"></div><div class="toast-msg" id="tmsg"></div></div></div>
+<div class="toast" id="toast">
+  <div class="toast-dot" id="tdot"></div>
+  <div><div class="toast-sym" id="tsym"></div><div class="toast-msg" id="tmsg"></div></div>
+</div>
 
 <script>
 document.getElementById('fyear').textContent = new Date().getFullYear();
-
-<img src="logomayora.jpeg" alt="Mayora Gold FX">
 
 /* Canvas particles */
 (()=>{
@@ -1110,21 +1025,21 @@ window.addEventListener('scroll',()=>document.getElementById('nav').classList.to
 document.getElementById('nav').classList.add('solid');
 
 window.toggleMob=()=>document.getElementById('mob-nav').classList.toggle('open');
+
 window.switchTab=t=>{
   ['login','reg'].forEach(n=>{document.getElementById('tab-'+n).classList.toggle('on',n===t);document.getElementById('form-'+n).classList.toggle('on',n===t)});
   document.getElementById('li-err').textContent='';document.getElementById('ri-err').textContent='';
 };
 
 /* Page navigation */
-const pages=['home','berita','vip','auth','journal','admin','edu'];
+const pages=['home','berita','vip','auth','journal','admin'];
 function goPage(p){
   pages.forEach(n=>document.getElementById('page-'+n).classList.toggle('active',n===p));
-  ['home','berita','vip','edu'].forEach(n=>{const el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p)});
+  ['home','berita','vip'].forEach(n=>{const el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p)});
   document.getElementById('mob-nav').classList.remove('open');
   window.scrollTo(0,0);
   if(p==='berita') window._renderNews&&window._renderNews();
   if(p==='admin') window._loadAdminData&&window._loadAdminData();
-  if(p==='edu') window._renderEdu&&window._renderEdu();
 }
 window.goPage=goPage;
 
@@ -1132,20 +1047,18 @@ window.requireVipNav=()=>{
   if(!window._curUser){goPage('auth');return;}
   goPage('journal');
 };
-window.requireEduNav=()=>{
-  if(!window._curUser){goPage('auth');return;}
-  goPage('edu');
-};
 
+/* ─── Admin tabs ─── FIX: use window.* wrappers, safe if module not ready yet */
 window.admTab=(n,el)=>{
   document.querySelectorAll('.admin-page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('adm-'+n).classList.add('on');el.classList.add('on');
-  if(n==='users'&&window._loadUsers) window._loadUsers();
-  if(n==='stats'&&window._loadStats) window._loadStats();
-  if(n==='edu'&&window._loadAdminEdu) window._loadAdminEdu();
+  document.getElementById('adm-'+n).classList.add('on');
+  el.classList.add('on');
+  if(n==='users' && window._loadUsers) window._loadUsers();
+  if(n==='stats' && window._loadStats) window._loadStats();
 };
 
+/* Journal tabs */
 window.jTab=(n,el)=>{
   document.querySelectorAll('.journal-page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('on'));
@@ -1154,37 +1067,22 @@ window.jTab=(n,el)=>{
 window.fltHist=(f,btn)=>{window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');window._renderHistory&&window._renderHistory();};
 window._histFlt='all';
 
-window.filterEdu=(cat,btn)=>{
-  window._eduFlt=cat;
-  document.querySelectorAll('#edu-filter .flt-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  window._renderEdu&&window._renderEdu();
-};
-window._eduFlt='all';
-
 /* News admin UI helpers */
 window.showNewsForm=()=>{
   document.getElementById('news-form-wrap').style.display='block';
   document.getElementById('nf-title-lbl').textContent='Tambah Berita Baru';
   document.getElementById('nf-edit-id').value='';
-  ['judul','excerpt','konten'].forEach(k=>document.getElementById('nf-'+k).value='');
+  document.getElementById('nf-judul').value='';
+  document.getElementById('nf-excerpt').value='';
+  document.getElementById('nf-konten').value='';
   document.getElementById('nf-tgl').value=new Date().toISOString().slice(0,10);
   document.getElementById('nf-featured').checked=false;
   document.getElementById('nf-foto').value='';
-  clearImg();window._editNewsImg=null;window.scrollTo(0,0);
+  clearImg();
+  window._editNewsImg=null;
+  window.scrollTo(0,0);
 };
 window.hideNewsForm=()=>{document.getElementById('news-form-wrap').style.display='none';};
-
-/* Edu admin helpers */
-window.showEduForm=()=>{
-  document.getElementById('edu-form-wrap').style.display='block';
-  document.getElementById('ef-title-lbl').textContent='Tambah Modul Edukasi';
-  document.getElementById('ef-edit-id').value='';
-  ['judul','desc','konten','durasi'].forEach(k=>document.getElementById('ef-'+k).value='');
-  document.getElementById('ef-foto').value='';
-  clearEduImg();window._editEduImg=null;window.scrollTo(0,0);
-};
-window.hideEduForm=()=>{document.getElementById('edu-form-wrap').style.display='none';};
 
 window.previewImg=function(input){
   const file=input.files[0];if(!file)return;
@@ -1200,42 +1098,6 @@ window.clearImg=()=>{
   window._editNewsImg=null;
 };
 
-window.previewEduImg=function(input){
-  const file=input.files[0];if(!file)return;
-  document.getElementById('edu-img-preview-wrap').style.display='block';
-  document.getElementById('edu-img-preview').src=URL.createObjectURL(file);
-  document.getElementById('edu-img-current-url').textContent='';
-};
-window.clearEduImg=()=>{
-  document.getElementById('ef-foto').value='';
-  document.getElementById('edu-img-preview-wrap').style.display='none';
-  document.getElementById('edu-img-preview').src='';
-  document.getElementById('edu-img-current-url').textContent='';
-  window._editEduImg=null;
-};
-
-window.openEduModal=(id)=>{
-  const m=window._eduCache?.find(e=>e.id===id);if(!m)return;
-  document.getElementById('edu-modal-ttl').textContent=m.title||m.judul;
-  const catMap={Dasar:'dasar',Teknikal:'teknikal',Lanjutan:'lanjutan',Strategi:'strategi',Psikologi:'psikologi'};
-  const catCls=catMap[m.cat]||'dasar';
-  document.getElementById('edu-modal-body').innerHTML=`
-    ${m.imageUrl?`<img class="edu-modal-img" src="${m.imageUrl}" alt="${m.title||m.judul}">`:`<div class="edu-modal-img-placeholder">✦</div>`}
-    <div class="edu-modal-content">
-      <div class="edu-modal-cat">${m.cat}</div>
-      <div class="edu-modal-title">${m.title||m.judul}</div>
-      <div class="edu-modal-meta">
-        <span style="font-size:.62rem;color:var(--text3)">📚 Level: <b style="color:var(--text2)">${m.level||'Beginner'}</b></span>
-        ${m.durasi?`<span style="font-size:.62rem;color:var(--text3)">⏱ ${m.durasi}</span>`:''}
-        <span class="badge ${catCls==='dasar'?'long':catCls==='lanjutan'?'short':'open'}">${m.cat}</span>
-      </div>
-      <div class="edu-modal-text">${(m.konten||m.desc||'Konten tidak tersedia.').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-    </div>`;
-  document.getElementById('edu-overlay').classList.add('open');
-};
-window.closeEduModal=()=>document.getElementById('edu-overlay').classList.remove('open');
-document.getElementById('edu-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('edu-overlay'))window.closeEduModal();});
-
 /* Toast */
 let toastT;
 function toast(sym,msg,color){
@@ -1247,19 +1109,23 @@ function toast(sym,msg,color){
 }
 window.toast=toast;
 
-/* Ticker / Price */
+/* Ticker / Price display */
 const SYM_D={XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',ADAUSDT:'ADA/USDT'};
 const TICK_SYMS=['XAUUSD','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
 window._lp={};window._prevLp={};
+
 function renderTicker(){
   const items=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="ticker-item"><span class="ti-sym">${SYM_D[s]}</span><span class="ti-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span><span class="ti-sep">|</span></div>`}).join('');
   document.getElementById('ticker-wrap').innerHTML=`<div class="ticker-inner">${items+items}</div>`;
 }
 window.renderTicker=renderTicker;
+
 function renderPricebar(){
   document.getElementById('pricebar').innerHTML=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="pb-item"><span class="pb-sym">${SYM_D[s]}</span><span class="pb-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span></div>`}).join('');
 }
 window.renderPricebar=renderPricebar;
+
+/* Hero chart — fix: build SVG path correctly */
 const xauHistory=[];
 function updateHeroCard(p,prev){
   if(!p)return;
@@ -1274,8 +1140,9 @@ function updateHeroCard(p,prev){
     const W=400,H=80,pad=8,xS=(W-2*pad)/(xauHistory.length-1),yS=(H-2*pad)/rng;
     const coords=xauHistory.map((v,i)=>`${(pad+i*xS).toFixed(1)},${(H-pad-(v-mn)*yS).toFixed(1)}`);
     const pts=coords.join(' ');
-    const firstX=(pad).toFixed(1),firstY=(H-pad).toFixed(1);
-    const lastX=(pad+(xauHistory.length-1)*xS).toFixed(1),lastY=(H-pad).toFixed(1);
+    /* Build fill path correctly */
+    const firstX=(pad).toFixed(1), firstY=(H-pad).toFixed(1);
+    const lastX=(pad+(xauHistory.length-1)*xS).toFixed(1), lastY=(H-pad).toFixed(1);
     const dPath=`M${firstX},${firstY} L${coords.join(' L')} L${lastX},${lastY} Z`;
     document.getElementById('hcc-line').setAttribute('points',pts);
     document.getElementById('hcc-fill').setAttribute('d',dPath);
@@ -1287,7 +1154,6 @@ function updateHeroCard(p,prev){
   document.getElementById('hcc-pct').className='hcc-metric-v '+(chgPct>=0?'up':'dn');
 }
 window.updateHeroCard=updateHeroCard;
-window.SYM_D=SYM_D;
 </script>
 
 <script type="module">
@@ -1295,7 +1161,40 @@ import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-ap
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-const FB={apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",authDomain:"journal-97254.firebaseapp.com",projectId:"journal-97254",storageBucket:"journal-97254.firebasestorage.app",messagingSenderId:"101188824456",appId:"1:101188824456:web:a0ca25a26e63704b361e3d"};
+/*
+=== FIRESTORE RULES ===
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /users/{userId} {
+      allow read: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+      allow write: if request.auth != null &&
+        (request.auth.uid == userId ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true);
+    }
+    match /news/{newsId} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+    }
+  }
+}
+=====================
+*/
+
+const FB={
+  apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
+  authDomain:"journal-97254.firebaseapp.com",
+  projectId:"journal-97254",
+  storageBucket:"journal-97254.firebasestorage.app",
+  messagingSenderId:"101188824456",
+  appId:"1:101188824456:web:a0ca25a26e63704b361e3d"
+};
+
 const ADMIN_EMAIL='adminmayoragold@mayora.com';
 const ADMIN_PASS='tradingsehat';
 const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
@@ -1303,10 +1202,9 @@ const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
 let trades=[],nextId=1,isVip=false,isAdmin=false,saveDebounce,tickInterval;
 window._curUser=null;
 window._editNewsImg=null;
-window._editEduImg=null;
-window._eduCache=[];
 let allNewsCache=[];
 
+/* ─ Error messages ─ */
 function fmsg(c){return({
   'auth/user-not-found':'Akun tidak ditemukan.',
   'auth/wrong-password':'Password salah.',
@@ -1319,30 +1217,25 @@ function fmsg(c){return({
 
 function setBtnLoad(id,loading,txt){const b=document.getElementById(id);if(!b)return;b.disabled=loading;b.innerHTML=loading?'<div class="spin"></div>':`<span>${txt}</span>`;}
 
-/* ─── FIX: Auth state — tambah flag _loginInProgress ─── */
-let _loginInProgress=false;
-
+/* ─ Auth state ─ */
 onAuthStateChanged(auth,async user=>{
   if(user){
     window._curUser=user;
     if(window._adminBootstrap&&user.email===ADMIN_EMAIL){
       window._adminBootstrap=false;
-      try{await setDoc(doc(db,'users',user.uid),{displayName:'Admin Mayora Gold FX',email:ADMIN_EMAIL,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()});}catch(e){console.warn('Admin setDoc:',e.message);}
+      try{
+        await setDoc(doc(db,'users',user.uid),{
+          displayName:'Admin Mayora Gold FX',email:ADMIN_EMAIL,
+          vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()
+        });
+      }catch(e){console.warn('Admin setDoc:',e.message);}
     }
     await loadData(user.uid);
     showLoggedIn(user);
-    /* FIX: Hanya redirect jika halaman saat ini adalah auth page */
     const activePage=document.querySelector('.page.active');
     if(activePage&&activePage.id==='page-auth'){
-      /* FIX: Reset button state SEBELUM redirect */
-      setBtnLoad('li-btn',false,'Sign In →');
-      setBtnLoad('ri-btn',false,'Buat Akun →');
       if(isAdmin) goPage('admin');
       else goPage('home');
-    }else{
-      /* Jika bukan dari auth page (misal refresh), tetap reset button */
-      setBtnLoad('li-btn',false,'Sign In →');
-      setBtnLoad('ri-btn',false,'Buat Akun →');
     }
   }else{
     window._curUser=null;isVip=false;isAdmin=false;
@@ -1350,9 +1243,6 @@ onAuthStateChanged(auth,async user=>{
     document.getElementById('nav-loggedin').style.display='none';
     document.getElementById('nl-admin').style.display='none';
     document.getElementById('mob-admin-link').style.display='none';
-    /* FIX: Reset tombol kalau logout atau gagal */
-    setBtnLoad('li-btn',false,'Sign In →');
-    setBtnLoad('ri-btn',false,'Buat Akun →');
   }
   document.getElementById('loader').classList.add('out');
 });
@@ -1378,13 +1268,9 @@ function showLoggedIn(user){
   document.getElementById('acc-status').innerHTML=isAdmin?'<span style="color:var(--green)">✦ Administrator</span>':isVip?'<span style="color:var(--gold)">✦ VIP Member</span>':'<span style="color:var(--text3)">Regular — hubungi admin untuk upgrade</span>';
   document.getElementById('adm-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('adm-uname').textContent=name;
-  /* EDU lock/unlock */
-  const canEdu=isVip||isAdmin;
-  if(document.getElementById('edu-vip-lock')) document.getElementById('edu-vip-lock').style.display=canEdu?'none':'block';
-  if(document.getElementById('edu-vip-content')) document.getElementById('edu-vip-content').style.display=canEdu?'block':'none';
   ['dash','hist','notes'].forEach(k=>{
-    document.getElementById('vip-lock-'+k).style.display=canEdu?'none':'block';
-    document.getElementById('vip-cnt-'+k).style.display=canEdu?'block':'none';
+    document.getElementById('vip-lock-'+k).style.display=(isVip||isAdmin)?'none':'block';
+    document.getElementById('vip-cnt-'+k).style.display=(isVip||isAdmin)?'block':'none';
   });
   setSaveStatus('saved');
   renderAll();
@@ -1392,39 +1278,31 @@ function showLoggedIn(user){
   tick();
 }
 
-/* ─── Login / Register ─── */
+/* ─ Login / Register ─ */
 window.doLogin=async()=>{
   const email=document.getElementById('li-email').value.trim(),pass=document.getElementById('li-pass').value;
   const err=document.getElementById('li-err');
   err.textContent='';
   if(!email||!pass){err.textContent='Email dan password diperlukan.';return;}
-  /* FIX: Cegah double call */
-  if(_loginInProgress)return;
-  _loginInProgress=true;
   setBtnLoad('li-btn',true,'Sign In →');
   try{
     await signInWithEmailAndPassword(auth,email,pass);
-    /* onAuthStateChanged akan handle redirect & reset button */
   }catch(e){
     if((e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')&&email===ADMIN_EMAIL&&pass===ADMIN_PASS){
       try{
         window._adminBootstrap=true;
         const cred=await createUserWithEmailAndPassword(auth,ADMIN_EMAIL,ADMIN_PASS);
         await updateProfile(cred.user,{displayName:'Admin Mayora Gold FX'});
-        /* onAuthStateChanged handle the rest */
         return;
       }catch(e2){
         window._adminBootstrap=false;
         err.textContent='Gagal buat akun admin: '+e2.message;
+        setBtnLoad('li-btn',false,'Sign In →');
+        return;
       }
-    }else{
-      err.textContent=fmsg(e.code);
     }
+    err.textContent=fmsg(e.code);
     setBtnLoad('li-btn',false,'Sign In →');
-    _loginInProgress=false;
-  }finally{
-    /* Hanya reset jika error terjadi — sukses dihandle onAuthStateChanged */
-    if(!auth.currentUser) _loginInProgress=false;
   }
 };
 
@@ -1434,24 +1312,19 @@ window.doRegister=async()=>{
   err.textContent='';
   if(!name||!email||!pass){err.textContent='Semua field harus diisi.';return;}
   if(pass.length<6){err.textContent='Password minimal 6 karakter.';return;}
-  if(_loginInProgress)return;
-  _loginInProgress=true;
   setBtnLoad('ri-btn',true,'Buat Akun →');
   try{
     const cred=await createUserWithEmailAndPassword(auth,email,pass);
     await updateProfile(cred.user,{displayName:name});
     await setDoc(doc(db,'users',cred.user.uid),{displayName:name,email,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()});
-    /* onAuthStateChanged handle redirect */
   }catch(e){
-    err.textContent=fmsg(e.code);
+    document.getElementById('ri-err').textContent=fmsg(e.code);
     setBtnLoad('ri-btn',false,'Buat Akun →');
-    _loginInProgress=false;
   }
 };
 
 window.doLogout=async()=>{
   await persistTrades();
-  _loginInProgress=false;
   await signOut(auth);
   if(tickInterval){clearInterval(tickInterval);tickInterval=null;}
   goPage('home');
@@ -1467,31 +1340,37 @@ window.doReset=async()=>{
   }catch(e){toast('MGF',fmsg(e.code),'#E05A5A');}
 };
 
-/* ─── User data ─── */
+/* ─ User data ─ */
 async function loadData(uid){
   try{
     const snap=await getDoc(doc(db,'users',uid));
     if(snap.exists()){
       const d=snap.data();
-      trades=d.trades||[];nextId=d.nextId||(trades.length?Math.max(...trades.map(t=>t.id))+1:1);
+      trades=d.trades||[];
+      nextId=d.nextId||(trades.length?Math.max(...trades.map(t=>t.id))+1:1);
       isVip=d.vip===true;
       const emailCheck=window._curUser?.email||'';
       isAdmin=d.admin===true||emailCheck===ADMIN_EMAIL;
-      if(emailCheck===ADMIN_EMAIL&&!d.admin)setDoc(doc(db,'users',uid),{admin:true,vip:true},{merge:true}).catch(()=>{});
+      if(emailCheck===ADMIN_EMAIL&&!d.admin){
+        setDoc(doc(db,'users',uid),{admin:true,vip:true},{merge:true}).catch(()=>{});
+      }
       const ts=d.updatedAt?.toDate();
       if(ts)document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');
     }else{
       trades=[];nextId=1;isVip=false;
       const emailCheck=window._curUser?.email||'';
       isAdmin=emailCheck===ADMIN_EMAIL;
-      const newDoc=isAdmin?{displayName:'Admin Mayora Gold FX',email:emailCheck,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()}:{displayName:window._curUser?.displayName||'',email:emailCheck,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()};
+      const newDoc=isAdmin
+        ?{displayName:'Admin Mayora Gold FX',email:emailCheck,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()}
+        :{displayName:window._curUser?.displayName||'',email:emailCheck,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()};
       try{await setDoc(doc(db,'users',uid),newDoc);}catch(_){}
     }
   }catch(e){trades=[];nextId=1;isVip=false;isAdmin=(window._curUser?.email===ADMIN_EMAIL);}
 }
 
 async function persistTrades(){
-  if(!window._curUser)return;setSaveStatus('saving');
+  if(!window._curUser)return;
+  setSaveStatus('saving');
   try{
     await setDoc(doc(db,'users',window._curUser.uid),{trades,nextId,updatedAt:serverTimestamp()},{merge:true});
     setSaveStatus('saved');
@@ -1502,25 +1381,35 @@ async function persistTrades(){
 function triggerSave(){setSaveStatus('saving');clearTimeout(saveDebounce);saveDebounce=setTimeout(persistTrades,1200);}
 function setSaveStatus(s){const el=document.getElementById('save-status'),lb=document.getElementById('save-lbl');el.className='save-status '+s;lb.textContent=s==='saved'?'Saved':s==='saving'?'Saving...':s==='error'?'Error':'—';}
 
-/* ─── NEWS ─── */
+/* ────────────────────────
+   NEWS — Firestore
+──────────────────────── */
 async function loadNewsFromDB(){
   try{
     const q=query(collection(db,'news'),orderBy('createdAt','desc'));
     const snap=await getDocs(q);
-    const arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));
-    allNewsCache=arr;return arr;
-  }catch(e){return getStaticNews();}
+    const arr=[];
+    snap.forEach(d=>arr.push({id:d.id,...d.data()}));
+    allNewsCache=arr;
+    return arr;
+  }catch(e){
+    return getStaticNews();
+  }
 }
-function getStaticNews(){return[
-  {id:'s1',cat:'Market Update',title:'Harga Emas Catat Level Tertinggi di Tengah Ketegangan Geopolitik',date:'5 Jun 2026',excerpt:'Harga emas spot menguat signifikan dalam perdagangan sesi Asia, didukung meningkatnya permintaan safe haven akibat ketegangan di kawasan Timur Tengah dan kekhawatiran inflasi global.',featured:true,imageUrl:''},
-  {id:'s2',cat:'Analisa Teknikal',title:'XAU/USD: Breakout Struktur Weekly — Potensi Target 2400',date:'4 Jun 2026',excerpt:'Analisa market structure pada timeframe weekly menunjukkan potensi breakout yang valid di atas resistance kunci 2350.',featured:false,imageUrl:''},
-  {id:'s3',cat:'Edukasi',title:'Memahami Smart Money Concept dalam Trading Emas',date:'3 Jun 2026',excerpt:'Panduan lengkap menggunakan SMC untuk mengidentifikasi order block dan fair value gap pada pair XAU/USD.',featured:false,imageUrl:''},
-  {id:'s4',cat:'Sinyal',title:'Setup BUY XAU/USD — Konfirmasi Rejection dari OB H4',date:'2 Jun 2026',excerpt:'Tim analis Mayora Gold FX mengidentifikasi setup buy dengan risk-reward 1:3.2 dari order block H4 yang valid.',featured:false,imageUrl:''},
-  {id:'s5',cat:'Market Update',title:'Fed Pertahankan Suku Bunga — Emas Merespons Positif',date:'1 Jun 2026',excerpt:'Keputusan Federal Reserve mempertahankan suku bunga memberikan sentimen positif terhadap harga emas global.',featured:false,imageUrl:''},
-];}
+
+function getStaticNews(){
+  return[
+    {id:'s1',cat:'Market Update',title:'Harga Emas Catat Level Tertinggi di Tengah Ketegangan Geopolitik',date:'5 Jun 2026',excerpt:'Harga emas spot menguat signifikan dalam perdagangan sesi Asia, didukung meningkatnya permintaan safe haven akibat ketegangan di kawasan Timur Tengah dan kekhawatiran inflasi global.',featured:true,imageUrl:''},
+    {id:'s2',cat:'Analisa Teknikal',title:'XAU/USD: Breakout Struktur Weekly — Potensi Target 2400',date:'4 Jun 2026',excerpt:'Analisa market structure pada timeframe weekly menunjukkan potensi breakout yang valid di atas resistance kunci 2350.',featured:false,imageUrl:''},
+    {id:'s3',cat:'Edukasi',title:'Memahami Smart Money Concept dalam Trading Emas',date:'3 Jun 2026',excerpt:'Panduan lengkap menggunakan SMC untuk mengidentifikasi order block dan fair value gap pada pair XAU/USD.',featured:false,imageUrl:''},
+    {id:'s4',cat:'Sinyal',title:'Setup BUY XAU/USD — Konfirmasi Rejection dari OB H4',date:'2 Jun 2026',excerpt:'Tim analis Mayora Gold FX mengidentifikasi setup buy dengan risk-reward 1:3.2 dari order block H4 yang valid.',featured:false,imageUrl:''},
+    {id:'s5',cat:'Market Update',title:'Fed Pertahankan Suku Bunga — Emas Merespons Positif',date:'1 Jun 2026',excerpt:'Keputusan Federal Reserve mempertahankan suku bunga memberikan sentimen positif terhadap harga emas global.',featured:false,imageUrl:''},
+  ];
+}
 
 function fmtDate(ts){
-  if(!ts)return'';if(typeof ts==='string')return ts;
+  if(!ts)return'';
+  if(typeof ts==='string')return ts;
   if(ts.toDate)return ts.toDate().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
   return new Date(ts).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 }
@@ -1531,62 +1420,43 @@ async function renderNews(){
   const featured=newsData.find(n=>n.featured)||newsData[0];
   let html='';
   if(featured){
-    html+=`<div class="news-featured"><div class="news-featured-thumb">${featured.imageUrl?`<img src="${featured.imageUrl}" alt="${featured.title}" loading="lazy">`:`<svg viewBox="0 0 200 80" width="100%" height="100%" style="opacity:.06;position:absolute;inset:0"><path d="M0,40 Q50,10 100,40 T200,40" stroke="#C9A84C" stroke-width="2" fill="none"/></svg><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="55%" text-anchor="middle" fill="#C9A84C" font-size="20" font-family="Cormorant Garamond,serif">✦</text></svg>`}<div class="nf-cat">${featured.cat}</div></div><div class="news-featured-body"><div class="nf-date">${fmtDate(featured.date||featured.createdAt)}</div><div class="nf-title">${featured.title}</div><p class="nf-excerpt">${featured.excerpt}</p></div></div>`;
+    html+=`<div class="news-featured">
+      <div class="news-featured-thumb">
+        ${featured.imageUrl?`<img src="${featured.imageUrl}" alt="${featured.title}" loading="lazy">`:
+        `<svg viewBox="0 0 200 80" width="100%" height="100%" style="opacity:.06;position:absolute;inset:0"><path d="M0,40 Q50,10 100,40 T200,40" stroke="#C9A84C" stroke-width="2" fill="none"/></svg>
+        <svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="55%" text-anchor="middle" fill="#C9A84C" font-size="20" font-family="Cormorant Garamond,serif">✦</text></svg>`}
+        <div class="nf-cat">${featured.cat}</div>
+      </div>
+      <div class="news-featured-body">
+        <div class="nf-date">${fmtDate(featured.date||featured.createdAt)}</div>
+        <div class="nf-title">${featured.title}</div>
+        <p class="nf-excerpt">${featured.excerpt}</p>
+      </div>
+    </div>`;
   }
   html+='<div class="news-list">';
-  newsData.filter(n=>n!==featured).forEach(n=>{html+=`<div class="news-card">${n.imageUrl?`<div class="nc-thumb"><img src="${n.imageUrl}" alt="${n.title}" loading="lazy"></div>`:'<div class="nc-cat-dot"></div>'}<div class="nc-body"><div class="nc-cat">${n.cat}</div><div class="nc-title">${n.title}</div><div class="nc-date">${fmtDate(n.date||n.createdAt)}</div></div></div>`;});
-  html+='</div>';main.innerHTML=html;
+  newsData.filter(n=>n!==featured).forEach(n=>{
+    html+=`<div class="news-card">
+      ${n.imageUrl?`<div class="nc-thumb"><img src="${n.imageUrl}" alt="${n.title}" loading="lazy"></div>`:'<div class="nc-cat-dot"></div>'}
+      <div class="nc-body"><div class="nc-cat">${n.cat}</div><div class="nc-title">${n.title}</div><div class="nc-date">${fmtDate(n.date||n.createdAt)}</div></div>
+    </div>`;
+  });
+  html+='</div>';
+  main.innerHTML=html;
+
   const pw=document.getElementById('price-widget');
   const pRows=[['XAU/USD',window._lp?.XAUUSD,'up'],['BTC/USDT',window._lp?.BTCUSDT,'up'],['ETH/USDT',window._lp?.ETHUSDT,'dn']];
   pw.innerHTML=`<div class="pw-header">Live Prices</div>`+pRows.map(([s,p,c])=>`<div class="pw-row"><span class="pw-sym">${s}</span><span class="pw-price">${typeof p==='number'?p.toFixed(2):'—'}</span><span class="pw-chg ${c}">${c==='up'?'▲':'▼'}</span></div>`).join('');
+
   const aside=document.getElementById('news-aside');
   aside.innerHTML=`<div class="nsc-header">Artikel Terpopuler</div>`+newsData.slice(0,4).map(a=>`<div class="nsc-item"><div class="nsc-title">${a.title}</div><div class="nsc-meta">${fmtDate(a.date||a.createdAt)}</div></div>`).join('');
 }
+/* ── Expose to global scope so goPage() can call it ── */
 window._renderNews=renderNews;
 
-/* ─── EDUKASI ─── */
-async function loadEduFromDB(){
-  try{
-    const q=query(collection(db,'edukasi'),orderBy('createdAt','desc'));
-    const snap=await getDocs(q);
-    const arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));
-    window._eduCache=arr;return arr;
-  }catch(e){window._eduCache=[];return[];}
-}
-
-async function renderEdu(){
-  const canEdu=isVip||isAdmin;
-  const lockEl=document.getElementById('edu-vip-lock');
-  const cntEl=document.getElementById('edu-vip-content');
-  if(lockEl) lockEl.style.display=canEdu?'none':'block';
-  if(cntEl) cntEl.style.display=canEdu?'block':'none';
-  if(!canEdu)return;
-  const modules=await loadEduFromDB();
-  const filtered=window._eduFlt==='all'?modules:modules.filter(m=>m.cat===window._eduFlt);
-  const grid=document.getElementById('edu-grid');
-  if(!filtered.length){grid.innerHTML=`<div class="empty-state edu-empty"><div class="empty-icon">✦</div>${modules.length?'Tidak ada modul untuk kategori ini.':'Belum ada modul edukasi. Admin belum menambahkan konten.'}</div>`;return;}
-  const catCls={Dasar:'dasar',Teknikal:'teknikal',Lanjutan:'lanjutan',Strategi:'strategi',Psikologi:'psikologi'};
-  grid.innerHTML=filtered.map(m=>`
-    <div class="edu-card" onclick="openEduModal('${m.id}')">
-      <div class="edu-thumb">
-        ${m.imageUrl?`<img src="${m.imageUrl}" alt="${m.title||m.judul}" loading="lazy">`:`<div class="edu-thumb-placeholder"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><rect x="8" y="6" width="24" height="32" rx="3" stroke="#C9A84C" stroke-width="1.5"/><path d="M14 16h12M14 22h8" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"/><path d="M32 18v20a4 4 0 01-4 4H12" stroke="#C9A84C" stroke-width="1.5"/></svg></div>`}
-        <div class="edu-cat-badge ${catCls[m.cat]||'dasar'}">${m.cat}</div>
-        <div class="edu-level">${m.level||'Beginner'}</div>
-      </div>
-      <div class="edu-body">
-        <div class="edu-body-cat">${m.cat}</div>
-        <div class="edu-body-title">${m.title||m.judul}</div>
-        <div class="edu-body-desc">${(m.desc||'').slice(0,100)}${(m.desc||'').length>100?'...':''}</div>
-        <div class="edu-meta">
-          ${m.durasi?`<span class="edu-meta-item">⏱ ${m.durasi}</span>`:''}
-          <span class="edu-meta-item" style="color:var(--gold)">Baca Selengkapnya →</span>
-        </div>
-      </div>
-    </div>`).join('');
-}
-window._renderEdu=renderEdu;
-
-/* ─── ADMIN ─── */
+/* ────────────────────────
+   ADMIN — News CRUD
+──────────────────────── */
 async function loadAdminData(){
   await renderAdminNewsList();
 }
@@ -1597,17 +1467,21 @@ async function renderAdminNewsList(){
   list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Memuat...</div>';
   const news=await loadNewsFromDB();
   if(!news.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada berita</div>';return;}
-  list.innerHTML=news.map(n=>`<div class="admin-news-item"><div class="ani-thumb">${n.imageUrl?`<img src="${n.imageUrl}" alt="${n.title}" loading="lazy">`:'<div style="width:100%;height:100%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;color:var(--gold);opacity:.3;font-size:1.4rem">✦</div>'}</div><div class="ani-body"><div class="ani-cat">${n.cat}${n.featured?'<span class="ani-featured">FEATURED</span>':''}</div><div class="ani-title">${n.title}</div><div class="ani-date">${fmtDate(n.date||n.createdAt)}</div><div class="ani-actions"><button class="btn-edit-n" onclick="window._editNews('${n.id}')">✎ Edit</button><button class="btn-feat-n" onclick="window._toggleFeatured('${n.id}',${!n.featured})">${n.featured?'★ Unfeatured':'☆ Featured'}</button><button class="btn-del-n" onclick="window._deleteNews('${n.id}')">✕ Hapus</button></div></div></div>`).join('');
+  list.innerHTML=news.map(n=>`
+    <div class="admin-news-item">
+      <div class="ani-thumb">${n.imageUrl?`<img src="${n.imageUrl}" alt="${n.title}" loading="lazy">`:'<div style="width:100%;height:100%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;color:var(--gold);opacity:.3;font-size:1.4rem">✦</div>'}</div>
+      <div class="ani-body">
+        <div class="ani-cat">${n.cat}${n.featured?'<span class="ani-featured">FEATURED</span>':''}</div>
+        <div class="ani-title">${n.title}</div>
+        <div class="ani-date">${fmtDate(n.date||n.createdAt)}</div>
+        <div class="ani-actions">
+          <button class="btn-edit-n" onclick="window._editNews('${n.id}')">✎ Edit</button>
+          <button class="btn-feat-n" onclick="window._toggleFeatured('${n.id}',${!n.featured})">${n.featured?'★ Unfeatured':'☆ Set Featured'}</button>
+          <button class="btn-del-n" onclick="window._deleteNews('${n.id}')">✕ Hapus</button>
+        </div>
+      </div>
+    </div>`).join('');
 }
-
-async function renderAdminEduList(){
-  const list=document.getElementById('admin-edu-list');
-  list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Memuat...</div>';
-  const modules=await loadEduFromDB();
-  if(!modules.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada modul edukasi. Klik + Tambah Modul untuk menambahkan.</div>';return;}
-  list.innerHTML=modules.map(m=>`<div class="admin-news-item"><div class="ani-thumb">${m.imageUrl?`<img src="${m.imageUrl}" alt="${m.title||m.judul}" loading="lazy">`:'<div style="width:100%;height:100%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;color:var(--gold);opacity:.3;font-size:1.4rem">✦</div>'}</div><div class="ani-body"><div class="ani-cat">${m.cat} · ${m.level||'Beginner'}</div><div class="ani-title">${m.title||m.judul}</div><div class="ani-date">${m.durasi||''} · ${fmtDate(m.createdAt)}</div><div class="ani-actions"><button class="btn-edit-n" onclick="window._editEdu('${m.id}')">✎ Edit</button><button class="btn-del-n" onclick="window._deleteEdu('${m.id}')">✕ Hapus</button></div></div></div>`).join('');
-}
-window._loadAdminEdu=renderAdminEduList;
 
 window._editNews=async(id)=>{
   const n=allNewsCache.find(x=>x.id===id);if(!n)return;
@@ -1621,29 +1495,24 @@ window._editNews=async(id)=>{
   document.getElementById('nf-kat').value=n.cat||'Market Update';
   document.getElementById('nf-featured').checked=!!n.featured;
   document.getElementById('nf-foto').value='';
-  if(n.imageUrl){document.getElementById('img-preview-wrap').style.display='block';document.getElementById('img-preview').src=n.imageUrl;document.getElementById('img-current-url').textContent='Foto sudah ada';window._editNewsImg=n.imageUrl;}else{clearImg();}
-  window.scrollTo(0,0);
-};
-
-window._editEdu=async(id)=>{
-  const m=window._eduCache.find(x=>x.id===id);if(!m)return;
-  document.getElementById('edu-form-wrap').style.display='block';
-  document.getElementById('ef-title-lbl').textContent='Edit Modul Edukasi';
-  document.getElementById('ef-edit-id').value=id;
-  document.getElementById('ef-judul').value=m.title||m.judul||'';
-  document.getElementById('ef-desc').value=m.desc||'';
-  document.getElementById('ef-konten').value=m.konten||'';
-  document.getElementById('ef-durasi').value=m.durasi||'';
-  document.getElementById('ef-kat').value=m.cat||'Dasar';
-  document.getElementById('ef-level').value=m.level||'Beginner';
-  document.getElementById('ef-foto').value='';
-  if(m.imageUrl){document.getElementById('edu-img-preview-wrap').style.display='block';document.getElementById('edu-img-preview').src=m.imageUrl;document.getElementById('edu-img-current-url').textContent='Foto sudah ada';window._editEduImg=m.imageUrl;}else{clearEduImg();}
+  if(n.imageUrl){
+    document.getElementById('img-preview-wrap').style.display='block';
+    document.getElementById('img-preview').src=n.imageUrl;
+    document.getElementById('img-current-url').textContent='Foto sudah ada';
+    window._editNewsImg=n.imageUrl;
+  }else{clearImg();}
   window.scrollTo(0,0);
 };
 
 window._toggleFeatured=async(id,val)=>{
   try{
-    if(val){const snap=await getDocs(query(collection(db,'news')));const batch=[];snap.forEach(d=>{if(d.id!==id&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});await Promise.all(batch);}
+    if(val){
+      const q=query(collection(db,'news'));
+      const snap=await getDocs(q);
+      const batch=[];
+      snap.forEach(d=>{if(d.id!==id&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});
+      await Promise.all(batch);
+    }
     await updateDoc(doc(db,'news',id),{featured:val});
     toast('Admin',val?'Dijadikan featured':'Dihapus dari featured','#C9A84C');
     await renderAdminNewsList();
@@ -1652,14 +1521,14 @@ window._toggleFeatured=async(id,val)=>{
 
 window._deleteNews=async(id)=>{
   if(!confirm('Hapus berita ini?'))return;
-  try{await deleteDoc(doc(db,'news',id));toast('Admin','Berita dihapus','#E05A5A');await renderAdminNewsList();}catch(e){toast('Error',e.message,'#E05A5A');}
+  try{
+    await deleteDoc(doc(db,'news',id));
+    toast('Admin','Berita dihapus','#E05A5A');
+    await renderAdminNewsList();
+  }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
-window._deleteEdu=async(id)=>{
-  if(!confirm('Hapus modul ini?'))return;
-  try{await deleteDoc(doc(db,'edukasi',id));toast('Admin','Modul dihapus','#E05A5A');await renderAdminEduList();}catch(e){toast('Error',e.message,'#E05A5A');}
-};
-
+/* Kompres gambar → base64 */
 function compressImage(file,maxPx,quality,onProgress){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
@@ -1672,14 +1541,18 @@ function compressImage(file,maxPx,quality,onProgress){
         if(w>maxPx){h=Math.round(h*maxPx/w);w=maxPx;}
         if(h>maxPx){w=Math.round(w*maxPx/h);h=maxPx;}
         canvas.width=w;canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
         onProgress&&onProgress(80);
         const dataUrl=canvas.toDataURL('image/jpeg',quality);
-        onProgress&&onProgress(100);resolve(dataUrl);
+        onProgress&&onProgress(100);
+        resolve(dataUrl);
       };
-      img.onerror=reject;img.src=e.target.result;
+      img.onerror=reject;
+      img.src=e.target.result;
     };
-    reader.onerror=reject;reader.readAsDataURL(file);
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
   });
 }
 
@@ -1691,104 +1564,149 @@ window.saveNews=async()=>{
   const kat=document.getElementById('nf-kat').value;
   const featured=document.getElementById('nf-featured').checked;
   if(!judul||!excerpt){toast('Validasi','Judul dan excerpt wajib diisi','#E05A5A');return;}
+
   const btn=document.getElementById('btn-save-news');
   btn.disabled=true;btn.innerHTML='<div class="spin" style="border-top-color:var(--bg)"></div>';
+
   let imageUrl=window._editNewsImg||'';
   const fileInput=document.getElementById('nf-foto');
   const file=fileInput.files[0];
+
   try{
     if(file){
-      const prog=document.getElementById('upload-prog'),progBar=document.getElementById('upload-prog-bar');
+      const prog=document.getElementById('upload-prog');
+      const progBar=document.getElementById('upload-prog-bar');
       prog.style.display='block';progBar.style.width='10%';
       imageUrl=await compressImage(file,800,0.75,(p)=>{progBar.style.width=p+'%';});
       prog.style.display='none';
     }
-    if(featured){const snap=await getDocs(query(collection(db,'news')));const editId=document.getElementById('nf-edit-id').value;const batch=[];snap.forEach(d=>{if(d.id!==editId&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});await Promise.all(batch);}
+
+    if(featured){
+      const snap=await getDocs(query(collection(db,'news')));
+      const editId=document.getElementById('nf-edit-id').value;
+      const batch=[];
+      snap.forEach(d=>{if(d.id!==editId&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});
+      await Promise.all(batch);
+    }
+
     const editId=document.getElementById('nf-edit-id').value;
     const payload={title:judul,excerpt,konten,cat:kat,date:tgl,featured,imageUrl,updatedAt:serverTimestamp()};
-    if(editId){await updateDoc(doc(db,'news',editId),payload);toast('Admin','Berita diperbarui!','#3DBA7A');}
-    else{payload.createdAt=serverTimestamp();await addDoc(collection(db,'news'),payload);toast('Admin','Berita ditambahkan!','#3DBA7A');}
-    hideNewsForm();await renderAdminNewsList();
-  }catch(e){toast('Error',e.message||'Gagal simpan','#E05A5A');}
-  finally{btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Berita';}
-};
 
-window.saveEdu=async()=>{
-  const judul=document.getElementById('ef-judul').value.trim();
-  const desc=document.getElementById('ef-desc').value.trim();
-  const konten=document.getElementById('ef-konten').value.trim();
-  const durasi=document.getElementById('ef-durasi').value.trim();
-  const kat=document.getElementById('ef-kat').value;
-  const level=document.getElementById('ef-level').value;
-  if(!judul||!desc||!konten){toast('Validasi','Judul, deskripsi, dan konten wajib diisi','#E05A5A');return;}
-  const btn=document.getElementById('btn-save-edu');
-  btn.disabled=true;btn.innerHTML='<div class="spin" style="border-top-color:var(--bg)"></div>';
-  let imageUrl=window._editEduImg||'';
-  const fileInput=document.getElementById('ef-foto');
-  const file=fileInput.files[0];
-  try{
-    if(file){
-      const prog=document.getElementById('edu-upload-prog'),progBar=document.getElementById('edu-upload-prog-bar');
-      prog.style.display='block';progBar.style.width='10%';
-      imageUrl=await compressImage(file,900,0.8,(p)=>{progBar.style.width=p+'%';});
-      prog.style.display='none';
+    if(editId){
+      await updateDoc(doc(db,'news',editId),payload);
+      toast('Admin','Berita diperbarui!','#3DBA7A');
+    }else{
+      payload.createdAt=serverTimestamp();
+      await addDoc(collection(db,'news'),payload);
+      toast('Admin','Berita ditambahkan!','#3DBA7A');
     }
-    const editId=document.getElementById('ef-edit-id').value;
-    const payload={title:judul,desc,konten,cat:kat,level,durasi,imageUrl,updatedAt:serverTimestamp()};
-    if(editId){await updateDoc(doc(db,'edukasi',editId),payload);toast('Admin','Modul diperbarui!','#3DBA7A');}
-    else{payload.createdAt=serverTimestamp();await addDoc(collection(db,'edukasi'),payload);toast('Admin','Modul ditambahkan!','#3DBA7A');}
-    hideEduForm();await renderAdminEduList();
-  }catch(e){toast('Error',e.message||'Gagal simpan','#E05A5A');}
-  finally{btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Modul';}
+
+    hideNewsForm();
+    await renderAdminNewsList();
+  }catch(e){
+    toast('Error',e.message||'Gagal simpan','#E05A5A');
+    console.error(e);
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Berita';
+  }
 };
 
-/* ─── User Management ─── */
+/* ────────────────────────
+   USER MANAGEMENT
+   *** FIX: exposed as window._loadUsers & window._loadStats ***
+──────────────────────── */
 async function loadUsers(){
   const list=document.getElementById('user-list');
   list.innerHTML='<div class="empty-state">Memuat user...</div>';
   try{
     const snap=await getDocs(collection(db,'users'));
-    const users=[];snap.forEach(d=>users.push({uid:d.id,...d.data()}));
+    const users=[];
+    snap.forEach(d=>users.push({uid:d.id,...d.data()}));
     document.getElementById('user-count-lbl').textContent=users.length+' total user';
     if(!users.length){list.innerHTML='<div class="empty-state">Belum ada user</div>';return;}
-    list.innerHTML=users.map(u=>`<div class="user-item"><div class="user-av">${(u.displayName||u.email||'?').charAt(0).toUpperCase()}</div><div class="user-info-col"><div class="user-name">${u.displayName||'—'}</div><div class="user-email">${u.email||'—'}</div></div><div class="user-badges">${u.admin?'<span class="admin-pill">ADMIN</span>':''}<button class="toggle-vip ${u.vip?'is-vip':'not-vip'}" onclick="window._toggleUserVip('${u.uid}',${!u.vip})">${u.vip?'✦ VIP — Cabut':'Jadikan VIP'}</button></div></div>`).join('');
-  }catch(e){list.innerHTML=`<div class="empty-state">Gagal: ${e.message}</div>`;}
+    list.innerHTML=users.map(u=>`
+      <div class="user-item">
+        <div class="user-av">${(u.displayName||u.email||'?').charAt(0).toUpperCase()}</div>
+        <div class="user-info-col">
+          <div class="user-name">${u.displayName||'—'}</div>
+          <div class="user-email">${u.email||'—'}</div>
+        </div>
+        <div class="user-badges">
+          ${u.admin?'<span class="admin-pill">ADMIN</span>':''}
+          <button class="toggle-vip ${u.vip?'is-vip':'not-vip'}" onclick="window._toggleUserVip('${u.uid}',${!u.vip})">${u.vip?'✦ VIP — Cabut':'Jadikan VIP'}</button>
+        </div>
+      </div>`).join('');
+  }catch(e){
+    list.innerHTML=`<div class="empty-state">Gagal memuat user: ${e.message}</div>`;
+  }
 }
+/* ★★★ KUNCI FIX: expose loadUsers ke window ★★★ */
 window._loadUsers=loadUsers;
 
 window._toggleUserVip=async(uid,val)=>{
   try{
     await setDoc(doc(db,'users',uid),{vip:val},{merge:true});
     toast('Admin',(val?'User dijadikan VIP':'VIP dicabut'),'#3DBA7A');
-    await loadUsers();await loadStats();
+    await loadUsers();
+    await loadStats();
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
 async function loadStats(){
   try{
     const newsSnap=await getDocs(collection(db,'news'));
-    const eduSnap=await getDocs(collection(db,'edukasi'));
     const userSnap=await getDocs(collection(db,'users'));
     const users=[];userSnap.forEach(d=>users.push(d.data()));
     const vips=users.filter(u=>u.vip===true);
     document.getElementById('stat-news').textContent=newsSnap.size;
-    document.getElementById('stat-edu').textContent=eduSnap.size;
     document.getElementById('stat-users').textContent=users.length;
     document.getElementById('stat-vip').textContent=vips.length;
+    document.getElementById('stat-reg').textContent=users.length-vips.length;
   }catch(e){console.error('loadStats:',e);}
 }
+/* ★★★ KUNCI FIX: expose loadStats ke window ★★★ */
 window._loadStats=loadStats;
 
-/* ─── PRICES ─── */
+/* ────────────────────────
+   PRICES
+──────────────────────── */
 const CRYPTO=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT'];
+
 async function fetchXau(){
-  try{const r=await fetch('https://api.gold-api.com/price/XAU',{signal:AbortSignal.timeout(6000)});const d=await r.json();if(d.price){const p=parseFloat(d.price)-2;window._lp.XAUUSD=p;window._lp.XAUTUSDT=p;return;}}catch(_){}
-  try{const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});const d=await r.json();const p=d?.items?.[0]?.xauPrice;if(p){const v=parseFloat(p)-2;window._lp.XAUUSD=v;window._lp.XAUTUSDT=v;}}catch(_){}
+  /* Try gold-api.com first */
+  try{
+    const r=await fetch('https://api.gold-api.com/price/XAU',{signal:AbortSignal.timeout(6000)});
+    const d=await r.json();
+    if(d.price){const p=parseFloat(d.price)-2;window._lp.XAUUSD=p;window._lp.XAUTUSDT=p;return;}
+  }catch(_){}
+  /* Fallback: goldprice.org */
+  try{
+    const r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});
+    const d=await r.json();
+    const p=d?.items?.[0]?.xauPrice;
+    if(p){const v=parseFloat(p)-2;window._lp.XAUUSD=v;window._lp.XAUTUSDT=v;}
+  }catch(_){}
 }
+
 async function fetchCrypto(){
-  try{const r=await fetch('https://api.binance.com/api/v3/ticker/price',{signal:AbortSignal.timeout(5000)});const data=await r.json();const lookup={};data.forEach(d=>lookup[d.symbol]=parseFloat(d.price));CRYPTO.forEach(s=>{if(lookup[s])window._lp[s]=lookup[s];});return;}catch(_){}
-  try{const cgIds={BTCUSDT:'bitcoin',ETHUSDT:'ethereum',SOLUSDT:'solana',BNBUSDT:'binancecoin',XRPUSDT:'ripple',DOGEUSDT:'dogecoin',ADAUSDT:'cardano'};const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(cgIds).join(',')}&vs_currencies=usd`,{signal:AbortSignal.timeout(8000)});const d=await r.json();Object.entries(cgIds).forEach(([s,id])=>{if(d[id]?.usd)window._lp[s]=d[id].usd;});}catch(_){}
+  /* Binance — try proxy first to avoid CORS issues, then direct */
+  try{
+    const r=await fetch(`https://api.binance.com/api/v3/ticker/price`,{signal:AbortSignal.timeout(5000)});
+    const data=await r.json();
+    const lookup={};data.forEach(d=>lookup[d.symbol]=parseFloat(d.price));
+    CRYPTO.forEach(s=>{if(lookup[s])window._lp[s]=lookup[s];});
+    return;
+  }catch(_){}
+  /* CoinGecko fallback — only if Binance fails */
+  try{
+    const cgIds={BTCUSDT:'bitcoin',ETHUSDT:'ethereum',SOLUSDT:'solana',BNBUSDT:'binancecoin',XRPUSDT:'ripple',DOGEUSDT:'dogecoin',ADAUSDT:'cardano'};
+    const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(cgIds).join(',')}&vs_currencies=usd`,{signal:AbortSignal.timeout(8000)});
+    const d=await r.json();
+    Object.entries(cgIds).forEach(([s,id])=>{if(d[id]?.usd)window._lp[s]=d[id].usd;});
+  }catch(_){}
 }
+
 async function fetchPrices(){
   window._prevLp={...window._lp};
   await Promise.allSettled([fetchXau(),fetchCrypto()]);
@@ -1797,7 +1715,9 @@ async function fetchPrices(){
   if(dot){dot.className='live-dot'+(has?' on':'');document.getElementById('ap-live').textContent=has?'Live':'Offline';}
 }
 
-/* ─── TRADE ─── */
+/* ────────────────────────
+   TRADE HELPERS
+──────────────────────── */
 const calcPnl=t=>!t.exit?null:+((t.dir==='Long'?(t.exit-t.entry):(t.entry-t.exit))*t.size).toFixed(2);
 const calcOpnl=t=>{const cp=window._lp[t.symbol];return cp?((t.dir==='Long'?(cp-t.entry):(t.entry-cp))*t.size):null;};
 const calcR=t=>{if(!t.exit||!t.sl)return null;const risk=Math.abs(t.entry-t.sl)*t.size,pnl=calcPnl(t);return(!risk||pnl===null)?null:+(pnl/risk).toFixed(2);};
@@ -1818,6 +1738,9 @@ function autoCheck(){
   });return changed;
 }
 
+/* ────────────────────────
+   RENDER
+──────────────────────── */
 function renderStats(){
   const closed=trades.filter(t=>t.exit!==null),open=trades.filter(t=>t.exit===null&&(t.type!=='limit'||t.activated));
   const wins=closed.filter(t=>calcPnl(t)>0),totalPnl=closed.reduce((a,t)=>a+calcPnl(t),0);
@@ -1836,22 +1759,24 @@ function renderOpen(){
   const open=trades.filter(t=>t.exit===null);
   const tb=document.getElementById('open-tbody');
   if(!open.length){tb.innerHTML=`<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">✦</div>No open positions</div></td></tr>`;return;}
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   tb.innerHTML=open.map(t=>{
     const cp=window._lp[t.symbol],isLim=t.type==='limit'&&!t.activated;
     const pnl=isLim?null:calcOpnl(t),pnlPct=(pnl!==null&&t.entry&&t.size)?(pnl/(t.entry*t.size)*100):null;
     const prog=!isLim?calcProg(t):null,pc=prog!==null?(prog>66?'#3DBA7A':prog>33?'#C9A84C':'#E05A5A'):'var(--text3)';
-    return`<tr><td><span class="td-sym">${window.SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td style="font-family:'Cormorant Garamond',serif;font-size:1rem">${cp?fmtP(cp,t.symbol):'—'}</td><td><span style="color:var(--red)">${t.sl?fmtP(t.sl,t.symbol):'—'}</span>/<span style="color:var(--green)">${t.tp?fmtP(t.tp,t.symbol):'—'}</span></td><td>${t.size}</td><td class="${pnl===null?'':pnl>=0?'p-pos':'p-neg'}">${pnl===null?`<span style="color:var(--text3)">${isLim?'Pending':'—'}</span>`:fmtM(pnl)+` <span style="opacity:.5;font-size:.6rem">(${fmtPct(pnlPct)})</span>`}</td><td>${prog!==null?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${prog.toFixed(0)}%;background:${pc}"></div></div><div class="prog-txt">${prog.toFixed(0)}%</div></div>`:isLim?`<span style="font-size:.6rem;color:var(--text3)">Waiting</span>`:'—'}</td><td>${isLim?'<span class="badge lim">Limit</span>':'<span class="badge open">Open</span>'}</td><td><div class="row-actions"><button class="act-btn" onclick="window._editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window._delTrade(${t.id})">Del</button></div></td></tr>`;
+    return`<tr><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td style="font-family:'Cormorant Garamond',serif;font-size:1rem">${cp?fmtP(cp,t.symbol):'—'}</td><td><span style="color:var(--red)">${t.sl?fmtP(t.sl,t.symbol):'—'}</span>/<span style="color:var(--green)">${t.tp?fmtP(t.tp,t.symbol):'—'}</span></td><td>${t.size}</td><td class="${pnl===null?'':pnl>=0?'p-pos':'p-neg'}">${pnl===null?`<span style="color:var(--text3)">${isLim?'Pending':'—'}</span>`:fmtM(pnl)+` <span style="opacity:.5;font-size:.6rem">(${fmtPct(pnlPct)})</span>`}</td><td>${prog!==null?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${prog.toFixed(0)}%;background:${pc}"></div></div><div class="prog-txt">${prog.toFixed(0)}%</div></div>`:isLim?`<span style="font-size:.6rem;color:var(--text3)">Waiting</span>`:'—'}</td><td>${isLim?'<span class="badge lim">Limit</span>':'<span class="badge open">Open</span>'}</td><td><div class="row-actions"><button class="act-btn" onclick="window._editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window._delTrade(${t.id})">Del</button></div></td></tr>`;
   }).join('');
 }
 
 function renderHistory(){
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   let data=trades.filter(t=>t.exit!==null);
   if(window._histFlt==='win')data=data.filter(t=>calcPnl(t)>0);
   if(window._histFlt==='loss')data=data.filter(t=>calcPnl(t)<=0);
   const tb=document.getElementById('hist-tbody');
   if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">✦</div>No trades found</div></td></tr>`;return;}
   tb.innerHTML=[...data].reverse().map(t=>{const pnl=calcPnl(t),r=calcR(t),rb=t.closedReason?`<span class="badge ${t.closedReason==='TP'?'tp':'sl'}" style="margin-left:4px">${t.closedReason}</span>`:'';
-    return`<tr><td>${t.date_close||t.date}</td><td><span class="td-sym">${window.SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td>${fmtP(t.exit,t.symbol)}${rb}</td><td>${t.size}</td><td class="${pnl>0?'p-pos':'p-neg'}">${fmtM(pnl)}</td><td class="${r&&r>=1?'p-pos':r&&r<0?'p-neg':'p-neu'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td><td><div class="row-actions"><button class="act-btn" onclick="window._editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window._delTrade(${t.id})">Del</button></div></td></tr>`;
+    return`<tr><td>${t.date_close||t.date}</td><td><span class="td-sym">${SYM_D[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td>${fmtP(t.exit,t.symbol)}${rb}</td><td>${t.size}</td><td class="${pnl>0?'p-pos':'p-neg'}">${fmtM(pnl)}</td><td class="${r&&r>=1?'p-pos':r&&r<0?'p-neg':'p-neu'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td><td><div class="row-actions"><button class="act-btn" onclick="window._editTrade(${t.id})">Edit</button><button class="act-btn del" onclick="window._delTrade(${t.id})">Del</button></div></td></tr>`;
   }).join('');
 }
 window._renderHistory=renderHistory;
@@ -1868,21 +1793,24 @@ function renderEquity(){
 }
 
 function renderBkd(){
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   const syms={};trades.filter(t=>t.exit).forEach(t=>{const p=calcPnl(t);syms[t.symbol]=(syms[t.symbol]||0)+p;});
   const arr=Object.entries(syms).sort((a,b)=>b[1]-a[1]);
   if(!arr.length){document.getElementById('bkd-list').innerHTML='<div class="empty-state" style="padding:20px">No closed trades</div>';return;}
   const maxA=Math.max(...arr.map(a=>Math.abs(a[1])));
-  document.getElementById('bkd-list').innerHTML=arr.map(([sym,pnl])=>`<div class="bk-row"><span class="bk-sym">${window.SYM_D[sym]||sym}</span><div class="bk-bar-wrap"><div class="bk-bar" style="width:${(Math.abs(pnl)/maxA*100).toFixed(1)}%;background:${pnl>=0?'#3DBA7A':'#E05A5A'}"></div></div><span class="bk-val ${pnl>=0?'p-pos':'p-neg'}">${fmtM(pnl)}</span></div>`).join('');
+  document.getElementById('bkd-list').innerHTML=arr.map(([sym,pnl])=>`<div class="bk-row"><span class="bk-sym">${SYM_D[sym]||sym}</span><div class="bk-bar-wrap"><div class="bk-bar" style="width:${(Math.abs(pnl)/maxA*100).toFixed(1)}%;background:${pnl>=0?'#3DBA7A':'#E05A5A'}"></div></div><span class="bk-val ${pnl>=0?'p-pos':'p-neg'}">${fmtM(pnl)}</span></div>`).join('');
 }
 
 function renderNotes(){
+  const SYM_D=window.SYM_D||{XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT'};
   const notes=trades.filter(t=>t.notes),g=document.getElementById('notes-grid');
   if(!notes.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div>No journal notes yet</div>`;return;}
-  g.innerHTML=[...notes].reverse().map(t=>`<div class="note-card"><div class="note-sym">${window.SYM_D[t.symbol]||t.symbol}</div><div class="note-date">${t.date} · ${t.dir}</div><div class="note-txt">${t.notes}</div>${t.tag?`<div class="note-tag">✦ ${t.tag}</div>`:''}</div>`).join('');
+  g.innerHTML=[...notes].reverse().map(t=>`<div class="note-card"><div class="note-sym">${SYM_D[t.symbol]||t.symbol}</div><div class="note-date">${t.date} · ${t.dir}</div><div class="note-txt">${t.notes}</div>${t.tag?`<div class="note-tag">✦ ${t.tag}</div>`:''}</div>`).join('');
 }
 
 function renderAll(){renderStats();renderOpen();renderHistory();renderEquity();renderBkd();renderNotes();}
 
+/* ── Modal ── */
 window.openModal=(t=null)=>{
   if(!isVip&&!isAdmin){toast('MGF','Fitur VIP — hubungi admin','#C9A84C');return;}
   document.getElementById('modal-ttl').textContent=t?'Edit Trade':'Log New Trade';
@@ -1929,16 +1857,25 @@ window.clearAll=async()=>{
   trades=[];nextId=1;await persistTrades();renderAll();toast('MGF','Semua trade dihapus','#E05A5A');
 };
 
+/* ── Tick ── */
 async function tick(){
   await fetchPrices();
-  renderTicker();renderPricebar();
+  renderTicker();
+  renderPricebar();
   updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);
   const changed=autoCheck();
   if(changed){renderAll();triggerSave();}else{renderOpen();renderStats();}
 }
 
-fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,null);});
-setInterval(()=>fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);}),15000);
+/* Initial price fetch */
+fetchPrices().then(()=>{
+  renderTicker();
+  updateHeroCard(window._lp.XAUUSD,null);
+});
+setInterval(()=>fetchPrices().then(()=>{
+  renderTicker();
+  updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);
+}),15000);
 </script>
 </body>
 </html>
