@@ -1488,7 +1488,6 @@ window.updateHeroCard=updateHeroCard;
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,where,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import{getStorage,ref as storageRef,uploadBytesResumable,getDownloadURL,deleteObject}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 
 const FB={
   apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
@@ -1501,9 +1500,15 @@ const FB={
 
 const ADMIN_EMAIL='adminmayoragold@mayora.com';
 const ADMIN_PASS='tradingsehat';
-const STORAGE_NEWS_PATH='news-images/';
 
-const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
+// ═══════════════════════════════════════════
+// CLOUDINARY CONFIG (menggantikan Firebase Storage)
+// ═══════════════════════════════════════════
+const CLOUDINARY_CLOUD='dktcrzfck';
+const CLOUDINARY_PRESET='mayoragold_preset';
+const CLOUDINARY_URL=`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
+
+const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
 
 let trades=[],nextId=1,isVip=false,isAdmin=false,saveDebounce,tickInterval;
 window._curUser=null;
@@ -1519,18 +1524,18 @@ function setBtnLoad(id,loading,txt){
 }
 
 /* ── Slug unique check ── */
-async function ensureUniqueSlug(baseSlug, editId=null){
-  let slug=baseSlug, counter=2;
+async function ensureUniqueSlug(baseSlug,editId=null){
+  let slug=baseSlug,counter=2;
   while(true){
     const q=query(collection(db,'news'),where('slug','==',slug));
     const snap=await getDocs(q);
     const conflict=snap.docs.filter(d=>d.id!==editId);
-    if(conflict.length===0) return slug;
+    if(conflict.length===0)return slug;
     slug=`${baseSlug}-${counter}`;counter++;
   }
 }
 
-/* ── Image compression (client-side Canvas) ── */
+/* ── Kompres gambar client-side ── */
 function compressToBlob(file,maxPx=1200,quality=0.80){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
@@ -1558,49 +1563,50 @@ function compressToBlob(file,maxPx=1200,quality=0.80){
   });
 }
 
-/* ── Upload blob ke Firebase Storage dengan progress ── */
-function uploadToStorage(blob, filename, onProgress){
+/* ── Upload ke Cloudinary dengan progress real-time ── */
+function uploadToStorage(blob,filename,onProgress){
   return new Promise((resolve,reject)=>{
-    const ts=Date.now();
-    const path=`${STORAGE_NEWS_PATH}${filename}-${ts}.jpg`;
-    const sRef=storageRef(storage,path);
-    const task=uploadBytesResumable(sRef,blob,{
-      contentType:'image/jpeg',
-      cacheControl:'public, max-age=31536000'
-    });
-    task.on('state_changed',
-      snap=>{
-        const pct=Math.round((snap.bytesTransferred/snap.totalBytes)*100);
+    const formData=new FormData();
+    formData.append('file',blob,filename+'.jpg');
+    formData.append('upload_preset',CLOUDINARY_PRESET);
+    formData.append('folder','news-images');
+
+    const xhr=new XMLHttpRequest();
+    xhr.open('POST',CLOUDINARY_URL);
+
+    xhr.upload.onprogress=e=>{
+      if(e.lengthComputable){
+        const pct=Math.round((e.loaded/e.total)*100);
         onProgress&&onProgress(pct);
-      },
-      err=>{
-        const msg={'storage/unauthorized':'Tidak punya izin upload. Periksa Storage Rules.','storage/canceled':'Upload dibatalkan.','storage/quota-exceeded':'Kuota Storage habis.'}[err.code]||'Upload gagal: '+err.message;
-        reject(new Error(msg));
-      },
-      async()=>{
-        try{resolve(await getDownloadURL(task.snapshot.ref));}
-        catch(e){reject(new Error('Gagal ambil URL: '+e.message));}
       }
-    );
+    };
+
+    xhr.onload=()=>{
+      if(xhr.status===200){
+        try{
+          const res=JSON.parse(xhr.responseText);
+          resolve(res.secure_url);
+        }catch(e){reject(new Error('Gagal parse response Cloudinary.'));}
+      }else{
+        let msg='Upload gagal (HTTP '+xhr.status+')';
+        try{const err=JSON.parse(xhr.responseText);msg=err.error?.message||msg;}catch(_){}
+        reject(new Error(msg));
+      }
+    };
+    xhr.onerror=()=>reject(new Error('Upload gagal. Periksa koneksi internet.'));
+    xhr.send(formData);
   });
 }
 
-/* ── Hapus gambar lama dari Storage ── */
+/* ── Hapus gambar lama (Cloudinary unsigned = tidak bisa delete via client) ── */
 async function deleteOldImage(imageUrl){
-  if(!imageUrl||!imageUrl.includes('firebasestorage')) return;
-  try{
-    const url=new URL(imageUrl);
-    const encoded=url.pathname.split('/o/')[1];
-    if(!encoded)return;
-    const path=decodeURIComponent(encoded);
-    await deleteObject(storageRef(storage,path));
-  }catch(e){
-    if(e.code!=='storage/object-not-found') console.warn('[Storage] Hapus gambar lama:',e.message);
-  }
+  // Unsigned preset tidak support delete dari browser — aman diabaikan
+  // Hapus manual di cloudinary.com → Media Library jika perlu
+  console.log('[Cloudinary] Old image kept (delete via Media Library):', imageUrl);
 }
 
-/* ── Progress bar UI helper ── */
-function setUploadProgress(pct, label=''){
+/* ── Progress bar UI ── */
+function setUploadProgress(pct,label=''){
   const wrap=document.getElementById('upload-prog');
   const bar=document.getElementById('upload-prog-bar');
   const lbl=document.getElementById('upload-prog-label');
@@ -1611,8 +1617,7 @@ function setUploadProgress(pct, label=''){
 }
 
 /* ══════════════════════════════════════
-   saveNews — FULLY UPGRADED
-   Upload gambar → Storage → URL → Firestore + Slug
+   saveNews — pakai Cloudinary
    ══════════════════════════════════════ */
 window.saveNews=async()=>{
   const errEl=document.getElementById('nf-save-err');
@@ -1646,20 +1651,20 @@ window.saveNews=async()=>{
     const slug=await ensureUniqueSlug(baseSlug,editId);
 
     /* 2. Proses gambar */
-    let imageUrl=oldImgUrl; // default: gambar lama (mode edit tanpa ganti foto)
+    let imageUrl=oldImgUrl;
 
     if(file){
-      /* 2a. Kompres client-side */
+      /* Kompres */
       setUploadProgress(5,'Mengompres gambar...');
       const blob=await compressToBlob(file,1200,0.80);
 
-      /* 2b. Upload ke Firebase Storage */
-      setUploadProgress(15,'Mengunggah gambar...');
-      imageUrl=await uploadToStorage(blob, slug, (pct)=>{
+      /* Upload ke Cloudinary */
+      setUploadProgress(15,'Mengunggah ke Cloudinary...');
+      imageUrl=await uploadToStorage(blob,slug,(pct)=>{
         setUploadProgress(15+Math.round(pct*0.7),'Mengunggah gambar... '+pct+'%');
       });
 
-      /* 2c. Hapus gambar lama jika edit & ada gambar sebelumnya */
+      /* Catat old image (tidak bisa auto-delete, tapi dicatat) */
       if(editId&&oldImgUrl&&oldImgUrl!==imageUrl){
         await deleteOldImage(oldImgUrl);
       }
@@ -1667,7 +1672,7 @@ window.saveNews=async()=>{
 
     setUploadProgress(90,'Menyimpan ke database...');
 
-    /* 3. Jika dijadikan featured → unfeatured yang lain */
+    /* 3. Jika featured → unfeatured yang lain */
     if(featured){
       const q2=query(collection(db,'news'));
       const snap=await getDocs(q2);
@@ -1708,7 +1713,7 @@ window.saveNews=async()=>{
 
   }catch(e){
     console.error('[saveNews]',e);
-    errEl.textContent='⚠ '+( e.message||'Terjadi kesalahan. Coba lagi.');
+    errEl.textContent='⚠ '+(e.message||'Terjadi kesalahan. Coba lagi.');
     errEl.style.display='block';
     toast('Error',e.message||'Gagal simpan','#E05A5A');
     setUploadProgress(0);
@@ -1895,14 +1900,11 @@ window._editNews=async(id)=>{
   document.getElementById('nf-featured').checked=!!n.featured;
   document.getElementById('nf-foto').value='';
   document.getElementById('nf-save-err').style.display='none';
-  // Hitung ulang counter
   const exc=n.excerpt||'';
   const excEl=document.getElementById('nf-excerpt-count');
   if(excEl)excEl.textContent=exc.length+'/160';
-  // Slug
   const slugEl=document.getElementById('nf-slug-preview');
   if(slugEl)slugEl.textContent=n.slug?'/'+n.slug:(n.title?'/'+generateSlug(n.title):'—');
-  // Gambar
   if(n.imageUrl){
     document.getElementById('img-preview-wrap').style.display='block';
     document.getElementById('img-preview').src=n.imageUrl;
@@ -1922,10 +1924,10 @@ window._toggleFeatured=async(id,val)=>{
 };
 
 window._deleteNews=async(id,imgUrl='')=>{
-  if(!confirm('Hapus berita ini? Gambar di Storage juga akan dihapus.'))return;
+  if(!confirm('Hapus berita ini?'))return;
   try{
     await deleteDoc(doc(db,'news',id));
-    if(imgUrl) await deleteOldImage(imgUrl);
+    // Cloudinary: hapus manual via Media Library jika perlu
     toast('Admin','Berita dihapus','#E05A5A');await renderAdminNewsList();
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
@@ -2056,5 +2058,3 @@ async function tick(){
 fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,null);});
 setInterval(()=>fetchPrices().then(()=>{renderTicker();updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD);}),15000);
 </script>
-</body>
-</html>
