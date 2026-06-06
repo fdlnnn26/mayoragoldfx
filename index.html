@@ -45,8 +45,35 @@ button,input,select,textarea{font-family:inherit;outline:none}
 #nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nav-h);padding:0 40px;display:flex;align-items:center;justify-content:space-between;transition:all .35s}
 #nav.solid{background:rgba(6,6,10,0.94);backdrop-filter:blur(24px);border-bottom:1px solid var(--card-border)}
 .nav-logo{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
-.nav-mark{width:36px;height:36px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold-d),var(--gold),var(--gold-l),var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--bg);position:relative;flex-shrink:0}
-.nav-mark::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid var(--gold-border)}
+.nav-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    /* Hapus 'background: conic-gradient(...)' agar tidak menutupi gambar */
+    background: var(--bg4); /* Bisa diganti warna background alternatif jika perlu */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden; /* Penting agar gambar tidak keluar dari lingkaran */
+}
+
+/* Biarkan .nav-mark::after tetap ada untuk memberikan efek garis emas di luar logo */
+.nav-mark::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-border);
+}
+
+/* Tambahkan ini untuk memastikan gambar di dalamnya rapi */
+.nav-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 .nav-brandname{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.15em;font-weight:500}
 .nav-brandname b{color:var(--gold)}
 .nav-center{display:flex;align-items:center;gap:6px}
@@ -234,7 +261,26 @@ button,input,select,textarea{font-family:inherit;outline:none}
 #page-auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--nav-h) 20px 40px;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(201,168,76,0.04),transparent 60%)}
 .auth-wrap{width:100%;max-width:400px}
 .auth-logo{text-align:center;margin-bottom:32px}
-.auth-logo-mark{width:52px;height:52px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold-d),var(--gold),var(--gold-l),var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.2rem;font-weight:600;color:var(--bg);margin:0 auto 14px;box-shadow:0 0 24px rgba(201,168,76,0.3)}
+.auth-logo-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    /* Hapus background conic-gradient agar tidak menutupi gambar */
+    background: var(--bg4); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 0 24px rgba(201,168,76,0.3);
+    overflow: hidden; /* Penting agar gambar tidak keluar lingkaran */
+    position: relative;
+}
+
+.auth-logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Gambar tetap proporsional */
+}
 .auth-logo-name{font-family:'Cinzel',serif;font-size:.9rem;letter-spacing:.2em;font-weight:500;margin-bottom:4px}
 .auth-logo-name b{color:var(--gold)}
 .auth-logo-sub{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text3)}
@@ -520,7 +566,9 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 
 <nav id="nav">
   <a class="nav-logo" onclick="goPage('home')">
-    <div class="nav-mark">M</div>
+    <div class="nav-mark">
+      <img src="logomayora.webp" alt="Logo" width="36" height="36">
+    </div>
     <div class="nav-brandname">MAYORA <b>GOLD FX</b></div>
   </a>
   <div class="nav-center">
@@ -742,7 +790,9 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <div class="page" id="page-auth">
   <div class="auth-wrap">
     <div class="auth-logo">
-      <div class="auth-logo-mark">M</div>
+      <div class="auth-logo-mark">
+       <img src="logomayora.webp" alt="Logo" width="52" height="52">
+      </div>
       <div class="auth-logo-name">MAYORA <b>GOLD FX</b></div>
       <div class="auth-logo-sub">Member Portal</div>
     </div>
