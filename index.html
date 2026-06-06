@@ -153,25 +153,12 @@ button,input,select,textarea{font-family:inherit;outline:none}
 
 #bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4}
 
-/* ── SEO CONTENT SECTIONS (visually hidden but indexable) ── */
-.seo-section{
-  padding:80px 40px;
-  position:relative;z-index:1;
-  background:var(--bg2);
-}
-.seo-section + .seo-section{
-  background:var(--bg);
-  border-top:1px solid var(--card-border);
-}
+/* ── SEO CONTENT SECTIONS ── */
+.seo-section{padding:80px 40px;position:relative;z-index:1;background:var(--bg2);}
+.seo-section + .seo-section{background:var(--bg);border-top:1px solid var(--card-border);}
 .seo-inner{max-width:1200px;margin:0 auto}
 .seo-intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-.seo-h1{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.6rem,2.5vw,2.2rem);
-  font-weight:500;
-  line-height:1.2;
-  margin-bottom:16px;
-}
+.seo-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:500;line-height:1.2;margin-bottom:16px;}
 .seo-h1 span{background:linear-gradient(120deg,var(--gold-d),var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .seo-p{font-size:.82rem;color:var(--text2);line-height:2;margin-bottom:14px;letter-spacing:.02em}
 .seo-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,2vw,1.9rem);font-weight:500;margin-bottom:14px;margin-top:32px;line-height:1.25}
@@ -564,6 +551,12 @@ td:last-child{text-align:right}
 .btn-add-news{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.62rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:8px 18px;cursor:pointer;border-radius:var(--radius)}
 .upload-progress{width:100%;height:3px;background:rgba(201,168,76,0.1);border-radius:2px;margin-top:6px;display:none}
 .upload-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width .3s}
+/* Slug preview */
+.slug-preview-row{margin-top:5px;display:flex;align-items:center;gap:6px}
+.slug-preview-label{font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.slug-preview-val{font-size:.62rem;color:var(--gold);font-family:'Courier New',monospace;background:rgba(201,168,76,.07);padding:2px 8px;border-radius:3px;word-break:break-all}
+/* Upload progress label */
+.upload-progress-label{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
 .admin-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
 .admin-news-list{display:flex;flex-direction:column;gap:12px}
 .admin-news-item{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:border-color .25s}
@@ -574,6 +567,7 @@ td:last-child{text-align:right}
 .ani-cat{font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .ani-title{font-size:.88rem;font-weight:400;margin-bottom:4px;letter-spacing:.02em}
 .ani-date{font-size:.62rem;color:var(--text3)}
+.ani-slug{font-size:.56rem;color:var(--text3);font-family:'Courier New',monospace;margin-top:2px}
 .ani-featured{display:inline-block;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;background:rgba(201,168,76,0.12);border:1px solid var(--gold-border);color:var(--gold);border-radius:2px;margin-left:6px}
 .ani-actions{display:flex;gap:6px;margin-top:8px}
 .btn-edit-n{background:none;border:1px solid var(--card-border);color:var(--text3);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
@@ -782,9 +776,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 
   <div class="ticker-wrap" id="ticker-wrap" aria-label="Live price ticker" role="marquee"></div>
 
-  <!-- ═══════════════════════════════════════════
-       SEO BODY CONTENT — SECTION 1: INTRO
-  ═══════════════════════════════════════════ -->
   <section class="seo-section" aria-labelledby="seo-h1-main">
     <div class="seo-inner">
       <div class="seo-intro-grid">
@@ -813,101 +804,42 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           </ul>
         </div>
       </div>
-
       <div class="seo-divider"></div>
-
-      <!-- Trust stats -->
       <div class="seo-trust-row">
-        <div class="seo-trust-card">
-          <div class="stc-v">87%</div>
-          <div class="stc-l">Win Rate Sinyal XAU/USD</div>
-        </div>
-        <div class="seo-trust-card">
-          <div class="stc-v">500+</div>
-          <div class="stc-l">Member Aktif Indonesia</div>
-        </div>
-        <div class="seo-trust-card">
-          <div class="stc-v">2 Thn</div>
-          <div class="stc-l">Track Record Terverifikasi</div>
-        </div>
-        <div class="seo-trust-card">
-          <div class="stc-v">Rp0</div>
-          <div class="stc-l">Biaya Membership VIP</div>
-        </div>
+        <div class="seo-trust-card"><div class="stc-v">87%</div><div class="stc-l">Win Rate Sinyal XAU/USD</div></div>
+        <div class="seo-trust-card"><div class="stc-v">500+</div><div class="stc-l">Member Aktif Indonesia</div></div>
+        <div class="seo-trust-card"><div class="stc-v">2 Thn</div><div class="stc-l">Track Record Terverifikasi</div></div>
+        <div class="seo-trust-card"><div class="stc-v">Rp0</div><div class="stc-l">Biaya Membership VIP</div></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SEO BODY CONTENT — SECTION 2: LAYANAN
-  ═══════════════════════════════════════════ -->
   <section class="seo-section" aria-labelledby="seo-services-title">
     <div class="seo-inner">
       <h2 class="seo-h1" id="seo-services-title">Layanan Lengkap <span>Trading Emas Premium</span> dalam Satu Platform</h2>
       <p class="seo-p" style="max-width:680px;margin-bottom:32px">Semua yang kamu butuhkan untuk trading emas XAU/USD secara profesional — tersedia dalam satu ekosistem terintegrasi, dapat diakses gratis sebagai member VIP Mayora Gold FX.</p>
-
       <div class="seo-cols3">
-        <div class="seo-col-card">
-          <div class="seo-col-card-t">✦ Sinyal Harian XAU/USD</div>
-          <p class="seo-col-card-p">Sinyal trading emas harian dengan level entry, stop loss, dan take profit yang spesifik. Setiap sinyal dilengkapi analisa singkat basis setup-nya — apakah dari order block, liquidity sweep, atau fair value gap. Win rate 87% berdasarkan track record 2 tahun.</p>
-        </div>
-        <div class="seo-col-card">
-          <div class="seo-col-card-t">✦ Analisa Market Structure</div>
-          <p class="seo-col-card-p">Analisa mendalam menggunakan metode Smart Money Concept (SMC) — identifikasi pergerakan institusional di pasar emas, baca struktur pasar multi-timeframe (M15, H1, H4, Daily), dan temukan area high-probability entry dengan rasio risk-reward optimal.</p>
-        </div>
-        <div class="seo-col-card">
-          <div class="seo-col-card-t">✦ Live Trading Session</div>
-          <p class="seo-col-card-p">Sesi trading live bersama trader berpengalaman di Mayora Gold FX. Lihat secara real-time bagaimana trader profesional membaca market, memilih entry, mengelola posisi, dan mengambil keputusan di tengah volatilitas pasar emas.</p>
-        </div>
-        <div class="seo-col-card">
-          <div class="seo-col-card-t">✦ Trading Journal Otomatis</div>
-          <p class="seo-col-card-p">Sistem trading journal premium terintegrasi langsung di platform. Catat setiap trade, hitung win rate, drawdown, dan risk-reward ratio secara otomatis. Fitur equity curve dan P&L per simbol membantu kamu mengidentifikasi pola dan area improvement.</p>
-        </div>
-        <div class="seo-col-card">
-          <div class="seo-col-card-t">✦ Webinar & Edukasi Mingguan</div>
-          <p class="seo-col-card-p">Webinar rutin setiap minggu mencakup: analisa fundamental emas (inflasi, suku bunga, safe haven flow), update market structure mingguan, dan sesi Q&A langsung dengan analis. Rekaman tersedia untuk member yang tidak bisa hadir live.</p>
-        </div>
-        <div class="seo-col-card">
-          <div class="seo-col-card-t">✦ Komunitas VIP Eksklusif</div>
-          <p class="seo-col-card-p">Grup VIP WhatsApp dengan ratusan trader aktif dari seluruh Indonesia. Diskusi ide trading, berbagi analisa, saling mendukung, dan belajar dari pengalaman trader lain. Admin aktif 24 jam untuk menjawab pertanyaan dan berbagi update market terkini.</p>
-        </div>
+        <div class="seo-col-card"><div class="seo-col-card-t">✦ Sinyal Harian XAU/USD</div><p class="seo-col-card-p">Sinyal trading emas harian dengan level entry, stop loss, dan take profit yang spesifik. Setiap sinyal dilengkapi analisa singkat basis setup-nya — apakah dari order block, liquidity sweep, atau fair value gap. Win rate 87% berdasarkan track record 2 tahun.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">✦ Analisa Market Structure</div><p class="seo-col-card-p">Analisa mendalam menggunakan metode Smart Money Concept (SMC) — identifikasi pergerakan institusional di pasar emas, baca struktur pasar multi-timeframe (M15, H1, H4, Daily), dan temukan area high-probability entry dengan rasio risk-reward optimal.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">✦ Live Trading Session</div><p class="seo-col-card-p">Sesi trading live bersama trader berpengalaman di Mayora Gold FX. Lihat secara real-time bagaimana trader profesional membaca market, memilih entry, mengelola posisi, dan mengambil keputusan di tengah volatilitas pasar emas.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">✦ Trading Journal Otomatis</div><p class="seo-col-card-p">Sistem trading journal premium terintegrasi langsung di platform. Catat setiap trade, hitung win rate, drawdown, dan risk-reward ratio secara otomatis. Fitur equity curve dan P&L per simbol membantu kamu mengidentifikasi pola dan area improvement.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">✦ Webinar & Edukasi Mingguan</div><p class="seo-col-card-p">Webinar rutin setiap minggu mencakup: analisa fundamental emas (inflasi, suku bunga, safe haven flow), update market structure mingguan, dan sesi Q&A langsung dengan analis. Rekaman tersedia untuk member yang tidak bisa hadir live.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">✦ Komunitas VIP Eksklusif</div><p class="seo-col-card-p">Grup VIP WhatsApp dengan ratusan trader aktif dari seluruh Indonesia. Diskusi ide trading, berbagi analisa, saling mendukung, dan belajar dari pengalaman trader lain. Admin aktif 24 jam untuk menjawab pertanyaan dan berbagi update market terkini.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SEO BODY CONTENT — SECTION 3: FAQ
-  ═══════════════════════════════════════════ -->
   <section class="seo-section" aria-labelledby="seo-faq-title">
     <div class="seo-inner">
       <h2 class="seo-h1" id="seo-faq-title">Pertanyaan Umum <span>Seputar Mayora Gold FX</span></h2>
       <p class="seo-p" style="max-width:560px;margin-bottom:8px">Jawaban atas pertanyaan yang paling sering ditanyakan calon member komunitas trading emas kami.</p>
-
       <div class="faq-list" id="faq-list">
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Apakah membership VIP Mayora Gold FX benar-benar gratis?</div>
-          <div class="faq-a">Ya, membership VIP Mayora Gold FX sepenuhnya <strong>GRATIS selamanya</strong> — tidak ada biaya pendaftaran, biaya bulanan, atau biaya tersembunyi apapun. Cukup hubungi admin kami via WhatsApp, dan akun VIP kamu akan diaktifkan dalam waktu singkat. Kami percaya bahwa edukasi dan komunitas trading yang berkualitas seharusnya bisa diakses semua orang tanpa hambatan finansial.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Berapa win rate sinyal trading emas XAU/USD di Mayora Gold FX?</div>
-          <div class="faq-a">Win rate sinyal XAU/USD kami mencapai <strong>87%</strong> berdasarkan track record 2 tahun dengan 500+ member aktif. Angka ini didasarkan pada rekap sinyal harian yang didokumentasikan secara transparan. Perlu dipahami bahwa past performance bukan jaminan hasil masa depan — trading selalu mengandung risiko dan manajemen modal yang baik tetap menjadi kunci keberhasilan.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Apa yang dimaksud dengan Smart Money Concept (SMC) dalam trading emas?</div>
-          <div class="faq-a">Smart Money Concept (SMC) adalah metodologi analisa yang berfokus pada mengidentifikasi pergerakan institusi besar (bank, hedge fund, market maker) di pasar emas. Konsep utamanya meliputi: <strong>Order Block</strong> (area akumulasi institusional), <strong>Fair Value Gap</strong> (celah harga yang cenderung diisi kembali), <strong>Liquidity Sweep</strong> (pergerakan harga untuk mengambil stop loss sebelum berbalik arah), dan <strong>Market Structure</strong> (pola Higher High/Higher Low dan Lower High/Lower Low). Di Mayora Gold FX, semua sinyal dan analisa kami berbasis SMC untuk memaksimalkan akurasi entry dan exit.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Bagaimana cara bergabung komunitas trading emas Mayora Gold FX?</div>
-          <div class="faq-a">Cara bergabung sangat mudah dan cepat: (1) Klik tombol "Join VIP Gratis" di halaman ini, (2) Kamu akan diarahkan ke WhatsApp admin kami, (3) Kirim pesan dan admin akan mengaktifkan akun VIP kamu, (4) Daftarkan akun di Member Portal untuk akses trading journal dan fitur premium lainnya. Seluruh proses bisa selesai dalam 5–10 menit.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Apakah Mayora Gold FX cocok untuk trader pemula yang baru belajar trading emas?</div>
-          <div class="faq-a">Ya, sangat cocok. Mayora Gold FX dirancang untuk semua level — dari pemula yang baru mengenal trading emas hingga trader berpengalaman yang ingin meningkatkan konsistensi. Untuk pemula, kami menyediakan materi edukasi dari dasar: cara membaca chart candlestick, dasar analisa teknikal, manajemen risiko, dan pengenalan market structure. Webinar mingguan juga dirancang ramah pemula dengan sesi tanya jawab terbuka.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Apa perbedaan trading emas spot XAU/USD dengan investasi emas fisik?</div>
-          <div class="faq-a">Trading emas spot XAU/USD dilakukan di pasar forex dan derivatif, bukan pembelian emas fisik. Perbedaan utama: (1) <strong>Likuiditas:</strong> XAU/USD dapat dibeli dan dijual kapan saja selama pasar forex buka (24 jam, 5 hari seminggu); (2) <strong>Leverage:</strong> Trading spot memungkinkan penggunaan leverage untuk memperbesar eksposur; (3) <strong>Biaya:</strong> Tidak ada biaya penyimpanan seperti emas fisik; (4) <strong>Risiko:</strong> Volatilitas lebih tinggi. Mayora Gold FX fokus pada trading emas spot XAU/USD untuk memanfaatkan pergerakan harga jangka pendek dan menengah.</div>
-        </div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Apakah membership VIP Mayora Gold FX benar-benar gratis?</div><div class="faq-a">Ya, membership VIP Mayora Gold FX sepenuhnya <strong>GRATIS selamanya</strong> — tidak ada biaya pendaftaran, biaya bulanan, atau biaya tersembunyi apapun. Cukup hubungi admin kami via WhatsApp, dan akun VIP kamu akan diaktifkan dalam waktu singkat.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Berapa win rate sinyal trading emas XAU/USD di Mayora Gold FX?</div><div class="faq-a">Win rate sinyal XAU/USD kami mencapai <strong>87%</strong> berdasarkan track record 2 tahun dengan 500+ member aktif. Perlu dipahami bahwa past performance bukan jaminan hasil masa depan — trading selalu mengandung risiko.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Apa yang dimaksud dengan Smart Money Concept (SMC) dalam trading emas?</div><div class="faq-a">Smart Money Concept (SMC) adalah metodologi analisa yang berfokus pada mengidentifikasi pergerakan institusi besar di pasar emas. Konsep utamanya meliputi: <strong>Order Block</strong>, <strong>Fair Value Gap</strong>, <strong>Liquidity Sweep</strong>, dan <strong>Market Structure</strong>.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Bagaimana cara bergabung komunitas trading emas Mayora Gold FX?</div><div class="faq-a">Cara bergabung sangat mudah: (1) Klik tombol "Join VIP Gratis", (2) Kamu akan diarahkan ke WhatsApp admin kami, (3) Admin akan mengaktifkan akun VIP kamu. Seluruh proses bisa selesai dalam 5–10 menit.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Apakah Mayora Gold FX cocok untuk trader pemula?</div><div class="faq-a">Ya, sangat cocok. Mayora Gold FX dirancang untuk semua level — dari pemula yang baru mengenal trading emas hingga trader berpengalaman. Untuk pemula, kami menyediakan materi edukasi dari dasar: cara membaca chart, manajemen risiko, dan pengenalan market structure.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Apa perbedaan trading emas spot XAU/USD dengan investasi emas fisik?</div><div class="faq-a">Trading emas spot XAU/USD dilakukan di pasar forex, bukan pembelian emas fisik. Perbedaan utama: Likuiditas (24 jam, 5 hari/minggu), tersedia leverage, tidak ada biaya penyimpanan, namun volatilitas lebih tinggi.</div></div>
       </div>
     </div>
   </section>
@@ -1185,17 +1117,31 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         <div class="sec-label" style="margin-bottom:0">Manajemen Berita</div>
         <button class="btn-add-news" onclick="showNewsForm()">+ Tambah Berita</button>
       </div>
+
+      <!-- ══════════════════════════════════════
+           FORM BERITA (UPGRADED — Storage + Slug)
+           ══════════════════════════════════════ -->
       <div class="news-form-wrap" id="news-form-wrap" style="display:none">
         <div class="news-form-title">
           <span id="nf-title-lbl">Tambah Berita Baru</span>
           <button class="btn-cancel-news" onclick="hideNewsForm()">✕ Batal</button>
         </div>
         <input type="hidden" id="nf-edit-id">
+        <!-- hidden: simpan URL gambar lama saat mode edit -->
+        <input type="hidden" id="nf-old-img-url">
+
         <div class="nf-grid">
-          <div>
+          <!-- Judul + slug preview -->
+          <div class="nf-full">
             <label class="form-lbl" for="nf-judul">Judul Berita *</label>
-            <input class="form-inp" id="nf-judul" type="text" placeholder="Judul artikel...">
+            <input class="form-inp" id="nf-judul" type="text" placeholder="Judul artikel..." autocomplete="off">
+            <!-- Slug preview live -->
+            <div class="slug-preview-row">
+              <span class="slug-preview-label">URL Slug:</span>
+              <span class="slug-preview-val" id="nf-slug-preview">—</span>
+            </div>
           </div>
+
           <div>
             <label class="form-lbl" for="nf-kat">Kategori *</label>
             <select class="form-inp" id="nf-kat">
@@ -1207,37 +1153,65 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
               <option value="Lainnya">Lainnya</option>
             </select>
           </div>
+
           <div>
             <label class="form-lbl" for="nf-tgl">Tanggal *</label>
             <input class="form-inp" id="nf-tgl" type="date">
           </div>
-          <div style="display:flex;align-items:flex-end;gap:16px">
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.72rem;color:var(--text2)">
-              <input type="checkbox" id="nf-featured" style="accent-color:var(--gold)">
+
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.72rem;color:var(--text2);user-select:none">
+              <input type="checkbox" id="nf-featured" style="accent-color:var(--gold);width:14px;height:14px">
               Jadikan Featured (utama)
             </label>
           </div>
+
           <div class="nf-full">
-            <label class="form-lbl" for="nf-excerpt">Excerpt / Ringkasan *</label>
-            <textarea class="form-inp form-textarea" id="nf-excerpt" rows="2" placeholder="Ringkasan singkat artikel..."></textarea>
+            <label class="form-lbl" for="nf-excerpt">
+              Ringkasan / Excerpt *
+              <span id="nf-excerpt-count" style="color:var(--text3);font-weight:300;margin-left:6px">0/160</span>
+            </label>
+            <textarea class="form-inp form-textarea" id="nf-excerpt" rows="3"
+                      maxlength="300"
+                      placeholder="Ringkasan singkat artikel (≤160 karakter ideal untuk SEO)..."></textarea>
           </div>
+
           <div class="nf-full">
             <label class="form-lbl" for="nf-konten">Konten Lengkap</label>
-            <textarea class="form-inp form-textarea" id="nf-konten" rows="5" placeholder="Isi artikel lengkap..."></textarea>
+            <textarea class="form-inp form-textarea" id="nf-konten" rows="6" placeholder="Isi artikel lengkap..."></textarea>
           </div>
+
+          <!-- Upload Foto — terintegrasi Firebase Storage -->
           <div class="nf-full">
-            <label class="form-lbl" for="nf-foto">Foto Berita</label>
-            <input class="form-inp" id="nf-foto" type="file" accept="image/*" onchange="previewImg(this)">
-            <div class="upload-progress" id="upload-prog"><div class="upload-progress-bar" id="upload-prog-bar"></div></div>
+            <label class="form-lbl" for="nf-foto">
+              Foto Berita
+              <span style="color:var(--text3);font-weight:300;margin-left:6px">(JPG/PNG/WEBP — diunggah ke Firebase Storage)</span>
+            </label>
+            <input class="form-inp" id="nf-foto" type="file" accept="image/jpeg,image/png,image/webp"
+                   onchange="previewImg(this)">
+
+            <!-- Progress bar real-time upload -->
+            <div style="margin-top:6px">
+              <div class="upload-progress-label" id="upload-prog-label" style="display:none"></div>
+              <div class="upload-progress" id="upload-prog">
+                <div class="upload-progress-bar" id="upload-prog-bar"></div>
+              </div>
+            </div>
+
+            <!-- Preview gambar -->
             <div class="img-preview-wrap" id="img-preview-wrap">
               <img id="img-preview" src="" alt="Preview foto berita">
               <div style="margin-top:6px;display:flex;gap:8px;align-items:center">
-                <span style="font-size:.62rem;color:var(--text3)" id="img-current-url"></span>
-                <button class="btn-danger" style="font-size:.5rem;padding:3px 8px" onclick="clearImg()">✕ Hapus foto</button>
+                <span id="img-current-label" style="font-size:.6rem;color:var(--text3)">Gambar baru dipilih</span>
+                <button class="btn-danger" style="font-size:.5rem;padding:3px 8px" onclick="clearImg()">✕ Hapus</button>
               </div>
             </div>
           </div>
-        </div>
+        </div><!-- /.nf-grid -->
+
+        <!-- Error display -->
+        <div id="nf-save-err" style="display:none;font-size:.68rem;color:var(--red);background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.2);padding:10px 14px;border-radius:4px;margin-top:10px"></div>
+
         <div class="form-actions">
           <button class="btn-cancel-news" onclick="hideNewsForm()">Batal</button>
           <button class="btn-save-news" id="btn-save-news" onclick="saveNews()">
@@ -1246,6 +1220,8 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           </button>
         </div>
       </div>
+      <!-- /FORM BERITA -->
+
       <div class="admin-news-list" id="admin-news-list">
         <div class="empty-state"><div class="empty-icon">✦</div>Memuat berita...</div>
       </div>
@@ -1317,10 +1293,12 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div><div class="toast-sym" id="tsym"></div><div class="toast-msg" id="tmsg"></div></div>
 </div>
 
+<!-- ════════════════════════════════════════════════════
+     SCRIPTS
+     ════════════════════════════════════════════════════ -->
 <script>
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
-/* FAQ toggle */
 window.toggleFaq = function(el) {
   const item = el.closest('.faq-item');
   const isOpen = item.classList.contains('open');
@@ -1337,11 +1315,9 @@ window.toggleFaq = function(el) {
   init();draw();window.addEventListener('resize',()=>{cancelAnimationFrame(raf);init();draw()});
 })();
 
-/* Reveal on scroll */
 const revEls=document.querySelectorAll('.reveal'),revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.12});
 revEls.forEach(e=>revObs.observe(e));
 
-/* Navbar scroll */
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',window.scrollY>30));
 document.getElementById('nav').classList.add('solid');
 
@@ -1361,7 +1337,6 @@ window.switchTab=t=>{
   document.getElementById('li-ok').style.display='none';document.getElementById('ri-ok').style.display='none';
 };
 
-/* Page navigation */
 const pages=['home','berita','vip','auth','journal','admin'];
 function goPage(p){
   pages.forEach(n=>document.getElementById('page-'+n).classList.toggle('active',n===p));
@@ -1395,18 +1370,43 @@ window.jTab=(n,el)=>{
 window.fltHist=(f,btn)=>{window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');window._renderHistory&&window._renderHistory();};
 window._histFlt='all';
 
+/* Form helpers (slug preview + excerpt counter) */
+document.getElementById('nf-judul')?.addEventListener('input', function(){
+  const slug = generateSlug(this.value);
+  const el = document.getElementById('nf-slug-preview');
+  if(el) el.textContent = slug ? '/'+slug : '—';
+});
+document.getElementById('nf-excerpt')?.addEventListener('input', function(){
+  const n = this.value.length;
+  const el = document.getElementById('nf-excerpt-count');
+  if(el){ el.textContent=n+'/160'; el.style.color = n>160?'var(--red)':n>130?'var(--gold)':'var(--text3)'; }
+});
+
+/* Slug generator */
+function generateSlug(text){
+  const map={'à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a','è':'e','é':'e','ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ò':'o','ó':'o','ô':'o','õ':'o','ö':'o','ù':'u','ú':'u','û':'u','ü':'u','ñ':'n','ç':'c'};
+  return text.toLowerCase()
+    .replace(/[àáâãäåèéêëìíîïòóôõöùúûüñç]/g,c=>map[c]||c)
+    .replace(/[^a-z0-9\s-]/g,'').trim()
+    .replace(/\s+/g,'-').replace(/-{2,}/g,'-').replace(/^-+|-+$/g,'');
+}
+window.generateSlug = generateSlug;
+
 window.showNewsForm=()=>{
   document.getElementById('news-form-wrap').style.display='block';
   document.getElementById('nf-title-lbl').textContent='Tambah Berita Baru';
   document.getElementById('nf-edit-id').value='';
+  document.getElementById('nf-old-img-url').value='';
   document.getElementById('nf-judul').value='';
   document.getElementById('nf-excerpt').value='';
   document.getElementById('nf-konten').value='';
   document.getElementById('nf-tgl').value=new Date().toISOString().slice(0,10);
   document.getElementById('nf-featured').checked=false;
   document.getElementById('nf-foto').value='';
+  document.getElementById('nf-excerpt-count').textContent='0/160';
+  document.getElementById('nf-slug-preview').textContent='—';
+  document.getElementById('nf-save-err').style.display='none';
   clearImg();
-  window._editNewsImg=null;
   window.scrollTo(0,0);
 };
 window.hideNewsForm=()=>{document.getElementById('news-form-wrap').style.display='none';};
@@ -1414,15 +1414,18 @@ window.hideNewsForm=()=>{document.getElementById('news-form-wrap').style.display
 window.previewImg=function(input){
   const file=input.files[0];if(!file)return;
   const wrap=document.getElementById('img-preview-wrap'),img=document.getElementById('img-preview');
-  wrap.style.display='block';img.src=URL.createObjectURL(file);
-  document.getElementById('img-current-url').textContent='';
+  wrap.style.display='block';
+  const url=URL.createObjectURL(file);
+  img.onload=()=>URL.revokeObjectURL(url);
+  img.src=url;
+  document.getElementById('img-current-label').textContent='Gambar baru dipilih';
 };
 window.clearImg=()=>{
   document.getElementById('nf-foto').value='';
   document.getElementById('img-preview-wrap').style.display='none';
   document.getElementById('img-preview').src='';
-  document.getElementById('img-current-url').textContent='';
-  window._editNewsImg=null;
+  document.getElementById('img-current-label').textContent='';
+  document.getElementById('nf-old-img-url').value='';
 };
 
 /* Toast */
@@ -1436,7 +1439,7 @@ function toast(sym,msg,color){
 }
 window.toast=toast;
 
-/* Ticker / Price display */
+/* Ticker / Price */
 const SYM_D={XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',ADAUSDT:'ADA/USDT'};
 window.SYM_D=SYM_D;
 const TICK_SYMS=['XAUUSD','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
@@ -1484,7 +1487,8 @@ window.updateHeroCard=updateHeroCard;
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,where,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import{getStorage,ref as storageRef,uploadBytesResumable,getDownloadURL,deleteObject}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 
 const FB={
   apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
@@ -1497,13 +1501,15 @@ const FB={
 
 const ADMIN_EMAIL='adminmayoragold@mayora.com';
 const ADMIN_PASS='tradingsehat';
-const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
+const STORAGE_NEWS_PATH='news-images/';
+
+const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
 
 let trades=[],nextId=1,isVip=false,isAdmin=false,saveDebounce,tickInterval;
 window._curUser=null;
-window._editNewsImg=null;
 let allNewsCache=[];
 
+/* ── Helpers ── */
 function fmsg(c){return({'auth/user-not-found':'Akun tidak ditemukan.','auth/wrong-password':'Password salah.','auth/invalid-credential':'Email atau password salah.','auth/email-already-in-use':'Email sudah terdaftar.','auth/invalid-email':'Format email tidak valid.','auth/weak-password':'Password terlalu lemah.','auth/too-many-requests':'Terlalu banyak percobaan. Tunggu sebentar.'})[c]||'Error: '+c;}
 
 function setBtnLoad(id,loading,txt){
@@ -1512,6 +1518,207 @@ function setBtnLoad(id,loading,txt){
   b.innerHTML=loading?'<div class="spin"></div>':`<span>${txt}</span>`;
 }
 
+/* ── Slug unique check ── */
+async function ensureUniqueSlug(baseSlug, editId=null){
+  let slug=baseSlug, counter=2;
+  while(true){
+    const q=query(collection(db,'news'),where('slug','==',slug));
+    const snap=await getDocs(q);
+    const conflict=snap.docs.filter(d=>d.id!==editId);
+    if(conflict.length===0) return slug;
+    slug=`${baseSlug}-${counter}`;counter++;
+  }
+}
+
+/* ── Image compression (client-side Canvas) ── */
+function compressToBlob(file,maxPx=1200,quality=0.80){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('Gagal membaca file.'));
+    reader.onload=e=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('Gagal memuat gambar.'));
+      img.onload=()=>{
+        let w=img.naturalWidth,h=img.naturalHeight;
+        if(w>maxPx||h>maxPx){
+          if(w>h){h=Math.round(h*maxPx/w);w=maxPx;}
+          else{w=Math.round(w*maxPx/h);h=maxPx;}
+        }
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        canvas.toBlob(blob=>{
+          if(!blob){reject(new Error('Konversi gambar gagal.'));return;}
+          resolve(blob);
+        },'image/jpeg',quality);
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ── Upload blob ke Firebase Storage dengan progress ── */
+function uploadToStorage(blob, filename, onProgress){
+  return new Promise((resolve,reject)=>{
+    const ts=Date.now();
+    const path=`${STORAGE_NEWS_PATH}${filename}-${ts}.jpg`;
+    const sRef=storageRef(storage,path);
+    const task=uploadBytesResumable(sRef,blob,{
+      contentType:'image/jpeg',
+      cacheControl:'public, max-age=31536000'
+    });
+    task.on('state_changed',
+      snap=>{
+        const pct=Math.round((snap.bytesTransferred/snap.totalBytes)*100);
+        onProgress&&onProgress(pct);
+      },
+      err=>{
+        const msg={'storage/unauthorized':'Tidak punya izin upload. Periksa Storage Rules.','storage/canceled':'Upload dibatalkan.','storage/quota-exceeded':'Kuota Storage habis.'}[err.code]||'Upload gagal: '+err.message;
+        reject(new Error(msg));
+      },
+      async()=>{
+        try{resolve(await getDownloadURL(task.snapshot.ref));}
+        catch(e){reject(new Error('Gagal ambil URL: '+e.message));}
+      }
+    );
+  });
+}
+
+/* ── Hapus gambar lama dari Storage ── */
+async function deleteOldImage(imageUrl){
+  if(!imageUrl||!imageUrl.includes('firebasestorage')) return;
+  try{
+    const url=new URL(imageUrl);
+    const encoded=url.pathname.split('/o/')[1];
+    if(!encoded)return;
+    const path=decodeURIComponent(encoded);
+    await deleteObject(storageRef(storage,path));
+  }catch(e){
+    if(e.code!=='storage/object-not-found') console.warn('[Storage] Hapus gambar lama:',e.message);
+  }
+}
+
+/* ── Progress bar UI helper ── */
+function setUploadProgress(pct, label=''){
+  const wrap=document.getElementById('upload-prog');
+  const bar=document.getElementById('upload-prog-bar');
+  const lbl=document.getElementById('upload-prog-label');
+  const show=pct>0&&pct<100;
+  if(wrap)wrap.style.display=show?'block':'none';
+  if(bar)bar.style.width=pct+'%';
+  if(lbl){lbl.style.display=show?'block':'none';lbl.textContent=label;}
+}
+
+/* ══════════════════════════════════════
+   saveNews — FULLY UPGRADED
+   Upload gambar → Storage → URL → Firestore + Slug
+   ══════════════════════════════════════ */
+window.saveNews=async()=>{
+  const errEl=document.getElementById('nf-save-err');
+  errEl.style.display='none';
+
+  const judul=document.getElementById('nf-judul').value.trim();
+  const excerpt=document.getElementById('nf-excerpt').value.trim();
+  const konten=document.getElementById('nf-konten').value.trim();
+  const tgl=document.getElementById('nf-tgl').value;
+  const kat=document.getElementById('nf-kat').value;
+  const featured=document.getElementById('nf-featured').checked;
+
+  if(!judul||!excerpt||!tgl){
+    errEl.textContent='⚠ Judul, Tanggal, dan Ringkasan wajib diisi.';
+    errEl.style.display='block';return;
+  }
+
+  const btn=document.getElementById('btn-save-news');
+  btn.disabled=true;
+  btn.innerHTML='<div class="spin" style="border-top-color:var(--bg)"></div>';
+  setUploadProgress(0);
+
+  try{
+    const editId=document.getElementById('nf-edit-id').value||null;
+    const oldImgUrl=document.getElementById('nf-old-img-url').value||'';
+    const fileInput=document.getElementById('nf-foto');
+    const file=fileInput?.files?.[0]||null;
+
+    /* 1. Generate slug unik */
+    const baseSlug=generateSlug(judul);
+    const slug=await ensureUniqueSlug(baseSlug,editId);
+
+    /* 2. Proses gambar */
+    let imageUrl=oldImgUrl; // default: gambar lama (mode edit tanpa ganti foto)
+
+    if(file){
+      /* 2a. Kompres client-side */
+      setUploadProgress(5,'Mengompres gambar...');
+      const blob=await compressToBlob(file,1200,0.80);
+
+      /* 2b. Upload ke Firebase Storage */
+      setUploadProgress(15,'Mengunggah gambar...');
+      imageUrl=await uploadToStorage(blob, slug, (pct)=>{
+        setUploadProgress(15+Math.round(pct*0.7),'Mengunggah gambar... '+pct+'%');
+      });
+
+      /* 2c. Hapus gambar lama jika edit & ada gambar sebelumnya */
+      if(editId&&oldImgUrl&&oldImgUrl!==imageUrl){
+        await deleteOldImage(oldImgUrl);
+      }
+    }
+
+    setUploadProgress(90,'Menyimpan ke database...');
+
+    /* 3. Jika dijadikan featured → unfeatured yang lain */
+    if(featured){
+      const q2=query(collection(db,'news'));
+      const snap=await getDocs(q2);
+      const batch=[];
+      snap.forEach(d=>{if(d.id!==editId&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});
+      await Promise.all(batch);
+    }
+
+    /* 4. Payload Firestore */
+    const payload={
+      title:judul,
+      slug,
+      cat:kat,
+      date:tgl,
+      excerpt,
+      konten,
+      featured,
+      imageUrl,
+      metaTitle:judul,
+      metaDescription:excerpt.substring(0,160),
+      updatedAt:serverTimestamp(),
+    };
+
+    /* 5. Simpan / update */
+    if(editId){
+      await updateDoc(doc(db,'news',editId),payload);
+    }else{
+      payload.createdAt=serverTimestamp();
+      await addDoc(collection(db,'news'),payload);
+    }
+
+    setUploadProgress(100);
+    setTimeout(()=>setUploadProgress(0),400);
+
+    toast('Admin',editId?'Berita diperbarui!':'Berita ditambahkan!','#3DBA7A');
+    hideNewsForm();
+    await renderAdminNewsList();
+
+  }catch(e){
+    console.error('[saveNews]',e);
+    errEl.textContent='⚠ '+( e.message||'Terjadi kesalahan. Coba lagi.');
+    errEl.style.display='block';
+    toast('Error',e.message||'Gagal simpan','#E05A5A');
+    setUploadProgress(0);
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Berita';
+  }
+};
+
+/* ══ Auth ══ */
 onAuthStateChanged(auth,async user=>{
   if(user){
     window._curUser=user;
@@ -1628,6 +1835,7 @@ async function persistTrades(){
 function triggerSave(){setSaveStatus('saving');clearTimeout(saveDebounce);saveDebounce=setTimeout(persistTrades,1200);}
 function setSaveStatus(s){const el=document.getElementById('save-status'),lb=document.getElementById('save-lbl');el.className='save-status '+s;lb.textContent=s==='saved'?'Saved':s==='saving'?'Saving...':s==='error'?'Error':'—';}
 
+/* ══ News ══ */
 async function loadNewsFromDB(){
   try{
     const q=query(collection(db,'news'),orderBy('createdAt','desc'));
@@ -1637,11 +1845,11 @@ async function loadNewsFromDB(){
 
 function getStaticNews(){
   return[
-    {id:'s1',cat:'Market Update',title:'Harga Emas Catat Level Tertinggi di Tengah Ketegangan Geopolitik',date:'5 Jun 2026',excerpt:'Harga emas spot menguat signifikan dalam perdagangan sesi Asia, didukung meningkatnya permintaan safe haven akibat ketegangan di kawasan Timur Tengah dan kekhawatiran inflasi global.',featured:true,imageUrl:''},
-    {id:'s2',cat:'Analisa Teknikal',title:'XAU/USD: Breakout Struktur Weekly — Potensi Target 2400',date:'4 Jun 2026',excerpt:'Analisa market structure pada timeframe weekly menunjukkan potensi breakout yang valid di atas resistance kunci 2350.',featured:false,imageUrl:''},
-    {id:'s3',cat:'Edukasi',title:'Memahami Smart Money Concept dalam Trading Emas XAU/USD',date:'3 Jun 2026',excerpt:'Panduan lengkap menggunakan SMC untuk mengidentifikasi order block dan fair value gap pada pair XAU/USD.',featured:false,imageUrl:''},
-    {id:'s4',cat:'Sinyal',title:'Setup BUY XAU/USD — Konfirmasi Rejection dari OB H4',date:'2 Jun 2026',excerpt:'Tim analis Mayora Gold FX mengidentifikasi setup buy dengan risk-reward 1:3.2 dari order block H4 yang valid.',featured:false,imageUrl:''},
-    {id:'s5',cat:'Market Update',title:'Fed Pertahankan Suku Bunga — Emas Merespons Positif',date:'1 Jun 2026',excerpt:'Keputusan Federal Reserve mempertahankan suku bunga memberikan sentimen positif terhadap harga emas global.',featured:false,imageUrl:''},
+    {id:'s1',cat:'Market Update',title:'Harga Emas Catat Level Tertinggi di Tengah Ketegangan Geopolitik',date:'5 Jun 2026',excerpt:'Harga emas spot menguat signifikan dalam perdagangan sesi Asia, didukung meningkatnya permintaan safe haven akibat ketegangan di kawasan Timur Tengah dan kekhawatiran inflasi global.',featured:true,imageUrl:'',slug:'harga-emas-catat-level-tertinggi'},
+    {id:'s2',cat:'Analisa Teknikal',title:'XAU/USD: Breakout Struktur Weekly — Potensi Target 2400',date:'4 Jun 2026',excerpt:'Analisa market structure pada timeframe weekly menunjukkan potensi breakout yang valid di atas resistance kunci 2350.',featured:false,imageUrl:'',slug:'xauusd-breakout-struktur-weekly'},
+    {id:'s3',cat:'Edukasi',title:'Memahami Smart Money Concept dalam Trading Emas XAU/USD',date:'3 Jun 2026',excerpt:'Panduan lengkap menggunakan SMC untuk mengidentifikasi order block dan fair value gap pada pair XAU/USD.',featured:false,imageUrl:'',slug:'memahami-smart-money-concept-trading-emas'},
+    {id:'s4',cat:'Sinyal',title:'Setup BUY XAU/USD — Konfirmasi Rejection dari OB H4',date:'2 Jun 2026',excerpt:'Tim analis Mayora Gold FX mengidentifikasi setup buy dengan risk-reward 1:3.2 dari order block H4 yang valid.',featured:false,imageUrl:'',slug:'setup-buy-xauusd-ob-h4'},
+    {id:'s5',cat:'Market Update',title:'Fed Pertahankan Suku Bunga — Emas Merespons Positif',date:'1 Jun 2026',excerpt:'Keputusan Federal Reserve mempertahankan suku bunga memberikan sentimen positif terhadap harga emas global.',featured:false,imageUrl:'',slug:'fed-pertahankan-suku-bunga-emas-positif'},
   ];
 }
 
@@ -1670,41 +1878,56 @@ window._loadAdminData=loadAdminData;
 async function renderAdminNewsList(){
   const list=document.getElementById('admin-news-list');list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Memuat...</div>';
   const news=await loadNewsFromDB();if(!news.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada berita</div>';return;}
-  list.innerHTML=news.map(n=>`<div class="admin-news-item"><div class="ani-thumb">${n.imageUrl?`<img src="${n.imageUrl}" alt="${n.title}" loading="lazy">`:'<div style="width:100%;height:100%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;color:var(--gold);opacity:.3;font-size:1.4rem" aria-hidden="true">✦</div>'}</div><div class="ani-body"><div class="ani-cat">${n.cat}${n.featured?'<span class="ani-featured">FEATURED</span>':''}</div><div class="ani-title">${n.title}</div><div class="ani-date">${fmtDate(n.date||n.createdAt)}</div><div class="ani-actions"><button class="btn-edit-n" onclick="window._editNews('${n.id}')">✎ Edit</button><button class="btn-feat-n" onclick="window._toggleFeatured('${n.id}',${!n.featured})">${n.featured?'★ Unfeatured':'☆ Set Featured'}</button><button class="btn-del-n" onclick="window._deleteNews('${n.id}')">✕ Hapus</button></div></div></div>`).join('');
+  list.innerHTML=news.map(n=>`<div class="admin-news-item"><div class="ani-thumb">${n.imageUrl?`<img src="${n.imageUrl}" alt="${n.title}" loading="lazy">`:'<div style="width:100%;height:100%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,serif;color:var(--gold);opacity:.3;font-size:1.4rem" aria-hidden="true">✦</div>'}</div><div class="ani-body"><div class="ani-cat">${n.cat}${n.featured?'<span class="ani-featured">FEATURED</span>':''}</div><div class="ani-title">${n.title}</div><div class="ani-date">${fmtDate(n.date||n.createdAt)}</div>${n.slug?`<div class="ani-slug">/${n.slug}</div>`:''}<div class="ani-actions"><button class="btn-edit-n" onclick="window._editNews('${n.id}')">✎ Edit</button><button class="btn-feat-n" onclick="window._toggleFeatured('${n.id}',${!n.featured})">${n.featured?'★ Unfeatured':'☆ Set Featured'}</button><button class="btn-del-n" onclick="window._deleteNews('${n.id}','${n.imageUrl||''}')">✕ Hapus</button></div></div></div>`).join('');
 }
 
 window._editNews=async(id)=>{
   const n=allNewsCache.find(x=>x.id===id);if(!n)return;
-  document.getElementById('news-form-wrap').style.display='block';document.getElementById('nf-title-lbl').textContent='Edit Berita';document.getElementById('nf-edit-id').value=id;document.getElementById('nf-judul').value=n.title||'';document.getElementById('nf-excerpt').value=n.excerpt||'';document.getElementById('nf-konten').value=n.konten||'';document.getElementById('nf-tgl').value=n.date||new Date().toISOString().slice(0,10);document.getElementById('nf-kat').value=n.cat||'Market Update';document.getElementById('nf-featured').checked=!!n.featured;document.getElementById('nf-foto').value='';
-  if(n.imageUrl){document.getElementById('img-preview-wrap').style.display='block';document.getElementById('img-preview').src=n.imageUrl;document.getElementById('img-current-url').textContent='Foto sudah ada';window._editNewsImg=n.imageUrl;}else{clearImg();}window.scrollTo(0,0);
+  document.getElementById('news-form-wrap').style.display='block';
+  document.getElementById('nf-title-lbl').textContent='Edit Berita';
+  document.getElementById('nf-edit-id').value=id;
+  document.getElementById('nf-old-img-url').value=n.imageUrl||'';
+  document.getElementById('nf-judul').value=n.title||'';
+  document.getElementById('nf-excerpt').value=n.excerpt||'';
+  document.getElementById('nf-konten').value=n.konten||'';
+  document.getElementById('nf-tgl').value=n.date||new Date().toISOString().slice(0,10);
+  document.getElementById('nf-kat').value=n.cat||'Market Update';
+  document.getElementById('nf-featured').checked=!!n.featured;
+  document.getElementById('nf-foto').value='';
+  document.getElementById('nf-save-err').style.display='none';
+  // Hitung ulang counter
+  const exc=n.excerpt||'';
+  const excEl=document.getElementById('nf-excerpt-count');
+  if(excEl)excEl.textContent=exc.length+'/160';
+  // Slug
+  const slugEl=document.getElementById('nf-slug-preview');
+  if(slugEl)slugEl.textContent=n.slug?'/'+n.slug:(n.title?'/'+generateSlug(n.title):'—');
+  // Gambar
+  if(n.imageUrl){
+    document.getElementById('img-preview-wrap').style.display='block';
+    document.getElementById('img-preview').src=n.imageUrl;
+    document.getElementById('img-current-label').textContent='Gambar saat ini (ganti jika perlu)';
+  }else{
+    document.getElementById('img-preview-wrap').style.display='none';
+    document.getElementById('img-preview').src='';
+  }
+  window.scrollTo(0,0);
 };
 
 window._toggleFeatured=async(id,val)=>{
-  try{if(val){const q2=query(collection(db,'news'));const snap=await getDocs(q2);const batch=[];snap.forEach(d=>{if(d.id!==id&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});await Promise.all(batch);}
-  await updateDoc(doc(db,'news',id),{featured:val});toast('Admin',val?'Dijadikan featured':'Dihapus dari featured','#C9A84C');await renderAdminNewsList();}catch(e){toast('Error',e.message,'#E05A5A');}
+  try{
+    if(val){const q2=query(collection(db,'news'));const snap=await getDocs(q2);const batch=[];snap.forEach(d=>{if(d.id!==id&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});await Promise.all(batch);}
+    await updateDoc(doc(db,'news',id),{featured:val});toast('Admin',val?'Dijadikan featured':'Dihapus dari featured','#C9A84C');await renderAdminNewsList();
+  }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
-window._deleteNews=async(id)=>{if(!confirm('Hapus berita ini?'))return;try{await deleteDoc(doc(db,'news',id));toast('Admin','Berita dihapus','#E05A5A');await renderAdminNewsList();}catch(e){toast('Error',e.message,'#E05A5A');}};
-
-function compressImage(file,maxPx,quality,onProgress){
-  return new Promise((resolve,reject)=>{
-    const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{onProgress&&onProgress(40);const canvas=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxPx){h=Math.round(h*maxPx/w);w=maxPx;}if(h>maxPx){w=Math.round(w*maxPx/h);h=maxPx;}canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);onProgress&&onProgress(80);const dataUrl=canvas.toDataURL('image/jpeg',quality);onProgress&&onProgress(100);resolve(dataUrl);};img.onerror=reject;img.src=e.target.result;};reader.onerror=reject;reader.readAsDataURL(file);
-  });
-}
-
-window.saveNews=async()=>{
-  const judul=document.getElementById('nf-judul').value.trim(),excerpt=document.getElementById('nf-excerpt').value.trim(),konten=document.getElementById('nf-konten').value.trim(),tgl=document.getElementById('nf-tgl').value,kat=document.getElementById('nf-kat').value,featured=document.getElementById('nf-featured').checked;
-  if(!judul||!excerpt){toast('Validasi','Judul dan excerpt wajib diisi','#E05A5A');return;}
-  const btn=document.getElementById('btn-save-news');btn.disabled=true;btn.innerHTML='<div class="spin" style="border-top-color:var(--bg)"></div>';
-  let imageUrl=window._editNewsImg||'';const fileInput=document.getElementById('nf-foto');const file=fileInput.files[0];
+window._deleteNews=async(id,imgUrl='')=>{
+  if(!confirm('Hapus berita ini? Gambar di Storage juga akan dihapus.'))return;
   try{
-    if(file){const prog=document.getElementById('upload-prog');const progBar=document.getElementById('upload-prog-bar');prog.style.display='block';progBar.style.width='10%';imageUrl=await compressImage(file,800,0.75,(p)=>{progBar.style.width=p+'%';});prog.style.display='none';}
-    if(featured){const snap=await getDocs(query(collection(db,'news')));const editId=document.getElementById('nf-edit-id').value;const batch=[];snap.forEach(d=>{if(d.id!==editId&&d.data().featured)batch.push(updateDoc(doc(db,'news',d.id),{featured:false}));});await Promise.all(batch);}
-    const editId=document.getElementById('nf-edit-id').value;const payload={title:judul,excerpt,konten,cat:kat,date:tgl,featured,imageUrl,updatedAt:serverTimestamp()};
-    if(editId){await updateDoc(doc(db,'news',editId),payload);toast('Admin','Berita diperbarui!','#3DBA7A');}else{payload.createdAt=serverTimestamp();await addDoc(collection(db,'news'),payload);toast('Admin','Berita ditambahkan!','#3DBA7A');}
-    hideNewsForm();await renderAdminNewsList();
-  }catch(e){toast('Error',e.message||'Gagal simpan','#E05A5A');console.error(e);}
-  finally{btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Berita';}
+    await deleteDoc(doc(db,'news',id));
+    if(imgUrl) await deleteOldImage(imgUrl);
+    toast('Admin','Berita dihapus','#E05A5A');await renderAdminNewsList();
+  }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
 async function loadUsers(){
@@ -1725,6 +1948,7 @@ async function loadStats(){
 }
 window._loadStats=loadStats;
 
+/* ══ Price Feed ══ */
 const CRYPTO=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT'];
 
 async function fetchXau(){
@@ -1739,6 +1963,7 @@ async function fetchCrypto(){
 
 async function fetchPrices(){window._prevLp={...window._lp};await Promise.allSettled([fetchXau(),fetchCrypto()]);const has=Object.keys(window._lp).length>0;const dot=document.getElementById('ap-dot');if(dot){dot.className='live-dot'+(has?' on':'');document.getElementById('ap-live').textContent=has?'Live':'Offline';}}
 
+/* ══ Trade Journal ══ */
 const calcPnl=t=>!t.exit?null:+((t.dir==='Long'?(t.exit-t.entry):(t.entry-t.exit))*t.size).toFixed(2);
 const calcOpnl=t=>{const cp=window._lp[t.symbol];return cp?((t.dir==='Long'?(cp-t.entry):(t.entry-cp))*t.size):null;};
 const calcR=t=>{if(!t.exit||!t.sl)return null;const risk=Math.abs(t.entry-t.sl)*t.size,pnl=calcPnl(t);return(!risk||pnl===null)?null:+(pnl/risk).toFixed(2);};
