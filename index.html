@@ -1498,8 +1498,6 @@ const FB={
   appId:"1:101188824456:web:a0ca25a26e63704b361e3d"
 };
 
-const ADMIN_EMAIL='adminmayoragold@mayora.com';
-const ADMIN_PASS='tradingsehat';
 
 // ═══════════════════════════════════════════
 // CLOUDINARY CONFIG (menggantikan Firebase Storage)
@@ -1724,36 +1722,50 @@ window.saveNews=async()=>{
 };
 
 /* ══ Auth ══ */
-onAuthStateChanged(auth,async user=>{
-  if(user){
-    window._curUser=user;
-    if(window._adminBootstrap&&user.email===ADMIN_EMAIL){
-      window._adminBootstrap=false;
-      try{await setDoc(doc(db,'users',user.uid),{displayName:'Admin Mayora Gold FX',email:ADMIN_EMAIL,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()});}catch(e){console.warn('Admin setDoc:',e.message);}
+onAuthStateChanged(auth, async user => {
+  try {
+    if (user) {
+      window._curUser = user;
+      
+      // 1. Langsung load data dari database. 
+      // Status isAdmin akan ditentukan di dalam loadData() berdasarkan field di firestore
+      await loadData(user.uid);
+      
+      showLoggedIn(user);
+      setBtnLoad('li-btn', false, 'Sign In →');
+      setBtnLoad('ri-btn', false, 'Buat Akun →');
+      
+      const activePage = document.querySelector('.page.active');
+      if (activePage && activePage.id === 'page-auth') {
+        const isRegisterFlow = document.getElementById('form-reg').classList.contains('on');
+        const okEl = document.getElementById(isRegisterFlow ? 'ri-ok' : 'li-ok');
+        if (okEl) okEl.style.display = 'block';
+        
+        setTimeout(() => {
+          if (okEl) okEl.style.display = 'none';
+          // Sekarang isAdmin sudah di-set di loadData()
+          if (isAdmin) goPage('admin'); 
+          else goPage('home');
+          toast('Selamat datang', 'Login berhasil!', '#3DBA7A');
+        }, 900);
+      }
+    } else {
+      window._curUser = null;
+      isVip = false;
+      isAdmin = false;
+      // ... (reset UI tetap sama)
+      document.getElementById('nav-guest').style.display = 'block';
+      document.getElementById('nav-loggedin').style.display = 'none';
+      document.getElementById('nl-admin').style.display = 'none';
+      document.getElementById('mob-admin-link').style.display = 'none';
     }
-    await loadData(user.uid);
-    showLoggedIn(user);
-    setBtnLoad('li-btn',false,'Sign In →');
-    setBtnLoad('ri-btn',false,'Buat Akun →');
-    const activePage=document.querySelector('.page.active');
-    if(activePage&&activePage.id==='page-auth'){
-      const isRegisterFlow=document.getElementById('form-reg').classList.contains('on');
-      const okEl=document.getElementById(isRegisterFlow?'ri-ok':'li-ok');
-      if(okEl){okEl.style.display='block';}
-      setTimeout(()=>{if(okEl){okEl.style.display='none';}if(isAdmin)goPage('admin');else goPage('home');toast('Selamat datang','Login berhasil!','#3DBA7A');},900);
-    }
-  }else{
-    window._curUser=null;isVip=false;isAdmin=false;
-    document.getElementById('nav-guest').style.display='block';
-    document.getElementById('nav-loggedin').style.display='none';
-    document.getElementById('nl-admin').style.display='none';
-    document.getElementById('mob-admin-link').style.display='none';
-    setBtnLoad('li-btn',false,'Sign In →');
-    setBtnLoad('ri-btn',false,'Buat Akun →');
+  } catch (err) {
+    console.error("Error dalam onAuthStateChanged:", err);
+  } finally {
+    // 2. FINALLY: Loader PASTI hilang meskipun terjadi error di atas
+    document.getElementById('loader').classList.add('out');
   }
-  document.getElementById('loader').classList.add('out');
 });
-
 function showLoggedIn(user){
   const name=user.displayName||user.email.split('@')[0];
   document.getElementById('nav-guest').style.display='none';
@@ -1784,19 +1796,32 @@ function showLoggedIn(user){
   tick();
 }
 
-window.doLogin=async()=>{
-  const email=document.getElementById('li-email').value.trim(),pass=document.getElementById('li-pass').value;
-  const err=document.getElementById('li-err');err.textContent='';document.getElementById('li-ok').style.display='none';
-  if(!email||!pass){err.textContent='Email dan password diperlukan.';return;}
-  setBtnLoad('li-btn',true,'Sign In →');
-  try{
-    await signInWithEmailAndPassword(auth,email,pass);
-  }catch(e){
-    if((e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')&&email===ADMIN_EMAIL&&pass===ADMIN_PASS){
-      try{window._adminBootstrap=true;const cred=await createUserWithEmailAndPassword(auth,ADMIN_EMAIL,ADMIN_PASS);await updateProfile(cred.user,{displayName:'Admin Mayora Gold FX'});return;}
-      catch(e2){window._adminBootstrap=false;err.textContent='Gagal buat akun admin: '+e2.message;setBtnLoad('li-btn',false,'Sign In →');return;}
-    }
-    err.textContent=fmsg(e.code);setBtnLoad('li-btn',false,'Sign In →');
+window.doLogin = async () => {
+  const email = document.getElementById('li-email').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  const err = document.getElementById('li-err');
+  
+  // Reset UI status
+  err.textContent = '';
+  document.getElementById('li-ok').style.display = 'none';
+
+  // Validasi input dasar
+  if (!email || !pass) {
+    err.textContent = 'Email dan password diperlukan.';
+    return;
+  }
+
+  setBtnLoad('li-btn', true, 'Sign In →');
+
+  try {
+    // Cukup gunakan Firebase Authentication standar
+    await signInWithEmailAndPassword(auth, email, pass);
+    // Tidak perlu lagi mengecek manual ADMIN_EMAIL atau ADMIN_PASS di sini.
+    // Jika berhasil, onAuthStateChanged akan menangani sisanya (loadData, redirect, dll)
+  } catch (e) {
+    // fmsg adalah helper function yang sudah kamu buat sebelumnya
+    err.textContent = fmsg(e.code);
+    setBtnLoad('li-btn', false, 'Sign In →');
   }
 };
 
@@ -1816,20 +1841,54 @@ window.doRegister=async()=>{
 window.doLogout=async()=>{await persistTrades();await signOut(auth);if(tickInterval){clearInterval(tickInterval);tickInterval=null;}goPage('home');toast('Mayora GFX','Logout berhasil','#C9A84C');};
 window.doReset=async()=>{const email=window._curUser?.email;if(!email)return;try{await sendPasswordResetEmail(auth,email);const ok=document.getElementById('reset-ok');ok.style.display='block';setTimeout(()=>ok.style.display='none',5000);toast('MGF','Reset email dikirim!','#3DBA7A');}catch(e){toast('MGF',fmsg(e.code),'#E05A5A');}};
 
-async function loadData(uid){
-  try{
-    const snap=await getDoc(doc(db,'users',uid));
-    if(snap.exists()){
-      const d=snap.data();trades=d.trades||[];nextId=d.nextId||(trades.length?Math.max(...trades.map(t=>t.id))+1:1);
-      isVip=d.vip===true;const emailCheck=window._curUser?.email||'';isAdmin=d.admin===true||emailCheck===ADMIN_EMAIL;
-      if(emailCheck===ADMIN_EMAIL&&!d.admin){setDoc(doc(db,'users',uid),{admin:true,vip:true},{merge:true}).catch(()=>{});}
-      const ts=d.updatedAt?.toDate();if(ts)document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');
-    }else{
-      trades=[];nextId=1;isVip=false;const emailCheck=window._curUser?.email||'';isAdmin=emailCheck===ADMIN_EMAIL;
-      const newDoc=isAdmin?{displayName:'Admin Mayora Gold FX',email:emailCheck,vip:true,admin:true,trades:[],nextId:1,createdAt:serverTimestamp()}:{displayName:window._curUser?.displayName||'',email:emailCheck,vip:false,admin:false,trades:[],nextId:1,createdAt:serverTimestamp()};
-      try{await setDoc(doc(db,'users',uid),newDoc);}catch(_){}
+async function loadData(uid) {
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    
+    if (snap.exists()) {
+      const d = snap.data();
+      
+      // Ambil data dari Firestore
+      trades = d.trades || [];
+      nextId = d.nextId || (trades.length ? Math.max(...trades.map(t => t.id)) + 1 : 1);
+      
+      // Status VIP dan Admin murni dari database
+      isVip = d.vip === true;
+      isAdmin = d.admin === true; 
+      
+      const ts = d.updatedAt?.toDate();
+      if (ts) document.getElementById('acc-lastsave').textContent = ts.toLocaleString('id-ID');
+      
+    } else {
+      // Jika dokumen user belum ada, buat dokumen standar (Regular user)
+      trades = [];
+      nextId = 1;
+      isVip = false;
+      isAdmin = false;
+      
+      const newDoc = {
+        displayName: window._curUser?.displayName || '',
+        email: window._curUser?.email || '',
+        vip: false,
+        admin: false,
+        trades: [],
+        nextId: 1,
+        createdAt: serverTimestamp()
+      };
+      
+      try {
+        await setDoc(doc(db, 'users', uid), newDoc);
+      } catch (err) {
+        console.error("Gagal membuat profil user baru:", err);
+      }
     }
-  }catch(e){trades=[];nextId=1;isVip=false;isAdmin=(window._curUser?.email===ADMIN_EMAIL);}
+  } catch (e) {
+    console.error("Error saat loadData:", e);
+    trades = [];
+    nextId = 1;
+    isVip = false;
+    isAdmin = false;
+  }
 }
 
 async function persistTrades(){
