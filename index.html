@@ -513,16 +513,18 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <canvas id="bg-canvas"></canvas>
 
 <div id="loader">
-  <div class="loader-mark"><span class="loader-m">M</span></div>
+  <div class="loader-mark">
+    <img src="logomayora.jpeg" class="loader-logo">
+  </div>
   <div class="loader-name">MAYORA GOLD FX</div>
   <div class="loader-line"></div>
 </div>
 
 <nav id="nav">
   <a class="nav-logo" onclick="goPage('home')">
-    <div class="nav-mark">M</div>
-    <div class="nav-brandname">MAYORA <b>GOLD FX</b></div>
-  </a>
+  <img src="logomayora.jpeg" class="site-logo">
+  <div class="nav-brandname">MAYORA <b>GOLD FX</b></div>
+</a>
   <div class="nav-center">
     <button class="nav-link active" id="nl-home" onclick="goPage('home')">Beranda</button>
     <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
@@ -742,10 +744,9 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <div class="page" id="page-auth">
   <div class="auth-wrap">
     <div class="auth-logo">
-      <div class="auth-logo-mark">M</div>
+      <img src="logomayora.jpeg" class="auth-logo-img">
       <div class="auth-logo-name">MAYORA <b>GOLD FX</b></div>
-      <div class="auth-logo-sub">Member Portal</div>
-    </div>
+   </div>
     <div class="auth-card">
       <div class="auth-tabs">
         <button class="auth-tab on" id="tab-login" onclick="switchTab('login')">Sign In</button>
