@@ -69,7 +69,6 @@ button,input,select,textarea{font-family:inherit;outline:none}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--gold-d)}
 
-/* ── aspect-ratio containers — prevent layout shift ── */
 .img-ar-16-9{aspect-ratio:16/9;overflow:hidden;background:var(--bg4)}
 .img-ar-4-3{aspect-ratio:4/3;overflow:hidden;background:var(--bg4)}
 .img-ar-sq{aspect-ratio:1;overflow:hidden;background:var(--bg4)}
@@ -81,7 +80,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 
 #bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4}
 
-/* ── SEO CONTENT SECTIONS ── */
+/* SEO SECTIONS */
 .seo-section{padding:80px 40px;position:relative;z-index:1;background:var(--bg2);}
 .seo-section+.seo-section{background:var(--bg);border-top:1px solid var(--card-border);}
 .seo-inner{max-width:1200px;margin:0 auto}
@@ -182,6 +181,8 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .btn-hero-primary:hover{box-shadow:0 0 50px rgba(201,168,76,0.55);transform:translateY(-2px)}
 .btn-hero-sec{background:transparent;border:1px solid var(--gold-border);color:var(--gold);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:14px 28px;cursor:pointer;border-radius:var(--radius);transition:all .25s}
 .btn-hero-sec:hover{background:var(--gold-glow)}
+.btn-hero-pub{background:transparent;border:1px solid rgba(37,211,102,0.35);color:#25D366;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:14px 28px;cursor:pointer;border-radius:var(--radius);transition:all .25s;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn-hero-pub:hover{background:rgba(37,211,102,0.07)}
 .hero-stats{display:flex;gap:36px;flex-wrap:wrap}
 .hero-stat .v{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;line-height:1;background:linear-gradient(135deg,var(--gold),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-stat .l{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-top:6px}
@@ -250,7 +251,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .wa-btn-pub{display:inline-flex;align-items:center;gap:12px;background:transparent;border:1px solid rgba(37,211,102,0.35);color:#25D366;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:15px 36px;cursor:pointer;border-radius:var(--radius);transition:all .25s}
 .wa-btn-pub:hover{background:rgba(37,211,102,0.07)}
 
-/* ── BERITA PAGE ── */
+/* BERITA PAGE */
 #page-berita{padding:var(--nav-h) 40px 80px}
 .news-inner{max-width:1200px;margin:0 auto}
 .news-top{padding:60px 0 48px;text-align:center}
@@ -287,7 +288,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .pw-price{font-family:'Cormorant Garamond',serif;font-size:.98rem}
 .pw-chg{font-size:.62rem}
 
-/* ── NEWS DETAIL ── */
+/* NEWS DETAIL */
 #news-detail-view{display:none}
 #news-detail-view.open{display:block}
 .nd-back{display:inline-flex;align-items:center;gap:8px;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text2);background:none;border:1px solid var(--card-border);padding:8px 16px;border-radius:var(--radius);cursor:pointer;transition:all .25s;margin:32px 0 24px}
@@ -611,6 +612,8 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   .seo-section{padding:60px 20px}
   .seo-cols3{grid-template-columns:1fr}
   .seo-trust-row{grid-template-columns:1fr 1fr}
+  .hero-actions{gap:10px}
+  .btn-hero-primary,.btn-hero-sec,.btn-hero-pub{padding:12px 20px;font-size:.6rem}
 }
 </style>
 </head>
@@ -663,7 +666,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <button class="btn-hero-primary" style="margin-top:8px" onclick="goPage('auth');toggleMob()">Login Member →</button>
 </div>
 
-<!-- ═══════════════════════════════ PAGE: HOME ═══════════════════════════════ -->
+<!-- PAGE: HOME -->
 <main>
 <div class="page active" id="page-home">
   <section id="hero" aria-label="Hero section">
@@ -675,8 +678,13 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         </div>
         <h1 class="hero-title">Komunitas Trading<br><span class="gold-text">Emas XAU/USD</span><br>Terbaik Indonesia</h1>
         <p class="hero-desc">Ekosistem trading emas premium — sinyal XAU/USD akurasi tinggi, edukasi eksklusif, live trading session, dan komunitas VIP yang bisa kamu akses gratis.</p>
+        <!-- ✅ FIX: Tambah tombol Grup Public di hero -->
         <div class="hero-actions">
           <button class="btn-hero-primary" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
+          <a href="https://chat.whatsapp.com/B9ZPf6eGUNvH1eFf6y5OYr?" target="_blank" rel="noopener noreferrer" class="btn-hero-pub">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Grup Public
+          </a>
           <button class="btn-hero-sec" onclick="goPage('berita')">Baca Berita ↓</button>
         </div>
         <div class="hero-stats">
@@ -842,6 +850,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         <div>
           <div class="footer-col-t">Hubungi Kami</div>
           <a href="https://wa.me/6282197231712" target="_blank" rel="noopener noreferrer" class="footer-link">WhatsApp Admin (VIP)</a>
+          <a href="https://chat.whatsapp.com/B9ZPf6eGUNvH1eFf6y5OYr?" target="_blank" rel="noopener noreferrer" class="footer-link">Grup Public WhatsApp</a>
           <div style="margin-top:16px;font-size:.62rem;color:var(--text3);line-height:1.7">Trading Emas XAU/USD<br>Smart Money Concept · SMC<br>Komunitas Trader Indonesia</div>
         </div>
       </div>
@@ -858,10 +867,9 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 </div>
 </main>
 
-<!-- ═══════════════════════════════ PAGE: BERITA ═══════════════════════════════ -->
+<!-- PAGE: BERITA -->
 <div class="page" id="page-berita" role="main" aria-label="Berita dan Analisa Pasar">
   <div class="news-inner">
-    <!-- LIST VIEW -->
     <div id="news-list-view">
       <div class="news-top reveal">
         <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Market Update</span><div class="eyebrow-line r"></div></div>
@@ -877,7 +885,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
     </div>
 
-    <!-- DETAIL VIEW (hidden by default) -->
     <div id="news-detail-view">
       <button class="nd-back" onclick="closeNewsDetail()" aria-label="Kembali ke daftar berita">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
@@ -906,7 +913,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   </div>
 </div>
 
-<!-- ═══════════════════════════════ PAGE: VIP ═══════════════════════════════ -->
+<!-- PAGE: VIP -->
 <div class="page" id="page-vip" role="main">
   <div class="vip-hero">
     <div class="vip-hero-badge">✦ Exclusive Membership</div>
@@ -942,7 +949,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div style="padding:40px"></div>
 </div>
 
-<!-- ═══════════════════════════════ PAGE: AUTH ═══════════════════════════════ -->
+<!-- PAGE: AUTH -->
 <div class="page" id="page-auth" role="main">
   <div class="auth-wrap">
     <div class="auth-logo">
@@ -975,7 +982,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   </div>
 </div>
 
-<!-- ═══════════════════════════════ PAGE: JOURNAL ═══════════════════════════════ -->
+<!-- PAGE: JOURNAL -->
 <div class="page" id="page-journal">
   <div class="app-header">
     <div>
@@ -1053,7 +1060,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   </div>
 </div>
 
-<!-- ═══════════════════════════════ PAGE: ADMIN ═══════════════════════════════ -->
+<!-- PAGE: ADMIN -->
 <div class="page" id="page-admin">
   <div class="admin-header">
     <div>
@@ -1218,45 +1225,67 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div><div class="toast-sym" id="tsym"></div><div class="toast-msg" id="tmsg"></div></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     VANILLA JS — non-module helpers
-     ═══════════════════════════════════════════════════════════ -->
+<!-- VANILLA JS -->
 <script>
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
-/* ── FAQ ── */
+/* ✅ FIX: Deep link handler — buka artikel dari ?berita=slug */
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('berita');
+  if(slug){
+    var attempts = 0;
+    var tryOpen = setInterval(function(){
+      attempts++;
+      var cache = window.allNewsCache || [];
+      var found = cache.find(function(n){ return n.slug === slug || n.id === slug; });
+      if(found){
+        clearInterval(tryOpen);
+        goPage('berita');
+        setTimeout(function(){ window.openNews(found.id); }, 100);
+      }
+      if(attempts > 30) clearInterval(tryOpen); // timeout ~9s
+    }, 300);
+    /* Trigger berita page load so news cache populates */
+    setTimeout(function(){
+      if(window._renderNews) window._renderNews();
+    }, 400);
+  }
+})();
+
+/* FAQ */
 window.toggleFaq = function(el){
-  const item = el.closest('.faq-item');
-  const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  var item = el.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(f){ f.classList.remove('open'); });
   if(!isOpen) item.classList.add('open');
 };
 
-/* ── Background canvas ── */
-(()=>{
-  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
-  let W,H,pts,raf;
-  function init(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;pts=Array.from({length:55},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,a:Math.random()*.6}))}
-  function draw(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(201,168,76,${p.a})`;ctx.fill()});for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(201,168,76,${.08*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke()}}raf=requestAnimationFrame(draw)}
-  init();draw();window.addEventListener('resize',()=>{cancelAnimationFrame(raf);init();draw()});
+/* Background canvas */
+(function(){
+  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  var W,H,pts,raf;
+  function init(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;pts=Array.from({length:55},function(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,a:Math.random()*.6}});}
+  function draw(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+p.a+')';ctx.fill()});for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(201,168,76,'+(0.08*(1-d/100))+')';ctx.lineWidth=.5;ctx.stroke()}}raf=requestAnimationFrame(draw);}
+  init();draw();window.addEventListener('resize',function(){cancelAnimationFrame(raf);init();draw();});
 })();
 
-/* ── Reveal observer ── */
-const revEls=document.querySelectorAll('.reveal'),revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.12});
-revEls.forEach(e=>revObs.observe(e));
+/* Reveal observer */
+var revEls=document.querySelectorAll('.reveal'),revObs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.12});
+revEls.forEach(function(e){revObs.observe(e);});
 
-/* ── Nav scroll solid ── */
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',window.scrollY>30));
+/* Nav scroll */
+window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('solid',window.scrollY>30);});
 document.getElementById('nav').classList.add('solid');
 
-window.toggleMob=()=>{
-  const mob=document.getElementById('mob-nav');
+window.toggleMob=function(){
+  var mob=document.getElementById('mob-nav');
   mob.classList.toggle('open');
   document.getElementById('ham').setAttribute('aria-expanded',mob.classList.contains('open'));
 };
 
-window.switchTab=t=>{
-  ['login','reg'].forEach(n=>{
+window.switchTab=function(t){
+  ['login','reg'].forEach(function(n){
     document.getElementById('tab-'+n).classList.toggle('on',n===t);
     document.getElementById('tab-'+n).setAttribute('aria-selected',n===t);
     document.getElementById('form-'+n).classList.toggle('on',n===t);
@@ -1265,118 +1294,104 @@ window.switchTab=t=>{
   document.getElementById('li-ok').style.display='none';document.getElementById('ri-ok').style.display='none';
 };
 
-/* ── Page routing ── */
-const pages=['home','berita','vip','auth','journal','admin'];
+/* Page routing */
+var pages=['home','berita','vip','auth','journal','admin'];
 function goPage(p){
-  pages.forEach(n=>document.getElementById('page-'+n).classList.toggle('active',n===p));
-  ['home','berita','vip'].forEach(n=>{const el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p)});
+  pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
+  ['home','berita','vip'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   document.getElementById('mob-nav').classList.remove('open');
   window.scrollTo(0,0);
   if(p==='berita'){
-    /* Always show list view when navigating to berita page */
     closeNewsDetail();
     window._renderNews&&window._renderNews();
   }
   if(p==='admin') window._loadAdminData&&window._loadAdminData();
-  /* Reset SEO meta to defaults when leaving berita */
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
 
-window.requireVipNav=()=>{
+window.requireVipNav=function(){
   if(!window._curUser){goPage('auth');return;}
   goPage('journal');
 };
 
-window.admTab=(n,el)=>{
-  document.querySelectorAll('.admin-page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('on'));
+window.admTab=function(n,el){
+  document.querySelectorAll('.admin-page').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.admin-tab').forEach(function(t){t.classList.remove('on');});
   document.getElementById('adm-'+n).classList.add('on');
   el.classList.add('on');
   if(n==='users'&&window._loadUsers) window._loadUsers();
   if(n==='stats'&&window._loadStats) window._loadStats();
 };
 
-window.jTab=(n,el)=>{
-  document.querySelectorAll('.journal-page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('on'));
+window.jTab=function(n,el){
+  document.querySelectorAll('.journal-page').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.app-tab').forEach(function(t){t.classList.remove('on');});
   document.getElementById('jp-'+n).classList.add('on');el.classList.add('on');
 };
-window.fltHist=(f,btn)=>{window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');window._renderHistory&&window._renderHistory();};
+window.fltHist=function(f,btn){window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');window._renderHistory&&window._renderHistory();};
 window._histFlt='all';
 
-/* ── Slug generator ── */
+/* Slug generator */
 function generateSlug(text){
-  const map={'à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a','è':'e','é':'e','ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ò':'o','ó':'o','ô':'o','õ':'o','ö':'o','ù':'u','ú':'u','û':'u','ü':'u','ñ':'n','ç':'c'};
+  var map={'à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a','è':'e','é':'e','ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ò':'o','ó':'o','ô':'o','õ':'o','ö':'o','ù':'u','ú':'u','û':'u','ü':'u','ñ':'n','ç':'c'};
   return text.toLowerCase()
-    .replace(/[àáâãäåèéêëìíîïòóôõöùúûüñç]/g,c=>map[c]||c)
+    .replace(/[àáâãäåèéêëìíîïòóôõöùúûüñç]/g,function(c){return map[c]||c;})
     .replace(/[^a-z0-9\s-]/g,'').trim()
     .replace(/\s+/g,'-').replace(/-{2,}/g,'-').replace(/^-+|-+$/g,'');
 }
 window.generateSlug=generateSlug;
 
-/* ── Cloudinary URL optimizer ──
-   Inserts c_limit,w_WIDTH,f_auto,q_auto into a Cloudinary URL.
-   Works for both https://res.cloudinary.com/... and legacy URLs.
-   Returns original URL unchanged if not Cloudinary or already optimized.
-── */
+/* Cloudinary URL optimizer */
 function getOptUrl(url, width){
   if(!url) return '';
-  // Cloudinary URL pattern: https://res.cloudinary.com/{cloud}/image/upload/{transforms}/{public_id}
-  const clMatch = url.match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/);
-  if(!clMatch) return url; // not a cloudinary URL, return as-is
-  const [, base, rest] = clMatch;
-  // Strip any existing transform segments (everything before the first v\d+ or the actual filename)
-  // Simple approach: prepend our transforms
-  const transform = `c_limit,w_${width},f_auto,q_auto`;
-  // Avoid double-inserting transforms
+  var clMatch = url.match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/);
+  if(!clMatch) return url;
+  var base = clMatch[1], rest = clMatch[2];
+  var transform = 'c_limit,w_'+width+',f_auto,q_auto';
   if(rest.includes('c_limit') || rest.includes('f_auto')) return url;
-  return `${base}${transform}/${rest}`;
+  return base+transform+'/'+rest;
 }
 window.getOptUrl = getOptUrl;
 
-/* ── SEO meta helpers ── */
-const DEFAULT_META = {
+/* SEO meta helpers */
+var DEFAULT_META = {
   title: 'Mayora Gold FX — Komunitas Trading Emas XAU/USD Indonesia | Sinyal & Edukasi Premium',
   desc: 'Platform trading emas (XAU/USD) premium Indonesia. Sinyal XAUUSD akurasi 87%, live session, journal otomatis & komunitas VIP 500+ trader elite. Daftar GRATIS sekarang!',
   image: 'https://mayoragoldfx.com/og-image.jpg'
 };
 
-function updateSeoMeta({title, desc, image}){
-  document.title = title;
-  document.getElementById('meta-desc').setAttribute('content', desc);
-  document.getElementById('og-title').setAttribute('content', title);
-  document.getElementById('og-desc').setAttribute('content', desc);
-  document.getElementById('og-image').setAttribute('content', image);
-  document.getElementById('tw-title').setAttribute('content', title);
-  document.getElementById('tw-desc').setAttribute('content', desc);
-  document.getElementById('tw-image').setAttribute('content', image);
+function updateSeoMeta(o){
+  document.title = o.title;
+  document.getElementById('meta-desc').setAttribute('content', o.desc);
+  document.getElementById('og-title').setAttribute('content', o.title);
+  document.getElementById('og-desc').setAttribute('content', o.desc);
+  document.getElementById('og-image').setAttribute('content', o.image);
+  document.getElementById('tw-title').setAttribute('content', o.title);
+  document.getElementById('tw-desc').setAttribute('content', o.desc);
+  document.getElementById('tw-image').setAttribute('content', o.image);
 }
 
-function resetSeoMeta(){
-  updateSeoMeta(DEFAULT_META);
-}
+function resetSeoMeta(){ updateSeoMeta(DEFAULT_META); }
 
-/* ── News Detail ── */
+/* ✅ FIX: News Detail — share link pakai ?berita=slug (kompatibel static hosting) */
 window.openNews = function(id){
-  const n = (window.allNewsCache||[]).find(x=>x.id===id);
+  var n = (window.allNewsCache||[]).find(function(x){return x.id===id;});
   if(!n) return;
 
-  /* Update SEO meta */
-  const seoTitle = (n.metaTitle || n.title) + ' — Mayora Gold FX';
-  const seoDesc  = (n.metaDescription || n.excerpt || '').substring(0,160);
-  const seoImg   = n.imageUrl ? getOptUrl(n.imageUrl, 1200) : DEFAULT_META.image;
+  var seoTitle = (n.metaTitle || n.title) + ' — Mayora Gold FX';
+  var seoDesc  = (n.metaDescription || n.excerpt || '').substring(0,160);
+  var seoImg   = n.imageUrl ? getOptUrl(n.imageUrl, 1200) : DEFAULT_META.image;
   updateSeoMeta({ title: seoTitle, desc: seoDesc, image: seoImg });
 
-  /* Populate detail DOM */
   document.getElementById('nd-cat').textContent   = n.cat || '';
   document.getElementById('nd-date').textContent  = fmtDate(n.date || n.createdAt);
   document.getElementById('nd-title').textContent = n.title || '';
   document.getElementById('nd-excerpt').textContent = n.excerpt || '';
   document.getElementById('nd-body').textContent  = n.konten || 'Konten lengkap belum tersedia.';
 
-  const imgWrap = document.getElementById('nd-img-wrap');
-  const imgEl   = document.getElementById('nd-img');
+  var imgWrap = document.getElementById('nd-img-wrap');
+  var imgEl   = document.getElementById('nd-img');
   if(n.imageUrl){
     imgEl.src = getOptUrl(n.imageUrl, 860);
     imgEl.alt = n.title;
@@ -1385,23 +1400,22 @@ window.openNews = function(id){
     imgWrap.style.display = 'none';
   }
 
-  /* WhatsApp share */
-  const shareUrl  = `https://mayoragoldfx.com/berita/${n.slug||n.id}`;
-  const shareText = encodeURIComponent(`${n.title}\n\n${n.excerpt||''}\n\n${shareUrl}`);
-  document.getElementById('nd-share-wa').href = `https://wa.me/?text=${shareText}`;
+  /* ✅ Share URL: pakai query param agar tidak 404 di static hosting */
+  var shareUrl  = 'https://mayoragoldfx.com/?berita=' + (n.slug || n.id);
+  var shareText = encodeURIComponent(n.title + '\n\n' + (n.excerpt||'') + '\n\n' + shareUrl);
+  document.getElementById('nd-share-wa').href = 'https://wa.me/?text=' + shareText;
 
-  /* Show/hide views */
   document.getElementById('news-list-view').style.display  = 'none';
   document.getElementById('news-detail-view').style.display = 'block';
   window.scrollTo(0,0);
 };
+
 window.closeNewsDetail = function(){
   document.getElementById('news-list-view').style.display  = '';
   document.getElementById('news-detail-view').style.display = '';
   resetSeoMeta();
 };
 
-/* Helper used before module is loaded */
 function fmtDate(ts){
   if(!ts)return'';
   if(typeof ts==='string')return ts;
@@ -1410,19 +1424,19 @@ function fmtDate(ts){
 }
 window.fmtDate = fmtDate;
 
-/* ── Admin form helpers ── */
-document.getElementById('nf-judul')?.addEventListener('input',function(){
-  const slug=generateSlug(this.value);
-  const el=document.getElementById('nf-slug-preview');
-  if(el) el.textContent=slug?'/'+slug:'—';
+/* Admin form helpers */
+document.getElementById('nf-judul')&&document.getElementById('nf-judul').addEventListener('input',function(){
+  var slug=generateSlug(this.value);
+  var el=document.getElementById('nf-slug-preview');
+  if(el) el.textContent=slug?'/?berita='+slug:'—';
 });
-document.getElementById('nf-excerpt')?.addEventListener('input',function(){
-  const n=this.value.length;
-  const el=document.getElementById('nf-excerpt-count');
+document.getElementById('nf-excerpt')&&document.getElementById('nf-excerpt').addEventListener('input',function(){
+  var n=this.value.length;
+  var el=document.getElementById('nf-excerpt-count');
   if(el){el.textContent=n+'/160';el.style.color=n>160?'var(--red)':n>130?'var(--gold)':'var(--text3)';}
 });
 
-window.showNewsForm=()=>{
+window.showNewsForm=function(){
   document.getElementById('news-form-wrap').style.display='block';
   document.getElementById('nf-title-lbl').textContent='Tambah Berita Baru';
   document.getElementById('nf-edit-id').value='';
@@ -1439,18 +1453,18 @@ window.showNewsForm=()=>{
   clearImg();
   window.scrollTo(0,0);
 };
-window.hideNewsForm=()=>{document.getElementById('news-form-wrap').style.display='none';};
+window.hideNewsForm=function(){document.getElementById('news-form-wrap').style.display='none';};
 
 window.previewImg=function(input){
-  const file=input.files[0];if(!file)return;
-  const wrap=document.getElementById('img-preview-wrap'),img=document.getElementById('img-preview');
+  var file=input.files[0];if(!file)return;
+  var wrap=document.getElementById('img-preview-wrap'),img=document.getElementById('img-preview');
   wrap.style.display='block';
-  const url=URL.createObjectURL(file);
-  img.onload=()=>URL.revokeObjectURL(url);
+  var url=URL.createObjectURL(file);
+  img.onload=function(){URL.revokeObjectURL(url);};
   img.src=url;
   document.getElementById('img-current-label').textContent='Gambar baru dipilih';
 };
-window.clearImg=()=>{
+window.clearImg=function(){
   document.getElementById('nf-foto').value='';
   document.getElementById('img-preview-wrap').style.display='none';
   document.getElementById('img-preview').src='';
@@ -1458,72 +1472,69 @@ window.clearImg=()=>{
   document.getElementById('nf-old-img-url').value='';
 };
 
-/* ── Toast ── */
-let toastT;
+/* Toast */
+var toastT;
 function toast(sym,msg,color){
   document.getElementById('tdot').style.background=color;
   document.getElementById('tsym').textContent=sym;
   document.getElementById('tmsg').textContent=msg;
-  const el=document.getElementById('toast');el.classList.add('show');
+  var el=document.getElementById('toast');el.classList.add('show');
   if(toastT)clearTimeout(toastT);
-  toastT=setTimeout(()=>el.classList.remove('show'),3500);
+  toastT=setTimeout(function(){el.classList.remove('show');},3500);
 }
 window.toast=toast;
 
-/* ── Ticker / Price ── */
-const SYM_D={XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',ADAUSDT:'ADA/USDT'};
+/* Ticker / Price */
+var SYM_D={XAUUSD:'XAU/USD',XAUTUSDT:'XAUT/USDT',BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',SOLUSDT:'SOL/USDT',BNBUSDT:'BNB/USDT',XRPUSDT:'XRP/USDT',DOGEUSDT:'DOGE/USDT',ADAUSDT:'ADA/USDT'};
 window.SYM_D=SYM_D;
-const TICK_SYMS=['XAUUSD','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
+var TICK_SYMS=['XAUUSD','BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
 window._lp={};window._prevLp={};
 
 function renderTicker(){
-  const items=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="ticker-item"><span class="ti-sym">${SYM_D[s]}</span><span class="ti-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span><span class="ti-sep">|</span></div>`}).join('');
-  document.getElementById('ticker-wrap').innerHTML=`<div class="ticker-inner" aria-hidden="true">${items+items}</div>`;
+  var items=TICK_SYMS.map(function(s){var p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';var up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return'<div class="ticker-item"><span class="ti-sym">'+SYM_D[s]+'</span><span class="ti-price">'+p.toFixed(dec)+'</span><span class="pb-chg '+(up?'up':'dn')+'">'+(up?'▲':'▼')+'</span><span class="ti-sep">|</span></div>';}).join('');
+  document.getElementById('ticker-wrap').innerHTML='<div class="ticker-inner" aria-hidden="true">'+items+items+'</div>';
 }
 window.renderTicker=renderTicker;
 
 function renderPricebar(){
-  document.getElementById('pricebar').innerHTML=TICK_SYMS.map(s=>{const p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';const up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return`<div class="pb-item"><span class="pb-sym">${SYM_D[s]}</span><span class="pb-price">${p.toFixed(dec)}</span><span class="pb-chg ${up?'up':'dn'}">${up?'▲':'▼'}</span></div>`}).join('');
+  document.getElementById('pricebar').innerHTML=TICK_SYMS.map(function(s){var p=window._lp[s],prev=window._prevLp[s]||p;if(!p)return'';var up=p>=(prev||p),dec=s==='XAUUSD'?2:(p<1?4:2);return'<div class="pb-item"><span class="pb-sym">'+SYM_D[s]+'</span><span class="pb-price">'+p.toFixed(dec)+'</span><span class="pb-chg '+(up?'up':'dn')+'">'+(up?'▲':'▼')+'</span></div>';}).join('');
 }
 window.renderPricebar=renderPricebar;
 
-const xauHistory=[];
+var xauHistory=[];
 function updateHeroCard(p,prev){
   if(!p)return;
   document.getElementById('hcc-price').textContent=p.toFixed(2);
-  const chgPct=prev?((p-prev)/prev*100):0;
-  const el=document.getElementById('hcc-chg');
+  var chgPct=prev?((p-prev)/prev*100):0;
+  var el=document.getElementById('hcc-chg');
   el.textContent=(chgPct>=0?'▲ +':'▼ ')+Math.abs(chgPct).toFixed(3)+'%';
   el.className='hcc-change '+(chgPct>=0?'up':'dn');
   xauHistory.push(p);if(xauHistory.length>40)xauHistory.shift();
   if(xauHistory.length>1){
-    const mn=Math.min(...xauHistory),mx=Math.max(...xauHistory),rng=mx-mn||1;
-    const W=400,H=80,pad=8,xS=(W-2*pad)/(xauHistory.length-1),yS=(H-2*pad)/rng;
-    const coords=xauHistory.map((v,i)=>`${(pad+i*xS).toFixed(1)},${(H-pad-(v-mn)*yS).toFixed(1)}`);
-    const pts=coords.join(' ');
-    const firstX=(pad).toFixed(1),lastX=(pad+(xauHistory.length-1)*xS).toFixed(1),floorY=(H-pad).toFixed(1);
-    const dPath=`M${firstX},${floorY} L${coords.join(' L')} L${lastX},${floorY} Z`;
+    var mn=Math.min.apply(null,xauHistory),mx=Math.max.apply(null,xauHistory),rng=mx-mn||1;
+    var W=400,H=80,pad=8,xS=(W-2*pad)/(xauHistory.length-1),yS=(H-2*pad)/rng;
+    var coords=xauHistory.map(function(v,i){return(pad+i*xS).toFixed(1)+','+(H-pad-(v-mn)*yS).toFixed(1);});
+    var pts=coords.join(' ');
+    var firstX=pad.toFixed(1),lastX=(pad+(xauHistory.length-1)*xS).toFixed(1),floorY=(H-pad).toFixed(1);
+    var dPath='M'+firstX+','+floorY+' L'+coords.join(' L')+' L'+lastX+','+floorY+' Z';
     document.getElementById('hcc-line').setAttribute('points',pts);
     document.getElementById('hcc-fill').setAttribute('d',dPath);
   }
-  const mn=Math.min(...xauHistory),mx=Math.max(...xauHistory);
-  document.getElementById('hcc-high').textContent=mx.toFixed(2);
-  document.getElementById('hcc-low').textContent=mn.toFixed(2);
+  var mn2=Math.min.apply(null,xauHistory),mx2=Math.max.apply(null,xauHistory);
+  document.getElementById('hcc-high').textContent=mx2.toFixed(2);
+  document.getElementById('hcc-low').textContent=mn2.toFixed(2);
   document.getElementById('hcc-pct').textContent=(chgPct>=0?'+':'')+chgPct.toFixed(2)+'%';
   document.getElementById('hcc-pct').className='hcc-metric-v '+(chgPct>=0?'up':'dn');
 }
 window.updateHeroCard=updateHeroCard;
 </script>
 
-<!-- ═══════════════════════════════════════════════════════════
-     FIREBASE MODULE
-     ═══════════════════════════════════════════════════════════ -->
+<!-- FIREBASE MODULE -->
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,limit,where,serverTimestamp,writeBatch}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-/* ── Firebase config ── */
 const FB={
   apiKey:"AIzaSyClc59Muo0ajiNjvC5s0rq74BtDrce6rp8",
   authDomain:"journal-97254.firebaseapp.com",
@@ -1533,7 +1544,6 @@ const FB={
   appId:"1:101188824456:web:a0ca25a26e63704b361e3d"
 };
 
-/* ── Cloudinary config ── */
 const CLOUDINARY_CLOUD  = 'dktcrzfck';
 const CLOUDINARY_PRESET = 'mayoragold_preset';
 const CLOUDINARY_URL    = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
@@ -1544,7 +1554,6 @@ let trades=[],isVip=false,isAdmin=false,tickInterval=null,saveDebounce=null;
 window._curUser=null;
 window.allNewsCache=[];
 
-/* ── Error messages ── */
 function fmsg(c){return({'auth/user-not-found':'Akun tidak ditemukan.','auth/wrong-password':'Password salah.','auth/invalid-credential':'Email atau password salah.','auth/email-already-in-use':'Email sudah terdaftar.','auth/invalid-email':'Format email tidak valid.','auth/weak-password':'Password terlalu lemah.','auth/too-many-requests':'Terlalu banyak percobaan. Tunggu sebentar.'})[c]||'Error: '+c;}
 
 function setBtnLoad(id,loading,txt){
@@ -1553,17 +1562,12 @@ function setBtnLoad(id,loading,txt){
   b.innerHTML=loading?'<div class="spin"></div>':`<span>${txt}</span>`;
 }
 
-/* ════════════════════════════════════════════════════════
-   CLOUDINARY — Upload with real-time progress (no client-side compression)
-   ════════════════════════════════════════════════════════ */
 function uploadToCloudinary(file, filename, onProgress){
   return new Promise((resolve, reject)=>{
     const formData = new FormData();
     formData.append('file', file, filename + '.' + file.name.split('.').pop());
     formData.append('upload_preset', CLOUDINARY_PRESET);
     formData.append('folder', 'news-images');
-    /* Let Cloudinary handle resizing via eager transforms or on-the-fly URLs */
-
     const xhr = new XMLHttpRequest();
     xhr.open('POST', CLOUDINARY_URL);
     xhr.upload.onprogress = e => {
@@ -1594,7 +1598,6 @@ function setUploadProgress(pct, label=''){
   if(lbl){ lbl.style.display=show?'block':'none'; lbl.textContent=label; }
 }
 
-/* ── Slug unique check ── */
 async function ensureUniqueSlug(baseSlug, editId=null){
   let slug=baseSlug, counter=2;
   while(true){
@@ -1606,40 +1609,29 @@ async function ensureUniqueSlug(baseSlug, editId=null){
   }
 }
 
-/* ════════════════════════════════════════════════════════
-   saveNews
-   ════════════════════════════════════════════════════════ */
 window.saveNews = async ()=>{
   const errEl = document.getElementById('nf-save-err');
   errEl.style.display = 'none';
-
   const judul   = document.getElementById('nf-judul').value.trim();
   const excerpt = document.getElementById('nf-excerpt').value.trim();
   const konten  = document.getElementById('nf-konten').value.trim();
   const tgl     = document.getElementById('nf-tgl').value;
   const kat     = document.getElementById('nf-kat').value;
   const featured= document.getElementById('nf-featured').checked;
-
   if(!judul||!excerpt||!tgl){
     errEl.textContent='⚠ Judul, Tanggal, dan Ringkasan wajib diisi.';
     errEl.style.display='block'; return;
   }
-
   const btn = document.getElementById('btn-save-news');
   btn.disabled=true;
   btn.innerHTML='<div class="spin" style="border-top-color:var(--bg)"></div>';
   setUploadProgress(0);
-
   try{
     const editId    = document.getElementById('nf-edit-id').value||null;
     const oldImgUrl = document.getElementById('nf-old-img-url').value||'';
     const fileInput = document.getElementById('nf-foto');
     const file      = fileInput?.files?.[0]||null;
-
-    /* 1. Unique slug */
     const slug = await ensureUniqueSlug(generateSlug(judul), editId);
-
-    /* 2. Image upload (no client-side compression — Cloudinary handles it) */
     let imageUrl = oldImgUrl;
     if(file){
       setUploadProgress(10, 'Mengunggah ke Cloudinary...');
@@ -1647,34 +1639,26 @@ window.saveNews = async ()=>{
         setUploadProgress(10 + Math.round(pct * 0.8), `Mengunggah gambar... ${pct}%`);
       });
     }
-
     setUploadProgress(92, 'Menyimpan ke database...');
-
-    /* 3. Unfeatured others if this is featured */
     if(featured){
       const snap = await getDocs(query(collection(db,'news')));
       await Promise.all(snap.docs
         .filter(d=>d.id!==editId&&d.data().featured)
         .map(d=>updateDoc(doc(db,'news',d.id),{featured:false})));
     }
-
-    /* 4. Payload */
     const payload={
       title:judul, slug, cat:kat, date:tgl, excerpt, konten, featured, imageUrl,
       metaTitle:judul,
       metaDescription:excerpt.substring(0,160),
       updatedAt:serverTimestamp(),
     };
-
     if(editId){ await updateDoc(doc(db,'news',editId),payload); }
     else { payload.createdAt=serverTimestamp(); await addDoc(collection(db,'news'),payload); }
-
     setUploadProgress(100);
     setTimeout(()=>setUploadProgress(0),400);
     toast('Admin', editId?'Berita diperbarui!':'Berita ditambahkan!', '#3DBA7A');
     hideNewsForm();
     await renderAdminNewsList();
-
   }catch(e){
     console.error('[saveNews]',e);
     errEl.textContent='⚠ '+(e.message||'Terjadi kesalahan. Coba lagi.');
@@ -1687,9 +1671,6 @@ window.saveNews = async ()=>{
   }
 };
 
-/* ════════════════════════════════════════════════════════
-   AUTH
-   ════════════════════════════════════════════════════════ */
 onAuthStateChanged(auth, async user=>{
   try{
     if(user){
@@ -1792,9 +1773,6 @@ window.doReset = async ()=>{
   }catch(e){toast('MGF',fmsg(e.code),'#E05A5A');}
 };
 
-/* ════════════════════════════════════════════════════════
-   LOAD USER DATA (reads subcollection for trades)
-   ════════════════════════════════════════════════════════ */
 async function loadData(uid){
   try{
     const snap=await getDoc(doc(db,'users',uid));
@@ -1812,7 +1790,6 @@ async function loadData(uid){
         vip:false,admin:false,createdAt:serverTimestamp()
       });
     }
-    /* Load trades from subcollection */
     await loadTrades(uid);
   }catch(e){
     console.error('loadData error:',e);
@@ -1820,18 +1797,12 @@ async function loadData(uid){
   }
 }
 
-/* ── loadTrades: subcollection with pagination ── */
 async function loadTrades(uid){
   try{
-    const q=query(
-      collection(db,'users',uid,'trades'),
-      orderBy('createdAt','desc'),
-      limit(200)   /* generous limit — adjust as needed */
-    );
+    const q=query(collection(db,'users',uid,'trades'),orderBy('createdAt','desc'),limit(200));
     const snap=await getDocs(q);
     trades=[];
     snap.forEach(d=>trades.push({_docId:d.id,...d.data()}));
-    /* Normalize: ensure numeric id field exists for UI keys */
     trades.forEach((t,i)=>{ if(!t.id) t.id=t._docId; });
     document.getElementById('acc-trades').textContent=trades.length+' trades';
   }catch(e){
@@ -1840,7 +1811,6 @@ async function loadTrades(uid){
   }
 }
 
-/* ── persistTrades: save a single trade doc to subcollection ── */
 async function persistOneTrade(t){
   if(!window._curUser) return;
   setSaveStatus('saving');
@@ -1855,16 +1825,13 @@ async function persistOneTrade(t){
       updatedAt:serverTimestamp(),
     };
     if(t._docId){
-      /* existing doc */
       await updateDoc(doc(db,'users',uid,'trades',t._docId),payload);
     }else{
-      /* new doc */
       payload.createdAt=serverTimestamp();
       const ref=await addDoc(collection(db,'users',uid,'trades'),payload);
       t._docId=ref.id;
       t.id=ref.id;
     }
-    /* Update user meta */
     await setDoc(doc(db,'users',uid),{updatedAt:serverTimestamp()},{merge:true});
     setSaveStatus('saved');
     document.getElementById('acc-lastsave').textContent=new Date().toLocaleString('id-ID');
@@ -1874,7 +1841,6 @@ async function persistOneTrade(t){
   }
 }
 
-/* ── Debounced bulk persist for auto-checks ── */
 function triggerSave(){
   setSaveStatus('saving');
   clearTimeout(saveDebounce);
@@ -1892,9 +1858,6 @@ function setSaveStatus(s){
   lb.textContent=s==='saved'?'Saved':s==='saving'?'Saving...':s==='error'?'Error':'—';
 }
 
-/* ════════════════════════════════════════════════════════
-   NEWS
-   ════════════════════════════════════════════════════════ */
 async function loadNewsFromDB(){
   try{
     const q=query(collection(db,'news'),orderBy('createdAt','desc'));
@@ -1909,8 +1872,8 @@ function getStaticNews(){
   return[
     {id:'s1',cat:'Market Update',title:'Harga Emas Catat Level Tertinggi di Tengah Ketegangan Geopolitik',date:'5 Jun 2026',excerpt:'Harga emas spot menguat signifikan dalam perdagangan sesi Asia, didukung meningkatnya permintaan safe haven akibat ketegangan di kawasan Timur Tengah dan kekhawatiran inflasi global.',featured:true,imageUrl:'',slug:'harga-emas-catat-level-tertinggi',konten:'Analisa pasar lebih lanjut: Harga emas spot terus mendapat dukungan dari aliran safe haven di tengah meningkatnya ketidakpastian geopolitik. Trader memperhatikan level resistance 2380 sebagai target jangka pendek, dengan support kuat di 2310.\n\nDari sisi fundamental, inflasi AS yang masih elevated membatasi ruang penurunan suku bunga Fed, yang secara historis menjadi katalis bullish untuk emas.'},
     {id:'s2',cat:'Analisa Teknikal',title:'XAU/USD: Breakout Struktur Weekly — Potensi Target 2400',date:'4 Jun 2026',excerpt:'Analisa market structure pada timeframe weekly menunjukkan potensi breakout yang valid di atas resistance kunci 2350.',featured:false,imageUrl:'',slug:'xauusd-breakout-struktur-weekly',konten:'Analisa Teknikal Detail:\n\nTimeframe Weekly menunjukkan Break of Structure (BOS) yang valid di atas 2350. Area ini sebelumnya merupakan swing high yang belum di-mitigasi, menandakan interest institusional yang kuat.\n\nSetup:\n- Entry: 2342-2348 (area premium OB H4)\n- Stop Loss: 2320\n- Take Profit 1: 2375\n- Take Profit 2: 2400\n\nWin rate setup serupa dalam 6 bulan terakhir: 82%'},
-    {id:'s3',cat:'Edukasi',title:'Memahami Smart Money Concept dalam Trading Emas XAU/USD',date:'3 Jun 2026',excerpt:'Panduan lengkap menggunakan SMC untuk mengidentifikasi order block dan fair value gap pada pair XAU/USD.',featured:false,imageUrl:'',slug:'memahami-smart-money-concept-trading-emas',konten:'Smart Money Concept (SMC) — Panduan Lengkap untuk XAU/USD\n\n1. Order Block (OB)\nArea harga di mana institusi besar menempatkan order. Ditandai dengan candle bearish/bullish sebelum gerakan impulsif yang besar.\n\n2. Fair Value Gap (FVG)\nKesenjangan harga yang terjadi saat pergerakan terlalu cepat. Market cenderung kembali mengisi FVG sebelum melanjutkan tren.\n\n3. Liquidity Sweep\nPergerakan harga yang "menjebak" retail trader sebelum reversal. Biasanya terjadi di area stop loss yang obvious (swing high/low).'},
-    {id:'s4',cat:'Sinyal',title:'Setup BUY XAU/USD — Konfirmasi Rejection dari OB H4',date:'2 Jun 2026',excerpt:'Tim analis Mayora Gold FX mengidentifikasi setup buy dengan risk-reward 1:3.2 dari order block H4 yang valid.',featured:false,imageUrl:'',slug:'setup-buy-xauusd-ob-h4',konten:'⚠️ BUKAN SARAN INVESTASI — hanya untuk edukasi\n\nSetup Teknikal:\nSymbol: XAU/USD\nDirection: BUY\nEntry Zone: 2315-2320\nStop Loss: 2302\nTake Profit: 2358\nRisk:Reward: 1:3.2\n\nRationale:\n- Rejection kuat dari OB H4 yang valid\n- FVG H1 sudah terisi sepenuhnya\n- Market structure H4 masih bullish (Higher High, Higher Low)\n- Volume relatif tinggi di area entry'},
+    {id:'s3',cat:'Edukasi',title:'Memahami Smart Money Concept dalam Trading Emas XAU/USD',date:'3 Jun 2026',excerpt:'Panduan lengkap menggunakan SMC untuk mengidentifikasi order block dan fair value gap pada pair XAU/USD.',featured:false,imageUrl:'',slug:'memahami-smart-money-concept-trading-emas',konten:'Smart Money Concept (SMC) — Panduan Lengkap untuk XAU/USD\n\n1. Order Block (OB)\nArea harga di mana institusi besar menempatkan order. Ditandai dengan candle bearish/bullish sebelum gerakan impulsif yang besar.\n\n2. Fair Value Gap (FVG)\nKesenjangan harga yang terjadi saat pergerakan terlalu cepat. Market cenderung kembali mengisi FVG sebelum melanjutkan tren.\n\n3. Liquidity Sweep\nPergerakan harga yang menjebak retail trader sebelum reversal. Biasanya terjadi di area stop loss yang obvious (swing high/low).'},
+    {id:'s4',cat:'Sinyal',title:'Setup BUY XAU/USD — Konfirmasi Rejection dari OB H4',date:'2 Jun 2026',excerpt:'Tim analis Mayora Gold FX mengidentifikasi setup buy dengan risk-reward 1:3.2 dari order block H4 yang valid.',featured:false,imageUrl:'',slug:'setup-buy-xauusd-ob-h4',konten:'BUKAN SARAN INVESTASI — hanya untuk edukasi\n\nSetup Teknikal:\nSymbol: XAU/USD\nDirection: BUY\nEntry Zone: 2315-2320\nStop Loss: 2302\nTake Profit: 2358\nRisk:Reward: 1:3.2\n\nRationale:\n- Rejection kuat dari OB H4 yang valid\n- FVG H1 sudah terisi sepenuhnya\n- Market structure H4 masih bullish (Higher High, Higher Low)\n- Volume relatif tinggi di area entry'},
     {id:'s5',cat:'Market Update',title:'Fed Pertahankan Suku Bunga — Emas Merespons Positif',date:'1 Jun 2026',excerpt:'Keputusan Federal Reserve mempertahankan suku bunga memberikan sentimen positif terhadap harga emas global.',featured:false,imageUrl:'',slug:'fed-pertahankan-suku-bunga-emas-positif',konten:'FOMC Meeting Update\n\nFederal Reserve memutuskan untuk mempertahankan suku bunga di level 5.25-5.50% dalam pertemuan terbaru. Keputusan ini sesuai ekspektasi pasar namun statement Powell yang dovish memberikan dorongan tambahan bagi emas.\n\nImplikasi untuk XAU/USD:\n- Jangka pendek: Bullish bias, target 2350-2380\n- Jangka menengah: Tergantung data inflasi PCE minggu depan\n- Support kuat: 2290-2300'},
   ];
 }
@@ -1955,18 +1918,15 @@ async function renderNews(){
   html+='</div>';
   main.innerHTML=html;
 
-  /* Price widget */
   const pw=document.getElementById('price-widget');
   const pRows=[['XAU/USD',window._lp?.XAUUSD,'up'],['BTC/USDT',window._lp?.BTCUSDT,'up'],['ETH/USDT',window._lp?.ETHUSDT,'dn']];
   pw.innerHTML=`<div class="pw-header">Live Prices</div>`+pRows.map(([s,p,c])=>`<div class="pw-row"><span class="pw-sym">${s}</span><span class="pw-price">${typeof p==='number'?p.toFixed(2):'—'}</span><span class="pw-chg ${c}">${c==='up'?'▲':'▼'}</span></div>`).join('');
 
-  /* Sidebar popular */
   const aside=document.getElementById('news-aside');
   aside.innerHTML=`<div class="nsc-header">Artikel Terpopuler</div>`+newsData.slice(0,4).map(a=>`<div class="nsc-item" onclick="openNews('${a.id}')"><div class="nsc-title">${a.title}</div><div class="nsc-meta">${fmtDate(a.date||a.createdAt)}</div></div>`).join('');
 }
 window._renderNews=renderNews;
 
-/* ── Admin news ── */
 async function loadAdminData(){ await renderAdminNewsList(); }
 window._loadAdminData=loadAdminData;
 
@@ -1986,7 +1946,7 @@ async function renderAdminNewsList(){
         <div class="ani-cat">${n.cat}${n.featured?'<span class="ani-featured">FEATURED</span>':''}</div>
         <div class="ani-title">${n.title}</div>
         <div class="ani-date">${fmtDate(n.date||n.createdAt)}</div>
-        ${n.slug?`<div class="ani-slug">/${n.slug}</div>`:''}
+        ${n.slug?`<div class="ani-slug">/?berita=${n.slug}</div>`:''}
         <div class="ani-actions">
           <button class="btn-edit-n" onclick="window._editNews('${n.id}')">✎ Edit</button>
           <button class="btn-feat-n" onclick="window._toggleFeatured('${n.id}',${!n.featured})">${n.featured?'★ Unfeatured':'☆ Set Featured'}</button>
@@ -2015,7 +1975,7 @@ window._editNews=async id=>{
   const excEl=document.getElementById('nf-excerpt-count');
   if(excEl) excEl.textContent=exc.length+'/160';
   const slugEl=document.getElementById('nf-slug-preview');
-  if(slugEl) slugEl.textContent=n.slug?'/'+n.slug:(n.title?'/'+generateSlug(n.title):'—');
+  if(slugEl) slugEl.textContent=n.slug?'/?berita='+n.slug:(n.title?'/?berita='+generateSlug(n.title):'—');
   if(n.imageUrl){
     document.getElementById('img-preview-wrap').style.display='block';
     document.getElementById('img-preview').src=getOptUrl(n.imageUrl,400);
@@ -2048,7 +2008,6 @@ window._deleteNews=async id=>{
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
 
-/* ── Admin users ── */
 async function loadUsers(){
   const list=document.getElementById('user-list');
   list.innerHTML='<div class="empty-state">Memuat user...</div>';
@@ -2084,9 +2043,6 @@ async function loadStats(){
 }
 window._loadStats=loadStats;
 
-/* ════════════════════════════════════════════════════════
-   PRICE FEED
-   ════════════════════════════════════════════════════════ */
 const CRYPTO=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT'];
 
 async function fetchXau(){
@@ -2107,7 +2063,6 @@ async function fetchPrices(){
   if(dot){dot.className='live-dot'+(has?' on':'');document.getElementById('ap-live').textContent=has?'Live':'Offline';}
 }
 
-/* ── Tick with visibility API ── */
 function startTick(){
   if(tickInterval) return;
   tickInterval=setInterval(tick,9000);
@@ -2116,19 +2071,15 @@ function stopTick(){
   if(tickInterval){ clearInterval(tickInterval); tickInterval=null; }
 }
 
-/* Pause when tab hidden, resume when visible */
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){
     stopTick();
   }else if(window._curUser){
-    tick();          /* immediate refresh on tab focus */
+    tick();
     startTick();
   }
 });
 
-/* ════════════════════════════════════════════════════════
-   TRADE JOURNAL
-   ════════════════════════════════════════════════════════ */
 const calcPnl=t=>!t.exit?null:+((t.dir==='Long'?(t.exit-t.entry):(t.entry-t.exit))*t.size).toFixed(2);
 const calcOpnl=t=>{const cp=window._lp[t.symbol];return cp?((t.dir==='Long'?(cp-t.entry):(t.entry-cp))*t.size):null;};
 const calcR=t=>{if(!t.exit||!t.sl)return null;const risk=Math.abs(t.entry-t.sl)*t.size,pnl=calcPnl(t);return(!risk||pnl===null)?null:+(pnl/risk).toFixed(2);};
@@ -2224,7 +2175,6 @@ function renderNotes(){
 
 function renderAll(){renderStats();renderOpen();renderHistory();renderEquity();renderBkd();renderNotes();}
 
-/* ── Modal ── */
 window.openModal=t=>{
   if(!isVip&&!isAdmin){toast('MGF','Fitur VIP — hubungi admin','#C9A84C');return;}
   document.getElementById('modal-ttl').textContent=t?'Edit Trade':'Log New Trade';
@@ -2261,16 +2211,13 @@ window._delTrade = async docId => {
   document.getElementById('acc-trades').textContent=trades.length+' trades';
 };
 
-/* ── Save Trade ── */
 window.saveTrade = async ()=>{
   if(!isVip&&!isAdmin) return;
   const sym=document.getElementById('f-sym').value,entry=parseFloat(document.getElementById('f-entry').value);
   if(!sym||!entry){alert('Symbol dan Entry harus diisi.');return;}
-
   const exitVal=document.getElementById('f-exit').value;
   const editDocId=document.getElementById('edit-id').value||null;
   const existing=trades.find(t=>(t._docId||t.id)===editDocId);
-
   const obj={
     _docId:editDocId||null,
     id:editDocId||null,
@@ -2289,30 +2236,24 @@ window.saveTrade = async ()=>{
     closedReason:existing?.closedReason||null,
     date_close:existing?.date_close||null,
   };
-
   if(editDocId){
     trades=trades.map(t=>(t._docId||t.id)===editDocId?obj:t);
   }else{
     trades.push(obj);
   }
-
   window.closeModal();
   renderAll();
-  /* Persist the new/updated trade immediately */
   await persistOneTrade(obj);
 };
 
-/* ── Clear all ── */
 window.clearAll = async ()=>{
   if(!isVip&&!isAdmin) return;
   if(!confirm('Hapus semua data trade?')) return;
   if(!window._curUser) return;
   try{
     setSaveStatus('saving');
-    /* Delete all trade docs in subcollection */
     const uid=window._curUser.uid;
     const snap=await getDocs(collection(db,'users',uid,'trades'));
-    /* Batch delete (max 500 per batch) */
     const batchSize=400;
     const docsArr=snap.docs;
     for(let i=0;i<docsArr.length;i+=batchSize){
@@ -2328,9 +2269,6 @@ window.clearAll = async ()=>{
   }catch(e){ console.error('clearAll:',e); setSaveStatus('error'); }
 };
 
-/* ════════════════════════════════════════════════════════
-   TICK
-   ════════════════════════════════════════════════════════ */
 async function tick(){
   await fetchPrices();
   renderTicker();
@@ -2341,9 +2279,7 @@ async function tick(){
   else { renderOpen(); renderStats(); }
 }
 
-/* Initial price fetch (before login) */
 fetchPrices().then(()=>{ renderTicker(); updateHeroCard(window._lp.XAUUSD,null); });
-/* Lightweight 15s refresh for ticker/hero (no auth needed) */
 setInterval(()=>fetchPrices().then(()=>{ renderTicker(); updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD); }),15000);
 </script>
 </body>
