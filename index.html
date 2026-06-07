@@ -571,8 +571,176 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 .footer-craft{font-size:.54rem;color:var(--text3);letter-spacing:.1em}
 .footer-craft span{color:var(--gold)}
 
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
-.reveal.vis{opacity:1;transform:translateY(0)}
+/* ══════════ MODUL BELAJAR CSS ══════════ */
+/* ── Module list ── */
+.mod-list-wrap{max-width:1200px;margin:0 auto;padding:48px 40px 80px}
+.mod-list-top{margin-bottom:48px}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:500;line-height:1.15;margin-bottom:10px}
+.page-sub{font-size:.8rem;color:var(--text2);line-height:1.9;max-width:520px}
+.mod-filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.mod-filter-label{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3)}
+.flt-btn{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid var(--card-border);color:var(--text3);padding:5px 12px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.flt-btn.on,.flt-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
+.mod-search{background:var(--bg3);border:1px solid var(--card-border);color:var(--text);font-size:.72rem;font-weight:300;padding:6px 12px;border-radius:var(--radius);width:220px;transition:border-color .2s;margin-left:auto}
+.mod-search::placeholder{color:var(--text3)}
+.mod-search:focus{border-color:var(--gold)}
+.mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.mod-card{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .3s;position:relative}
+.mod-card:hover{border-color:rgba(201,168,76,.35);transform:translateY(-4px)}
+.mod-card-thumb{aspect-ratio:16/9;background:var(--bg4);position:relative;overflow:hidden}
+.mod-card-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.mod-card:hover .mod-card-thumb img{transform:scale(1.03)}
+.mod-card-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg4),var(--bg5))}
+.mod-card-thumb-placeholder svg{opacity:.12}
+.mod-num-badge{position:absolute;top:12px;left:12px;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.2em;background:rgba(201,168,76,.9);color:var(--bg);padding:3px 9px;border-radius:2px;z-index:1;font-weight:600}
+.mod-level-badge{position:absolute;top:12px;right:12px;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;padding:3px 8px;border-radius:2px;z-index:1}
+.mod-level-badge.pemula{background:rgba(61,186,122,.85);color:var(--bg)}
+.mod-level-badge.intermediate{background:rgba(201,168,76,.85);color:var(--bg)}
+.mod-level-badge.advanced{background:rgba(224,90,90,.85);color:var(--bg)}
+.mod-card-body{padding:18px 16px}
+.mod-cat{font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.mod-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;line-height:1.3;margin-bottom:8px}
+.mod-excerpt{font-size:.7rem;color:var(--text2);line-height:1.8;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mod-meta{display:flex;align-items:center;gap:12px;border-top:1px solid rgba(201,168,76,.06);padding-top:10px;margin-top:4px}
+.mod-meta-item{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:4px}
+.mod-progress-bar{height:2px;background:rgba(201,168,76,.08);border-radius:1px;margin-top:8px;overflow:hidden}
+.mod-progress-fill{height:100%;background:var(--gold);border-radius:1px;transition:width .4s}
+.mod-lock-overlay{position:absolute;inset:0;background:rgba(6,6,10,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(2px)}
+.mod-lock-icon{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);opacity:.5}
+.mod-lock-txt{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text2)}
+/* ── Module reader ── */
+.mod-reader-wrap{max-width:1100px;margin:0 auto;padding:40px 40px 80px}
+.mod-back{display:inline-flex;align-items:center;gap:8px;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text2);background:none;border:1px solid var(--card-border);padding:7px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s;margin-bottom:28px}
+.mod-back:hover{border-color:var(--gold);color:var(--gold)}
+.mod-reader-grid{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start}
+.mod-sidebar{position:sticky;top:calc(var(--nav-h) + 58px);background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden}
+.mod-sidebar-title{padding:14px 16px;border-bottom:1px solid var(--card-border);font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.mod-sidebar-scroll{max-height:calc(100vh - 200px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--card-border) transparent}
+.mod-sidebar-item{padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.04);cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:10px}
+.mod-sidebar-item:last-child{border-bottom:none}
+.mod-sidebar-item:hover{background:var(--bg4)}
+.mod-sidebar-item.active{background:rgba(201,168,76,.06);border-right:2px solid var(--gold)}
+.msi-num{font-family:'Cinzel',serif;font-size:.62rem;color:var(--gold);opacity:.6;min-width:20px}
+.msi-title{font-size:.72rem;color:var(--text2);line-height:1.4;flex:1;min-width:0}
+.mod-sidebar-item.active .msi-title{color:var(--text)}
+.msi-check{width:14px;height:14px;border-radius:50%;border:1px solid var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.msi-check.done{background:var(--green);border-color:var(--green);color:var(--bg)}
+.msi-check.done::before{content:'✓';font-size:.52rem;font-weight:600}
+.mod-reader-nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--card-border);background:var(--bg4)}
+.mod-nav-btn{background:none;border:1px solid var(--card-border);color:var(--text2);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.mod-nav-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.mod-nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.mod-nav-prog{font-size:.58rem;color:var(--text3)}
+.mod-content-area{min-height:60vh}
+.mod-content-header{margin-bottom:36px}
+.mod-content-header .mod-cat{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.mod-content-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:500;line-height:1.15;margin-bottom:14px}
+.mod-content-meta{display:flex;gap:20px;flex-wrap:wrap}
+.mod-content-meta-item{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+/* Block renderer */
+.mblock{margin-bottom:32px}
+.mblock-text{font-size:.84rem;color:var(--text2);line-height:2;letter-spacing:.02em;white-space:pre-wrap}
+.mblock-h2{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:500;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--card-border)}
+.mblock-h2 span{color:var(--gold)}
+.mblock-h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;color:var(--text);margin-bottom:12px}
+.mblock-image{border-radius:8px;overflow:hidden;background:var(--bg4);aspect-ratio:16/9}
+.mblock-image img{width:100%;height:100%;object-fit:cover;display:block}
+.mblock-caption{font-size:.68rem;color:var(--text3);margin-top:8px;font-style:italic;text-align:center;line-height:1.7}
+.mblock-callout{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:18px 20px}
+.mblock-callout-title{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.mblock-callout-body{font-size:.78rem;color:var(--text2);line-height:1.9}
+.mblock-tip{background:rgba(61,186,122,.04);border:1px solid rgba(61,186,122,.15);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:16px 20px}
+.mblock-tip-title{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:7px}
+.mblock-tip-body{font-size:.76rem;color:var(--text2);line-height:1.85}
+.mblock-warning{background:rgba(224,90,90,.04);border:1px solid rgba(224,90,90,.15);border-left:3px solid var(--red);border-radius:0 6px 6px 0;padding:16px 20px}
+.mblock-warning-title{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:7px}
+.mblock-warning-body{font-size:.76rem;color:var(--text2);line-height:1.85}
+.mblock-list{list-style:none;font-size:.8rem;color:var(--text2);line-height:2}
+.mblock-list li{padding-left:20px;position:relative;margin-bottom:6px}
+.mblock-list li::before{content:'✦';position:absolute;left:0;color:var(--gold);font-size:.52rem;top:5px}
+.mblock-divider{height:1px;background:linear-gradient(90deg,transparent,var(--card-border),transparent);margin:32px 0}
+.mblock-term{background:var(--bg4);border:1px solid var(--card-border);border-radius:6px;padding:20px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+.mblock-term-symbol{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--gold);background:rgba(201,168,76,.06);border:1px solid var(--gold-border);border-radius:4px;padding:6px 16px;text-align:center;min-width:80px}
+.mblock-term-name{font-size:.88rem;font-weight:500;margin-bottom:5px}
+.mblock-term-def{font-size:.74rem;color:var(--text2);line-height:1.85}
+.mquiz-block{background:var(--bg4);border:1px solid var(--card-border);border-radius:8px;padding:24px;margin-bottom:24px}
+.mquiz-q{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;margin-bottom:18px;line-height:1.4}
+.mquiz-opts{display:flex;flex-direction:column;gap:8px}
+.mquiz-opt{background:var(--bg3);border:1px solid var(--card-border);padding:11px 14px;border-radius:var(--radius);cursor:pointer;font-size:.78rem;color:var(--text2);transition:all .2s;display:flex;align-items:center;gap:10px}
+.mquiz-opt:hover{border-color:rgba(201,168,76,.3);background:var(--bg5)}
+.mquiz-opt.correct{border-color:var(--green);background:rgba(61,186,122,.08);color:var(--green)}
+.mquiz-opt.wrong{border-color:var(--red);background:rgba(224,90,90,.08);color:var(--red)}
+.mquiz-opt.disabled{cursor:not-allowed;opacity:.7}
+.mquiz-opt-letter{width:22px;height:22px;border-radius:50%;border:1px solid var(--text3);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-family:'Cinzel',serif;flex-shrink:0}
+.mquiz-result{margin-top:14px;padding:12px 16px;border-radius:var(--radius);font-size:.75rem;line-height:1.8;display:none}
+.mquiz-result.show{display:block}
+.mquiz-result.correct{background:rgba(61,186,122,.08);border:1px solid rgba(61,186,122,.2);color:var(--green)}
+.mquiz-result.wrong{background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.2);color:var(--red)}
+.btn-complete-mod{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:13px 32px;cursor:pointer;border-radius:var(--radius);box-shadow:0 0 24px rgba(201,168,76,.3);transition:all .25s;margin-top:32px}
+.btn-complete-mod:hover{box-shadow:0 0 40px rgba(201,168,76,.5);transform:translateY(-2px)}
+.btn-complete-mod.done{background:linear-gradient(135deg,var(--green),#1a9e50);box-shadow:0 0 24px rgba(61,186,122,.3)}
+/* ── Admin module panel ── */
+.adm-mod-wrap{max-width:1200px;margin:0 auto;padding:32px 40px 80px}
+.adm-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.btn-add-mod{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.6rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:8px 18px;cursor:pointer;border-radius:var(--radius)}
+.mod-form-card{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:28px;margin-bottom:28px;display:none}
+.mod-form-card.open{display:block}
+.mod-form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.mod-form-head-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400}
+.form-grid2m{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-full-m{grid-column:1/-1}
+.form-lbl-m{display:block;font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.form-inp-m{width:100%;background:var(--bg4);border:1px solid var(--card-border);color:var(--text);font-size:.78rem;font-weight:300;padding:9px 11px;border-radius:var(--radius);transition:border-color .2s}
+.form-inp-m::placeholder{color:var(--text3)}
+.form-inp-m:focus{border-color:var(--gold)}
+.form-textarea-m{min-height:88px;resize:vertical}
+.form-actions-m{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.btn-save-mod{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.6rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:9px 22px;cursor:pointer;border-radius:var(--radius);display:flex;align-items:center;gap:8px}
+.btn-cancel-mod{background:none;border:1px solid var(--card-border);color:var(--text2);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:9px 16px;cursor:pointer;border-radius:var(--radius)}
+.btn-save-mod:disabled{opacity:.5;cursor:not-allowed}
+.form-err-m{font-size:.66rem;color:var(--red);background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.2);padding:10px 14px;border-radius:var(--radius);display:none;margin-top:10px}
+.block-builder-m{background:var(--bg4);border:1px solid var(--card-border);border-radius:6px;padding:16px;margin-bottom:14px}
+.block-builder-head-m{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.block-type-label-m{font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.block-builder-del-m{background:none;border:1px solid rgba(224,90,90,.2);color:var(--red);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;cursor:pointer;border-radius:var(--radius)}
+.add-block-row-m{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.add-block-btn-m{background:none;border:1px solid var(--card-border);color:var(--text3);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.add-block-btn-m:hover{border-color:rgba(201,168,76,.4);color:var(--gold)}
+.uprog-wrap-m{height:3px;background:rgba(201,168,76,.08);border-radius:2px;margin-top:8px;display:none}
+.uprog-bar-m{height:100%;background:var(--gold);border-radius:2px;transition:width .3s}
+.uprog-label-m{font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;display:none}
+.img-preview-wrap-m{margin-top:8px;display:none}
+.img-preview-wrap-m img{max-width:200px;max-height:110px;object-fit:cover;border-radius:4px;border:1px solid var(--card-border)}
+.adm-mod-list-m{display:flex;flex-direction:column;gap:12px}
+.adm-mod-item-m{background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:border-color .25s}
+.adm-mod-item-m:hover{border-color:rgba(201,168,76,.3)}
+.ami-thumb-m{width:88px;height:66px;border-radius:4px;overflow:hidden;background:var(--bg4);flex-shrink:0;aspect-ratio:4/3}
+.ami-thumb-m img{width:100%;height:100%;object-fit:cover;display:block}
+.ami-body-m{flex:1;min-width:0}
+.ami-top-m{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.ami-num-m{font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);background:rgba(201,168,76,.1);border:1px solid var(--gold-border);padding:2px 8px;border-radius:2px}
+.ami-title-m{font-size:.86rem;font-weight:400;margin-bottom:3px}
+.ami-meta-m{font-size:.6rem;color:var(--text3);margin-bottom:8px}
+.ami-actions-m{display:flex;gap:6px;flex-wrap:wrap}
+.btn-edit-m{background:none;border:1px solid var(--card-border);color:var(--text3);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.btn-edit-m:hover{border-color:rgba(201,168,76,.4);color:var(--gold)}
+.btn-del-m{background:none;border:1px solid rgba(224,90,90,.2);color:var(--red);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;cursor:pointer;border-radius:var(--radius)}
+.btn-del-m:hover{background:rgba(224,90,90,.08)}
+/* ── Modul tab pills inside page ── */
+.mod-app-tabs{background:rgba(10,10,16,.96);border-bottom:1px solid var(--card-border);padding:0 40px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;position:sticky;top:var(--nav-h);z-index:300;backdrop-filter:blur(20px)}
+.mod-app-tabs::-webkit-scrollbar{display:none}
+.mod-app-tab{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;background:none;border:none;border-bottom:2px solid transparent}
+.mod-app-tab:hover{color:var(--text2)}
+.mod-app-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.mod-page-sec{display:none}.mod-page-sec.on{display:block}
+.vip-lock-msg{text-align:center;padding:60px 28px;background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;margin-top:24px}
+.vlm-icon{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);opacity:.2;margin-bottom:14px}
+.vlm-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:8px}
+.vlm-sub{font-size:.7rem;color:var(--text3);margin-bottom:20px;line-height:1.9}
+.vlm-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#25D366,#1a9e50);border:none;color:#fff;font-size:.62rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:11px 26px;cursor:pointer;border-radius:var(--radius)}
+@media(max-width:960px){.mod-grid{grid-template-columns:repeat(2,1fr)}.mod-reader-grid{grid-template-columns:1fr}.mod-sidebar{position:static}}
+@media(max-width:640px){.mod-list-wrap,.mod-reader-wrap,.adm-mod-wrap{padding-left:20px;padding-right:20px}.mod-grid{grid-template-columns:1fr}.mod-app-tabs{padding:0 20px}.form-grid2m{grid-template-columns:1fr}}
+
 
 @media(max-width:960px){
   .hero-inner{grid-template-columns:1fr;gap:48px}
@@ -635,6 +803,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
     <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
     <button class="nav-link" id="nl-journal" onclick="requireVipNav()">Journal</button>
+    <button class="nav-link" id="nl-modul" onclick="goPage('modul')">Modul</button>
     <button class="nav-link" id="nl-admin" onclick="goPage('admin')" style="display:none">Admin</button>
   </div>
   <div class="nav-right">
@@ -662,6 +831,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <span class="mob-link" onclick="goPage('berita');toggleMob()">Berita</span>
   <span class="mob-link" onclick="goPage('vip');toggleMob()">VIP</span>
   <span class="mob-link" onclick="requireVipNav();toggleMob()">Journal</span>
+  <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
   <button class="btn-hero-primary" style="margin-top:8px" onclick="goPage('auth');toggleMob()">Login Member →</button>
 </div>
@@ -845,6 +1015,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           <span class="footer-link" onclick="goPage('home')">Beranda</span>
           <span class="footer-link" onclick="goPage('berita')">Berita & Analisa</span>
           <span class="footer-link" onclick="goPage('vip')">VIP Gratis</span>
+          <span class="footer-link" onclick="goPage('modul')">Modul Belajar</span>
           <span class="footer-link" onclick="goPage('auth')">Login Member</span>
         </div>
         <div>
@@ -865,6 +1036,143 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     </div>
   </footer>
 </div>
+<!-- PAGE: MODUL BELAJAR -->
+<div class="page" id="page-modul" role="main" aria-label="Modul Edukasi Trading Emas">
+  <div class="mod-app-tabs">
+    <button class="mod-app-tab on" id="mat-all" onclick="modSwitchTab('all')">Semua Modul</button>
+    <button class="mod-app-tab" id="mat-my" onclick="modSwitchTab('my')">Progress Saya</button>
+    <button class="mod-app-tab" id="mat-adm" style="display:none" onclick="modSwitchTab('admin')">✦ Admin Modul</button>
+  </div>
+
+  <!-- TAB: ALL MODULES -->
+  <div class="mod-page-sec on" id="mod-sec-all">
+    <div id="mod-reader-view" style="display:none"></div>
+    <div id="mod-list-view">
+      <div class="mod-list-wrap">
+        <div class="mod-list-top">
+          <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-txt">Pusat Edukasi</span><div class="eyebrow-line r"></div></div>
+          <h1 class="page-title">Modul <span class="gold-text">Trading Emas XAU/USD</span></h1>
+          <p class="page-sub">Pelajari trading emas dari dasar hingga strategi advanced Smart Money Concept. Setiap modul berisi teks, gambar, dan latihan soal interaktif.</p>
+        </div>
+        <div class="mod-filter-bar">
+          <span class="mod-filter-label">Level:</span>
+          <button class="flt-btn on" onclick="modSetFilter('all',this)">Semua</button>
+          <button class="flt-btn" onclick="modSetFilter('pemula',this)">Pemula</button>
+          <button class="flt-btn" onclick="modSetFilter('intermediate',this)">Intermediate</button>
+          <button class="flt-btn" onclick="modSetFilter('advanced',this)">Advanced</button>
+          <input class="mod-search" id="mod-search-inp" type="search" placeholder="Cari modul..." oninput="modRenderGrid()">
+        </div>
+        <div class="mod-grid" id="mod-grid-main">
+          <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;opacity:.1;margin-bottom:10px;color:var(--gold)">✦</div><div style="font-size:.72rem;line-height:1.85">Memuat modul...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: MY PROGRESS -->
+  <div class="mod-page-sec" id="mod-sec-my">
+    <div class="mod-list-wrap">
+      <div class="mod-list-top">
+        <h2 class="page-title">Progress <span class="gold-text">Belajar Saya</span></h2>
+        <p class="page-sub">Modul yang sudah atau sedang kamu pelajari.</p>
+      </div>
+      <div class="mod-grid" id="mod-grid-my">
+        <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;opacity:.1;margin-bottom:10px;color:var(--gold)">✦</div><div style="font-size:.72rem;line-height:1.85">Belum ada progress. Mulai belajar dari tab Semua Modul!</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ADMIN MODULES -->
+  <div class="mod-page-sec" id="mod-sec-admin">
+    <div class="adm-mod-wrap">
+      <div class="adm-top-bar">
+        <div class="sec-label">Manajemen Modul</div>
+        <button class="btn-add-mod" onclick="modShowForm()">+ Tambah Modul</button>
+      </div>
+      <div class="mod-form-card" id="mod-form-card">
+        <div class="mod-form-head">
+          <div class="mod-form-head-title" id="mf-form-title">Tambah Modul Baru</div>
+          <button class="btn-cancel-mod" onclick="modHideForm()">✕ Batal</button>
+        </div>
+        <input type="hidden" id="mf-edit-id">
+        <div class="form-grid2m">
+          <div class="form-full-m">
+            <label class="form-lbl-m" for="mf-title">Judul Modul *</label>
+            <input class="form-inp-m" id="mf-title" type="text" placeholder="Pengenalan Dasar Trading Emas XAU/USD">
+          </div>
+          <div>
+            <label class="form-lbl-m" for="mf-num">Nomor Modul *</label>
+            <input class="form-inp-m" id="mf-num" type="number" min="1" placeholder="1">
+          </div>
+          <div>
+            <label class="form-lbl-m" for="mf-cat">Kategori</label>
+            <select class="form-inp-m" id="mf-cat">
+              <option value="Dasar Trading">Dasar Trading</option>
+              <option value="Market Structure">Market Structure</option>
+              <option value="Smart Money Concept">Smart Money Concept</option>
+              <option value="Manajemen Risiko">Manajemen Risiko</option>
+              <option value="Analisa Teknikal">Analisa Teknikal</option>
+              <option value="Psikologi Trading">Psikologi Trading</option>
+              <option value="Strategi Lanjutan">Strategi Lanjutan</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-lbl-m" for="mf-level">Level</label>
+            <select class="form-inp-m" id="mf-level">
+              <option value="pemula">Pemula</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-lbl-m" for="mf-duration">Durasi (menit)</label>
+            <input class="form-inp-m" id="mf-duration" type="number" min="1" placeholder="15">
+          </div>
+          <div>
+            <label class="form-lbl-m" for="mf-vip">Akses</label>
+            <select class="form-inp-m" id="mf-vip">
+              <option value="false">Gratis (Semua)</option>
+              <option value="true">VIP Only</option>
+            </select>
+          </div>
+          <div class="form-full-m">
+            <label class="form-lbl-m" for="mf-excerpt">Deskripsi Singkat *</label>
+            <textarea class="form-inp-m form-textarea-m" id="mf-excerpt" rows="2" maxlength="250" placeholder="Ringkasan modul..."></textarea>
+          </div>
+          <div class="form-full-m">
+            <label class="form-lbl-m" for="mf-cover">Cover Modul (Thumbnail)</label>
+            <input class="form-inp-m" id="mf-cover" type="file" accept="image/jpeg,image/png,image/webp" onchange="modPreviewCover(this)">
+            <div class="uprog-label-m" id="cover-prog-lbl-m"></div>
+            <div class="uprog-wrap-m" id="cover-prog-m"><div class="uprog-bar-m" id="cover-prog-bar-m"></div></div>
+            <div class="img-preview-wrap-m" id="cover-preview-wrap-m">
+              <img id="cover-preview-m" src="" alt="Preview">
+              <button class="btn-cancel-mod" style="font-size:.5rem;padding:2px 7px;margin-top:4px" onclick="modClearCover()">✕ Hapus</button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div class="form-lbl-m" style="margin-bottom:12px">Pelajaran &amp; Konten Modul</div>
+          <div id="mod-blocks-container"></div>
+          <div class="add-block-row-m">
+            <button class="add-block-btn-m" style="border-color:rgba(201,168,76,.4);color:var(--gold)" onclick="modAddLesson()">+ Tambah Pelajaran</button>
+          </div>
+        </div>
+        <div class="form-err-m" id="mf-err-m"></div>
+        <div class="form-actions-m">
+          <button class="btn-cancel-mod" onclick="modHideForm()">Batal</button>
+          <button class="btn-save-mod" id="mf-save-btn" onclick="modSaveModule()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Simpan Modul
+          </button>
+        </div>
+      </div>
+      <div class="adm-mod-list-m" id="adm-mod-list-m">
+        <div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:2rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Memuat modul...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
 
 <!-- PAGE: BERITA -->
@@ -1295,10 +1603,10 @@ window.switchTab=function(t){
 };
 
 /* Page routing */
-var pages=['home','berita','vip','auth','journal','admin'];
+var pages=['home','berita','vip','auth','journal','admin','modul'];
 function goPage(p){
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
-  ['home','berita','vip'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
+  ['home','berita','vip','modul'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   document.getElementById('mob-nav').classList.remove('open');
   window.scrollTo(0,0);
   if(p==='berita'){
@@ -1306,6 +1614,7 @@ function goPage(p){
     window._renderNews&&window._renderNews();
   }
   if(p==='admin') window._loadAdminData&&window._loadAdminData();
+  if(p==='modul') window.modLoadModules&&window.modLoadModules();
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
@@ -1549,6 +1858,7 @@ const CLOUDINARY_PRESET = 'mayoragold_preset';
 const CLOUDINARY_URL    = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
 
 const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
+window._db=db;
 
 let trades=[],isVip=false,isAdmin=false,tickInterval=null,saveDebounce=null;
 window._curUser=null;
@@ -1780,10 +2090,12 @@ async function loadData(uid){
       const d=snap.data();
       isVip   = d.vip===true;
       isAdmin = d.admin===true;
+      window._isVip=isVip;window._isAdmin=isAdmin;
       const ts=d.updatedAt?.toDate();
       if(ts) document.getElementById('acc-lastsave').textContent=ts.toLocaleString('id-ID');
     }else{
       isVip=false;isAdmin=false;
+      window._isVip=false;window._isAdmin=false;
       await setDoc(doc(db,'users',uid),{
         displayName:window._curUser?.displayName||'',
         email:window._curUser?.email||'',
@@ -2282,5 +2594,537 @@ async function tick(){
 fetchPrices().then(()=>{ renderTicker(); updateHeroCard(window._lp.XAUUSD,null); });
 setInterval(()=>fetchPrices().then(()=>{ renderTicker(); updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD); }),15000);
 </script>
+
+<!-- ══════════ MODUL BELAJAR SCRIPT ══════════ -->
+<script>
+/* ── Module state ── */
+window._modAllModules=[];
+window._modProgress={};
+window._modFilterLevel='all';
+window._modCurModule=null;
+window._modCurLesson=0;
+
+/* ── Tab switching ── */
+window.modSwitchTab=function(t){
+  ['all','my','admin'].forEach(n=>{
+    document.getElementById('mod-sec-'+n).classList.toggle('on',n===t);
+  });
+  document.querySelectorAll('.mod-app-tab').forEach(el=>el.classList.remove('on'));
+  const map={all:'mat-all',my:'mat-my',admin:'mat-adm'};
+  if(document.getElementById(map[t]))document.getElementById(map[t]).classList.add('on');
+  if(t==='my')modRenderMyModules();
+  if(t==='admin')modRenderAdminList();
+  if(t==='all')modCloseReader();
+  window.scrollTo(0,0);
+};
+
+/* ── Filter ── */
+window.modSetFilter=function(val,btn){
+  window._modFilterLevel=val;
+  if(btn){
+    btn.closest('.mod-filter-bar').querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+  }
+  modRenderGrid();
+};
+
+/* ── escHtml helper ── */
+function mesc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ── Render grid ── */
+window.modRenderGrid=function(){
+  let mods=window._modAllModules||[];
+  const lvl=window._modFilterLevel||'all';
+  const q=(document.getElementById('mod-search-inp')?.value||'').toLowerCase().trim();
+  if(lvl!=='all')mods=mods.filter(m=>m.level===lvl);
+  if(q)mods=mods.filter(m=>(m.title||'').toLowerCase().includes(q)||(m.excerpt||'').toLowerCase().includes(q)||(m.cat||'').toLowerCase().includes(q));
+  const grid=document.getElementById('mod-grid-main');if(!grid)return;
+  const isVip=window._isVip||false,isAdmin=window._isAdmin||false,uid=window._curUser?.uid||null;
+  if(!mods.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem;line-height:1.85">${window._modAllModules.length===0?'Belum ada modul.':'Tidak ada modul yang cocok.'}</div></div>`;return;}
+  grid.innerHTML=mods.map(m=>{
+    const thumb=m.coverUrl?m.coverUrl:'';
+    const progress=window._modProgress[m.id]||{completedLessons:[]};
+    const total=(m.lessons||[]).length||1;
+    const done=progress.completedLessons?.length||0;
+    const pct=Math.round((done/total)*100);
+    const locked=m.vip&&!isVip&&!isAdmin&&uid;
+    return`<div class="mod-card" onclick="${locked?'window.modShowVipLock()':'window.modOpenById(\''+m.id+'\')'}">
+      <div class="mod-card-thumb">
+        ${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:`<div class="mod-card-thumb-placeholder"><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="56%" text-anchor="middle" fill="#C9A84C" font-size="22" font-family="Cormorant Garamond,serif">✦</text></svg></div>`}
+        <div class="mod-num-badge">Modul ${m.num||'?'}</div>
+        <div class="mod-level-badge ${m.level||'pemula'}">${(m.level||'pemula').charAt(0).toUpperCase()+(m.level||'pemula').slice(1)}</div>
+        ${locked?`<div class="mod-lock-overlay"><div class="mod-lock-icon">🔒</div><div class="mod-lock-txt">VIP Only</div></div>`:''}
+      </div>
+      <div class="mod-card-body">
+        <div class="mod-cat">${mesc(m.cat||'Edukasi')}</div>
+        <div class="mod-title">${mesc(m.title||'Modul Trading')}</div>
+        <div class="mod-excerpt">${mesc(m.excerpt||'')}</div>
+        <div class="mod-meta">
+          ${m.duration?`<span class="mod-meta-item">⏱ ${m.duration} mnt</span>`:''}
+          <span class="mod-meta-item">📖 ${(m.lessons||[]).length||0} pelajaran</span>
+          ${m.vip?`<span class="mod-meta-item" style="color:var(--gold)">✦ VIP</span>`:'<span class="mod-meta-item" style="color:var(--green)">✓ Gratis</span>'}
+        </div>
+        ${done>0?`<div class="mod-progress-bar"><div class="mod-progress-fill" style="width:${pct}%"></div></div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.modShowVipLock=function(){
+  toast('VIP','Modul ini untuk member VIP. Hubungi admin!','#C9A84C');
+};
+
+/* ── My modules ── */
+window.modRenderMyModules=function(){
+  const started=(window._modAllModules||[]).filter(m=>{
+    const p=window._modProgress[m.id];return p&&p.completedLessons&&p.completedLessons.length>0;
+  });
+  const grid=document.getElementById('mod-grid-my');if(!grid)return;
+  if(!started.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Belum ada progress. Mulai dari tab Semua Modul!</div></div>`;return;}
+  const isVip=window._isVip||false,isAdmin=window._isAdmin||false;
+  grid.innerHTML=started.map(m=>{
+    const thumb=m.coverUrl||'';
+    const progress=window._modProgress[m.id]||{completedLessons:[]};
+    const total=(m.lessons||[]).length||1;
+    const done=progress.completedLessons?.length||0;
+    const pct=Math.round((done/total)*100);
+    return`<div class="mod-card" onclick="window.modOpenById('${m.id}')">
+      <div class="mod-card-thumb">
+        ${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:`<div class="mod-card-thumb-placeholder"><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="56%" text-anchor="middle" fill="#C9A84C" font-size="22" font-family="Cormorant Garamond,serif">✦</text></svg></div>`}
+        <div class="mod-num-badge">Modul ${m.num||'?'}</div>
+        <div class="mod-level-badge ${m.level||'pemula'}">${(m.level||'pemula').charAt(0).toUpperCase()+(m.level||'pemula').slice(1)}</div>
+      </div>
+      <div class="mod-card-body">
+        <div class="mod-cat">${mesc(m.cat||'Edukasi')}</div>
+        <div class="mod-title">${mesc(m.title||'Modul Trading')}</div>
+        <div class="mod-meta"><span class="mod-meta-item">✓ ${done}/${total} pelajaran</span><span class="mod-meta-item">${pct}% selesai</span></div>
+        <div class="mod-progress-bar"><div class="mod-progress-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+/* ── Block renderer ── */
+function modRenderBlock(bl){
+  switch(bl.type){
+    case 'text':return`<div class="mblock"><div class="mblock-text">${mesc(bl.content||bl.text||'')}</div></div>`;
+    case 'h2':return`<div class="mblock"><div class="mblock-h2">${mesc(bl.text||'')}</div></div>`;
+    case 'h3':return`<div class="mblock"><div class="mblock-h3">${mesc(bl.text||'')}</div></div>`;
+    case 'image':return`<div class="mblock">${bl.imageUrl?`<div class="mblock-image"><img src="${bl.imageUrl}" alt="${mesc(bl.caption||'Gambar modul')}" loading="lazy"></div>`:'<div style="height:80px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.7rem">Gambar tidak tersedia</div>'}${bl.caption?`<div class="mblock-caption">${mesc(bl.caption)}</div>`:''}</div>`;
+    case 'callout':return`<div class="mblock"><div class="mblock-callout"><div class="mblock-callout-title">💡 ${mesc(bl.title||'Info')}</div><div class="mblock-callout-body">${mesc(bl.body||'')}</div></div></div>`;
+    case 'tip':return`<div class="mblock"><div class="mblock-tip"><div class="mblock-tip-title">✅ ${mesc(bl.title||'Tips')}</div><div class="mblock-tip-body">${mesc(bl.body||'')}</div></div></div>`;
+    case 'warning':return`<div class="mblock"><div class="mblock-warning"><div class="mblock-warning-title">⚠ ${mesc(bl.title||'Perhatian')}</div><div class="mblock-warning-body">${mesc(bl.body||'')}</div></div></div>`;
+    case 'list':{const items=(bl.items||'').split('\n').filter(x=>x.trim());return`<div class="mblock"><ul class="mblock-list">${items.map(it=>`<li>${mesc(it.trim())}</li>`).join('')}</ul></div>`;}
+    case 'term':return`<div class="mblock"><div class="mblock-term"><div class="mblock-term-symbol">${mesc(bl.symbol||'?')}</div><div><div class="mblock-term-name">${mesc(bl.name||'')}</div><div class="mblock-term-def">${mesc(bl.definition||bl.body||'')}</div></div></div></div>`;
+    case 'divider':return`<div class="mblock"><div class="mblock-divider"></div></div>`;
+    case 'quiz':{
+      const qid='mq'+Math.random().toString(36).slice(2,8);
+      const opts=(bl.options||bl.opts||'').split('\n').filter(x=>x.trim());
+      const letters=['A','B','C','D','E','F'];
+      return`<div class="mblock"><div class="mquiz-block" id="${qid}">
+        <div class="mquiz-q">${mesc(bl.question||'')}</div>
+        <div class="mquiz-opts">${opts.map((o,i)=>`<div class="mquiz-opt" onclick="modCheckQuiz('${qid}',${i+1},${parseInt(bl.correct)||1})">
+          <div class="mquiz-opt-letter">${letters[i]||i+1}</div>${mesc(o.trim())}
+        </div>`).join('')}</div>
+        <div class="mquiz-result" id="${qid}-res"></div>
+        ${bl.explanation?`<div id="${qid}-exp" style="display:none;font-size:.72rem;color:var(--text2);margin-top:10px;padding:10px 14px;background:var(--bg4);border-radius:var(--radius);line-height:1.9">${mesc(bl.explanation)}</div>`:''}
+      </div></div>`;
+    }
+    default:return'';
+  }
+}
+
+window.modCheckQuiz=function(qid,chosen,correct){
+  const el=document.getElementById(qid);if(!el)return;
+  const opts=el.querySelectorAll('.mquiz-opt');
+  opts.forEach((o,i)=>{o.classList.add('disabled');o.onclick=null;if(i+1===correct)o.classList.add('correct');else if(i+1===chosen)o.classList.add('wrong');});
+  const res=document.getElementById(qid+'-res'),exp=document.getElementById(qid+'-exp');
+  if(res){res.classList.add('show',chosen===correct?'correct':'wrong');res.textContent=chosen===correct?'✓ Jawaban benar! Kerja bagus.':'✗ Kurang tepat. Jawaban yang benar ada di atas.';}
+  if(exp)exp.style.display='block';
+};
+
+/* ── Module reader ── */
+window.modOpenById=function(id){
+  const mod=(window._modAllModules||[]).find(m=>m.id===id);if(!mod)return;
+  window._modCurModule=mod;window._modCurLesson=0;
+  document.getElementById('mod-list-view').style.display='none';
+  document.getElementById('mod-reader-view').style.display='block';
+  modRenderReader();
+  window.scrollTo(0,0);
+};
+
+window.modCloseReader=function(){
+  window._modCurModule=null;window._modCurLesson=0;
+  document.getElementById('mod-list-view').style.display='';
+  document.getElementById('mod-reader-view').style.display='none';
+};
+
+function modRenderReader(){
+  const mod=window._modCurModule;if(!mod)return;
+  const lessons=mod.lessons||[];
+  const li=window._modCurLesson;
+  const lesson=lessons[li];if(!lesson)return;
+  const progress=window._modProgress[mod.id]||{completedLessons:[]};
+  const completed=progress.completedLessons||[];
+  const total=lessons.length;
+  const isDone=completed.includes(li);
+  const sidebarItems=lessons.map((l,i)=>`
+    <div class="mod-sidebar-item ${i===li?'active':''}" onclick="window.modGoLesson(${i})">
+      <span class="msi-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="msi-title">${mesc(l.title||'Pelajaran '+(i+1))}</span>
+      <span class="msi-check ${completed.includes(i)?'done':''}"></span>
+    </div>`).join('');
+  const blocksHtml=(lesson.blocks||[]).map(modRenderBlock).join('');
+  document.getElementById('mod-reader-view').innerHTML=`
+    <div class="mod-reader-wrap">
+      <button class="mod-back" onclick="window.modCloseReader()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+        Kembali ke Modul
+      </button>
+      <div class="mod-reader-grid">
+        <div class="mod-sidebar">
+          <div class="mod-sidebar-title">Daftar Pelajaran</div>
+          <div class="mod-sidebar-scroll">${sidebarItems}</div>
+          <div class="mod-reader-nav">
+            <button class="mod-nav-btn" onclick="window.modGoLesson(${li-1})" ${li===0?'disabled':''}>← Prev</button>
+            <span class="mod-nav-prog">${li+1} / ${total}</span>
+            <button class="mod-nav-btn" onclick="window.modGoLesson(${li+1})" ${li===total-1?'disabled':''}>Next →</button>
+          </div>
+        </div>
+        <div class="mod-content-area">
+          <div class="mod-content-header">
+            <div class="mod-cat">${mesc(mod.cat||'')} · ${mesc(mod.title||'')}</div>
+            <div class="mod-content-title">Pelajaran ${li+1}: ${mesc(lesson.title||'')}</div>
+            <div class="mod-content-meta">
+              ${lesson.duration?`<span class="mod-content-meta-item">⏱ ${lesson.duration} menit</span>`:''}
+              <span class="mod-content-meta-item">📖 Pelajaran ${li+1} dari ${total}</span>
+              <span class="mod-content-meta-item" style="color:var(--gold)">${mesc(mod.level||'pemula')}</span>
+            </div>
+          </div>
+          ${blocksHtml||'<div style="text-align:center;padding:48px;color:var(--text3)"><div style="font-size:2rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Konten pelajaran sedang disiapkan.</div></div>'}
+          <button class="btn-complete-mod ${isDone?'done':''}" onclick="window.modMarkDone(${li})">
+            ${isDone?'✓ Pelajaran Selesai':'Tandai Selesai ✦'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+window.modGoLesson=function(i){
+  const mod=window._modCurModule;if(!mod)return;
+  const lessons=mod.lessons||[];
+  if(i<0||i>=lessons.length)return;
+  window._modCurLesson=i;
+  modRenderReader();window.scrollTo(0,0);
+};
+
+window.modMarkDone=async function(i){
+  const mod=window._modCurModule;if(!mod)return;
+  const uid=window._curUser?.uid;if(!uid){toast('Info','Login dulu ya!','#C9A84C');return;}
+  let p=window._modProgress[mod.id]||{completedLessons:[]};
+  if(!p.completedLessons.includes(i))p.completedLessons.push(i);
+  window._modProgress[mod.id]=p;
+  try{
+    const {doc,setDoc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    await setDoc(doc(window._db,'users',uid,'progress',mod.id),p,{merge:true});
+  }catch(e){console.warn('mod progress save:',e);}
+  modRenderReader();
+  toast('✦',`Pelajaran ${i+1} selesai!`,'#3DBA7A');
+};
+
+/* ── Admin module list ── */
+window.modRenderAdminList=function(){
+  const list=document.getElementById('adm-mod-list-m');if(!list)return;
+  const mods=window._modAllModules||[];
+  if(!mods.length){list.innerHTML='<div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:2rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Belum ada modul.</div></div>';return;}
+  list.innerHTML=mods.map(m=>{
+    const thumb=m.coverUrl||'';
+    return`<div class="adm-mod-item-m">
+      <div class="ami-thumb-m">${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:''}</div>
+      <div class="ami-body-m">
+        <div class="ami-top-m">
+          <span class="ami-num-m">Modul ${m.num}</span>
+          <span style="font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)">${mesc(m.cat||'')}</span>
+          <span class="mod-level-badge ${m.level||'pemula'}" style="position:static">${m.level||'pemula'}</span>
+          ${m.vip?`<span style="font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;background:rgba(201,168,76,.1);border:1px solid var(--gold-border);color:var(--gold);border-radius:2px">VIP</span>`:''}
+        </div>
+        <div class="ami-title-m">${mesc(m.title||'—')}</div>
+        <div class="ami-meta-m">${(m.lessons||[]).length||0} pelajaran · ${m.duration||'?'} menit</div>
+        <div class="ami-actions-m">
+          <button class="btn-edit-m" onclick="modEditModule('${m.id}')">✎ Edit</button>
+          <button class="btn-del-m" onclick="modDeleteModule('${m.id}')">✕ Hapus</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+/* ── Admin form ── */
+window.modShowForm=function(){
+  window._modFormBlocks=[];
+  ['mf-edit-id','mf-title','mf-num','mf-excerpt'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('mf-cat').value='Dasar Trading';
+  document.getElementById('mf-level').value='pemula';
+  document.getElementById('mf-duration').value='15';
+  document.getElementById('mf-vip').value='false';
+  document.getElementById('mf-cover').value='';
+  document.getElementById('cover-preview-wrap-m').style.display='none';
+  document.getElementById('mf-err-m').style.display='none';
+  document.getElementById('mf-form-title').textContent='Tambah Modul Baru';
+  modRenderLessonBuilder();
+  document.getElementById('mod-form-card').classList.add('open');
+  window.scrollTo(0,0);
+};
+window.modHideForm=function(){document.getElementById('mod-form-card').classList.remove('open');};
+
+window.modPreviewCover=function(input){
+  const file=input.files[0];if(!file)return;
+  const wrap=document.getElementById('cover-preview-wrap-m'),img=document.getElementById('cover-preview-m');
+  if(!wrap||!img)return;
+  wrap.style.display='block';
+  const url=URL.createObjectURL(file);img.onload=()=>URL.revokeObjectURL(url);img.src=url;
+};
+window.modClearCover=function(){
+  const inp=document.getElementById('mf-cover');if(inp)inp.value='';
+  document.getElementById('cover-preview-wrap-m').style.display='none';
+  document.getElementById('cover-preview-m').src='';
+};
+
+/* ── Lesson builder ── */
+window._modFormBlocks=[];
+function modRenderLessonBuilder(){
+  const c=document.getElementById('mod-blocks-container');if(!c)return;
+  c.innerHTML='';
+  (window._modFormBlocks||[]).forEach((bl,i)=>{
+    if(bl.type!=='_lesson')return;
+    c.insertAdjacentHTML('beforeend',modBuildLessonUI(bl,i));
+  });
+}
+function modBuildLessonUI(bl,i){
+  const len=(window._modFormBlocks||[]).length;
+  return`<div class="block-builder-m" id="mbb-${i}" style="border-color:rgba(201,168,76,.3)">
+    <div class="block-builder-head-m">
+      <span class="block-type-label-m">📚 Pelajaran ${i+1}</span>
+      <div style="display:flex;gap:6px">
+        ${i>0?`<button class="add-block-btn-m" onclick="modMoveLessonBlock(${i},-1)">↑</button>`:''}
+        ${i<len-1?`<button class="add-block-btn-m" onclick="modMoveLessonBlock(${i},1)">↓</button>`:''}
+        <button class="block-builder-del-m" onclick="modDelLessonBlock(${i})">✕ Hapus</button>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <label class="form-lbl-m">Judul Pelajaran *</label>
+      <input class="form-inp-m" type="text" placeholder="Contoh: Apa itu XAU/USD?" value="${mesc(bl.lessonTitle||'')}" oninput="window._modFormBlocks[${i}].lessonTitle=this.value">
+    </div>
+    <div style="margin-bottom:10px">
+      <label class="form-lbl-m">Durasi Estimasi (menit)</label>
+      <input class="form-inp-m" type="number" min="1" placeholder="10" value="${bl.lessonDuration||10}" oninput="window._modFormBlocks[${i}].lessonDuration=+this.value">
+    </div>
+    <div>
+      <div class="form-lbl-m" style="margin-bottom:8px">Blok Konten</div>
+      <div id="mlesson-blocks-${i}">${(bl.lessonBlocks||[]).map((sub,si)=>modBuildSubBlock(sub,i,si)).join('')}</div>
+      <div class="add-block-row-m" style="margin-top:8px">
+        <span style="font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)">+ Tambah:</span>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'text')">📝 Teks</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'h2')">H2</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'h3')">H3</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'callout')">💡 Callout</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'tip')">✅ Tip</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'warning')">⚠</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'list')">📋 Daftar</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'term')">📚 Istilah</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'quiz')">❓ Kuis</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+const MOD_BLOCK_DEFS={
+  text:{label:'Teks',fields:[{id:'content',lbl:'Isi Teks',type:'textarea',rows:4,ph:'Tulis konten di sini...'}]},
+  h2:{label:'Judul H2',fields:[{id:'text',lbl:'Teks',type:'text',ph:'Judul bagian...'}]},
+  h3:{label:'Sub H3',fields:[{id:'text',lbl:'Teks',type:'text',ph:'Sub-judul...'}]},
+  callout:{label:'Callout',fields:[{id:'title',lbl:'Judul',type:'text',ph:'Info Penting'},{id:'body',lbl:'Isi',type:'textarea',rows:3,ph:'Penjelasan...'}]},
+  tip:{label:'Tips',fields:[{id:'title',lbl:'Judul',type:'text',ph:'Tips'},{id:'body',lbl:'Isi',type:'textarea',rows:2,ph:'...'}]},
+  warning:{label:'Peringatan',fields:[{id:'title',lbl:'Judul',type:'text',ph:'Perhatian!'},{id:'body',lbl:'Isi',type:'textarea',rows:2,ph:'...'}]},
+  list:{label:'Daftar',fields:[{id:'items',lbl:'Poin (satu baris = satu poin)',type:'textarea',rows:4,ph:'Poin satu\nPoin dua'}]},
+  term:{label:'Istilah',fields:[{id:'symbol',lbl:'Singkatan',type:'text',ph:'SMC'},{id:'name',lbl:'Nama',type:'text',ph:'Smart Money Concept'},{id:'definition',lbl:'Definisi',type:'textarea',rows:3,ph:'Penjelasan...'}]},
+  quiz:{label:'Kuis',fields:[{id:'question',lbl:'Pertanyaan',type:'text',ph:'Apa itu Order Block?'},{id:'options',lbl:'Pilihan (tiap baris = satu pilihan)',type:'textarea',rows:4,ph:'Pilihan A\nPilihan B\nPilihan C'},{id:'correct',lbl:'Nomor jawaban benar',type:'number',ph:'1'},{id:'explanation',lbl:'Penjelasan (opsional)',type:'textarea',rows:2,ph:'...'}]}
+};
+
+function modBuildSubBlock(bl,li,si){
+  const def=MOD_BLOCK_DEFS[bl.type];if(!def)return'';
+  let html=`<div class="block-builder-m" style="background:var(--bg5);margin-bottom:8px;border-color:rgba(201,168,76,.1)">
+    <div class="block-builder-head-m">
+      <span class="block-type-label-m" style="font-size:.5rem">${def.label} ${si+1}</span>
+      <button class="block-builder-del-m" onclick="modDelSubBlock(${li},${si})">✕</button>
+    </div>`;
+  def.fields.forEach(f=>{
+    const val=bl[f.id]||'';
+    html+=`<div style="margin-bottom:8px"><label class="form-lbl-m">${f.lbl}</label>`;
+    if(f.type==='textarea')html+=`<textarea class="form-inp-m" style="min-height:${(f.rows||3)*24}px;resize:vertical" placeholder="${f.ph||''}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">${mesc(val)}</textarea>`;
+    else if(f.type==='number')html+=`<input class="form-inp-m" type="number" placeholder="${f.ph||''}" value="${mesc(val)}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">`;
+    else html+=`<input class="form-inp-m" type="text" placeholder="${f.ph||''}" value="${mesc(val)}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">`;
+    html+='</div>';
+  });
+  html+='</div>';return html;
+}
+
+window.modAddLesson=function(){
+  if(!window._modFormBlocks)window._modFormBlocks=[];
+  window._modFormBlocks.push({type:'_lesson',lessonTitle:'',lessonDuration:10,lessonBlocks:[]});
+  modRenderLessonBuilder();
+};
+window.modMoveLessonBlock=function(i,dir){
+  const ni=i+dir;if(ni<0||ni>=(window._modFormBlocks||[]).length)return;
+  [window._modFormBlocks[i],window._modFormBlocks[ni]]=[window._modFormBlocks[ni],window._modFormBlocks[i]];
+  modRenderLessonBuilder();
+};
+window.modDelLessonBlock=function(i){window._modFormBlocks.splice(i,1);modRenderLessonBuilder();};
+window.modAddSubBlock=function(li,type){
+  const def=MOD_BLOCK_DEFS[type];if(!def)return;
+  const obj={type};def.fields.forEach(f=>obj[f.id]='');
+  if(!window._modFormBlocks[li].lessonBlocks)window._modFormBlocks[li].lessonBlocks=[];
+  window._modFormBlocks[li].lessonBlocks.push(obj);
+  const c=document.getElementById(`mlesson-blocks-${li}`);
+  if(c)c.insertAdjacentHTML('beforeend',modBuildSubBlock(obj,li,window._modFormBlocks[li].lessonBlocks.length-1));
+};
+window.modSetSubBlockVal=function(li,si,key,val){if(window._modFormBlocks[li]?.lessonBlocks)window._modFormBlocks[li].lessonBlocks[si][key]=val;};
+window.modDelSubBlock=function(li,si){
+  if(!window._modFormBlocks[li]?.lessonBlocks)return;
+  window._modFormBlocks[li].lessonBlocks.splice(si,1);
+  const c=document.getElementById(`mlesson-blocks-${li}`);
+  if(c)c.innerHTML=window._modFormBlocks[li].lessonBlocks.map((b,idx)=>modBuildSubBlock(b,li,idx)).join('');
+};
+window.modEditModule=function(id){
+  const mod=(window._modAllModules||[]).find(m=>m.id===id);if(!mod)return;
+  document.getElementById('mf-form-title').textContent='Edit Modul';
+  document.getElementById('mf-edit-id').value=id;
+  document.getElementById('mf-title').value=mod.title||'';
+  document.getElementById('mf-num').value=mod.num||1;
+  document.getElementById('mf-cat').value=mod.cat||'Dasar Trading';
+  document.getElementById('mf-level').value=mod.level||'pemula';
+  document.getElementById('mf-duration').value=mod.duration||15;
+  document.getElementById('mf-vip').value=String(!!mod.vip);
+  document.getElementById('mf-excerpt').value=mod.excerpt||'';
+  document.getElementById('mf-cover').value='';
+  document.getElementById('mf-err-m').style.display='none';
+  if(mod.coverUrl){document.getElementById('cover-preview-wrap-m').style.display='block';document.getElementById('cover-preview-m').src=mod.coverUrl;}
+  else{document.getElementById('cover-preview-wrap-m').style.display='none';}
+  window._modFormBlocks=(mod.lessons||[]).map(l=>({type:'_lesson',lessonTitle:l.title||'',lessonDuration:l.duration||10,lessonBlocks:l.blocks||[]}));
+  modRenderLessonBuilder();
+  document.getElementById('mod-form-card').classList.add('open');
+  window.scrollTo(0,0);
+};
+</script>
+
+<!-- MODUL FIREBASE SCRIPT -->
+<script type="module">
+import{getFirestore,doc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+/* reuse existing db and auth state */
+function getDB(){return window._db;}
+
+const CLOUD_NAME='dktcrzfck',CLOUD_PRESET='mayoragold_preset';
+function modUploadImg(file,slug){
+  return new Promise((res,rej)=>{
+    const fd=new FormData();
+    fd.append('file',file,slug+'.'+file.name.split('.').pop());
+    fd.append('upload_preset',CLOUD_PRESET);
+    fd.append('folder','module-images');
+    const xhr=new XMLHttpRequest();
+    xhr.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
+    xhr.onload=()=>{if(xhr.status===200){try{res(JSON.parse(xhr.responseText).secure_url);}catch(e){rej(e);}}else{rej(new Error('Upload gagal '+xhr.status));}};
+    xhr.onerror=()=>rej(new Error('Upload gagal. Cek koneksi.'));
+    xhr.send(fd);
+  });
+}
+
+window.modLoadModules=async function(){
+  const db=getDB();if(!db)return;
+  try{
+    const q=query(collection(db,'modules'),orderBy('num','asc'));
+    const snap=await getDocs(q);
+    const arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));
+    window._modAllModules=arr;
+  }catch(e){console.error('modLoadModules:',e);window._modAllModules=[];}
+  window.modRenderGrid();
+
+  /* Show admin tab if admin */
+  if(window._isAdmin){
+    document.getElementById('mat-adm').style.display='block';
+  }
+
+  /* Load progress if logged in */
+  const uid=window._curUser?.uid;
+  if(uid&&db){
+    try{
+      const pSnap=await getDocs(collection(db,'users',uid,'progress'));
+      pSnap.forEach(d=>window._modProgress[d.id]={...d.data()});
+    }catch(_){}
+  }
+};
+
+window.modSaveModule=async function(){
+  const errEl=document.getElementById('mf-err-m');errEl.style.display='none';
+  const title=document.getElementById('mf-title').value.trim();
+  const num=parseInt(document.getElementById('mf-num').value)||1;
+  const cat=document.getElementById('mf-cat').value;
+  const level=document.getElementById('mf-level').value;
+  const duration=parseInt(document.getElementById('mf-duration').value)||15;
+  const vip=document.getElementById('mf-vip').value==='true';
+  const excerpt=document.getElementById('mf-excerpt').value.trim();
+  if(!title||!excerpt){errEl.textContent='⚠ Judul dan Deskripsi wajib diisi.';errEl.style.display='block';return;}
+  const btn=document.getElementById('mf-save-btn');
+  btn.disabled=true;btn.innerHTML='<div class="spin" style="border-top-color:var(--bg)"></div>';
+  try{
+    const db=getDB();
+    const editId=document.getElementById('mf-edit-id').value||null;
+    const coverFile=document.getElementById('mf-cover')?.files?.[0]||null;
+    const oldCover=editId?(window._modAllModules.find(m=>m.id===editId)?.coverUrl||''):'';
+    let coverUrl=editId?oldCover:'';
+    if(coverFile){
+      const slug='module-'+(title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,''));
+      coverUrl=await modUploadImg(coverFile,slug+'-cover');
+    }
+    const lessons=(window._modFormBlocks||[])
+      .filter(b=>b.type==='_lesson')
+      .map(b=>({title:b.lessonTitle||'Pelajaran',duration:b.lessonDuration||10,blocks:b.lessonBlocks||[]}));
+    const payload={title,num,cat,level,duration,vip,excerpt,coverUrl,lessons,updatedAt:serverTimestamp()};
+    if(editId){await updateDoc(doc(db,'modules',editId),payload);}
+    else{payload.createdAt=serverTimestamp();await addDoc(collection(db,'modules'),payload);}
+    toast('Admin',editId?'Modul diperbarui!':'Modul ditambahkan!','#3DBA7A');
+    window.modHideForm();
+    await window.modLoadModules();
+    window.modRenderAdminList();
+  }catch(e){
+    console.error('[modSaveModule]',e);
+    errEl.textContent='⚠ '+(e.message||'Terjadi kesalahan.');errEl.style.display='block';
+    toast('Error',e.message||'Gagal simpan','#E05A5A');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Modul';
+  }
+};
+
+window.modDeleteModule=async function(id){
+  if(!confirm('Hapus modul ini secara permanen?'))return;
+  try{
+    await deleteDoc(doc(getDB(),'modules',id));
+    toast('Admin','Modul dihapus','#E05A5A');
+    await window.modLoadModules();window.modRenderAdminList();
+  }catch(e){toast('Error',e.message,'#E05A5A');}
+};
+
+/* Hook into existing Firebase auth state — load modules once auth resolves */
+const _origAuthReady=window._onAuthReady;
+function afterAuth(){
+  window.modLoadModules();
+}
+/* Poll for _db to be ready then load modules */
+(function waitDB(){
+  if(window._db){afterAuth();}
+  else{setTimeout(waitDB,300);}
+})();
+</script>
+-e 
 </body>
 </html>
