@@ -2927,6 +2927,7 @@ function modBuildLessonUI(bl,i){
         <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'text')">📝 Teks</button>
         <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'h2')">H2</button>
         <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'h3')">H3</button>
+        <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'image')">🖼 Gambar</button>
         <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'callout')">💡 Callout</button>
         <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'tip')">✅ Tip</button>
         <button class="add-block-btn-m" onclick="modAddSubBlock(${i},'warning')">⚠</button>
@@ -2942,6 +2943,7 @@ const MOD_BLOCK_DEFS={
   text:{label:'Teks',fields:[{id:'content',lbl:'Isi Teks',type:'textarea',rows:4,ph:'Tulis konten di sini...'}]},
   h2:{label:'Judul H2',fields:[{id:'text',lbl:'Teks',type:'text',ph:'Judul bagian...'}]},
   h3:{label:'Sub H3',fields:[{id:'text',lbl:'Teks',type:'text',ph:'Sub-judul...'}]},
+  image:{label:'Gambar',fields:[]},/* handled separately */
   callout:{label:'Callout',fields:[{id:'title',lbl:'Judul',type:'text',ph:'Info Penting'},{id:'body',lbl:'Isi',type:'textarea',rows:3,ph:'Penjelasan...'}]},
   tip:{label:'Tips',fields:[{id:'title',lbl:'Judul',type:'text',ph:'Tips'},{id:'body',lbl:'Isi',type:'textarea',rows:2,ph:'...'}]},
   warning:{label:'Peringatan',fields:[{id:'title',lbl:'Judul',type:'text',ph:'Perhatian!'},{id:'body',lbl:'Isi',type:'textarea',rows:2,ph:'...'}]},
@@ -2952,19 +2954,38 @@ const MOD_BLOCK_DEFS={
 
 function modBuildSubBlock(bl,li,si){
   const def=MOD_BLOCK_DEFS[bl.type];if(!def)return'';
-  let html=`<div class="block-builder-m" style="background:var(--bg5);margin-bottom:8px;border-color:rgba(201,168,76,.1)">
+  let html=`<div class="block-builder-m" id="msb-${li}-${si}" style="background:var(--bg5);margin-bottom:8px;border-color:rgba(201,168,76,.1)">
     <div class="block-builder-head-m">
       <span class="block-type-label-m" style="font-size:.5rem">${def.label} ${si+1}</span>
       <button class="block-builder-del-m" onclick="modDelSubBlock(${li},${si})">✕</button>
     </div>`;
-  def.fields.forEach(f=>{
-    const val=bl[f.id]||'';
-    html+=`<div style="margin-bottom:8px"><label class="form-lbl-m">${f.lbl}</label>`;
-    if(f.type==='textarea')html+=`<textarea class="form-inp-m" style="min-height:${(f.rows||3)*24}px;resize:vertical" placeholder="${f.ph||''}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">${mesc(val)}</textarea>`;
-    else if(f.type==='number')html+=`<input class="form-inp-m" type="number" placeholder="${f.ph||''}" value="${mesc(val)}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">`;
-    else html+=`<input class="form-inp-m" type="text" placeholder="${f.ph||''}" value="${mesc(val)}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">`;
-    html+='</div>';
-  });
+
+  if(bl.type==='image'){
+    /* Image block — upload + caption */
+    html+=`<div style="margin-bottom:8px">
+      <label class="form-lbl-m">Upload Gambar</label>
+      <input class="form-inp-m" type="file" accept="image/jpeg,image/png,image/webp,image/gif" onchange="modSubBlockUploadImage(${li},${si},this)">
+      <div class="uprog-wrap-m" id="msb-prog-${li}-${si}"><div class="uprog-bar-m" id="msb-prog-bar-${li}-${si}"></div></div>
+      <div id="msb-img-preview-${li}-${si}" style="${bl.imageUrl?'display:block':'display:none'};margin-top:8px">
+        ${bl.imageUrl?`<img src="${bl.imageUrl}" style="max-width:100%;max-height:160px;object-fit:contain;border-radius:6px;border:1px solid var(--card-border)">
+        <div style="font-size:.58rem;color:var(--green);margin-top:4px">✓ Gambar terupload</div>`:''}
+      </div>
+    </div>
+    <div style="margin-bottom:8px">
+      <label class="form-lbl-m">Caption (opsional)</label>
+      <input class="form-inp-m" type="text" placeholder="Keterangan gambar..." value="${mesc(bl.caption||'')}" oninput="modSetSubBlockVal(${li},${si},'caption',this.value)">
+    </div>`;
+  }else{
+    def.fields.forEach(f=>{
+      const val=bl[f.id]||'';
+      html+=`<div style="margin-bottom:8px"><label class="form-lbl-m">${f.lbl}</label>`;
+      if(f.type==='textarea')html+=`<textarea class="form-inp-m" style="min-height:${(f.rows||3)*24}px;resize:vertical" placeholder="${f.ph||''}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">${mesc(val)}</textarea>`;
+      else if(f.type==='number')html+=`<input class="form-inp-m" type="number" placeholder="${f.ph||''}" value="${mesc(val)}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">`;
+      else html+=`<input class="form-inp-m" type="text" placeholder="${f.ph||''}" value="${mesc(val)}" oninput="modSetSubBlockVal(${li},${si},'${f.id}',this.value)">`;
+      html+='</div>';
+    });
+  }
+
   html+='</div>';return html;
 }
 
@@ -3024,7 +3045,7 @@ import{getFirestore,doc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,que
 function getDB(){return window._db;}
 
 const CLOUD_NAME='dktcrzfck',CLOUD_PRESET='mayoragold_preset';
-function modUploadImg(file,slug){
+function modUploadImg(file,slug,onProg){
   return new Promise((res,rej)=>{
     const fd=new FormData();
     fd.append('file',file,slug+'.'+file.name.split('.').pop());
@@ -3032,6 +3053,7 @@ function modUploadImg(file,slug){
     fd.append('folder','module-images');
     const xhr=new XMLHttpRequest();
     xhr.open('POST',`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
+    xhr.upload.onprogress=e=>{if(e.lengthComputable&&onProg)onProg(Math.round(e.loaded/e.total*100));};
     xhr.onload=()=>{if(xhr.status===200){try{res(JSON.parse(xhr.responseText).secure_url);}catch(e){rej(e);}}else{rej(new Error('Upload gagal '+xhr.status));}};
     xhr.onerror=()=>rej(new Error('Upload gagal. Cek koneksi.'));
     xhr.send(fd);
@@ -3063,6 +3085,53 @@ window.modLoadModules=async function(){
   }
 };
 
+window.modSubBlockUploadImage=async function(li,si,input){
+  const file=input.files[0];if(!file)return;
+  const progWrap=document.getElementById(`msb-prog-${li}-${si}`);
+  const progBar=document.getElementById(`msb-prog-bar-${li}-${si}`);
+  const preview=document.getElementById(`msb-img-preview-${li}-${si}`);
+  if(progWrap)progWrap.style.display='block';
+  input.disabled=true;
+  try{
+    const slug=`mod-lesson-${li}-img-${si}-${Date.now()}`;
+    let pct=0;
+    const url=await new Promise((res,rej)=>{
+      const fd=new FormData();
+      fd.append('file',file,slug+'.'+file.name.split('.').pop());
+      fd.append('upload_preset','mayoragold_preset');
+      fd.append('folder','module-images');
+      const xhr=new XMLHttpRequest();
+      xhr.open('POST',`https://api.cloudinary.com/v1_1/dktcrzfck/image/upload`);
+      xhr.upload.onprogress=e=>{
+        if(e.lengthComputable){pct=Math.round(e.loaded/e.total*100);if(progBar)progBar.style.width=pct+'%';}
+      };
+      xhr.onload=()=>{
+        if(xhr.status===200){try{res(JSON.parse(xhr.responseText).secure_url);}catch(e){rej(e);}}
+        else{rej(new Error('Upload gagal '+xhr.status));}
+      };
+      xhr.onerror=()=>rej(new Error('Upload gagal. Cek koneksi.'));
+      xhr.send(fd);
+    });
+    /* Save URL to block data */
+    if(window._modFormBlocks[li]?.lessonBlocks?.[si]){
+      window._modFormBlocks[li].lessonBlocks[si].imageUrl=url;
+    }
+    /* Show preview */
+    if(preview){
+      preview.style.display='block';
+      preview.innerHTML=`<img src="${url}" style="max-width:100%;max-height:160px;object-fit:contain;border-radius:6px;border:1px solid var(--card-border)">
+        <div style="font-size:.58rem;color:var(--green);margin-top:4px">✓ Gambar berhasil diupload</div>`;
+    }
+    if(progWrap)progWrap.style.display='none';
+    toast('Upload','Gambar berhasil diunggah!','#3DBA7A');
+  }catch(e){
+    if(progWrap)progWrap.style.display='none';
+    toast('Error',e.message,'#E05A5A');
+  }finally{
+    input.disabled=false;
+  }
+};
+
 window.modSaveModule=async function(){
   const errEl=document.getElementById('mf-err-m');errEl.style.display='none';
   const title=document.getElementById('mf-title').value.trim();
@@ -3082,8 +3151,15 @@ window.modSaveModule=async function(){
     const oldCover=editId?(window._modAllModules.find(m=>m.id===editId)?.coverUrl||''):'';
     let coverUrl=editId?oldCover:'';
     if(coverFile){
+      const progWrap=document.getElementById('cover-prog-m');
+      const progBar=document.getElementById('cover-prog-bar-m');
+      const progLbl=document.getElementById('cover-prog-lbl-m');
+      if(progWrap)progWrap.style.display='block';
+      if(progLbl){progLbl.style.display='block';progLbl.textContent='Mengunggah cover...';}
       const slug='module-'+(title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,''));
-      coverUrl=await modUploadImg(coverFile,slug+'-cover');
+      coverUrl=await modUploadImg(coverFile,slug+'-cover',pct=>{if(progBar)progBar.style.width=pct+'%';});
+      if(progWrap)progWrap.style.display='none';
+      if(progLbl)progLbl.style.display='none';
     }
     const lessons=(window._modFormBlocks||[])
       .filter(b=>b.type==='_lesson')
