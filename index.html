@@ -879,7 +879,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <span class="mob-link" onclick="requireVipNav();toggleMob()">Journal</span>
   <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
-  <button class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
+  <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
 </div>
 <div id="mob-nav-backdrop" onclick="toggleMob()"></div>
 
@@ -1657,6 +1657,8 @@ window.switchTab=function(t){
 /* Page routing */
 var pages=['home','berita','vip','auth','journal','admin','modul'];
 function goPage(p){
+  /* Kalau sudah login dan mau ke auth, redirect ke home */
+  if(p==='auth'&&window._curUser){p='home';}
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
   ['home','berita','vip','modul'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   document.getElementById('mob-nav').classList.remove('open');
@@ -2058,6 +2060,8 @@ onAuthStateChanged(auth, async user=>{
       document.getElementById('nav-loggedin').style.display='none';
       document.getElementById('nl-admin').style.display='none';
       document.getElementById('mob-admin-link').style.display='none';
+      const mobLoginBtn=document.getElementById('mob-login-btn');
+      if(mobLoginBtn)mobLoginBtn.style.display='block';
       stopTick();
     }
   }catch(err){ console.error('onAuthStateChanged error:',err); }
@@ -2068,6 +2072,8 @@ function showLoggedIn(user){
   const name=user.displayName||user.email.split('@')[0];
   document.getElementById('nav-guest').style.display='none';
   document.getElementById('nav-loggedin').style.display='block';
+  const mobLoginBtn=document.getElementById('mob-login-btn');
+  if(mobLoginBtn)mobLoginBtn.style.display='none';
   document.getElementById('nav-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('nav-uname').textContent=name;
   document.getElementById('nav-vip-pill').style.display=isVip?'block':'none';
