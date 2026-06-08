@@ -376,7 +376,8 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .vpc-wa-btn:hover{box-shadow:0 0 50px rgba(37,211,102,0.55);transform:translateY(-2px)}
 
 /* AUTH */
-#page-auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--nav-h) 20px 40px;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(201,168,76,0.04),transparent 60%)}
+#page-auth{min-height:100vh;align-items:center;justify-content:center;padding:var(--nav-h) 20px 40px;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(201,168,76,0.04),transparent 60%)}
+#page-auth.active{display:flex}
 .auth-wrap{width:100%;max-width:400px}
 .auth-logo{text-align:center;margin-bottom:32px}
 .auth-logo-mark{width:52px;height:52px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 0 24px rgba(201,168,76,0.3);overflow:hidden;position:relative}
@@ -2047,14 +2048,12 @@ onAuthStateChanged(auth, async user=>{
       if(activePage&&activePage.id==='page-auth'){
         const isReg = document.getElementById('form-reg').classList.contains('on');
         const okEl  = document.getElementById(isReg?'ri-ok':'li-ok');
-        /* Kalau baru saja login (form terisi) tampilkan pesan sukses dulu */
-        const justLoggedIn = document.getElementById('li-email')?.value||document.getElementById('ri-name')?.value;
-        if(okEl&&justLoggedIn) okEl.style.display='block';
+        if(okEl) okEl.style.display='block';
         setTimeout(()=>{
           if(okEl) okEl.style.display='none';
           goPage(isAdmin?'admin':'home');
-          if(justLoggedIn) toast('Selamat datang','Login berhasil!','#3DBA7A');
-        },justLoggedIn?900:0);
+          toast('Selamat datang','Login berhasil!','#3DBA7A');
+        },900);
       }
     }else{
       window._curUser=null; isVip=false; isAdmin=false;
