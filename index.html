@@ -2047,12 +2047,14 @@ onAuthStateChanged(auth, async user=>{
       if(activePage&&activePage.id==='page-auth'){
         const isReg = document.getElementById('form-reg').classList.contains('on');
         const okEl  = document.getElementById(isReg?'ri-ok':'li-ok');
-        if(okEl) okEl.style.display='block';
+        /* Kalau baru saja login (form terisi) tampilkan pesan sukses dulu */
+        const justLoggedIn = document.getElementById('li-email')?.value||document.getElementById('ri-name')?.value;
+        if(okEl&&justLoggedIn) okEl.style.display='block';
         setTimeout(()=>{
           if(okEl) okEl.style.display='none';
           goPage(isAdmin?'admin':'home');
-          toast('Selamat datang','Login berhasil!','#3DBA7A');
-        },900);
+          if(justLoggedIn) toast('Selamat datang','Login berhasil!','#3DBA7A');
+        },justLoggedIn?900:0);
       }
     }else{
       window._curUser=null; isVip=false; isAdmin=false;
