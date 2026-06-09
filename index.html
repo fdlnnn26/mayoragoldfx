@@ -2706,7 +2706,7 @@ window.modRenderGrid=function(){
     const total=(m.lessons||[]).length||1;
     const done=progress.completedLessons?.length||0;
     const pct=Math.round((done/total)*100);
-    const locked=m.vip&&!isVip&&!isAdmin&&uid;
+    const locked=m.vip&&!isVip&&!isAdmin;
     return`<div class="mod-card" onclick="${locked?'window.modShowVipLock()':'window.modOpenById(\''+m.id+'\')'}">
       <div class="mod-card-thumb">
         ${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:`<div class="mod-card-thumb-placeholder"><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="56%" text-anchor="middle" fill="#C9A84C" font-size="22" font-family="Cormorant Garamond,serif">✦</text></svg></div>`}
