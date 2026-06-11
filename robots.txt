@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Blok halaman yang tidak perlu diindex
+Disallow: /#auth
+Disallow: /#journal
+Disallow: /#admin
+
+Sitemap: https://mayoragoldfx.com/sitemap.xml
