@@ -38,9 +38,6 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Apakah VIP Mayora Gold FX benar-benar gratis?","acceptedAnswer":{"@type":"Answer","text":"Ya, membership VIP Mayora Gold FX sepenuhnya GRATIS selamanya. Cukup hubungi admin via WhatsApp untuk aktivasi akun Anda."}},{"@type":"Question","name":"Berapa win rate sinyal trading emas Mayora Gold FX?","acceptedAnswer":{"@type":"Answer","text":"Win rate sinyal XAU/USD kami mencapai 87% berdasarkan track record 2 tahun dengan 500+ member aktif."}},{"@type":"Question","name":"Apa saja yang didapatkan dari membership VIP?","acceptedAnswer":{"@type":"Answer","text":"Member VIP mendapatkan: sinyal harian XAU/USD, live trading session, webinar mingguan, trading journal otomatis, analisa market premium, dan akses grup VIP eksklusif."}},{"@type":"Question","name":"Bagaimana cara bergabung komunitas trading emas Mayora Gold FX?","acceptedAnswer":{"@type":"Answer","text":"Cara bergabung sangat mudah: klik tombol Join VIP Gratis, lalu hubungi admin kami via WhatsApp di nomor +62-821-9723-1712. Admin akan mengaktifkan akun VIP kamu dalam waktu singkat."}},{"@type":"Question","name":"Apakah Mayora Gold FX cocok untuk trader pemula?","acceptedAnswer":{"@type":"Answer","text":"Ya, Mayora Gold FX dirancang untuk semua level trader. Kami menyediakan edukasi lengkap dari dasar hingga strategi advanced seperti Smart Money Concept (SMC) dan market structure analysis khusus XAU/USD."}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Beranda","item":"https://mayoragoldfx.com/"},{"@type":"ListItem","position":2,"name":"Berita & Analisa","item":"https://mayoragoldfx.com/#berita"},{"@type":"ListItem","position":3,"name":"VIP Membership","item":"https://mayoragoldfx.com/#vip"}]}</script>
 <meta name="theme-color" content="#C9A84C">
-  <link rel="icon" type="image/webp" href="/logomayora.webp">
-<link rel="shortcut icon" href="/logomayora.webp">
-<link rel="apple-touch-icon" href="/logomayora.webp">
 <meta name="msapplication-TileColor" content="#06060A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1593,8 +1590,15 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <script>
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
-/* ✅ FIX: Deep link handler — buka artikel dari ?berita=slug */
+/* Deep link handler — support hash (#berita, #vip, dll) + ?berita=slug untuk artikel */
 (function(){
+  /* 1. Cek hash untuk navigasi halaman */
+  var initPage = getPageFromHash();
+  if(initPage !== 'home') {
+    setTimeout(function(){ goPage(initPage); }, 50);
+  }
+
+  /* 2. Cek ?berita=slug untuk buka artikel langsung */
   var params = new URLSearchParams(window.location.search);
   var slug = params.get('berita');
   if(slug){
@@ -1608,9 +1612,8 @@ document.getElementById('fyear').textContent = new Date().getFullYear();
         goPage('berita');
         setTimeout(function(){ window.openNews(found.id); }, 100);
       }
-      if(attempts > 30) clearInterval(tryOpen); // timeout ~9s
+      if(attempts > 30) clearInterval(tryOpen);
     }, 300);
-    /* Trigger berita page load so news cache populates */
     setTimeout(function(){
       if(window._renderNews) window._renderNews();
     }, 400);
@@ -1664,6 +1667,24 @@ window.switchTab=function(t){
 
 /* Page routing */
 var pages=['home','berita','vip','auth','journal','admin','modul'];
+
+/* SEO-friendly page titles & descriptions per halaman */
+var PAGE_META = {
+  home:    { title: 'Mayora Gold FX — Komunitas Trading Emas XAU/USD Indonesia | Sinyal & Edukasi Premium', desc: 'Platform trading emas (XAU/USD) premium Indonesia. Sinyal XAUUSD akurasi 87%, live session, journal otomatis & komunitas VIP 500+ trader elite. Daftar GRATIS sekarang!', url: 'https://mayoragoldfx.com/' },
+  berita:  { title: 'Berita & Analisa Pasar Emas XAU/USD Terkini — Mayora Gold FX', desc: 'Update terkini seputar emas XAU/USD, forex, dan pasar keuangan global. Analisa teknikal harian, sinyal trading, dan market update dari tim analis Mayora Gold FX.', url: 'https://mayoragoldfx.com/#berita' },
+  vip:     { title: 'VIP Membership Gratis — Sinyal Emas XAU/USD & Komunitas Trader Elite | Mayora Gold FX', desc: 'Bergabung komunitas VIP trading emas gratis. Dapatkan sinyal XAU/USD harian, live trading session, webinar mingguan, journal otomatis & analisa Smart Money Concept.', url: 'https://mayoragoldfx.com/#vip' },
+  modul:   { title: 'Modul Belajar Trading Emas XAU/USD — Dari Dasar hingga SMC | Mayora Gold FX', desc: 'Pelajari trading emas XAU/USD dari nol: dasar trading, market structure, Smart Money Concept, manajemen risiko, hingga strategi advanced. Gratis untuk member VIP.', url: 'https://mayoragoldfx.com/#modul' },
+  auth:    { title: 'Login Member — Mayora Gold FX', desc: 'Login atau daftar akun Mayora Gold FX untuk akses trading journal, modul edukasi, dan fitur VIP eksklusif.', url: 'https://mayoragoldfx.com/#auth' },
+  journal: { title: 'Trading Journal Pro — Mayora Gold FX', desc: 'Catat dan analisa performa trading emas XAU/USD kamu. Fitur eksklusif untuk member VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/#journal' },
+  admin:   { title: 'Admin Dashboard — Mayora Gold FX', desc: 'Dashboard administrasi Mayora Gold FX.', url: 'https://mayoragoldfx.com/#admin' }
+};
+
+/* Canonical link tag — update per halaman */
+function updateCanonical(url) {
+  var el = document.querySelector('link[rel="canonical"]');
+  if (el) el.setAttribute('href', url);
+}
+
 function goPage(p){
   /* Kalau sudah login dan mau ke auth, redirect ke home */
   if(p==='auth'&&window._curUser){p='home';}
@@ -1671,6 +1692,20 @@ function goPage(p){
   ['home','berita','vip','modul'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   document.getElementById('mob-nav').classList.remove('open');
   window.scrollTo(0,0);
+
+  /* Update URL hash untuk SEO (kecuali home = clean URL) */
+  var newHash = (p === 'home') ? '' : '#' + p;
+  if (window.location.hash !== newHash) {
+    history.pushState({ page: p }, '', newHash || window.location.pathname);
+  }
+
+  /* Update meta per halaman */
+  var meta = PAGE_META[p] || PAGE_META['home'];
+  if(p !== 'berita') {
+    updateSeoMeta({ title: meta.title, desc: meta.desc, image: DEFAULT_META.image });
+    updateCanonical(meta.url);
+  }
+
   if(p==='berita'){
     closeNewsDetail();
     window._renderNews&&window._renderNews();
@@ -1680,6 +1715,18 @@ function goPage(p){
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
+
+/* Handle browser back/forward */
+window.addEventListener('popstate', function(e) {
+  var p = (e.state && e.state.page) ? e.state.page : getPageFromHash();
+  if (pages.indexOf(p) !== -1) goPage(p);
+});
+
+/* Read hash on load */
+function getPageFromHash() {
+  var hash = window.location.hash.replace('#','').split('?')[0];
+  return (hash && pages.indexOf(hash) !== -1) ? hash : 'home';
+}
 
 window.requireVipNav=function(){
   if(!window._curUser){goPage('auth');return;}
@@ -1771,8 +1818,12 @@ window.openNews = function(id){
     imgWrap.style.display = 'none';
   }
 
-  /* ✅ Share URL: pakai query param agar tidak 404 di static hosting */
-  var shareUrl  = 'https://mayoragoldfx.com/?berita=' + (n.slug || n.id);
+  /* Update URL supaya artikel bisa di-share & diindex */
+  var articleSlug = n.slug || n.id;
+  history.pushState({ page: 'berita', slug: articleSlug }, '', '#berita?artikel=' + articleSlug);
+  updateCanonical('https://mayoragoldfx.com/?berita=' + articleSlug);
+
+  var shareUrl  = 'https://mayoragoldfx.com/?berita=' + articleSlug;
   var shareText = encodeURIComponent(n.title + '\n\n' + (n.excerpt||'') + '\n\n' + shareUrl);
   document.getElementById('nd-share-wa').href = 'https://wa.me/?text=' + shareText;
 
@@ -1784,6 +1835,8 @@ window.openNews = function(id){
 window.closeNewsDetail = function(){
   document.getElementById('news-list-view').style.display  = '';
   document.getElementById('news-detail-view').style.display = '';
+  history.pushState({ page: 'berita' }, '', '#berita');
+  updateCanonical('https://mayoragoldfx.com/#berita');
   resetSeoMeta();
 };
 
