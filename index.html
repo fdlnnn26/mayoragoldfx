@@ -2586,7 +2586,14 @@ window._renderNews=renderNews;
 window._ecalData=[];
 window._ecalPoll=null;
 const FF_JSON_URL='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-const FF_PROXY_URL='https://corsproxy.io/?url='+encodeURIComponent(FF_JSON_URL);
+
+/* Multiple CORS proxy fallbacks — tries each in order until one works */
+const FF_PROXIES=[
+  'https://api.allorigins.win/raw?url='+encodeURIComponent(FF_JSON_URL),
+  'https://corsproxy.io/?url='+encodeURIComponent(FF_JSON_URL),
+  'https://proxy.cors.sh/'+FF_JSON_URL,
+  'https://thingproxy.freeboard.io/fetch/'+FF_JSON_URL,
+];
 
 function ecalFmtTime(iso){
   try{
@@ -2600,35 +2607,56 @@ function ecalFmtTime(iso){
 
 async function fetchEcalData(){
   let raw=null;
-  // Try direct fetch first (sometimes works), fallback to CORS proxy
+
+  /* 1. Try direct fetch first */
   try{
-    const r=await fetch(FF_JSON_URL,{cache:'no-store'});
+    const r=await fetch(FF_JSON_URL,{cache:'no-store',signal:AbortSignal.timeout(5000)});
     if(r.ok) raw=await r.json();
   }catch(e){}
-  if(!raw){
-    try{
-      const r2=await fetch(FF_PROXY_URL,{cache:'no-store'});
-      if(r2.ok) raw=await r2.json();
-    }catch(e){}
+
+  /* 2. Try each proxy until one works */
+  if(!Array.isArray(raw)){
+    for(const proxyUrl of FF_PROXIES){
+      if(raw) break;
+      try{
+        const r=await fetch(proxyUrl,{cache:'no-store',signal:AbortSignal.timeout(7000)});
+        if(r.ok){
+          const txt=await r.text();
+          /* allorigins wraps in {contents:...}, handle both */
+          try{ raw=JSON.parse(txt); }catch(e){ raw=null; }
+          if(raw&&raw.contents) try{ raw=JSON.parse(raw.contents); }catch(e){ raw=null; }
+        }
+      }catch(e){}
+    }
   }
+
   if(!Array.isArray(raw)) return null;
-  return raw.filter(e=>e.country==='USD'&&e.impact==='High');
+  /* impact field can be "High", "Medium", "Low" — case-insensitive match */
+  return raw.filter(e=>e.country==='USD'&&(e.impact||'').toLowerCase()==='high');
 }
 
 async function startEcalPolling(){
-  if(window._ecalPoll) return; // already running
+  /* Allow restart — clear old interval if exists */
+  if(window._ecalPoll){ clearInterval(window._ecalPoll); window._ecalPoll=null; }
   document.querySelectorAll('.ecal-list').forEach(function(l){l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';});
   const tick=async()=>{
     const data=await fetchEcalData();
-    if(data){
+    if(data&&data.length>0){
       window._ecalData=data;
       renderEcal();
-    }else if(!window._ecalData.length){
-      document.querySelectorAll('.ecal-list').forEach(function(l){l.innerHTML='<div class="ecal-empty">Gagal memuat kalender ekonomi.</div>';});
+    }else if(data&&data.length===0){
+      /* Successfully fetched but genuinely no high-impact events */
+      window._ecalData=[];
+      renderEcal();
+    }else{
+      /* Fetch failed — keep showing old data if any, else error msg */
+      if(!window._ecalData.length){
+        document.querySelectorAll('.ecal-list').forEach(function(l){l.innerHTML='<div class="ecal-empty">Gagal memuat — <a href="https://www.forexfactory.com/calendar" target="_blank" style="color:var(--gold)">buka Forex Factory →</a></div>';});
+      }
     }
   };
   await tick();
-  // Poll every 30s so 'actual' updates fast after release
+  /* Poll every 30s so actuals update fast after release */
   window._ecalPoll=setInterval(tick,30000);
 }
 window._startEcalListener=startEcalPolling;
