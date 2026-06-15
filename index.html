@@ -1516,8 +1516,8 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
               <input type="number" class="form-inp-m" id="calc-risk" placeholder="cth: 2" min="0" step="any" inputmode="decimal">
             </div>
             <div>
-              <label class="form-lbl-m" for="calc-sl">Stop Loss (poin)</label>
-              <input type="number" class="form-inp-m" id="calc-sl" placeholder="cth: 50" min="0" step="any" inputmode="decimal">
+              <label class="form-lbl-m" for="calc-sl">Jarak Stop Loss (poin)</label>
+              <input type="number" class="form-inp-m" id="calc-sl" placeholder="cth: 50 (= 50.0 / 5000 pip)" min="0" step="any" inputmode="decimal">
             </div>
             <div>
               <label class="form-lbl-m" for="calc-rr">Risk : Reward (1 : X)</label>
@@ -1527,7 +1527,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           <div class="form-actions-m" style="justify-content:flex-start;margin-top:18px">
             <button class="btn-save-mod" onclick="calcLotRisk()">Hitung →</button>
           </div>
-          <div style="font-size:.6rem;color:var(--text3);margin-top:14px;line-height:1.9">*Estimasi memakai asumsi 1 poin XAU/USD ≈ $1 per 1.00 lot standard (1.00 lot = 100 oz, langkah harga 0.01). Nilai pip aktual bisa berbeda tergantung kontrak &amp; broker — gunakan hasil ini sebagai panduan, bukan jaminan.</div>
+          <div style="font-size:.6rem;color:var(--text3);margin-top:14px;line-height:1.9">*Estimasi memakai asumsi 1 Poin XAU/USD = pergerakan harga $1 (cth: 4455 → 4456 = 1 poin = 10 pip), dengan nilai $1 per 0.01 lot (≈ $100 per 1.00 lot standard). Nilai poin/pip aktual bisa berbeda tergantung kontrak &amp; broker — gunakan hasil ini sebagai panduan, bukan jaminan.</div>
         </div>
         <div id="calc-result" style="display:none">
           <div class="stats-row" id="calc-stats"></div>
@@ -1933,7 +1933,8 @@ window.calcLotRisk=function(){
     return;
   }
   var riskAmount=modal*risk/100;
-  var lot=riskAmount/sl;
+  var VALUE_PER_POIN_PER_LOT=100; // 1 poin ($1 price move) = $100 per 1.00 lot (= $1 per 0.01 lot)
+  var lot=riskAmount/(sl*VALUE_PER_POIN_PER_LOT);
   var rewardAmount=riskAmount*rr;
   var tpPoin=sl*rr;
   var lotStr=lot<0.01?lot.toFixed(4):lot.toFixed(2);
