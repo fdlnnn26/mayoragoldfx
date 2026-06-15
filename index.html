@@ -2586,44 +2586,73 @@ window._renderNews=renderNews;
 window._ecalData=[];
 window._ecalPoll=null;
 
-/* Cache jadwal mingguan di localStorage — refresh penuh tiap 6 jam */
-const ECAL_CACHE_KEY='mgf_ecal_cache_v1';
-const ECAL_CACHE_TTL=6*3600*1000;
+/* ---------------------------------------------------------------
+   ECONOMIC CALENDAR — FIRESTORE SHARED CACHE
+   Semua 1000+ member pakai cache bersama di Firestore.
+   FCS API hanya dipanggil 1x per 6 jam (oleh siapapun yang
+   pertama buka setelah cache expired), bukan per browser.
+   → dari ~120.000 call/bulan jadi ~120 call/bulan.
+   --------------------------------------------------------------- */
 
-function ecalLoadCache(){
+const FCS_KEY        = 'bo2IiWM3oqzDHapogHRNTg';
+const ECAL_CACHE_TTL = 6 * 3600 * 1000; // 6 jam
+
+/* ---------- WHITELIST event USD yang benar-benar high-impact ----------
+   FCS memakai importance 0/1/2 (bukan 3), dan banyak event medium
+   (Building Permits, Housing Starts, dll) dapat importance "2" juga.
+   Daripada filter by importance saja, kita whitelist keyword persis
+   seperti Forex Factory red-flag untuk USD. Lebih akurat dan stabil.
+   --------------------------------------------------------------------- */
+const ECAL_HIGH_WHITELIST = [
+  // Fed / Monetary Policy
+  'fed interest rate','fomc','federal funds','fed press conference',
+  'fomc economic projections','interest rate projection',
+  // Inflation
+  'cpi','core cpi','pce price','core pce',
+  // Jobs
+  'non-farm payroll','nonfarm payroll','initial jobless claims',
+  'unemployment rate','adp employment','jolt',
+  // Growth / Activity
+  'gdp','retail sales','ism manufacturing','ism services',
+  'ism non-manufacturing',
+  // Housing (hanya yang benar-benar red di FF)
+  'nahb housing market','existing home sales',
+  'new home sales','pending home sales',
+  // Trade & Other
+  'trade balance','consumer confidence','cb consumer',
+  'michigan sentiment','average hourly earnings',
+  'durable goods','factory orders',
+  // Central bank speeches
+  'powell','fed chair','fed governor'
+];
+
+function ecalIsHighImpact(e){
+  /* country harus US */
+  if(e.country!=='US') return false;
+  const t=(e.title||e.indicator||'').toLowerCase();
+  return ECAL_HIGH_WHITELIST.some(kw=>t.includes(kw));
+}
+
+/* ---------- Firestore shared cache ---------- */
+async function ecalLoadFirestoreCache(){
   try{
-    const raw=localStorage.getItem(ECAL_CACHE_KEY);
-    if(!raw)return null;
-    const c=JSON.parse(raw);
-    if(!Array.isArray(c.data)||!c.fetchedAt)return null;
-    return c;
+    const db=getDB();
+    const snap=await getDoc(doc(db,'_cache','ecal'));
+    if(!snap.exists()) return null;
+    const c=snap.data();
+    if(!Array.isArray(c.data)||!c.fetchedAt) return null;
+    return c; // {data, fetchedAt}
   }catch(_){return null;}
 }
-function ecalSaveCache(data){
-  try{localStorage.setItem(ECAL_CACHE_KEY,JSON.stringify({data,fetchedAt:Date.now()}));}catch(_){}
-}
 
-/* Event high-impact berikutnya yang belum ada 'actual' (masih relevan: belum lewat >3 menit) */
-function ecalNextPending(){
-  const now=Date.now();
-  return (window._ecalData||[])
-    .filter(e=>e.actual===''||e.actual==null)
-    .map(e=>({...e,_t:new Date(e.date).getTime()}))
-    .filter(e=>e._t+3*60000>now)
-    .sort((a,b)=>a._t-b._t)[0]||null;
-}
-
-/* FCS API key — ganti kalau regenerate */
-const FCS_KEY='bo2IiWM3oqzDHapogHRNTg';
-
-function ecalFmtTime(iso){
+async function ecalSaveFirestoreCache(data){
   try{
-    const d=new Date(iso);
-    const wib=new Date(d.getTime()+7*3600*1000);
-    return String(wib.getUTCHours()).padStart(2,'0')+':'+String(wib.getUTCMinutes()).padStart(2,'0');
-  }catch(e){return '--:--';}
+    const db=getDB();
+    await setDoc(doc(db,'_cache','ecal'),{data,fetchedAt:Date.now()});
+  }catch(_){}
 }
 
+/* ---------- Fetch langsung ke FCS (hanya jika cache expired) ---------- */
 function getWeekRange(){
   const now=new Date();
   const dow=now.getDay()||7;
@@ -2633,7 +2662,7 @@ function getWeekRange(){
   return{start:fmt(mon),end:fmt(sun)};
 }
 
-async function fetchEcalData(){
+async function fetchEcalFromFCS(){
   try{
     const {start,end}=getWeekRange();
     const url=`https://fcsapi.com/api-v3/forex/economy_cal?country=US&from=${start}&to=${end}&access_key=${FCS_KEY}`;
@@ -2641,69 +2670,101 @@ async function fetchEcalData(){
     if(!r.ok) return null;
     const json=await r.json();
     if(!json.response||!Array.isArray(json.response)) return null;
-    /* FCS format: {id, country, title, indicator, importance, actual, previous, forecast, date} */
-    /* Filter US + high impact only (importance "2") */
-    const high=json.response.filter(e=>e.country==='US' && (e.importance==='2'||e.importance===2));
-    /* Normalize ke format internal kita — date sudah "YYYY-MM-DD HH:MM:SS" (UTC) */
-    return high.map(e=>({
-      title: e.title||e.indicator||'',
-      country: 'USD',
-      date: e.date.replace(' ','T')+'Z',
-      impact: 'High',
-      forecast: e.forecast||'',
-      previous: e.previous||'',
-      actual: e.actual||'',
-    }));
+    /* Filter pakai whitelist, bukan importance saja */
+    return json.response
+      .filter(ecalIsHighImpact)
+      .map(e=>({
+        title:    e.title||e.indicator||'',
+        country:  'USD',
+        date:     e.date.replace(' ','T')+'Z',
+        impact:   'High',
+        forecast: e.forecast||'',
+        previous: e.previous||'',
+        actual:   e.actual||'',
+      }));
   }catch(err){
     console.warn('FCS fetch error:',err);
     return null;
   }
 }
 
+/* ---------- Helpers ---------- */
+function ecalFmtTime(iso){
+  try{
+    const d=new Date(iso);
+    const wib=new Date(d.getTime()+7*3600*1000);
+    return String(wib.getUTCHours()).padStart(2,'0')+':'+String(wib.getUTCMinutes()).padStart(2,'0');
+  }catch(e){return '--:--';}
+}
+
+/* Event berikutnya yang belum ada actual & belum lewat >3 menit */
+function ecalNextPending(){
+  const now=Date.now();
+  return (window._ecalData||[])
+    .filter(e=>e.actual===''||e.actual==null)
+    .map(e=>({...e,_t:new Date(e.date).getTime()}))
+    .filter(e=>e._t+3*60000>now)
+    .sort((a,b)=>a._t-b._t)[0]||null;
+}
+
+/* ---------- Main polling dengan Firestore cache ---------- */
 async function startEcalPolling(){
   if(window._ecalPoll){clearTimeout(window._ecalPoll);window._ecalPoll=null;}
 
-  /* 1. Render instan dari cache (kalau ada) — gak nunggu API tiap buka halaman */
-  const cache=ecalLoadCache();
+  /* 1. Coba ambil dari Firestore cache dulu — instan, 0 FCS call */
+  const cache=await ecalLoadFirestoreCache();
   if(cache&&cache.data.length){
     window._ecalData=cache.data;
     renderEcal();
   }else{
-    document.querySelectorAll('.ecal-list').forEach(l=>{l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';});
+    document.querySelectorAll('.ecal-list').forEach(l=>{
+      l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';
+    });
   }
 
   const tick=async()=>{
-    const data=await fetchEcalData();
-    if(data){
-      window._ecalData=data;
-      ecalSaveCache(data);
+    /* Cek apakah cache Firestore masih segar */
+    const c=await ecalLoadFirestoreCache();
+    const needFresh=!c||(Date.now()-c.fetchedAt>ECAL_CACHE_TTL);
+
+    if(needFresh){
+      /* Hanya member yang pertama buka setelah expired yang akan hit FCS */
+      const data=await fetchEcalFromFCS();
+      if(data){
+        window._ecalData=data;
+        await ecalSaveFirestoreCache(data); // simpan ke Firestore untuk semua member
+        renderEcal();
+      }else if(!window._ecalData.length){
+        document.querySelectorAll('.ecal-list').forEach(l=>{
+          l.innerHTML='<div class="ecal-empty">Gagal memuat — <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" style="color:var(--gold)">buka Forex Factory →</a></div>';
+        });
+      }
+    }else{
+      /* Cache masih segar, update data lokal saja */
+      window._ecalData=c.data;
       renderEcal();
-    }else if(!window._ecalData.length){
-      document.querySelectorAll('.ecal-list').forEach(l=>{
-        l.innerHTML='<div class="ecal-empty">Gagal memuat — <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" style="color:var(--gold)">buka Forex Factory →</a></div>';
-      });
     }
   };
 
-  /* 2. Kalau cache kosong/sudah lebih dari 6 jam, fetch sekarang */
-  const needFresh=!cache||(Date.now()-cache.fetchedAt>ECAL_CACHE_TTL);
-  if(needFresh) await tick();
+  /* 2. Jalankan tick pertama */
+  const needFreshInit=!cache||(Date.now()-cache.fetchedAt>ECAL_CACHE_TTL);
+  if(needFreshInit) await tick();
 
   /* 3. Smart schedule:
-     - Event high-impact berikutnya yang belum punya 'actual' & rilisnya ≤60 detik lagi (atau baru lewat ≤3 menit)
-       → poll tiap 15 detik supaya 'actual' update real-time (lag <1 menit)
-     - Event berikutnya masih >60 detik → "tidur" sampai ~50 detik sebelum rilis
-     - Gak ada event pending → tidur sampai cache TTL (refresh jadwal tiap 6 jam) */
+     - <60 detik sebelum / sesaat setelah event → poll tiap 30 detik
+       supaya 'actual' update (lag max ~30 detik, hemat vs 15 detik)
+     - >60 detik sebelum event → tidur sampai 50 detik sebelum rilis
+     - Tidak ada event pending → tidur 6 jam (refresh jadwal mingguan) */
   function scheduleNext(){
     const next=ecalNextPending();
     let delay;
     if(next){
       const diff=next._t-Date.now();
-      delay = diff<=60000 ? 15000 : Math.min(diff-50000, ECAL_CACHE_TTL);
+      delay = diff<=60000 ? 30000 : Math.min(diff-50000, ECAL_CACHE_TTL);
     }else{
       delay = ECAL_CACHE_TTL;
     }
-    delay=Math.max(delay,15000);
+    delay=Math.max(delay,30000);
     window._ecalPoll=setTimeout(async()=>{await tick();scheduleNext();},delay);
   }
   scheduleNext();
