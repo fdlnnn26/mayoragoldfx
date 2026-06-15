@@ -140,6 +140,14 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .nav-link::after{content:'';position:absolute;left:14px;right:14px;bottom:4px;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s;transform-origin:center}
 .nav-link:hover,.nav-link.active{color:var(--gold)}
 .nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+.nav-dropdown{position:relative}
+.nav-caret{display:inline-block;font-size:.6em;margin-left:4px;transition:transform .25s;position:relative;top:-1px}
+.nav-dropdown.open .nav-caret{transform:rotate(180deg)}
+.nav-dropdown-menu{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);min-width:210px;background:rgba(10,10,16,0.98);backdrop-filter:blur(24px);border:1px solid var(--card-border);border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:2px;z-index:600;box-shadow:0 24px 48px rgba(0,0,0,0.5);opacity:0;visibility:hidden;transform:translateX(-50%) translateY(-6px);transition:opacity .2s,transform .2s,visibility .2s}
+.nav-dropdown.open .nav-dropdown-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.nav-dropdown-item{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);padding:10px 14px;border-radius:4px;cursor:pointer;background:none;border:none;text-align:left;width:100%;transition:all .2s;white-space:nowrap}
+.nav-dropdown-item:hover{background:rgba(201,168,76,0.08);color:var(--gold)}
+.nav-dropdown-item.gold{color:var(--gold);border-bottom:1px solid var(--card-border);margin-bottom:2px;padding-bottom:12px}
 .nav-right{display:flex;align-items:center;gap:10px}
 .nav-btn-login{background:transparent;border:1px solid var(--gold-border);color:var(--text2);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all .25s;border-radius:var(--radius)}
 .nav-btn-login:hover{border-color:var(--gold);color:var(--gold)}
@@ -204,6 +212,9 @@ button,input,select,textarea{font-family:inherit;outline:none}
 }
 .mob-link:last-of-type{border-bottom:none}
 .mob-link:hover,.mob-link.active{color:var(--gold);padding-left:6px}
+.mob-group-label{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:8px;opacity:.85}
+.mob-sublink{font-family:'DM Sans',sans-serif;font-size:.78rem;letter-spacing:.08em;text-transform:none;color:var(--text2);cursor:pointer;transition:color .2s, padding-left .2s;padding:9px 0 9px 14px;width:100%;border-bottom:1px solid rgba(201,168,76,0.07)}
+.mob-sublink:hover{color:var(--gold);padding-left:18px}
 
 /* PAGES */
 .page{display:none;min-height:100vh;position:relative;z-index:1;padding-top:var(--nav-h)}
@@ -900,8 +911,15 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div class="nav-center">
     <button class="nav-link active" id="nl-home" onclick="goPage('home')">Beranda</button>
     <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
-    <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
-    <button class="nav-link" id="nl-journal" onclick="requireVipNav()">Journal</button>
+    <div class="nav-dropdown" id="vip-dropdown">
+      <button class="nav-link" id="nl-vip" onclick="toggleVipMenu(event)">VIP <span class="nav-caret">▾</span></button>
+      <div class="nav-dropdown-menu" id="vip-dropdown-menu">
+        <button class="nav-dropdown-item gold" id="vdm-membership" onclick="closeVipMenu();goPage('vip')">✦ Membership VIP</button>
+        <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('dash')">Trading Journal</button>
+        <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('ecal')">Kalender Ekonomi</button>
+        <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('calc')">Kalkulator Lot &amp; Risk</button>
+      </div>
+    </div>
     <button class="nav-link" id="nl-modul" onclick="goPage('modul')">Modul</button>
     <button class="nav-link" id="nl-admin" onclick="goPage('admin')" style="display:none">Admin</button>
   </div>
@@ -928,8 +946,11 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <div id="mob-nav" role="dialog" aria-label="Menu mobile">
   <span class="mob-link" onclick="goPage('home');toggleMob()">Beranda</span>
   <span class="mob-link" onclick="goPage('berita');toggleMob()">Berita</span>
-  <span class="mob-link" onclick="goPage('vip');toggleMob()">VIP</span>
-  <span class="mob-link" onclick="requireVipNav();toggleMob()">Journal</span>
+  <div class="mob-group-label">VIP Area</div>
+  <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip');toggleMob()">✦ Membership VIP</span>
+  <span class="mob-sublink" onclick="goJournalTab('dash');toggleMob()">Trading Journal</span>
+  <span class="mob-sublink" onclick="goJournalTab('ecal');toggleMob()">Kalender Ekonomi</span>
+  <span class="mob-sublink" onclick="goJournalTab('calc');toggleMob()">Kalkulator Lot &amp; Risk</span>
   <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
   <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
@@ -1422,11 +1443,12 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   </div>
   <div class="pricebar" id="pricebar"></div>
   <div class="app-tabs">
-    <button class="app-tab on" onclick="jTab('dash',this)">Dashboard</button>
-    <button class="app-tab" onclick="jTab('history',this)">Trade History</button>
-    <button class="app-tab" onclick="jTab('notes',this)">Journal Notes</button>
-    <button class="app-tab" onclick="jTab('calc',this)">Kalkulator</button>
-    <button class="app-tab" onclick="jTab('account',this)">Account</button>
+    <button class="app-tab on" id="tab-btn-dash" onclick="jTab('dash',this)">Dashboard</button>
+    <button class="app-tab" id="tab-btn-history" onclick="jTab('history',this)">Trade History</button>
+    <button class="app-tab" id="tab-btn-notes" onclick="jTab('notes',this)">Journal Notes</button>
+    <button class="app-tab" id="tab-btn-ecal" onclick="jTab('ecal',this)">Kalender Ekonomi</button>
+    <button class="app-tab" id="tab-btn-calc" onclick="jTab('calc',this)">Kalkulator</button>
+    <button class="app-tab" id="tab-btn-account" onclick="jTab('account',this)">Account</button>
   </div>
   <div class="journal-page on" id="jp-dash">
     <div class="jmain">
@@ -1457,6 +1479,25 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <div class="jmain">
       <div id="vip-lock-notes" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Journal Notes hanya tersedia untuk member VIP.</div><a href="https://wa.me/6282138818361" target="_blank" rel="noopener noreferrer" class="vll-btn">Hubungi Admin →</a></div>
       <div id="vip-cnt-notes" style="display:none"><div class="sec-label">Journal Notes</div><div class="notes-grid" id="notes-grid"></div></div>
+    </div>
+  </div>
+  <div class="journal-page" id="jp-ecal">
+    <div class="jmain">
+      <div id="vip-lock-ecal" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalender Ekonomi hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Hubungi Admin →</a></div>
+      <div id="vip-cnt-ecal" style="display:none">
+        <div class="sec-label">Kalender Ekonomi</div>
+        <div class="ecal-widget" id="ecal-widget-journal">
+          <div class="ecal-header">
+            <div class="ecal-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              High Impact USD
+            </div>
+            <span class="ecal-live">Live</span>
+          </div>
+          <div class="ecal-list"></div>
+          <div class="ecal-footer"><a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer">Lihat Kalender Lengkap →</a></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="journal-page" id="jp-calc">
@@ -1793,6 +1834,8 @@ function updateCanonical(url) {
 function goPage(p){
   /* Kalau sudah login dan mau ke auth, redirect ke home */
   if(p==='auth'&&window._curUser){p='home';}
+  /* Member VIP/Admin tidak perlu lihat halaman membership VIP lagi */
+  if(p==='vip'&&window._curUser&&(window._isVip||window._isAdmin)){p='journal';}
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
   ['home','berita','vip','modul'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   document.getElementById('mob-nav').classList.remove('open');
@@ -1853,6 +1896,28 @@ window.jTab=function(n,el){
   document.querySelectorAll('.journal-page').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('.app-tab').forEach(function(t){t.classList.remove('on');});
   document.getElementById('jp-'+n).classList.add('on');el.classList.add('on');
+  if(n==='ecal'){window._renderEcal&&window._renderEcal();window._startEcalListener&&window._startEcalListener();}
+};
+
+/* VIP nav dropdown */
+window.toggleVipMenu=function(e){
+  if(e)e.stopPropagation();
+  document.getElementById('vip-dropdown').classList.toggle('open');
+};
+window.closeVipMenu=function(){
+  document.getElementById('vip-dropdown').classList.remove('open');
+};
+document.addEventListener('click',function(e){
+  var dd=document.getElementById('vip-dropdown');
+  if(dd&&dd.classList.contains('open')&&!dd.contains(e.target)) dd.classList.remove('open');
+});
+
+/* Jump straight into a Journal tab (requires login, gated by VIP lock inside the tab) */
+window.goJournalTab=function(n){
+  requireVipNav();
+  if(!window._curUser) return;
+  var btn=document.getElementById('tab-btn-'+n);
+  if(btn) jTab(n,btn);
 };
 window.fltHist=function(f,btn){window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');window._renderHistory&&window._renderHistory();};
 window._histFlt='all';
@@ -2267,10 +2332,14 @@ onAuthStateChanged(auth, async user=>{
       }
     }else{
       window._curUser=null; isVip=false; isAdmin=false;
+      window._isVip=false; window._isAdmin=false;
       document.getElementById('nav-guest').style.display='block';
       document.getElementById('nav-loggedin').style.display='none';
       document.getElementById('nl-admin').style.display='none';
       document.getElementById('mob-admin-link').style.display='none';
+      document.getElementById('vdm-membership').style.display='block';
+      const mobMembership=document.getElementById('mob-vdm-membership');
+      if(mobMembership)mobMembership.style.display='block';
       const mobLoginBtn=document.getElementById('mob-login-btn');
       if(mobLoginBtn)mobLoginBtn.style.display='block';
       stopTick();
@@ -2302,10 +2371,14 @@ function showLoggedIn(user){
   document.getElementById('acc-status').innerHTML=isAdmin?'<span style="color:var(--green)">✦ Administrator</span>':isVip?'<span style="color:var(--gold)">✦ VIP Member</span>':'<span style="color:var(--text3)">Regular — hubungi admin untuk upgrade</span>';
   document.getElementById('adm-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('adm-uname').textContent=name;
-  ['dash','hist','notes','calc'].forEach(k=>{
+  document.getElementById('vdm-membership').style.display=(isVip||isAdmin)?'none':'block';
+  const mobMembership=document.getElementById('mob-vdm-membership');
+  if(mobMembership)mobMembership.style.display=(isVip||isAdmin)?'none':'block';
+  ['dash','hist','notes','calc','ecal'].forEach(k=>{
     document.getElementById('vip-lock-'+k).style.display=(isVip||isAdmin)?'none':'block';
     document.getElementById('vip-cnt-'+k).style.display=(isVip||isAdmin)?'block':'none';
   });
+  if(isVip||isAdmin){window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();}
   setSaveStatus('saved');
   renderAll();
   startTick();
@@ -2543,16 +2616,14 @@ async function fetchEcalData(){
 
 async function startEcalPolling(){
   if(window._ecalPoll) return; // already running
-  const list=document.getElementById('ecal-list');
-  if(list) list.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';
+  document.querySelectorAll('.ecal-list').forEach(function(l){l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';});
   const tick=async()=>{
     const data=await fetchEcalData();
     if(data){
       window._ecalData=data;
       renderEcal();
     }else if(!window._ecalData.length){
-      const l=document.getElementById('ecal-list');
-      if(l) l.innerHTML='<div class="ecal-empty">Gagal memuat kalender ekonomi.</div>';
+      document.querySelectorAll('.ecal-list').forEach(function(l){l.innerHTML='<div class="ecal-empty">Gagal memuat kalender ekonomi.</div>';});
     }
   };
   await tick();
@@ -2586,11 +2657,11 @@ function ecalDateLabel(iso){
   return{key:dKey,label:dateStr,cls:'future'};
 }
 function renderEcal(){
-  const list=document.getElementById('ecal-list');
-  if(!list)return;
+  const lists=document.querySelectorAll('.ecal-list');
+  if(!lists.length)return;
   const data=window._ecalData||[];
   if(!data.length){
-    list.innerHTML='<div class="ecal-empty">Tidak ada event high-impact USD minggu ini.</div>';
+    lists.forEach(function(list){list.innerHTML='<div class="ecal-empty">Tidak ada event high-impact USD minggu ini.</div>';});
     return;
   }
   const now=Date.now();
@@ -2626,7 +2697,7 @@ function renderEcal(){
       </div>
     </div>`;
   });
-  list.innerHTML=html;
+  lists.forEach(function(list){list.innerHTML=html;});
 }
 window._renderEcal=renderEcal;
 
