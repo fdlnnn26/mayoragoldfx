@@ -1425,6 +1425,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <button class="app-tab on" onclick="jTab('dash',this)">Dashboard</button>
     <button class="app-tab" onclick="jTab('history',this)">Trade History</button>
     <button class="app-tab" onclick="jTab('notes',this)">Journal Notes</button>
+    <button class="app-tab" onclick="jTab('calc',this)">Kalkulator</button>
     <button class="app-tab" onclick="jTab('account',this)">Account</button>
   </div>
   <div class="journal-page on" id="jp-dash">
@@ -1456,6 +1457,43 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <div class="jmain">
       <div id="vip-lock-notes" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Journal Notes hanya tersedia untuk member VIP.</div><a href="https://wa.me/6282138818361" target="_blank" rel="noopener noreferrer" class="vll-btn">Hubungi Admin →</a></div>
       <div id="vip-cnt-notes" style="display:none"><div class="sec-label">Journal Notes</div><div class="notes-grid" id="notes-grid"></div></div>
+    </div>
+  </div>
+  <div class="journal-page" id="jp-calc">
+    <div class="jmain">
+      <div id="vip-lock-calc" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Lot &amp; Risk Calculator hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Hubungi Admin →</a></div>
+      <div id="vip-cnt-calc" style="display:none">
+        <div class="sec-label">Lot &amp; Risk Calculator</div>
+        <div class="acc-sec">
+          <div class="form-grid2m">
+            <div>
+              <label class="form-lbl-m" for="calc-modal">Modal Akun (USD)</label>
+              <input type="number" class="form-inp-m" id="calc-modal" placeholder="cth: 100" min="0" step="any" inputmode="decimal">
+            </div>
+            <div>
+              <label class="form-lbl-m" for="calc-risk">Risk per Trade (%)</label>
+              <input type="number" class="form-inp-m" id="calc-risk" placeholder="cth: 2" min="0" step="any" inputmode="decimal">
+            </div>
+            <div>
+              <label class="form-lbl-m" for="calc-sl">Stop Loss (poin)</label>
+              <input type="number" class="form-inp-m" id="calc-sl" placeholder="cth: 50" min="0" step="any" inputmode="decimal">
+            </div>
+            <div>
+              <label class="form-lbl-m" for="calc-rr">Risk : Reward (1 : X)</label>
+              <input type="number" class="form-inp-m" id="calc-rr" placeholder="cth: 2" min="0" step="any" inputmode="decimal">
+            </div>
+          </div>
+          <div class="form-actions-m" style="justify-content:flex-start;margin-top:18px">
+            <button class="btn-save-mod" onclick="calcLotRisk()">Hitung →</button>
+          </div>
+          <div style="font-size:.6rem;color:var(--text3);margin-top:14px;line-height:1.9">*Estimasi memakai asumsi 1 poin XAU/USD ≈ $1 per 1.00 lot standard (1.00 lot = 100 oz, langkah harga 0.01). Nilai pip aktual bisa berbeda tergantung kontrak &amp; broker — gunakan hasil ini sebagai panduan, bukan jaminan.</div>
+        </div>
+        <div id="calc-result" style="display:none">
+          <div class="stats-row" id="calc-stats"></div>
+          <div id="calc-risk-note" class="acc-sec" style="display:none;border-color:rgba(224,90,90,.3)"></div>
+          <div id="calc-cent-note" class="acc-sec" style="display:none;border-color:rgba(201,168,76,.35)"></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="journal-page" id="jp-account">
@@ -1649,6 +1687,9 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <script>
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
+/* Page routing */
+var pages=['home','berita','vip','auth','journal','admin','modul'];
+
 /* Deep link handler — support path (/berita, /vip, dll) + ?artikel=slug untuk artikel + 404 redirect (?p=) */
 (function(){
   /* 0. Handle redirect dari 404.html (GitHub Pages SPA trick) */
@@ -1731,9 +1772,6 @@ window.switchTab=function(t){
   document.getElementById('li-err').textContent='';document.getElementById('ri-err').textContent='';
   document.getElementById('li-ok').style.display='none';document.getElementById('ri-ok').style.display='none';
 };
-
-/* Page routing */
-var pages=['home','berita','vip','auth','journal','admin','modul'];
 
 /* SEO-friendly page titles & descriptions per halaman */
 var PAGE_META = {
@@ -1818,6 +1856,48 @@ window.jTab=function(n,el){
 };
 window.fltHist=function(f,btn){window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');window._renderHistory&&window._renderHistory();};
 window._histFlt='all';
+
+/* Lot & Risk Calculator (VIP) */
+window.calcLotRisk=function(){
+  var modal=parseFloat(document.getElementById('calc-modal').value);
+  var risk=parseFloat(document.getElementById('calc-risk').value);
+  var sl=parseFloat(document.getElementById('calc-sl').value);
+  var rr=parseFloat(document.getElementById('calc-rr').value);
+  if(!(modal>0)||!(risk>0)||!(sl>0)||!(rr>0)){
+    toast('MGF','Lengkapi semua kolom dengan angka lebih dari 0','#E05A5A');
+    return;
+  }
+  var riskAmount=modal*risk/100;
+  var lot=riskAmount/sl;
+  var rewardAmount=riskAmount*rr;
+  var tpPoin=sl*rr;
+  var lotStr=lot<0.01?lot.toFixed(4):lot.toFixed(2);
+
+  var html='';
+  html+='<div class="scard"><div class="scard-l">Risk Amount</div><div class="scard-v r">$'+riskAmount.toFixed(2)+'</div><div class="scard-sub">'+risk+'% dari modal $'+modal.toFixed(2)+'</div></div>';
+  html+='<div class="scard"><div class="scard-l">Lot Size</div><div class="scard-v g">'+lotStr+'</div><div class="scard-sub">SL '+sl+' poin</div></div>';
+  html+='<div class="scard"><div class="scard-l">Potential Profit</div><div class="scard-v g">$'+rewardAmount.toFixed(2)+'</div><div class="scard-sub">RR 1:'+rr+' · TP ±'+tpPoin.toFixed(1)+' poin</div></div>';
+  html+='<div class="scard"><div class="scard-l">Potential Loss</div><div class="scard-v r">-$'+riskAmount.toFixed(2)+'</div><div class="scard-sub">Jika SL kena</div></div>';
+  document.getElementById('calc-stats').innerHTML=html;
+
+  var riskNote=document.getElementById('calc-risk-note');
+  if(risk>5){
+    riskNote.style.display='block';
+    riskNote.innerHTML='<div class="acc-sec-t" style="color:var(--red)">⚠ Risk per Trade Tergolong Tinggi</div><div style="font-size:.7rem;color:var(--text2);line-height:1.95">Risk '+risk+'% per trade cukup besar. Kebanyakan trader profesional menjaga risk di kisaran 1–2% per trade agar modal tetap aman dari rangkaian loss berturut-turut.</div>';
+  }else{
+    riskNote.style.display='none';
+  }
+
+  var centNote=document.getElementById('calc-cent-note');
+  if(lot<0.01){
+    centNote.style.display='block';
+    centNote.innerHTML='<div class="acc-sec-t" style="color:var(--gold)">✦ Saran: Pakai Akun Cent</div><div style="font-size:.7rem;color:var(--text2);line-height:1.95">Dengan modal $'+modal.toFixed(2)+', risk '+risk+'%, dan SL '+sl+' poin, lot size yang dibutuhkan ('+lot.toFixed(4)+') lebih kecil dari minimum lot di akun standard (0.01). Supaya money management tetap presisi sesuai rencana risk kamu, lebih cocok pakai <strong style="color:var(--gold)">Akun Cent</strong> — modal yang sama akan terasa lebih besar (cth: $'+modal.toFixed(2)+' setara ¢'+(modal*100).toFixed(0)+'), sehingga lot size minimum jadi realistis untuk diterapkan tanpa memperbesar risk di luar rencana.</div>';
+  }else{
+    centNote.style.display='none';
+  }
+
+  document.getElementById('calc-result').style.display='block';
+};
 
 /* Slug generator */
 function generateSlug(text){
@@ -2222,7 +2302,7 @@ function showLoggedIn(user){
   document.getElementById('acc-status').innerHTML=isAdmin?'<span style="color:var(--green)">✦ Administrator</span>':isVip?'<span style="color:var(--gold)">✦ VIP Member</span>':'<span style="color:var(--text3)">Regular — hubungi admin untuk upgrade</span>';
   document.getElementById('adm-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('adm-uname').textContent=name;
-  ['dash','hist','notes'].forEach(k=>{
+  ['dash','hist','notes','calc'].forEach(k=>{
     document.getElementById('vip-lock-'+k).style.display=(isVip||isAdmin)?'none':'block';
     document.getElementById('vip-cnt-'+k).style.display=(isVip||isAdmin)?'block':'none';
   });
