@@ -2586,6 +2586,33 @@ window._renderNews=renderNews;
 window._ecalData=[];
 window._ecalPoll=null;
 
+/* Cache jadwal mingguan di localStorage — refresh penuh tiap 6 jam */
+const ECAL_CACHE_KEY='mgf_ecal_cache_v1';
+const ECAL_CACHE_TTL=6*3600*1000;
+
+function ecalLoadCache(){
+  try{
+    const raw=localStorage.getItem(ECAL_CACHE_KEY);
+    if(!raw)return null;
+    const c=JSON.parse(raw);
+    if(!Array.isArray(c.data)||!c.fetchedAt)return null;
+    return c;
+  }catch(_){return null;}
+}
+function ecalSaveCache(data){
+  try{localStorage.setItem(ECAL_CACHE_KEY,JSON.stringify({data,fetchedAt:Date.now()}));}catch(_){}
+}
+
+/* Event high-impact berikutnya yang belum ada 'actual' (masih relevan: belum lewat >3 menit) */
+function ecalNextPending(){
+  const now=Date.now();
+  return (window._ecalData||[])
+    .filter(e=>e.actual===''||e.actual==null)
+    .map(e=>({...e,_t:new Date(e.date).getTime()}))
+    .filter(e=>e._t+3*60000>now)
+    .sort((a,b)=>a._t-b._t)[0]||null;
+}
+
 /* FCS API key — ganti kalau regenerate */
 const FCS_KEY='bo2IiWM3oqzDHapogHRNTg';
 
@@ -2634,15 +2661,22 @@ async function fetchEcalData(){
 }
 
 async function startEcalPolling(){
-  if(window._ecalPoll){clearInterval(window._ecalPoll);window._ecalPoll=null;}
-  document.querySelectorAll('.ecal-list').forEach(l=>{l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';});
+  if(window._ecalPoll){clearTimeout(window._ecalPoll);window._ecalPoll=null;}
+
+  /* 1. Render instan dari cache (kalau ada) — gak nunggu API tiap buka halaman */
+  const cache=ecalLoadCache();
+  if(cache&&cache.data.length){
+    window._ecalData=cache.data;
+    renderEcal();
+  }else{
+    document.querySelectorAll('.ecal-list').forEach(l=>{l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';});
+  }
+
   const tick=async()=>{
     const data=await fetchEcalData();
-    if(data&&data.length>0){
+    if(data){
       window._ecalData=data;
-      renderEcal();
-    }else if(data&&data.length===0){
-      window._ecalData=[];
+      ecalSaveCache(data);
       renderEcal();
     }else if(!window._ecalData.length){
       document.querySelectorAll('.ecal-list').forEach(l=>{
@@ -2650,16 +2684,32 @@ async function startEcalPolling(){
       });
     }
   };
-  await tick();
-  /* Smart polling: tiap 15 detik saat menit ke-58,59,00,01,02 — sisanya tiap 5 menit */
+
+  /* 2. Kalau cache kosong/sudah lebih dari 6 jam, fetch sekarang */
+  const needFresh=!cache||(Date.now()-cache.fetchedAt>ECAL_CACHE_TTL);
+  if(needFresh) await tick();
+
+  /* 3. Smart schedule:
+     - Event high-impact berikutnya yang belum punya 'actual' & rilisnya ≤60 detik lagi (atau baru lewat ≤3 menit)
+       → poll tiap 15 detik supaya 'actual' update real-time (lag <1 menit)
+     - Event berikutnya masih >60 detik → "tidur" sampai ~50 detik sebelum rilis
+     - Gak ada event pending → tidur sampai cache TTL (refresh jadwal tiap 6 jam) */
   function scheduleNext(){
-    const min=new Date().getUTCMinutes();
-    const nearRelease=(min>=58||min<=2);
-    window._ecalPoll=setTimeout(async()=>{await tick();scheduleNext();},nearRelease?15000:300000);
+    const next=ecalNextPending();
+    let delay;
+    if(next){
+      const diff=next._t-Date.now();
+      delay = diff<=60000 ? 15000 : Math.min(diff-50000, ECAL_CACHE_TTL);
+    }else{
+      delay = ECAL_CACHE_TTL;
+    }
+    delay=Math.max(delay,15000);
+    window._ecalPoll=setTimeout(async()=>{await tick();scheduleNext();},delay);
   }
   scheduleNext();
 }
 window._startEcalListener=startEcalPolling;
+
 
 const ECAL_INVERSE_KEYWORDS=['unemployment','jobless','inventories','trade balance deficit'];
 function ecalBias(e){
