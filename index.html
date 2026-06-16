@@ -2608,94 +2608,81 @@ window._ecalData=[];
 window._ecalPoll=null;
 window._ecalUnsub=null; // Firestore onSnapshot unsubscribe
 
-/* FCS API key */
-const FCS_KEY='bo2IiWM3oqzDHapogHRNTg';
+/* FCS API keys — fallback otomatis kalau key 1 limit/error, coba key 2, lalu key 3 */
+const FCS_KEYS=[
+  'bo2IiWM3oqzDHapogHRNTg', // Key 1 (utama)
+  'GANTI_DENGAN_API_KEY_2',  // Key 2 (cadangan 1)
+  'GANTI_DENGAN_API_KEY_3',  // Key 3 (cadangan 2)
+];
+/* Simpan index key aktif di memory (reset tiap reload) */
+window._fcsKeyIdx = window._fcsKeyIdx ?? 0;
 
-/* ===== DAFTAR NEWS YANG BENERAN HIGH IMPACT (sesuai Forex Factory) ===== */
+/* ===== DAFTAR NEWS HIGH IMPACT — hanya yang benar-benar market mover XAU/USD ===== */
+/*
+  FILOSOFI:
+  - High = benar-benar menggerakkan XAU/USD signifikan (Fed, inflasi, NFP, GDP)
+  - Semua yang lain → Medium, meskipun FCS kasih importance=2
+  - Lebih baik false negative (High terlewat) daripada false positive (banyak noise)
+*/
 const TRUE_HIGH_KEYWORDS=[
-  /* NFP & Employment — hanya yang utama */
-  'nonfarm payroll','non-farm payroll','nfp',
-  'unemployment rate',
-  'adp employment change',           // bukan 'employment change' (terlalu lebar)
-  'initial jobless claims',          // exact, bukan cuma 'initial jobless'
-  'continuing jobless claims',
-  'jolts',
-  'average hourly earnings',
-  'participation rate',
 
-  /* Inflasi */
-  'cpi','consumer price index',      // CPI selalu High apapun variannya (MoM/YoY/Core)
-  'core cpi',                        // Core CPI
-  'core inflation rate',
-  'pce price','pce deflator',
-  'trimmed mean','cleveland median',
+  /* ── FOMC / Fed ── paling berpengaruh ke XAU/USD */
+  'fomc rate decision',
+  'federal funds rate',
+  'fomc statement',
+  'fomc minutes',
+  'fomc economic projections',
+  'fed interest rate decision',
+  'powell speaks',
+  'powell press conference',
+  'fed chair powell',
 
-  /* Fed / FOMC */
-  'fomc','fed interest rate','federal funds rate',
-  'fed press conference',
-  'monetary policy statement',
-  'fomc minutes','fomc economic projections',
-
-  /* GDP */
-  'gdp growth','gross domestic product',
-
-  /* Retail Sales — hanya headline MoM, bukan ex autos/gas */
-  'retail sales mom',                // match "Retail Sales MoM"
-  'retail sales ex autos mom',       // ini juga penting
-  'retail sales yoy',
-
-  /* PPI — hanya headline */
-  'ppi mom','ppi yoy',
+  /* ── INFLASI ── */
+  'cpi m/m','cpi mom',
+  'cpi y/y','cpi yoy',
+  'core cpi m/m','core cpi mom',
+  'core cpi y/y','core cpi yoy',
+  'consumer price index',
+  'ppi m/m','ppi mom',
+  'ppi y/y','ppi yoy',
   'producer price index',
+  'core pce price index',
+  'pce price index',
 
-  /* Housing — hanya headline, bukan turunan MoM */
-  'housing starts',                  // match "Housing Starts" tapi BUKAN "Housing Starts MoM"
-  'building permits prel',           // match "Building Permits Prel" headline
-  'new home sales',
-  'existing home sales',
-  'pending home sales',
-  'nahb housing market',             // NAHB tetap masuk
+  /* ── NFP & Employment utama ── */
+  'nonfarm payrolls',
+  'non-farm payrolls',
+  'unemployment rate',
+  'average hourly earnings m/m',
+  'average hourly earnings mom',
 
-  /* ISM */
-  'ism manufacturing','ism services','ism non-manufacturing',
+  /* ── GDP ── */
+  'gdp q/q','gdp qq',
+  'gdp growth rate',
+  'gross domestic product',
 
-  /* Trade */
-  'trade balance','current account',
+  /* ── ISM — hanya headline Manufacturing & Services ── */
+  'ism manufacturing pmi',
+  'ism services pmi',
+  'ism non-manufacturing pmi',
 
-  /* Consumer Confidence utama */
-  'consumer confidence','michigan sentiment','umich',
+  /* ── Retail Sales — hanya headline ── */
+  'retail sales m/m',
+  'retail sales mom',
+  'retail sales ex autos m/m',
+  'retail sales ex autos mom',
 
-  /* Lainnya yang benar-benar market mover */
-  'durable goods orders',            // bukan 'durable goods' saja
-  'factory orders',
-  'philly fed manufacturing',        // exact
-  'chicago pmi',
-  'personal income','personal spending',
-  'business inventories',
-  'api crude oil stock',
-  'eia crude oil stocks change',
-  'natural gas stocks change',
+  /* ── Consumer Confidence / Sentiment ── */
+  'michigan consumer sentiment',
+  'umich consumer sentiment',
+  'cb consumer confidence',
 ];
 
-/* Helper: match keyword tapi cegah false positive dari turunan MoM/YoY
-   Contoh: 'housing starts' harus match "Housing Starts" tapi TIDAK "Housing Starts MoM"
-   Pengecualian: beberapa keyword seperti CPI/PPI/GDP tetap High apapun variannya */
-const ALWAYS_HIGH_ANY_VARIANT=['cpi','ppi','gdp','fomc','jolts','nfp','nahb'];
+/* Exact-match mode: judul harus mengandung salah satu keyword di atas (case-insensitive)
+   Tidak ada fuzzy matching — mencegah false positive */
 function ecalIsHighImpact(title){
   const tl=title.toLowerCase().trim();
-  return TRUE_HIGH_KEYWORDS.some(k=>{
-    const ki=k.toLowerCase();
-    const idx=tl.indexOf(ki);
-    if(idx===-1)return false;
-    // Keyword yang selalu High apapun variannya → langsung match
-    if(ALWAYS_HIGH_ANY_VARIANT.some(a=>ki.includes(a)))return true;
-    // Keyword yang sudah spesifik (ada mom/yoy/prel di keyword) → langsung match
-    if(ki.includes('mom')||ki.includes('yoy')||ki.includes('prel'))return true;
-    // Keyword umum → pastikan tidak ada suffix MoM/YoY setelahnya
-    const after=tl.slice(idx+ki.length).trim();
-    if(after.startsWith('mom')||after.startsWith('yoy')||after.startsWith('m/m')||after.startsWith('y/y'))return false;
-    return true;
-  });
+  return TRUE_HIGH_KEYWORDS.some(k=>tl.includes(k.toLowerCase()));
 }
 
 /* Hitung week key format YYYY-Www (misal 2026-W25) untuk deteksi ganti minggu */
@@ -2746,20 +2733,53 @@ function ecalNormalize(response){
   });
 }
 
-/* Fetch dari FCS API */
+/* Fetch dari FCS API — dengan fallback 3 key otomatis */
 async function fetchFromFCS(){
-  try{
-    const{start,end}=getWeekRange();
-    const url=`https://fcsapi.com/api-v3/forex/economy_cal?country=US&from=${start}&to=${end}&access_key=${FCS_KEY}`;
-    const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
-    if(!r.ok)return null;
-    const json=await r.json();
-    if(!json.response||!Array.isArray(json.response))return null;
-    return ecalNormalize(json.response);
-  }catch(err){
-    console.warn('[ecal] FCS fetch error:',err);
-    return null;
+  const{start,end}=getWeekRange();
+  /* Coba semua key mulai dari index aktif, muter jika perlu */
+  const total=FCS_KEYS.length;
+  for(let attempt=0;attempt<total;attempt++){
+    const idx=(window._fcsKeyIdx+attempt)%total;
+    const key=FCS_KEYS[idx];
+    /* Skip placeholder key yang belum diisi */
+    if(!key||key.startsWith('GANTI_'))continue;
+    try{
+      const url=`https://fcsapi.com/api-v3/forex/economy_cal?country=US&from=${start}&to=${end}&access_key=${key}`;
+      const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
+      if(!r.ok){
+        console.warn(`[ecal] Key ${idx+1} HTTP error ${r.status}, coba key berikutnya...`);
+        continue;
+      }
+      const json=await r.json();
+      /* Deteksi limit habis — FCS mengembalikan status false / pesan limit */
+      const isLimited=(
+        json.status===false||
+        json.status===0||
+        (typeof json.msg==='string'&&(
+          json.msg.toLowerCase().includes('limit')||
+          json.msg.toLowerCase().includes('exceed')||
+          json.msg.toLowerCase().includes('invalid')||
+          json.msg.toLowerCase().includes('credit')
+        ))
+      );
+      if(isLimited){
+        console.warn(`[ecal] Key ${idx+1} limit/invalid (${json.msg||'no msg'}), beralih ke key berikutnya...`);
+        /* Geser ke key berikutnya agar percobaan berikutnya langsung pakai key baru */
+        window._fcsKeyIdx=(idx+1)%total;
+        continue;
+      }
+      if(!json.response||!Array.isArray(json.response))return null;
+      /* Berhasil — simpan key yang sukses sebagai starting point berikutnya */
+      window._fcsKeyIdx=idx;
+      console.info(`[ecal] Berhasil dengan Key ${idx+1}`);
+      return ecalNormalize(json.response);
+    }catch(err){
+      console.warn(`[ecal] Key ${idx+1} error:`,err.message||err);
+    }
   }
+  /* Semua key gagal */
+  console.error('[ecal] Semua FCS key gagal/limit.');
+  return null;
 }
 
 /* Baca cache dari Firestore */
