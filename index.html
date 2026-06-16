@@ -2611,8 +2611,8 @@ window._ecalUnsub=null; // Firestore onSnapshot unsubscribe
 /* FCS API keys — fallback otomatis kalau key 1 limit/error, coba key 2, lalu key 3 */
 const FCS_KEYS=[
   'bo2IiWM3oqzDHapogHRNTg', // Key 1 (utama)
-  'qraH0LeaQTs8uA0lqHKe2lG106w6G4',  // Key 2 (cadangan 1)
-  'RbArIRNcpqR6tSpNo2La',  // Key 3 (cadangan 2)
+  'GANTI_DENGAN_API_KEY_2',  // Key 2 (cadangan 1)
+  'GANTI_DENGAN_API_KEY_3',  // Key 3 (cadangan 2)
 ];
 /* Simpan index key aktif di memory (reset tiap reload) */
 window._fcsKeyIdx = window._fcsKeyIdx ?? 0;
@@ -2636,6 +2636,8 @@ const TRUE_HIGH_KEYWORDS=[
   'powell speaks',
   'powell press conference',
   'fed chair powell',
+  'fed press conference',
+  'press conference',
 
   /* ── INFLASI ── */
   'cpi m/m','cpi mom',
@@ -2655,6 +2657,7 @@ const TRUE_HIGH_KEYWORDS=[
   'unemployment rate',
   'average hourly earnings m/m',
   'average hourly earnings mom',
+  'initial jobless claims',
 
   /* ── GDP ── */
   'gdp q/q','gdp qq',
