@@ -2582,77 +2582,71 @@ async function renderNews(){
 }
 window._renderNews=renderNews;
 
-/* ===== ECONOMIC CALENDAR (FCS API) ===== */
+/* ===== ECONOMIC CALENDAR — Shared Firestore Cache + FCS API ===== */
+/*
+  ARSITEKTUR:
+  - Firestore doc: ecal_cache/current
+      { data: [...], fetchedAt: timestamp, weekKey: 'YYYY-Www' }
+  - Satu user fetch FCS → simpan ke Firestore → semua user lain baca dari Firestore
+  - FCS hanya dipanggil kalau cache Firestore expired (beda minggu / >23 jam)
+  - actual update: onSnapshot Firestore → realtime ke semua user tanpa poll FCS
+
+  TTL LOGIC (anti-kelewat news):
+  - Cache Firestore expire kalau weekKey beda (ganti minggu) ATAU >23 jam
+  - Saat window aktif event (5 menit sebelum s/d 10 menit setelah rilis):
+      → 1 "fetcher" call FCS tiap 30 detik → update Firestore
+      → semua user lain dapat update via onSnapshot (0 FCS call tambahan)
+  - Fetcher dipilih pakai lock di Firestore (ecal_cache/lock) agar tidak double fetch
+
+  ESTIMASI CREDIT FCS (500/bulan):
+  - Refresh jadwal: 1/hari × 30 hari = 30
+  - Poll actual saat event aktif: ~8 event/minggu × 20 poll = 160/bulan
+  - Total: ~190/bulan (terlepas berapa pun user online) ✅
+*/
+
 window._ecalData=[];
 window._ecalPoll=null;
+window._ecalUnsub=null; // Firestore onSnapshot unsubscribe
 
-/* ---------------------------------------------------------------
-   ECONOMIC CALENDAR — FIRESTORE SHARED CACHE
-   Semua 1000+ member pakai cache bersama di Firestore.
-   FCS API hanya dipanggil 1x per 6 jam (oleh siapapun yang
-   pertama buka setelah cache expired), bukan per browser.
-   → dari ~120.000 call/bulan jadi ~120 call/bulan.
-   --------------------------------------------------------------- */
+/* FCS API key */
+const FCS_KEY='bo2IiWM3oqzDHapogHRNTg';
 
-const FCS_KEY        = 'bo2IiWM3oqzDHapogHRNTg';
-const ECAL_CACHE_TTL = 6 * 3600 * 1000; // 6 jam
-
-/* ---------- WHITELIST event USD yang benar-benar high-impact ----------
-   FCS memakai importance 0/1/2 (bukan 3), dan banyak event medium
-   (Building Permits, Housing Starts, dll) dapat importance "2" juga.
-   Daripada filter by importance saja, kita whitelist keyword persis
-   seperti Forex Factory red-flag untuk USD. Lebih akurat dan stabil.
-   --------------------------------------------------------------------- */
-const ECAL_HIGH_WHITELIST = [
-  // Fed / Monetary Policy
-  'fed interest rate','fomc','federal funds','fed press conference',
-  'fomc economic projections','interest rate projection',
-  // Inflation
-  'cpi','core cpi','pce price','core pce',
-  // Jobs
-  'non-farm payroll','nonfarm payroll','initial jobless claims',
-  'unemployment rate','adp employment','jolt',
-  // Growth / Activity
-  'gdp','retail sales','ism manufacturing','ism services',
-  'ism non-manufacturing',
-  // Housing (hanya yang benar-benar red di FF)
-  'nahb housing market','existing home sales',
-  'new home sales','pending home sales',
-  // Trade & Other
-  'trade balance','consumer confidence','cb consumer',
-  'michigan sentiment','average hourly earnings',
-  'durable goods','factory orders',
-  // Central bank speeches
-  'powell','fed chair','fed governor'
+/* ===== DAFTAR NEWS YANG BENERAN HIGH IMPACT (sesuai Forex Factory) ===== */
+const TRUE_HIGH_KEYWORDS=[
+  'non-farm payroll','nonfarm payroll','nfp','unemployment rate','employment change',
+  'initial jobless','continuing jobless','adp employment','jolts',
+  'cpi','consumer price index','core cpi','core inflation','pce price','pce deflator',
+  'inflation rate','trimmed mean','cleveland median',
+  'fomc','fed interest rate','federal funds rate','fed press conference',
+  'interest rate decision','monetary policy statement','fomc minutes',
+  'fomc economic projections','dot plot',
+  'gdp','gross domestic product',
+  'retail sales',
+  'ppi','producer price',
+  'housing starts','building permits',
+  'ism manufacturing','ism services','ism non-manufacturing',
+  'trade balance','current account',
+  'consumer confidence','michigan sentiment','umich',
+  'durable goods','factory orders','industrial production',
+  'philly fed','empire state','chicago pmi',
+  'import prices','export prices',
+  'pending home sales','existing home sales','new home sales',
+  'average hourly earnings','participation rate',
+  'api crude','eia crude','natural gas stocks',
+  'wholesale inventories','business inventories',
+  'personal income','personal spending',
 ];
 
-function ecalIsHighImpact(e){
-  /* country harus US */
-  if(e.country!=='US') return false;
-  const t=(e.title||e.indicator||'').toLowerCase();
-  return ECAL_HIGH_WHITELIST.some(kw=>t.includes(kw));
+/* Hitung week key format YYYY-Www (misal 2026-W25) untuk deteksi ganti minggu */
+function getWeekKey(){
+  const now=new Date();
+  const dow=now.getDay()||7;
+  const mon=new Date(now);mon.setDate(now.getDate()-(dow-1));mon.setHours(0,0,0,0);
+  const jan4=new Date(mon.getFullYear(),0,4);
+  const week=Math.ceil(((mon-jan4)/86400000+jan4.getDay()+1)/7);
+  return `${mon.getFullYear()}-W${String(week).padStart(2,'0')}`;
 }
 
-/* ---------- Firestore shared cache ---------- */
-async function ecalLoadFirestoreCache(){
-  try{
-    const db=getDB();
-    const snap=await getDoc(doc(db,'_cache','ecal'));
-    if(!snap.exists()) return null;
-    const c=snap.data();
-    if(!Array.isArray(c.data)||!c.fetchedAt) return null;
-    return c; // {data, fetchedAt}
-  }catch(_){return null;}
-}
-
-async function ecalSaveFirestoreCache(data){
-  try{
-    const db=getDB();
-    await setDoc(doc(db,'_cache','ecal'),{data,fetchedAt:Date.now()});
-  }catch(_){}
-}
-
-/* ---------- Fetch langsung ke FCS (hanya jika cache expired) ---------- */
 function getWeekRange(){
   const now=new Date();
   const dow=now.getDay()||7;
@@ -2662,33 +2656,6 @@ function getWeekRange(){
   return{start:fmt(mon),end:fmt(sun)};
 }
 
-async function fetchEcalFromFCS(){
-  try{
-    const {start,end}=getWeekRange();
-    const url=`https://fcsapi.com/api-v3/forex/economy_cal?country=US&from=${start}&to=${end}&access_key=${FCS_KEY}`;
-    const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
-    if(!r.ok) return null;
-    const json=await r.json();
-    if(!json.response||!Array.isArray(json.response)) return null;
-    /* Filter pakai whitelist, bukan importance saja */
-    return json.response
-      .filter(ecalIsHighImpact)
-      .map(e=>({
-        title:    e.title||e.indicator||'',
-        country:  'USD',
-        date:     e.date.replace(' ','T')+'Z',
-        impact:   'High',
-        forecast: e.forecast||'',
-        previous: e.previous||'',
-        actual:   e.actual||'',
-      }));
-  }catch(err){
-    console.warn('FCS fetch error:',err);
-    return null;
-  }
-}
-
-/* ---------- Helpers ---------- */
 function ecalFmtTime(iso){
   try{
     const d=new Date(iso);
@@ -2697,75 +2664,214 @@ function ecalFmtTime(iso){
   }catch(e){return '--:--';}
 }
 
-/* Event berikutnya yang belum ada actual & belum lewat >3 menit */
-function ecalNextPending(){
-  const now=Date.now();
-  return (window._ecalData||[])
-    .filter(e=>e.actual===''||e.actual==null)
-    .map(e=>({...e,_t:new Date(e.date).getTime()}))
-    .filter(e=>e._t+3*60000>now)
-    .sort((a,b)=>a._t-b._t)[0]||null;
+/* Normalize raw FCS response → format internal */
+function ecalNormalize(response){
+  const filtered=response.filter(e=>
+    e.country==='US'&&
+    (e.importance==='2'||e.importance===2||e.importance==='1'||e.importance===1)
+  );
+  return filtered.map(e=>{
+    const titleLow=(e.title||e.indicator||'').toLowerCase();
+    const isRealHigh=TRUE_HIGH_KEYWORDS.some(k=>titleLow.includes(k));
+    return{
+      id: e.id||'',
+      title: e.title||e.indicator||'',
+      country:'USD',
+      date: e.date.replace(' ','T')+'Z',
+      impact: isRealHigh?'High':'Medium',
+      forecast: e.forecast||'',
+      previous: e.previous||'',
+      actual: e.actual||'',
+    };
+  });
 }
 
-/* ---------- Main polling dengan Firestore cache ---------- */
+/* Fetch dari FCS API */
+async function fetchFromFCS(){
+  try{
+    const{start,end}=getWeekRange();
+    const url=`https://fcsapi.com/api-v3/forex/economy_cal?country=US&from=${start}&to=${end}&access_key=${FCS_KEY}`;
+    const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
+    if(!r.ok)return null;
+    const json=await r.json();
+    if(!json.response||!Array.isArray(json.response))return null;
+    return ecalNormalize(json.response);
+  }catch(err){
+    console.warn('[ecal] FCS fetch error:',err);
+    return null;
+  }
+}
+
+/* Baca cache dari Firestore */
+async function ecalReadFirestore(){
+  try{
+    const db=getDB();
+    const{getDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const snap=await getDoc(doc(db,'ecal_cache','current'));
+    if(!snap.exists())return null;
+    return snap.data(); // {data, fetchedAt (ms), weekKey}
+  }catch(e){
+    console.warn('[ecal] Firestore read error:',e);
+    return null;
+  }
+}
+
+/* Tulis cache ke Firestore */
+async function ecalWriteFirestore(data){
+  try{
+    const db=getDB();
+    const{setDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    await setDoc(doc(db,'ecal_cache','current'),{
+      data,
+      fetchedAt: Date.now(),
+      weekKey: getWeekKey(),
+    });
+    return true;
+  }catch(e){
+    console.warn('[ecal] Firestore write error:',e);
+    return false;
+  }
+}
+
+/* Cek apakah cache Firestore masih valid:
+   - weekKey harus sama (belum ganti minggu)
+   - fetchedAt < 23 jam yang lalu */
+function ecalCacheValid(cached){
+  if(!cached||!cached.data||!cached.fetchedAt||!cached.weekKey)return false;
+  if(cached.weekKey!==getWeekKey())return false;           // ganti minggu → invalid
+  if(Date.now()-cached.fetchedAt > 23*3600*1000)return false; // >23 jam → invalid
+  return true;
+}
+
+/* Coba ambil lock fetcher (agar hanya 1 user yang call FCS saat bersamaan)
+   Lock expire 60 detik. Return true kalau berhasil dapat lock. */
+async function ecalTryLock(){
+  try{
+    const db=getDB();
+    const{getDoc,setDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const lockRef=doc(db,'ecal_cache','lock');
+    const snap=await getDoc(lockRef);
+    const now=Date.now();
+    if(snap.exists()&&(now-snap.data().at)<60000)return false; // ada lock aktif
+    await setDoc(lockRef,{at:now});
+    return true;
+  }catch(e){return true;} // kalau error, tetap lanjut fetch
+}
+
+async function ecalReleaseLock(){
+  try{
+    const db=getDB();
+    const{deleteDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    await deleteDoc(doc(db,'ecal_cache','lock'));
+  }catch(e){}
+}
+
+/* Subscribe Firestore realtime → update semua user tanpa poll FCS */
+function ecalSubscribeFirestore(){
+  if(window._ecalUnsub){window._ecalUnsub();window._ecalUnsub=null;}
+  try{
+    const db=getDB();
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js').then(({onSnapshot,doc})=>{
+      window._ecalUnsub=onSnapshot(doc(db,'ecal_cache','current'),snap=>{
+        if(!snap.exists())return;
+        const cached=snap.data();
+        if(cached&&Array.isArray(cached.data)&&cached.data.length){
+          window._ecalData=cached.data;
+          renderEcal();
+        }
+      });
+    });
+  }catch(e){console.warn('[ecal] onSnapshot error:',e);}
+}
+
+/* Main entry */
 async function startEcalPolling(){
   if(window._ecalPoll){clearTimeout(window._ecalPoll);window._ecalPoll=null;}
 
-  /* 1. Coba ambil dari Firestore cache dulu — instan, 0 FCS call */
-  const cache=await ecalLoadFirestoreCache();
-  if(cache&&cache.data.length){
-    window._ecalData=cache.data;
-    renderEcal();
-  }else{
-    document.querySelectorAll('.ecal-list').forEach(l=>{
+  /* Tampilkan loading */
+  document.querySelectorAll('.ecal-list').forEach(l=>{
+    if(!l.innerHTML.trim()||l.innerHTML.includes('ecal-empty'))
       l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';
-    });
+  });
+
+  /* 1. Baca cache Firestore dulu */
+  const cached=await ecalReadFirestore();
+  if(ecalCacheValid(cached)){
+    window._ecalData=cached.data;
+    renderEcal();
   }
 
-  const tick=async()=>{
-    /* Cek apakah cache Firestore masih segar */
-    const c=await ecalLoadFirestoreCache();
-    const needFresh=!c||(Date.now()-c.fetchedAt>ECAL_CACHE_TTL);
+  /* 2. Subscribe realtime — semua user dapat update otomatis saat ada yang update Firestore */
+  ecalSubscribeFirestore();
 
-    if(needFresh){
-      /* Hanya member yang pertama buka setelah expired yang akan hit FCS */
-      const data=await fetchEcalFromFCS();
+  /* 3. Kalau cache invalid/expired → fetch FCS (dengan lock agar tidak dobel) */
+  const doFetchFCS=async()=>{
+    const gotLock=await ecalTryLock();
+    if(!gotLock)return; // user lain sedang fetch, tunggu onSnapshot
+    try{
+      const data=await fetchFromFCS();
       if(data){
+        await ecalWriteFirestore(data); // onSnapshot akan update semua user
         window._ecalData=data;
-        await ecalSaveFirestoreCache(data); // simpan ke Firestore untuk semua member
         renderEcal();
       }else if(!window._ecalData.length){
         document.querySelectorAll('.ecal-list').forEach(l=>{
           l.innerHTML='<div class="ecal-empty">Gagal memuat — <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" style="color:var(--gold)">buka Forex Factory →</a></div>';
         });
       }
-    }else{
-      /* Cache masih segar, update data lokal saja */
-      window._ecalData=c.data;
-      renderEcal();
+    }finally{
+      await ecalReleaseLock();
     }
   };
 
-  /* 2. Jalankan tick pertama */
-  const needFreshInit=!cache||(Date.now()-cache.fetchedAt>ECAL_CACHE_TTL);
-  if(needFreshInit) await tick();
+  if(!ecalCacheValid(cached)) await doFetchFCS();
 
-  /* 3. Smart schedule:
-     - <60 detik sebelum / sesaat setelah event → poll tiap 30 detik
-       supaya 'actual' update (lag max ~30 detik, hemat vs 15 detik)
-     - >60 detik sebelum event → tidur sampai 50 detik sebelum rilis
-     - Tidak ada event pending → tidur 6 jam (refresh jadwal mingguan) */
+  /* 4. Smart schedule — hanya fetch FCS saat window aktif event
+        Di luar window: onSnapshot Firestore sudah cukup untuk realtime update
+        
+        WINDOW AKTIF: 5 menit sebelum s/d 10 menit setelah rilis
+        → fetch FCS tiap 30 detik (dengan lock → hanya 1 user yang actual call FCS)
+        
+        Di luar window → tidur sampai 5 menit sebelum event berikutnya
+        Tidak ada event → tidur sampai besok (re-check jadwal minggu baru) */
   function scheduleNext(){
-    const next=ecalNextPending();
+    const now=Date.now();
+    const pending=(window._ecalData||[])
+      .map(e=>({...e,_t:new Date(e.date).getTime()}))
+      .filter(e=>(e.actual===''||e.actual==null)&&e._t+10*60000>now)
+      .sort((a,b)=>a._t-b._t);
+
     let delay;
-    if(next){
-      const diff=next._t-Date.now();
-      delay = diff<=60000 ? 30000 : Math.min(diff-50000, ECAL_CACHE_TTL);
+    if(pending.length){
+      const next=pending[0];
+      const diff=next._t-now;
+      if(diff>-10*60000&&diff<=5*60000){
+        // Dalam window aktif → poll FCS tiap 30 detik (via lock)
+        delay=30000;
+      }else{
+        // Luar window → tidur sampai 5 menit sebelum event
+        delay=Math.max(diff-5*60000,60000);
+      }
     }else{
-      delay = ECAL_CACHE_TTL;
+      // Tidak ada event pending → tidur 1 jam (re-check kalau ada event baru)
+      delay=60*60*1000;
     }
-    delay=Math.max(delay,30000);
-    window._ecalPoll=setTimeout(async()=>{await tick();scheduleNext();},delay);
+    window._ecalPoll=setTimeout(async()=>{
+      // Di luar window: cukup re-check cache Firestore (bukan call FCS)
+      const now2=Date.now();
+      const p2=(window._ecalData||[])
+        .map(e=>({...e,_t:new Date(e.date).getTime()}))
+        .filter(e=>(e.actual===''||e.actual==null)&&e._t+10*60000>now2&&e._t-now2<=5*60000);
+      if(p2.length){
+        // Masuk window aktif → fetch FCS
+        await doFetchFCS();
+      }else{
+        // Cek kalau cache Firestore perlu refresh (ganti minggu / >23 jam)
+        const c=await ecalReadFirestore();
+        if(!ecalCacheValid(c)) await doFetchFCS();
+      }
+      scheduleNext();
+    },delay);
   }
   scheduleNext();
 }
@@ -2830,7 +2936,7 @@ function renderEcal(){
     }
     html+=`<div class="ecal-row ${i===nextIdx?'is-next':''}">
       <div class="ecal-time">${ecalFmtTime(e.date)}<small>WIB</small></div>
-      <div class="ecal-impact"><span class="ecal-dot high" title="High impact"></span></div>
+      <div class="ecal-impact"><span class="ecal-dot ${e.impact==='High'?'high':'medium'}" title="${e.impact} impact"></span></div>
       <div class="ecal-body">
         <div class="ecal-event-top"><span class="ecal-curr">${e.country}</span><span class="ecal-name">${e.title}</span></div>
         <div class="ecal-vals">${valHtml}</div>
