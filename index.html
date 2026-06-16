@@ -2613,29 +2613,90 @@ const FCS_KEY='bo2IiWM3oqzDHapogHRNTg';
 
 /* ===== DAFTAR NEWS YANG BENERAN HIGH IMPACT (sesuai Forex Factory) ===== */
 const TRUE_HIGH_KEYWORDS=[
-  'non-farm payroll','nonfarm payroll','nfp','unemployment rate','employment change',
-  'initial jobless','continuing jobless','adp employment','jolts',
-  'cpi','consumer price index','core cpi','core inflation','pce price','pce deflator',
-  'inflation rate','trimmed mean','cleveland median',
-  'fomc','fed interest rate','federal funds rate','fed press conference',
-  'interest rate decision','monetary policy statement','fomc minutes',
-  'fomc economic projections','dot plot',
-  'gdp','gross domestic product',
-  'retail sales',
-  'ppi','producer price',
-  'housing starts','building permits',
+  /* NFP & Employment — hanya yang utama */
+  'nonfarm payroll','non-farm payroll','nfp',
+  'unemployment rate',
+  'adp employment change',           // bukan 'employment change' (terlalu lebar)
+  'initial jobless claims',          // exact, bukan cuma 'initial jobless'
+  'continuing jobless claims',
+  'jolts',
+  'average hourly earnings',
+  'participation rate',
+
+  /* Inflasi */
+  'cpi','consumer price index',      // CPI selalu High apapun variannya (MoM/YoY/Core)
+  'core cpi',                        // Core CPI
+  'core inflation rate',
+  'pce price','pce deflator',
+  'trimmed mean','cleveland median',
+
+  /* Fed / FOMC */
+  'fomc','fed interest rate','federal funds rate',
+  'fed press conference',
+  'monetary policy statement',
+  'fomc minutes','fomc economic projections',
+
+  /* GDP */
+  'gdp growth','gross domestic product',
+
+  /* Retail Sales — hanya headline MoM, bukan ex autos/gas */
+  'retail sales mom',                // match "Retail Sales MoM"
+  'retail sales ex autos mom',       // ini juga penting
+  'retail sales yoy',
+
+  /* PPI — hanya headline */
+  'ppi mom','ppi yoy',
+  'producer price index',
+
+  /* Housing — hanya headline, bukan turunan MoM */
+  'housing starts',                  // match "Housing Starts" tapi BUKAN "Housing Starts MoM"
+  'building permits prel',           // match "Building Permits Prel" headline
+  'new home sales',
+  'existing home sales',
+  'pending home sales',
+  'nahb housing market',             // NAHB tetap masuk
+
+  /* ISM */
   'ism manufacturing','ism services','ism non-manufacturing',
+
+  /* Trade */
   'trade balance','current account',
+
+  /* Consumer Confidence utama */
   'consumer confidence','michigan sentiment','umich',
-  'durable goods','factory orders','industrial production',
-  'philly fed','empire state','chicago pmi',
-  'import prices','export prices',
-  'pending home sales','existing home sales','new home sales',
-  'average hourly earnings','participation rate',
-  'api crude','eia crude','natural gas stocks',
-  'wholesale inventories','business inventories',
+
+  /* Lainnya yang benar-benar market mover */
+  'durable goods orders',            // bukan 'durable goods' saja
+  'factory orders',
+  'philly fed manufacturing',        // exact
+  'chicago pmi',
   'personal income','personal spending',
+  'business inventories',
+  'api crude oil stock',
+  'eia crude oil stocks change',
+  'natural gas stocks change',
 ];
+
+/* Helper: match keyword tapi cegah false positive dari turunan MoM/YoY
+   Contoh: 'housing starts' harus match "Housing Starts" tapi TIDAK "Housing Starts MoM"
+   Pengecualian: beberapa keyword seperti CPI/PPI/GDP tetap High apapun variannya */
+const ALWAYS_HIGH_ANY_VARIANT=['cpi','ppi','gdp','fomc','jolts','nfp','nahb'];
+function ecalIsHighImpact(title){
+  const tl=title.toLowerCase().trim();
+  return TRUE_HIGH_KEYWORDS.some(k=>{
+    const ki=k.toLowerCase();
+    const idx=tl.indexOf(ki);
+    if(idx===-1)return false;
+    // Keyword yang selalu High apapun variannya → langsung match
+    if(ALWAYS_HIGH_ANY_VARIANT.some(a=>ki.includes(a)))return true;
+    // Keyword yang sudah spesifik (ada mom/yoy/prel di keyword) → langsung match
+    if(ki.includes('mom')||ki.includes('yoy')||ki.includes('prel'))return true;
+    // Keyword umum → pastikan tidak ada suffix MoM/YoY setelahnya
+    const after=tl.slice(idx+ki.length).trim();
+    if(after.startsWith('mom')||after.startsWith('yoy')||after.startsWith('m/m')||after.startsWith('y/y'))return false;
+    return true;
+  });
+}
 
 /* Hitung week key format YYYY-Www (misal 2026-W25) untuk deteksi ganti minggu */
 function getWeekKey(){
@@ -2671,8 +2732,7 @@ function ecalNormalize(response){
     (e.importance==='2'||e.importance===2||e.importance==='1'||e.importance===1)
   );
   return filtered.map(e=>{
-    const titleLow=(e.title||e.indicator||'').toLowerCase();
-    const isRealHigh=TRUE_HIGH_KEYWORDS.some(k=>titleLow.includes(k));
+    const isRealHigh=ecalIsHighImpact(e.title||e.indicator||'');
     return{
       id: e.id||'',
       title: e.title||e.indicator||'',
