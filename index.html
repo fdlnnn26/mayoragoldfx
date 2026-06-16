@@ -2585,7 +2585,7 @@ window._renderNews=renderNews;
 /* ===== ECONOMIC CALENDAR — Shared Firestore Cache + FCS API ===== */
 /*
   ARSITEKTUR:
-  - Firestore doc: ecal_cache/current
+  - Firestore doc: _cache/ecal_current
       { data: [...], fetchedAt: timestamp, weekKey: 'YYYY-Www' }
   - Satu user fetch FCS → simpan ke Firestore → semua user lain baca dari Firestore
   - FCS hanya dipanggil kalau cache Firestore expired (beda minggu / >23 jam)
@@ -2596,7 +2596,7 @@ window._renderNews=renderNews;
   - Saat window aktif event (5 menit sebelum s/d 10 menit setelah rilis):
       → 1 "fetcher" call FCS tiap 30 detik → update Firestore
       → semua user lain dapat update via onSnapshot (0 FCS call tambahan)
-  - Fetcher dipilih pakai lock di Firestore (ecal_cache/lock) agar tidak double fetch
+  - Fetcher dipilih pakai lock di Firestore (_cache/ecal_lock) agar tidak double fetch
 
   ESTIMASI CREDIT FCS (500/bulan):
   - Refresh jadwal: 1/hari × 30 hari = 30
@@ -2707,7 +2707,7 @@ async function ecalReadFirestore(){
   try{
     const db=getDB();
     const{getDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-    const snap=await getDoc(doc(db,'ecal_cache','current'));
+    const snap=await getDoc(doc(db,'_cache','ecal_current'));
     if(!snap.exists())return null;
     return snap.data(); // {data, fetchedAt (ms), weekKey}
   }catch(e){
@@ -2716,12 +2716,13 @@ async function ecalReadFirestore(){
   }
 }
 
-/* Tulis cache ke Firestore */
+/* Tulis cache ke Firestore — hanya admin (rules: isAdmin()) */
 async function ecalWriteFirestore(data){
+  if(!window._isAdmin)return false; // hanya admin yang boleh write ke _cache
   try{
     const db=getDB();
     const{setDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-    await setDoc(doc(db,'ecal_cache','current'),{
+    await setDoc(doc(db,'_cache','ecal_current'),{
       data,
       fetchedAt: Date.now(),
       weekKey: getWeekKey(),
@@ -2743,26 +2744,27 @@ function ecalCacheValid(cached){
   return true;
 }
 
-/* Coba ambil lock fetcher (agar hanya 1 user yang call FCS saat bersamaan)
-   Lock expire 60 detik. Return true kalau berhasil dapat lock. */
+/* Coba ambil lock fetcher — hanya admin yang bisa lock & write Firestore */
 async function ecalTryLock(){
+  if(!window._isAdmin)return true; // non-admin: fetch FCS lokal aja tanpa lock
   try{
     const db=getDB();
     const{getDoc,setDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-    const lockRef=doc(db,'ecal_cache','lock');
+    const lockRef=doc(db,'_cache','ecal_lock');
     const snap=await getDoc(lockRef);
     const now=Date.now();
     if(snap.exists()&&(now-snap.data().at)<60000)return false; // ada lock aktif
     await setDoc(lockRef,{at:now});
     return true;
-  }catch(e){return true;} // kalau error, tetap lanjut fetch
+  }catch(e){return true;}
 }
 
 async function ecalReleaseLock(){
+  if(!window._isAdmin)return;
   try{
     const db=getDB();
     const{deleteDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-    await deleteDoc(doc(db,'ecal_cache','lock'));
+    await deleteDoc(doc(db,'_cache','ecal_lock'));
   }catch(e){}
 }
 
@@ -2772,7 +2774,7 @@ function ecalSubscribeFirestore(){
   try{
     const db=getDB();
     import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js').then(({onSnapshot,doc})=>{
-      window._ecalUnsub=onSnapshot(doc(db,'ecal_cache','current'),snap=>{
+      window._ecalUnsub=onSnapshot(doc(db,'_cache','ecal_current'),snap=>{
         if(!snap.exists())return;
         const cached=snap.data();
         if(cached&&Array.isArray(cached.data)&&cached.data.length){
