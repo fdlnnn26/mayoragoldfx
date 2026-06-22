@@ -911,12 +911,12 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div class="nav-center">
     <button class="nav-link active" id="nl-home" onclick="goPage('home')">Beranda</button>
     <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
+    <button class="nav-link" id="nl-kalender" onclick="goPage('kalender')">Kalender</button>
     <div class="nav-dropdown" id="vip-dropdown">
       <button class="nav-link" id="nl-vip" onclick="toggleVipMenu(event)">VIP <span class="nav-caret">▾</span></button>
       <div class="nav-dropdown-menu" id="vip-dropdown-menu">
         <button class="nav-dropdown-item gold" id="vdm-membership" onclick="closeVipMenu();goPage('vip')">✦ Membership VIP</button>
         <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('dash')">Trading Journal</button>
-        <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('ecal')">Kalender Ekonomi</button>
         <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('calc')">Kalkulator Lot &amp; Risk</button>
       </div>
     </div>
@@ -946,10 +946,10 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <div id="mob-nav" role="dialog" aria-label="Menu mobile">
   <span class="mob-link" onclick="goPage('home');toggleMob()">Beranda</span>
   <span class="mob-link" onclick="goPage('berita');toggleMob()">Berita</span>
+  <span class="mob-link" onclick="goPage('kalender');toggleMob()">Kalender</span>
   <div class="mob-group-label">VIP Area</div>
   <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip');toggleMob()">✦ Membership VIP</span>
   <span class="mob-sublink" onclick="goJournalTab('dash');toggleMob()">Trading Journal</span>
-  <span class="mob-sublink" onclick="goJournalTab('ecal');toggleMob()">Kalender Ekonomi</span>
   <span class="mob-sublink" onclick="goJournalTab('calc');toggleMob()">Kalkulator Lot &amp; Risk</span>
   <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
@@ -1505,7 +1505,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div class="journal-page" id="jp-ecal">
     <div class="jmain">
       <div id="vip-lock-ecal" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalender Ekonomi hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
-      <div id="vip-cnt-ecal" style="display:none">
+      <div id="vip-cnt-ecal" style="display:block">
         <div class="sec-label">Kalender Ekonomi</div>
         <div class="ecal-widget" id="ecal-widget-journal">
           <div class="ecal-header">
@@ -1575,6 +1575,45 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
       <div class="acc-sec" id="danger-vip" style="display:none"><div class="acc-sec-t">Danger Zone</div>
         <div class="acc-row"><div><div class="acc-k">Clear All Trade Data</div><div class="acc-v" style="margin-top:3px">Hapus semua trade — tidak bisa dibatalkan</div></div><button class="btn-danger" onclick="clearAll()">Clear Data</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: KALENDER EKONOMI -->
+<div class="page" id="page-kalender" role="main" aria-label="Kalender Ekonomi">
+  <div style="padding:var(--nav-h) 40px 80px;max-width:900px;margin:0 auto">
+    <div style="padding:60px 0 40px;text-align:center">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Market Intelligence</span><div class="eyebrow-line r"></div></div>
+      <h1 class="section-title">Kalender <span class="gold-text">Ekonomi</span></h1>
+      <p class="section-sub" style="max-width:500px;margin:0 auto">Event high-impact USD yang mempengaruhi pergerakan XAU/USD minggu ini. Data real-time.</p>
+    </div>
+    <div class="ecal-widget" id="ecal-widget-page">
+      <div class="ecal-header">
+        <div class="ecal-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          High Impact USD — XAU/USD
+        </div>
+        <span class="ecal-live">Live</span>
+      </div>
+      <div style="padding:10px 16px 10px;border-bottom:1px solid var(--card-border);font-size:.62rem;color:var(--text3);line-height:1.7">
+        <span style="color:var(--gold)">●</span> High Impact &nbsp;&nbsp;
+        <span style="color:var(--gold);opacity:.5">●</span> Medium Impact &nbsp;&nbsp;
+        <span style="color:var(--text3)">●</span> Low Impact &nbsp;&nbsp;
+        · Semua waktu dalam <strong style="color:var(--text)">WIB (UTC+7)</strong>
+      </div>
+      <div class="ecal-list" id="ecal-list-page"></div>
+      <div class="ecal-footer">
+        <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer">Lihat Kalender Lengkap di Forex Factory →</a>
+      </div>
+    </div>
+    <div style="margin-top:32px;background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:24px 28px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);margin-bottom:10px">Cara Membaca Kalender Ekonomi</div>
+      <div style="font-size:.75rem;color:var(--text2);line-height:1.95;display:grid;grid-template-columns:1fr 1fr;gap:16px 32px">
+        <div><span style="color:var(--red)">●</span> <strong style="color:var(--text)">High Impact</strong> — Event utama seperti NFP, CPI, FOMC. Potensi volatilitas tinggi pada XAU/USD.</div>
+        <div><span style="color:var(--gold)">●</span> <strong style="color:var(--text)">Medium Impact</strong> — Data ekonomi sekunder. Pergerakan moderat, tetap perlu diperhatikan.</div>
+        <div><span style="color:var(--green)">↑ Bullish USD</span> — Actual lebih baik dari Forecast → tekanan turun untuk XAU/USD.</div>
+        <div><span style="color:var(--red)">↓ Bearish USD</span> — Actual lebih buruk dari Forecast → potensi naik untuk XAU/USD.</div>
       </div>
     </div>
   </div>
@@ -1750,7 +1789,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
 /* Page routing */
-var pages=['home','berita','vip','auth','journal','admin','modul'];
+var pages=['home','berita','vip','auth','journal','admin','modul','kalender'];
 
 /* Deep link handler — support path (/berita, /vip, dll) + ?artikel=slug untuk artikel + 404 redirect (?p=) */
 (function(){
@@ -1843,7 +1882,8 @@ var PAGE_META = {
   modul:   { title: 'Modul Belajar Trading Emas XAU/USD — Dari Dasar hingga SMC | Mayora Gold FX', desc: 'Pelajari trading emas XAU/USD dari nol: dasar trading, market structure, Smart Money Concept, manajemen risiko, hingga strategi advanced. Gratis untuk member VIP.', url: 'https://mayoragoldfx.com/modul' },
   auth:    { title: 'Login Member — Mayora Gold FX', desc: 'Login atau daftar akun Mayora Gold FX untuk akses trading journal, modul edukasi, dan fitur VIP eksklusif.', url: 'https://mayoragoldfx.com/auth' },
   journal: { title: 'Trading Journal Pro — Mayora Gold FX', desc: 'Catat dan analisa performa trading emas XAU/USD kamu. Fitur eksklusif untuk member VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/journal' },
-  admin:   { title: 'Admin Dashboard — Mayora Gold FX', desc: 'Dashboard administrasi Mayora Gold FX.', url: 'https://mayoragoldfx.com/admin' }
+  admin:   { title: 'Admin Dashboard — Mayora Gold FX', desc: 'Dashboard administrasi Mayora Gold FX.', url: 'https://mayoragoldfx.com/admin' },
+  kalender:{ title: 'Kalender Ekonomi Forex — High Impact USD | Mayora Gold FX', desc: 'Kalender ekonomi real-time untuk event high-impact USD. Pantau NFP, CPI, FOMC, GDP dan data makro lainnya yang mempengaruhi XAU/USD.', url: 'https://mayoragoldfx.com/kalender' }
 };
 
 /* Canonical link tag — update per halaman */
@@ -1858,7 +1898,7 @@ function goPage(p){
   /* Member VIP/Admin tidak perlu lihat halaman membership VIP lagi */
   if(p==='vip'&&window._curUser&&(window._isVip||window._isAdmin)){p='journal';}
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
-  ['home','berita','vip','modul'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
+  ['home','berita','vip','modul','kalender'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   document.getElementById('mob-nav').classList.remove('open');
   window.scrollTo(0,0);
 
@@ -1883,6 +1923,7 @@ function goPage(p){
   }
   if(p==='admin') window._loadAdminData&&window._loadAdminData();
   if(p==='modul') window.modLoadModules&&window.modLoadModules();
+  if(p==='kalender'){window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();}
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
@@ -2396,10 +2437,13 @@ function showLoggedIn(user){
   document.getElementById('vdm-membership').style.display=(isVip||isAdmin)?'none':'block';
   const mobMembership=document.getElementById('mob-vdm-membership');
   if(mobMembership)mobMembership.style.display=(isVip||isAdmin)?'none':'block';
-  ['dash','hist','notes','calc','ecal'].forEach(k=>{
+  ['dash','hist','notes','calc'].forEach(k=>{
     document.getElementById('vip-lock-'+k).style.display=(isVip||isAdmin)?'none':'block';
     document.getElementById('vip-cnt-'+k).style.display=(isVip||isAdmin)?'block':'none';
   });
+  /* ecal (Kalender) is always public — no VIP lock */
+  document.getElementById('vip-lock-ecal').style.display='none';
+  document.getElementById('vip-cnt-ecal').style.display='block';
   if(isVip||isAdmin){window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();}
   setSaveStatus('saved');
   renderAll();
