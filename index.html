@@ -1811,6 +1811,8 @@ var pages=['home','berita','vip','auth','journal','admin','modul','kalender'];
   var params = new URLSearchParams(window.location.search);
   var slug = params.get('artikel') || params.get('berita');
   if(slug){
+    /* Simpan slug ke global supaya bisa dibuka saat allNewsCache siap */
+    window._pendingArticleSlug = slug;
     var attempts = 0;
     var tryOpen = setInterval(function(){
       attempts++;
@@ -1818,14 +1820,16 @@ var pages=['home','berita','vip','auth','journal','admin','modul','kalender'];
       var found = cache.find(function(n){ return n.slug === slug || n.id === slug; });
       if(found){
         clearInterval(tryOpen);
+        window._pendingArticleSlug = null;
         goPage('berita');
-        setTimeout(function(){ window.openNews(found.id); }, 100);
+        setTimeout(function(){ window.openNews(found.id); }, 150);
       }
-      if(attempts > 30) clearInterval(tryOpen);
+      if(attempts > 60) { clearInterval(tryOpen); window._pendingArticleSlug = null; }
     }, 300);
+    /* Render news lebih awal supaya Firebase fetch segera dimulai */
     setTimeout(function(){
       if(window._renderNews) window._renderNews();
-    }, 400);
+    }, 200);
   }
 })();
 
@@ -2584,6 +2588,16 @@ async function loadNewsFromDB(){
     const snap=await getDocs(q);
     const arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));
     window.allNewsCache=arr;
+    /* Cek apakah ada artikel yang sedang menunggu untuk dibuka (dari deep link) */
+    if(window._pendingArticleSlug){
+      var pending=window._pendingArticleSlug;
+      var found=arr.find(function(n){return n.slug===pending||n.id===pending;});
+      if(found){
+        window._pendingArticleSlug=null;
+        goPage('berita');
+        setTimeout(function(){window.openNews(found.id);},150);
+      }
+    }
     return arr;
   }catch(e){ return getStaticNews(); }
 }
