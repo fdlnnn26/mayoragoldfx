@@ -39,6 +39,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Beranda","item":"https://mayoragoldfx.com/"},{"@type":"ListItem","position":2,"name":"Berita & Analisa","item":"https://mayoragoldfx.com/#berita"},{"@type":"ListItem","position":3,"name":"VIP Membership","item":"https://mayoragoldfx.com/#vip"}]}</script>
 <meta name="theme-color" content="#C9A84C">
 <meta name="msapplication-TileColor" content="#06060A">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mayora Gold FX">
@@ -2308,6 +2309,7 @@ const CLOUDINARY_URL    = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/i
 
 const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
 window._db=db;
+window.getDB=function(){return window._db;};
 window._fsQuery=query;window._fsCollection=collection;window._fsOnSnapshot=onSnapshot;window._fsOrderBy=orderBy;window._fsWhere=where;
 
 let trades=[],isVip=false,isAdmin=false,tickInterval=null,saveDebounce=null;
@@ -2743,8 +2745,8 @@ window._ecalUnsub=null; // Firestore onSnapshot unsubscribe
 /* FCS API keys — fallback otomatis kalau key 1 limit/error, coba key 2, lalu key 3 */
 const FCS_KEYS=[
   'bo2IiWM3oqzDHapogHRNTg', // Key 1 (utama)
-  'GANTI_DENGAN_API_KEY_2',  // Key 2 (cadangan 1)
-  'GANTI_DENGAN_API_KEY_3',  // Key 3 (cadangan 2)
+  'qraH0LeaQTs8uA0lqHKe2lG106w6G4',  // Key 2 (cadangan 1)
+  'RbArIRNcpqR6tSpNo2La',  // Key 3 (cadangan 2)
 ];
 /* Simpan index key aktif di memory (reset tiap reload) */
 window._fcsKeyIdx = window._fcsKeyIdx ?? 0;
