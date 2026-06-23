@@ -62,6 +62,54 @@
   --nav-h:64px;
   --radius:4px;
 }
+html.light{
+  --bg:#F5F0E8;--bg2:#EDE7D9;--bg3:#E4DDCC;--bg4:#D9D1BC;--bg5:#CEC5AE;
+  --text:#1A1508;--text2:#5A4E36;--text3:#9C8E78;
+  --card-border:rgba(139,105,20,0.18);
+  --gold-glow:rgba(201,168,76,0.12);--gold-border:rgba(139,105,20,0.25);
+  --green:#1E8A4C;--red:#C0392B;
+}
+html.light #bg-canvas{opacity:.12}
+html.light #nav.solid{background:rgba(245,240,232,0.94);border-bottom-color:var(--card-border)}
+html.light #mob-nav{background:rgba(245,240,232,0.98);border-left-color:var(--card-border)}
+html.light .nav-dropdown-menu{background:rgba(237,231,217,0.98)}
+html.light #loader{background:var(--bg)}
+html.light .ticker-wrap{background:rgba(237,231,217,0.95)}
+html.light .faq-item,.html.light .seo-col-card{background:var(--bg3)}
+
+/* THEME TOGGLE BUTTON */
+.theme-toggle{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(201,168,76,0.08);
+  border:1px solid var(--gold-border);
+  border-radius:20px;
+  padding:5px 10px;
+  cursor:pointer;
+  transition:all .25s;
+  flex-shrink:0;
+}
+.theme-toggle:hover{background:rgba(201,168,76,0.16);border-color:var(--gold)}
+.theme-toggle-track{
+  width:32px;height:17px;
+  border-radius:9px;
+  background:var(--bg4);
+  border:1px solid var(--gold-border);
+  position:relative;
+  transition:background .3s;
+  flex-shrink:0;
+}
+html.light .theme-toggle-track{background:var(--gold-d)}
+.theme-toggle-thumb{
+  position:absolute;top:2px;left:2px;
+  width:11px;height:11px;
+  border-radius:50%;
+  background:var(--text3);
+  transition:transform .3s, background .3s;
+}
+html.light .theme-toggle-thumb{transform:translateX(15px);background:#fff}
+.theme-toggle-icon{font-size:.75rem;line-height:1;user-select:none}
+.theme-toggle-lbl{font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text2);display:none}
+@media(min-width:960px){.theme-toggle-lbl{display:block}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-weight:300}
@@ -939,6 +987,11 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         <button class="btn-logout" onclick="doLogout()">Keluar</button>
       </div>
     </div>
+    <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Ganti tema">
+      <span class="theme-toggle-icon" id="theme-icon">🌙</span>
+      <div class="theme-toggle-track"><div class="theme-toggle-thumb"></div></div>
+      <span class="theme-toggle-lbl" id="theme-lbl">Dark</span>
+    </button>
     <button class="hamburger" id="ham" onclick="toggleMob()" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -4069,6 +4122,24 @@ window.modDeleteModule=async function(id){
     await window.modLoadModules();window.modRenderAdminList();
   }catch(e){toast('Error',e.message,'#E05A5A');}
 };
+
+/* ── THEME TOGGLE ── */
+(function(){
+  var stored = localStorage.getItem('mgfx-theme') || 'dark';
+  function applyTheme(t){
+    document.documentElement.classList.toggle('light', t==='light');
+    var icon = document.getElementById('theme-icon');
+    var lbl  = document.getElementById('theme-lbl');
+    if(icon) icon.textContent = t==='light' ? '☀️' : '🌙';
+    if(lbl)  lbl.textContent  = t==='light' ? 'Light' : 'Dark';
+    localStorage.setItem('mgfx-theme', t);
+  }
+  applyTheme(stored);
+  window.toggleTheme = function(){
+    var isLight = document.documentElement.classList.contains('light');
+    applyTheme(isLight ? 'dark' : 'light');
+  };
+})();
 
 /* Hook into existing Firebase auth state — load modules once auth resolves */
 const _origAuthReady=window._onAuthReady;
