@@ -4,11 +4,6 @@
 <meta charset="UTF-8">
 <title>Mayora Gold FX</title>
 <script>
-  // GitHub Pages SPA redirect trick:
-  // Saat user/crawler buka URL seperti /berita langsung, GitHub Pages
-  // tidak punya file fisik itu sehingga menampilkan 404.html ini.
-  // Kita redirect ke index.html dengan path asli disimpan di query string,
-  // lalu index.html akan membaca ?p= dan mengembalikan ke path yang benar.
   (function(){
     var path = window.location.pathname.replace(/^\//,'');
     var search = window.location.search.replace(/^\?/,'');
