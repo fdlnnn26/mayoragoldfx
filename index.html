@@ -1728,8 +1728,8 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           <div><label class="form-lbl-m" for="swap-lot">Ukuran Lot</label><input type="number" class="form-inp-m" id="swap-lot" placeholder="cth: 0.10" min="0" step="any" inputmode="decimal"></div>
           <div><label class="form-lbl-m" for="swap-dir">Arah Posisi</label><select class="form-inp-m" id="swap-dir"><option value="buy">Buy (Long)</option><option value="sell">Sell (Short)</option></select></div>
           <div><label class="form-lbl-m" for="swap-days">Jumlah Malam (hari)</label><input type="number" class="form-inp-m" id="swap-days" placeholder="cth: 3" min="1" step="1" value="1" inputmode="decimal"></div>
-          <div><label class="form-lbl-m" for="swap-rate-buy">Swap Rate Buy (poin/lot)</label><input type="number" class="form-inp-m" id="swap-rate-buy" placeholder="cth: -3.5" step="any" inputmode="decimal" value="-3.5"></div>
-          <div><label class="form-lbl-m" for="swap-rate-sell">Swap Rate Sell (poin/lot)</label><input type="number" class="form-inp-m" id="swap-rate-sell" placeholder="cth: 1.2" step="any" inputmode="decimal" value="1.2"></div>
+          <div><label class="form-lbl-m" for="swap-rate-buy">Swap Rate Buy (USD/lot — dari MT4/MT5)</label><input type="number" class="form-inp-m" id="swap-rate-buy" placeholder="cth: -2.5" step="any" inputmode="decimal" value="-3.5"></div>
+          <div><label class="form-lbl-m" for="swap-rate-sell">Swap Rate Sell (USD/lot — dari MT4/MT5)</label><input type="number" class="form-inp-m" id="swap-rate-sell" placeholder="cth: 1.2" step="any" inputmode="decimal" value="1.2"></div>
           <div><label class="form-lbl-m" for="swap-price">Harga XAU/USD Saat Ini</label><input type="number" class="form-inp-m" id="swap-price" placeholder="cth: 3300" step="any" inputmode="decimal"></div>
         </div>
         <div style="font-size:.58rem;color:var(--text3);line-height:1.8;margin-top:10px;background:var(--bg4);border-radius:4px;padding:10px 12px">
@@ -2375,15 +2375,17 @@ window.calcSwap=function(){
   if(!(lot>0)||isNaN(rateBuy)||isNaN(rateSell)||!(days>0)){
     toast('MGF','Lengkapi semua kolom swap','var(--red)');return;
   }
-  var POINT_VAL=0.1; // 1 point = $0.1 per 0.01 lot (standard XAU 100 oz = $1 per 0.01 lot point)
+  // XAU/USD MT4/MT5: swap rate ditampilkan dalam USD per lot per malam (sudah dalam nilai dolar)
+  // 10 pip = 1 point, tapi swap rate broker sudah final dalam USD — tidak perlu konversi
+  // Rumus: swapPerNight = rate (USD/lot) × lot
   var rate=dir==='buy'?rateBuy:rateSell;
-  var swapPerNight=rate*(lot/1)*10; // swap in USD: rate poin × lot × $10/lot/poin
+  var swapPerNight=rate*lot; // swap USD: langsung rate USD/lot × jumlah lot
   var totalSwap=swapPerNight*days;
   var isPos=totalSwap>=0;
 
   var html='';
   html+='<div class="scard"><div class="scard-l">Swap per Malam</div><div class="scard-v '+(swapPerNight>=0?'g':'r')+'">'+(swapPerNight>=0?'+':'')+swapPerNight.toFixed(2)+' USD</div><div class="scard-sub">'+dir.toUpperCase()+' '+lot+' lot</div></div>';
-  html+='<div class="scard"><div class="scard-l">Total Swap ('+days+' malam)</div><div class="scard-v '+(totalSwap>=0?'g':'r')+'">'+(totalSwap>=0?'+':'')+totalSwap.toFixed(2)+' USD</div><div class="scard-sub">Rate: '+rate+' poin/lot</div></div>';
+  html+='<div class="scard"><div class="scard-l">Total Swap ('+days+' malam)</div><div class="scard-v '+(totalSwap>=0?'g':'r')+'">'+(totalSwap>=0?'+':'')+totalSwap.toFixed(2)+' USD</div><div class="scard-sub">Rate: '+rate+' USD/lot</div></div>';
   if(price>0){
     var swapPct=Math.abs(totalSwap)/(price*lot*100)*100;
     html+='<div class="scard"><div class="scard-l">% dari Nilai Posisi</div><div class="scard-v">'+swapPct.toFixed(4)+'%</div><div class="scard-sub">Nilai posisi ~$'+(price*lot*100).toFixed(0)+'</div></div>';
@@ -2392,7 +2394,7 @@ window.calcSwap=function(){
 
   var tripleDay='Rabu';
   var detail='<b>Arah:</b> '+(dir==='buy'?'Buy (Long)':'Sell (Short)')+'<br>'
-    +'<b>Swap Rate '+dir+':</b> '+rate+' poin/lot/malam<br>'
+    +'<b>Swap Rate '+dir+':</b> '+rate+' USD/lot/malam<br>'
     +'<b>Lot:</b> '+lot+'<br>'
     +'<b>Durasi:</b> '+days+' malam<br>'
     +'<b>Triple Swap:</b> Hari '+tripleDay+' dihitung 3x (weekend rollover)<br><br>'
