@@ -948,11 +948,26 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   .seo-intro-grid{grid-template-columns:1fr}
   .seo-cols3{grid-template-columns:1fr 1fr}
   .seo-trust-row{grid-template-columns:repeat(2,1fr)}
+  /* Hide desktop nav links on tablet too, show hamburger */
+  .nav-center{display:none}
+  .hamburger{display:flex}
+  .nav-btn-vip,.nav-btn-login{display:none}
+  .nav-username{display:none}
 }
 @media(max-width:640px){
-  #nav{padding:0 20px}
-  .nav-center,.nav-btn-vip{display:none}
+  #nav{padding:0 16px}
+  .nav-center,.nav-btn-vip,.nav-btn-login,.nav-username,.vip-pill,.admin-pill,.btn-logout,.theme-toggle-lbl{display:none}
   .hamburger{display:flex}
+  /* Mobile nav-right: only show avatar (if logged in), theme toggle icon, hamburger */
+  .nav-right{gap:8px}
+  .nav-avatar{width:28px;height:28px;font-size:.7rem}
+  /* Theme toggle compact on mobile */
+  .theme-toggle{padding:5px 8px}
+  .theme-toggle-track{display:none}
+  /* Nav user wrap compact */
+  .nav-user-wrap{gap:6px}
+  /* Guest buttons on mobile go into mob-nav, hide in desktop nav */
+  #nav-guest{display:none}
   #hero{padding:60px 20px 48px}
   .about-grid,.testi-grid{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr}
@@ -1055,6 +1070,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
   <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
+  <button id="mob-vip-btn" class="btn-hero-sec" style="margin-top:8px;width:100%;text-align:center;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:12px 20px" onclick="goPage('vip');toggleMob()">JOIN VIP GRATIS ✦</button>
 </div>
 <div id="mob-nav-backdrop" onclick="toggleMob()"></div>
 
@@ -3005,6 +3021,8 @@ onAuthStateChanged(auth, async user=>{
       if(mobMembership)mobMembership.style.display='block';
       const mobLoginBtn=document.getElementById('mob-login-btn');
       if(mobLoginBtn)mobLoginBtn.style.display='block';
+      const mobVipBtn=document.getElementById('mob-vip-btn');
+      if(mobVipBtn)mobVipBtn.style.display='block';
       stopTick();
     }
   }catch(err){ console.error('onAuthStateChanged error:',err); }
@@ -3017,6 +3035,8 @@ function showLoggedIn(user){
   document.getElementById('nav-loggedin').style.display='block';
   const mobLoginBtn=document.getElementById('mob-login-btn');
   if(mobLoginBtn)mobLoginBtn.style.display='none';
+  const mobVipBtn=document.getElementById('mob-vip-btn');
+  if(mobVipBtn)mobVipBtn.style.display='none';
   document.getElementById('nav-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('nav-uname').textContent=name;
   document.getElementById('nav-vip-pill').style.display=isVip?'block':'none';
