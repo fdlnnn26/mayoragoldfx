@@ -1020,13 +1020,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('ai')"><span>AI Analisa Chart</span><span class="nav-di-label vip">VIP ✦</span></button>
       </div>
     </div>
-    <div class="nav-dropdown" id="vip-dropdown">
-      <button class="nav-link" id="nl-vip" onclick="toggleVipMenu(event)">VIP <span class="nav-caret">▾</span></button>
-      <div class="nav-dropdown-menu" id="vip-dropdown-menu">
-        <button class="nav-dropdown-item gold" id="vdm-membership" onclick="closeVipMenu();goPage('vip')">✦ Membership VIP</button>
-        <button class="nav-dropdown-item" id="vdm-journal" onclick="closeVipMenu();goPage('journal')" style="display:none">Dashboard Journal</button>
-      </div>
-    </div>
+    <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
     <button class="nav-link" id="nl-modul" onclick="goPage('modul')">Modul Materi</button>
     <button class="nav-link" id="nl-admin" onclick="goPage('admin')" style="display:none">Admin</button>
   </div>
@@ -2204,20 +2198,10 @@ window.jTab=function(n,el){
   if(n==='ecal'){window._renderEcal&&window._renderEcal();window._startEcalListener&&window._startEcalListener();}
 };
 
-/* VIP nav dropdown */
-window.toggleVipMenu=function(e){
-  if(e)e.stopPropagation();
-  document.getElementById('tools-dropdown').classList.remove('open');
-  document.getElementById('vip-dropdown').classList.toggle('open');
-};
-window.closeVipMenu=function(){
-  document.getElementById('vip-dropdown').classList.remove('open');
-};
 
 /* Trading Tools nav dropdown */
 window.toggleToolsMenu=function(e){
   if(e)e.stopPropagation();
-  document.getElementById('vip-dropdown').classList.remove('open');
   document.getElementById('tools-dropdown').classList.toggle('open');
 };
 window.closeToolsMenu=function(){
@@ -2225,8 +2209,6 @@ window.closeToolsMenu=function(){
 };
 
 document.addEventListener('click',function(e){
-  var dd=document.getElementById('vip-dropdown');
-  if(dd&&dd.classList.contains('open')&&!dd.contains(e.target)) dd.classList.remove('open');
   var td=document.getElementById('tools-dropdown');
   if(td&&td.classList.contains('open')&&!td.contains(e.target)) td.classList.remove('open');
 });
@@ -3014,7 +2996,8 @@ onAuthStateChanged(auth, async user=>{
       document.getElementById('nav-loggedin').style.display='none';
       document.getElementById('nl-admin').style.display='none';
       document.getElementById('mob-admin-link').style.display='none';
-      document.getElementById('vdm-membership').style.display='block';
+      const vdmMship=document.getElementById('vdm-membership');
+      if(vdmMship) vdmMship.style.display='block';
       const vdmJ=document.getElementById('vdm-journal');
       if(vdmJ) vdmJ.style.display='none';
       const mobMembership=document.getElementById('mob-vdm-membership');
@@ -3054,7 +3037,8 @@ function showLoggedIn(user){
   document.getElementById('acc-status').innerHTML=isAdmin?'<span style="color:var(--green)">✦ Administrator</span>':isVip?'<span style="color:var(--gold)">✦ VIP Member</span>':'<span style="color:var(--text3)">Regular — hubungi admin untuk upgrade</span>';
   document.getElementById('adm-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('adm-uname').textContent=name;
-  document.getElementById('vdm-membership').style.display='block';
+  const vdmMembership=document.getElementById('vdm-membership');
+  if(vdmMembership) vdmMembership.style.display='block';
   const vdmJournal=document.getElementById('vdm-journal');
   if(vdmJournal) vdmJournal.style.display=(isVip||isAdmin)?'block':'none';
   const mobMembership=document.getElementById('mob-vdm-membership');
