@@ -197,6 +197,14 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .nav-dropdown-item{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);padding:10px 14px;border-radius:4px;cursor:pointer;background:none;border:none;text-align:left;width:100%;transition:all .2s;white-space:nowrap}
 .nav-dropdown-item:hover{background:rgba(201,168,76,0.08);color:var(--gold)}
 .nav-dropdown-item.gold{color:var(--gold);border-bottom:1px solid var(--card-border);margin-bottom:2px;padding-bottom:12px}
+.nav-dropdown-item{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nav-di-label{font-size:.46rem;letter-spacing:.14em;padding:2px 6px;border-radius:2px;flex-shrink:0;font-weight:500}
+.nav-di-label.vip{background:rgba(201,168,76,0.15);border:1px solid var(--gold-border);color:var(--gold)}
+.nav-di-label.free{background:rgba(61,186,122,0.12);border:1px solid rgba(61,186,122,0.3);color:var(--green)}
+.mob-tool-label{font-size:.45rem;letter-spacing:.12em;padding:2px 6px;border-radius:2px;flex-shrink:0;font-weight:500;margin-left:auto}
+.mob-tool-label.vip{background:rgba(201,168,76,0.15);border:1px solid var(--gold-border);color:var(--gold)}
+.mob-tool-label.free{background:rgba(61,186,122,0.12);border:1px solid rgba(61,186,122,0.3);color:var(--green)}
+.mob-sublink{display:flex;align-items:center;gap:8px}
 .nav-right{display:flex;align-items:center;gap:10px}
 .nav-btn-login{background:transparent;border:1px solid var(--gold-border);color:var(--text2);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all .25s;border-radius:var(--radius)}
 .nav-btn-login:hover{border-color:var(--gold);color:var(--gold)}
@@ -986,14 +994,21 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div class="nav-center">
     <button class="nav-link active" id="nl-home" onclick="goPage('home')">Beranda</button>
     <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
-    <button class="nav-link" id="nl-kalender" onclick="goPage('kalender')">Kalender</button>
+    <div class="nav-dropdown" id="tools-dropdown">
+      <button class="nav-link" id="nl-tools" onclick="toggleToolsMenu(event)">Trading Tools <span class="nav-caret">▾</span></button>
+      <div class="nav-dropdown-menu" id="tools-dropdown-menu">
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('kalender')"><span>Kalender Ekonomi</span><span class="nav-di-label free">FREE</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('sessions')"><span>Market Sessions</span><span class="nav-di-label free">FREE</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('journal')"><span>Trading Journal</span><span class="nav-di-label vip">VIP ✦</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('calc')"><span>Kalkulator Lot &amp; Risk</span><span class="nav-di-label vip">VIP ✦</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('swap')"><span>Kalkulator Swap</span><span class="nav-di-label vip">VIP ✦</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('ai')"><span>AI Analisa Chart</span><span class="nav-di-label vip">VIP ✦</span></button>
+      </div>
+    </div>
     <div class="nav-dropdown" id="vip-dropdown">
       <button class="nav-link" id="nl-vip" onclick="toggleVipMenu(event)">VIP <span class="nav-caret">▾</span></button>
       <div class="nav-dropdown-menu" id="vip-dropdown-menu">
         <button class="nav-dropdown-item gold" id="vdm-membership" onclick="closeVipMenu();goPage('vip')">✦ Membership VIP</button>
-        <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('dash')">Trading Journal</button>
-        <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('calc')">Kalkulator Lot &amp; Risk</button>
-        <button class="nav-dropdown-item" onclick="closeVipMenu();goJournalTab('ai')">✦ AI Analisa Chart</button>
       </div>
     </div>
     <button class="nav-link" id="nl-modul" onclick="goPage('modul')">Modul Materi</button>
@@ -1027,12 +1042,15 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 <div id="mob-nav" role="dialog" aria-label="Menu mobile">
   <span class="mob-link" onclick="goPage('home');toggleMob()">Beranda</span>
   <span class="mob-link" onclick="goPage('berita');toggleMob()">Berita</span>
-  <span class="mob-link" onclick="goPage('kalender');toggleMob()">Kalender</span>
+  <div class="mob-group-label">Trading Tools</div>
+  <span class="mob-sublink" onclick="goPage('kalender');toggleMob()">Kalender Ekonomi<span class="mob-tool-label free">FREE</span></span>
+  <span class="mob-sublink" onclick="goPage('sessions');toggleMob()">Market Sessions<span class="mob-tool-label free">FREE</span></span>
+  <span class="mob-sublink" onclick="goPage('journal');toggleMob()">Trading Journal<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('calc');toggleMob()">Kalkulator Lot &amp; Risk<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('swap');toggleMob()">Kalkulator Swap<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('ai');toggleMob()">AI Analisa Chart<span class="mob-tool-label vip">VIP ✦</span></span>
   <div class="mob-group-label">VIP Area</div>
   <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip');toggleMob()">✦ Membership VIP</span>
-  <span class="mob-sublink" onclick="goJournalTab('dash');toggleMob()">Trading Journal</span>
-  <span class="mob-sublink" onclick="goJournalTab('calc');toggleMob()">Kalkulator Lot &amp; Risk</span>
-  <span class="mob-sublink" onclick="goJournalTab('ai');toggleMob()">✦ AI Analisa Chart</span>
   <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
   <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
@@ -1558,9 +1576,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <button class="app-tab on" id="tab-btn-dash" onclick="jTab('dash',this)">Dashboard</button>
     <button class="app-tab" id="tab-btn-history" onclick="jTab('history',this)">Trade History</button>
     <button class="app-tab" id="tab-btn-notes" onclick="jTab('notes',this)">Journal Notes</button>
-    <button class="app-tab" id="tab-btn-ecal" onclick="jTab('ecal',this)">Kalender Ekonomi</button>
-    <button class="app-tab" id="tab-btn-calc" onclick="jTab('calc',this)">Kalkulator</button>
-    <button class="app-tab" id="tab-btn-ai" onclick="jTab('ai',this)">✦ AI Analisa</button>
     <button class="app-tab" id="tab-btn-account" onclick="jTab('account',this)">Account</button>
   </div>
   <div class="journal-page on" id="jp-dash">
@@ -1594,123 +1609,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       <div id="vip-cnt-notes" style="display:none"><div class="sec-label">Journal Notes</div><div class="notes-grid" id="notes-grid"></div></div>
     </div>
   </div>
-  <div class="journal-page" id="jp-ecal">
-    <div class="jmain">
-      <div id="vip-lock-ecal" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalender Ekonomi hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
-      <div id="vip-cnt-ecal" style="display:block">
-        <div class="sec-label">Kalender Ekonomi</div>
-        <div class="ecal-widget" id="ecal-widget-journal">
-          <div class="ecal-header">
-            <div class="ecal-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-              High Impact USD
-            </div>
-            <span class="ecal-live">Live</span>
-          </div>
-          <div class="ecal-list"></div>
-          <div class="ecal-footer"><a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer">Lihat Kalender Lengkap →</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="journal-page" id="jp-calc">
-    <div class="jmain">
-      <div id="vip-lock-calc" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Lot &amp; Risk Calculator hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
-      <div id="vip-cnt-calc" style="display:none">
-        <div class="sec-label">Lot &amp; Risk Calculator</div>
-        <div class="acc-sec">
-          <div class="form-grid2m">
-            <div>
-              <label class="form-lbl-m" for="calc-modal">Modal Akun (USD)</label>
-              <input type="number" class="form-inp-m" id="calc-modal" placeholder="cth: 100" min="0" step="any" inputmode="decimal">
-            </div>
-            <div>
-              <label class="form-lbl-m" for="calc-risk">Risk per Trade (%)</label>
-              <input type="number" class="form-inp-m" id="calc-risk" placeholder="cth: 2" min="0" step="any" inputmode="decimal">
-            </div>
-            <div>
-              <label class="form-lbl-m" for="calc-sl">Jarak Stop Loss (poin)</label>
-              <input type="number" class="form-inp-m" id="calc-sl" placeholder="cth: 50 (= 50.0 / 5000 pip)" min="0" step="any" inputmode="decimal">
-            </div>
-            <div>
-              <label class="form-lbl-m" for="calc-rr">Risk : Reward (1 : X)</label>
-              <input type="number" class="form-inp-m" id="calc-rr" placeholder="cth: 2" min="0" step="any" inputmode="decimal">
-            </div>
-          </div>
-          <div class="form-actions-m" style="justify-content:flex-start;margin-top:18px">
-            <button class="btn-save-mod" onclick="calcLotRisk()">Hitung →</button>
-          </div>
-          <div style="font-size:.6rem;color:var(--text3);margin-top:14px;line-height:1.9">*Estimasi memakai asumsi 1 Poin XAU/USD = pergerakan harga $1 (cth: 4455 → 4456 = 1 poin = 10 pip), dengan nilai $1 per 0.01 lot (≈ $100 per 1.00 lot standard). Nilai poin/pip aktual bisa berbeda tergantung kontrak &amp; broker — gunakan hasil ini sebagai panduan, bukan jaminan.</div>
-        </div>
-        <div id="calc-result" style="display:none">
-          <div class="stats-row" id="calc-stats"></div>
-          <div id="calc-risk-note" class="acc-sec" style="display:none;border-color:rgba(224,90,90,.3)"></div>
-          <div id="calc-cent-note" class="acc-sec" style="display:none;border-color:rgba(201,168,76,.35)"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- PAGE: AI ANALISA CHART -->
-  <div class="journal-page" id="jp-ai">
-    <div class="jmain">
-      <div id="vip-lock-ai" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">AI Analisa Chart hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
-      <div id="vip-cnt-ai" style="display:none">
-        <div style="max-width:680px;margin:0 auto">
-          <div class="sec-label" style="margin-bottom:20px">✦ AI Analisa Chart XAU/USD</div>
-          <!-- Quota Badge -->
-          <div id="ai-quota-bar" style="display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;padding:12px 16px;margin-bottom:20px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            <div style="flex:1">
-              <div style="font-size:.62rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Kuota Analisa Hari Ini</div>
-              <div style="display:flex;gap:6px" id="ai-quota-dots"></div>
-            </div>
-            <div id="ai-quota-txt" style="font-size:.65rem;color:var(--text2)">3/3 tersisa</div>
-          </div>
-          <!-- Upload Area -->
-          <div id="ai-upload-area" style="border:2px dashed var(--card-border);border-radius:8px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px" onclick="document.getElementById('ai-file-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='var(--card-border)'" ondrop="aiHandleDrop(event)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.4" width="36" height="36" style="margin-bottom:12px;opacity:.7"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <div style="font-size:.78rem;color:var(--text);margin-bottom:6px">Upload Screenshot Chart</div>
-            <div style="font-size:.63rem;color:var(--text3)">Drag & drop atau klik untuk pilih gambar · JPG, PNG, WEBP</div>
-          </div>
-          <input type="file" id="ai-file-input" accept="image/*" style="display:none" onchange="aiHandleFile(this.files[0])">
-          <!-- Preview -->
-          <div id="ai-preview-wrap" style="display:none;margin-bottom:16px;position:relative">
-            <img id="ai-preview-img" src="" alt="Chart preview" style="width:100%;border-radius:6px;border:1px solid var(--card-border);display:block">
-            <button onclick="aiClearPreview()" style="position:absolute;top:8px;right:8px;background:rgba(6,6,10,.75);border:1px solid var(--card-border);border-radius:4px;color:var(--text2);padding:4px 8px;font-size:.62rem;cursor:pointer">✕ Hapus</button>
-          </div>
-          <!-- Prompt input -->
-          <div style="margin-bottom:14px">
-            <div style="font-size:.62rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Pertanyaan/Fokus Analisa (opsional)</div>
-            <textarea id="ai-prompt-input" placeholder="cth: Apakah ada setup entry yang bagus? Dimana level support/resistance terdekat?" style="width:100%;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;color:var(--text);font-size:.72rem;font-family:inherit;padding:10px 12px;resize:vertical;min-height:64px;line-height:1.7"></textarea>
-          </div>
-          <!-- Analyze Button -->
-          <button id="ai-analyze-btn" onclick="aiAnalyze()" style="width:100%;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06060A;font-weight:600;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;padding:13px;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Analisa Chart dengan AI
-          </button>
-          <!-- Loading -->
-          <div id="ai-loading" style="display:none;text-align:center;padding:32px 0">
-            <div class="spin" style="margin:0 auto 12px;border-top-color:var(--gold)"></div>
-            <div style="font-size:.68rem;color:var(--text2)" id="ai-loading-txt">Menganalisa chart kamu...</div>
-          </div>
-          <!-- Result -->
-          <div id="ai-result" style="display:none;margin-top:20px">
-            <div style="font-size:.62rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
-              Hasil Analisa AI
-            </div>
-            <div id="ai-result-body" style="background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:20px;font-size:.72rem;line-height:1.85;color:var(--text)"></div>
-            <div style="margin-top:10px;display:flex;justify-content:flex-end">
-              <button onclick="aiClearAll()" style="background:transparent;border:1px solid var(--card-border);border-radius:4px;color:var(--text3);padding:5px 12px;font-size:.62rem;cursor:pointer">Analisa Baru</button>
-            </div>
-          </div>
-          <!-- Error -->
-          <div id="ai-error" style="display:none;margin-top:14px;background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);border-radius:6px;padding:12px 14px;font-size:.68rem;color:var(--red)"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="journal-page" id="jp-account">
     <div class="jmain">
       <div class="sec-label">Account &amp; Settings</div>
@@ -1729,6 +1627,170 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       <div class="acc-sec" id="danger-vip" style="display:none"><div class="acc-sec-t">Danger Zone</div>
         <div class="acc-row"><div><div class="acc-k">Clear All Trade Data</div><div class="acc-v" style="margin-top:3px">Hapus semua trade — tidak bisa dibatalkan</div></div><button class="btn-danger" onclick="clearAll()">Clear Data</button></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: MARKET SESSIONS (standalone) -->
+<div class="page" id="page-sessions" role="main" aria-label="Market Sessions">
+  <div style="padding:var(--nav-h) 40px 80px;max-width:960px;margin:0 auto">
+    <div style="padding:60px 0 40px;text-align:center">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Trading Tools</span><div class="eyebrow-line r"></div></div>
+      <h1 class="section-title">Market <span class="gold-text">Sessions</span></h1>
+      <p class="section-sub" style="max-width:500px;margin:0 auto">Pantau sesi forex aktif secara real-time. Rencanakan entry di jam likuiditas tinggi.</p>
+    </div>
+    <div id="sessions-now-wrap" style="background:linear-gradient(135deg,rgba(201,168,76,0.07),rgba(201,168,76,0.02));border:1px solid var(--gold-border);border-radius:8px;padding:24px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Waktu Sekarang (WIB)</div>
+        <div id="sess-clock" style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;color:var(--text);line-height:1">00:00:00</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Sesi Aktif</div>
+        <div id="sess-active-now" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--gold)">—</div>
+        <div id="sess-activity-now" style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;margin-top:4px;color:var(--text3)">—</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px" id="sess-cards-grid"></div>
+    <div class="acc-sec" style="padding:20px 24px">
+      <div style="font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">24-Hour Session Map · WIB</div>
+      <div style="position:relative;height:52px;background:var(--bg4);border-radius:4px;overflow:hidden" id="sess-bar-24"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px">
+        <span style="font-size:.5rem;color:var(--text3)">00:00</span>
+        <span style="font-size:.5rem;color:var(--text3)">06:00</span>
+        <span style="font-size:.5rem;color:var(--text3)">12:00</span>
+        <span style="font-size:.5rem;color:var(--text3)">18:00</span>
+        <span style="font-size:.5rem;color:var(--text3)">24:00</span>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#4A9EE0"></div><span style="font-size:.58rem;color:var(--text3)">Sydney</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#E0A84A"></div><span style="font-size:.58rem;color:var(--text3)">Tokyo</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#4AE0A8"></div><span style="font-size:.58rem;color:var(--text3)">London</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#E05A5A"></div><span style="font-size:.58rem;color:var(--text3)">New York</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: KALKULATOR LOT & RISK (standalone, VIP) -->
+<div class="page" id="page-calc" role="main" aria-label="Kalkulator Lot dan Risk">
+  <div style="padding:var(--nav-h) 40px 80px;max-width:760px;margin:0 auto">
+    <div style="padding:60px 0 40px;text-align:center">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">VIP Trading Tools</span><div class="eyebrow-line r"></div></div>
+      <h1 class="section-title">Kalkulator <span class="gold-text">Lot & Risk</span></h1>
+      <p class="section-sub" style="max-width:480px;margin:0 auto">Hitung ukuran lot optimal berdasarkan modal, risk, dan jarak stop loss kamu.</p>
+    </div>
+    <div id="vip-lock-calc" class="vip-lock-box" style="display:none"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalkulator Lot &amp; Risk hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+    <div id="vip-cnt-calc" style="display:none">
+      <div class="acc-sec">
+        <div class="form-grid2m">
+          <div><label class="form-lbl-m" for="calc-modal">Modal Akun (USD)</label><input type="number" class="form-inp-m" id="calc-modal" placeholder="cth: 100" min="0" step="any" inputmode="decimal"></div>
+          <div><label class="form-lbl-m" for="calc-risk">Risk per Trade (%)</label><input type="number" class="form-inp-m" id="calc-risk" placeholder="cth: 2" min="0" step="any" inputmode="decimal"></div>
+          <div><label class="form-lbl-m" for="calc-sl">Jarak Stop Loss (poin)</label><input type="number" class="form-inp-m" id="calc-sl" placeholder="cth: 50 (= 50.0 / 5000 pip)" min="0" step="any" inputmode="decimal"></div>
+          <div><label class="form-lbl-m" for="calc-rr">Risk : Reward (1 : X)</label><input type="number" class="form-inp-m" id="calc-rr" placeholder="cth: 2" min="0" step="any" inputmode="decimal"></div>
+        </div>
+        <div class="form-actions-m" style="justify-content:flex-start;margin-top:18px">
+          <button class="btn-save-mod" onclick="calcLotRisk()">Hitung →</button>
+        </div>
+        <div style="font-size:.6rem;color:var(--text3);margin-top:14px;line-height:1.9">*Estimasi memakai asumsi 1 Poin XAU/USD = pergerakan harga $1, nilai $1 per 0.01 lot. Nilai aktual bisa berbeda tergantung broker.</div>
+      </div>
+      <div id="calc-result" style="display:none;margin-top:16px">
+        <div class="stats-row" id="calc-stats"></div>
+        <div id="calc-risk-note" class="acc-sec" style="display:none;border-color:rgba(224,90,90,.3)"></div>
+        <div id="calc-cent-note" class="acc-sec" style="display:none;border-color:rgba(201,168,76,.35)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: KALKULATOR SWAP (standalone, VIP) -->
+<div class="page" id="page-swap" role="main" aria-label="Kalkulator Swap">
+  <div style="padding:var(--nav-h) 40px 80px;max-width:760px;margin:0 auto">
+    <div style="padding:60px 0 40px;text-align:center">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">VIP Trading Tools</span><div class="eyebrow-line r"></div></div>
+      <h1 class="section-title">Kalkulator <span class="gold-text">Swap</span></h1>
+      <p class="section-sub" style="max-width:480px;margin:0 auto">Hitung biaya atau pendapatan swap (overnight rollover) untuk posisi XAU/USD kamu.</p>
+    </div>
+    <div id="vip-lock-swap" class="vip-lock-box" style="display:none"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalkulator Swap hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+    <div id="vip-cnt-swap" style="display:none">
+      <div class="acc-sec">
+        <div class="form-grid2m">
+          <div><label class="form-lbl-m" for="swap-lot">Ukuran Lot</label><input type="number" class="form-inp-m" id="swap-lot" placeholder="cth: 0.10" min="0" step="any" inputmode="decimal"></div>
+          <div><label class="form-lbl-m" for="swap-dir">Arah Posisi</label><select class="form-inp-m" id="swap-dir"><option value="buy">Buy (Long)</option><option value="sell">Sell (Short)</option></select></div>
+          <div><label class="form-lbl-m" for="swap-days">Jumlah Malam (hari)</label><input type="number" class="form-inp-m" id="swap-days" placeholder="cth: 3" min="1" step="1" value="1" inputmode="decimal"></div>
+          <div><label class="form-lbl-m" for="swap-rate-buy">Swap Rate Buy (poin/lot)</label><input type="number" class="form-inp-m" id="swap-rate-buy" placeholder="cth: -3.5" step="any" inputmode="decimal" value="-3.5"></div>
+          <div><label class="form-lbl-m" for="swap-rate-sell">Swap Rate Sell (poin/lot)</label><input type="number" class="form-inp-m" id="swap-rate-sell" placeholder="cth: 1.2" step="any" inputmode="decimal" value="1.2"></div>
+          <div><label class="form-lbl-m" for="swap-price">Harga XAU/USD Saat Ini</label><input type="number" class="form-inp-m" id="swap-price" placeholder="cth: 3300" step="any" inputmode="decimal"></div>
+        </div>
+        <div style="font-size:.58rem;color:var(--text3);line-height:1.8;margin-top:10px;background:var(--bg4);border-radius:4px;padding:10px 12px">
+          💡 Swap rate bisa berbeda tiap broker. Cek di MT4/MT5: klik kanan symbol → Specification. Wednesday = 3x swap (triple swap).
+        </div>
+        <div class="form-actions-m" style="justify-content:flex-start;margin-top:18px">
+          <button class="btn-save-mod" onclick="calcSwap()">Hitung Swap →</button>
+          <button onclick="autoFillSwapPrice()" style="background:transparent;border:1px solid var(--gold-border);color:var(--gold);font-size:.62rem;letter-spacing:.1em;padding:9px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s">⟳ Harga Live</button>
+        </div>
+      </div>
+      <div id="swap-result" style="display:none;margin-top:16px">
+        <div class="stats-row" id="swap-stats"></div>
+        <div id="swap-detail" class="acc-sec" style="margin-top:14px;font-size:.72rem;color:var(--text2);line-height:2"></div>
+      </div>
+      <div style="font-size:.58rem;color:var(--text3);margin-top:16px;line-height:1.9">*Perhitungan estimasi. Nilai aktual tergantung swap rate broker dan waktu rollover.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: AI ANALISA CHART (standalone, VIP) -->
+<div class="page" id="page-ai" role="main" aria-label="AI Analisa Chart">
+  <div style="padding:var(--nav-h) 40px 80px;max-width:760px;margin:0 auto">
+    <div style="padding:60px 0 40px;text-align:center">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">VIP Trading Tools</span><div class="eyebrow-line r"></div></div>
+      <h1 class="section-title">✦ AI Analisa <span class="gold-text">Chart</span></h1>
+      <p class="section-sub" style="max-width:480px;margin:0 auto">Upload screenshot chart XAU/USD dan dapatkan analisa AI secara instan.</p>
+    </div>
+    <div id="vip-lock-ai" class="vip-lock-box" style="display:none"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">AI Analisa Chart hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+    <div id="vip-cnt-ai" style="display:none">
+      <!-- Quota Badge -->
+      <div id="ai-quota-bar" style="display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;padding:12px 16px;margin-bottom:20px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <div style="flex:1">
+          <div style="font-size:.62rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Kuota Analisa Hari Ini</div>
+          <div style="display:flex;gap:6px" id="ai-quota-dots"></div>
+        </div>
+        <div id="ai-quota-txt" style="font-size:.65rem;color:var(--text2)">3/3 tersisa</div>
+      </div>
+      <!-- Upload Area -->
+      <div id="ai-upload-area" style="border:2px dashed var(--card-border);border-radius:8px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px" onclick="document.getElementById('ai-file-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='var(--card-border)'" ondrop="aiHandleDrop(event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.4" width="36" height="36" style="margin-bottom:12px;opacity:.7"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div style="font-size:.78rem;color:var(--text);margin-bottom:6px">Upload Screenshot Chart</div>
+        <div style="font-size:.63rem;color:var(--text3)">Drag &amp; drop atau klik untuk pilih gambar · JPG, PNG, WEBP</div>
+      </div>
+      <input type="file" id="ai-file-input" accept="image/*" style="display:none" onchange="aiHandleFile(this.files[0])">
+      <div id="ai-preview-wrap" style="display:none;margin-bottom:16px;position:relative">
+        <img id="ai-preview-img" src="" alt="Chart preview" style="width:100%;border-radius:6px;border:1px solid var(--card-border);display:block">
+        <button onclick="aiClearPreview()" style="position:absolute;top:8px;right:8px;background:rgba(6,6,10,.75);border:1px solid var(--card-border);border-radius:4px;color:var(--text2);padding:4px 8px;font-size:.62rem;cursor:pointer">✕ Hapus</button>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:.62rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Pertanyaan/Fokus Analisa (opsional)</div>
+        <textarea id="ai-prompt-input" placeholder="cth: Apakah ada setup entry yang bagus? Dimana level support/resistance terdekat?" style="width:100%;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;color:var(--text);font-size:.72rem;font-family:inherit;padding:10px 12px;resize:vertical;min-height:64px;line-height:1.7"></textarea>
+      </div>
+      <button id="ai-analyze-btn" onclick="aiAnalyze()" style="width:100%;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06060A;font-weight:600;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;padding:13px;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Analisa Chart dengan AI
+      </button>
+      <div id="ai-loading" style="display:none;text-align:center;padding:32px 0">
+        <div class="spin" style="margin:0 auto 12px;border-top-color:var(--gold)"></div>
+        <div style="font-size:.68rem;color:var(--text2)" id="ai-loading-txt">Menganalisa chart kamu...</div>
+      </div>
+      <div id="ai-result" style="display:none;margin-top:20px">
+        <div style="font-size:.62rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
+          Hasil Analisa AI
+        </div>
+        <div id="ai-result-body" style="background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:20px;font-size:.72rem;line-height:1.85;color:var(--text)"></div>
+        <div style="margin-top:10px;display:flex;justify-content:flex-end">
+          <button onclick="aiClearAll()" style="background:transparent;border:1px solid var(--card-border);border-radius:4px;color:var(--text3);padding:5px 12px;font-size:.62rem;cursor:pointer">Analisa Baru</button>
+        </div>
+      </div>
+      <div id="ai-error" style="display:none;margin-top:14px;background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);border-radius:6px;padding:12px 14px;font-size:.68rem;color:var(--red)"></div>
     </div>
   </div>
 </div>
@@ -1942,7 +2004,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
 /* Page routing */
-var pages=['home','berita','vip','auth','journal','admin','modul','kalender'];
+var pages=['home','berita','vip','auth','journal','admin','modul','kalender','sessions','calc','swap','ai'];
 
 /* Deep link handler — support path (/berita, /vip, dll) + ?artikel=slug untuk artikel + 404 redirect (?p=) */
 (function(){
@@ -2040,7 +2102,11 @@ var PAGE_META = {
   auth:    { title: 'Login Member — Mayora Gold FX', desc: 'Login atau daftar akun Mayora Gold FX untuk akses trading journal, modul edukasi, dan fitur VIP eksklusif.', url: 'https://mayoragoldfx.com/auth' },
   journal: { title: 'Trading Journal Pro — Mayora Gold FX', desc: 'Catat dan analisa performa trading emas XAU/USD kamu. Fitur eksklusif untuk member VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/journal' },
   admin:   { title: 'Admin Dashboard — Mayora Gold FX', desc: 'Dashboard administrasi Mayora Gold FX.', url: 'https://mayoragoldfx.com/admin' },
-  kalender:{ title: 'Kalender Ekonomi Forex — High Impact USD | Mayora Gold FX', desc: 'Kalender ekonomi real-time untuk event high-impact USD. Pantau NFP, CPI, FOMC, GDP dan data makro lainnya yang mempengaruhi XAU/USD.', url: 'https://mayoragoldfx.com/kalender' }
+  kalender:{ title: 'Kalender Ekonomi Forex — High Impact USD | Mayora Gold FX', desc: 'Kalender ekonomi real-time untuk event high-impact USD. Pantau NFP, CPI, FOMC, GDP dan data makro lainnya yang mempengaruhi XAU/USD.', url: 'https://mayoragoldfx.com/kalender' },
+  sessions:{ title: 'Market Sessions — Jam Aktif Sesi Forex | Mayora Gold FX', desc: 'Pantau sesi forex aktif secara real-time: Sydney, Tokyo, London, New York. Rencanakan entry di jam likuiditas tinggi XAU/USD.', url: 'https://mayoragoldfx.com/sessions' },
+  calc:    { title: 'Kalkulator Lot & Risk XAU/USD — Mayora Gold FX', desc: 'Hitung ukuran lot dan risk management optimal untuk trading emas XAU/USD. Fitur VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/calc' },
+  swap:    { title: 'Kalkulator Swap XAU/USD — Mayora Gold FX', desc: 'Hitung biaya atau pendapatan swap overnight untuk posisi gold XAU/USD. Fitur VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/swap' },
+  ai:      { title: 'AI Analisa Chart XAU/USD — Mayora Gold FX', desc: 'Analisa screenshot chart XAU/USD dengan AI secara instan. Identifikasi setup, support/resistance, dan peluang trading. Fitur VIP eksklusif.', url: 'https://mayoragoldfx.com/ai' }
 };
 
 /* Canonical link tag — update per halaman */
@@ -2054,8 +2120,15 @@ function goPage(p){
   if(p==='auth'&&window._curUser){p='home';}
   /* Member VIP/Admin tidak perlu lihat halaman membership VIP lagi */
   if(p==='vip'&&window._curUser&&(window._isVip||window._isAdmin)){p='journal';}
+  /* VIP-gated tool pages: redirect to auth jika belum login */
+  var vipPages=['journal','calc','swap','ai'];
+  if(vipPages.indexOf(p)!==-1&&!window._curUser){goPage('auth');return;}
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
-  ['home','berita','vip','modul','kalender'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
+  ['home','berita','vip','modul'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
+  /* Trading Tools dropdown — highlight when on any tool page */
+  var toolPages=['kalender','sessions','journal','calc','swap','ai'];
+  var nlTools=document.getElementById('nl-tools');
+  if(nlTools) nlTools.classList.toggle('active', toolPages.indexOf(p)!==-1);
   document.getElementById('mob-nav').classList.remove('open');
   window.scrollTo(0,0);
 
@@ -2072,15 +2145,13 @@ function goPage(p){
     updateCanonical(meta.url);
   }
 
-  if(p==='berita'){
-    closeNewsDetail();
-    window._renderNews&&window._renderNews();
-    window._startEcalListener&&window._startEcalListener();
-    window._renderEcal&&window._renderEcal();
-  }
+  if(p==='berita'){closeNewsDetail();window._renderNews&&window._renderNews();window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();}
   if(p==='admin') window._loadAdminData&&window._loadAdminData();
   if(p==='modul') window.modLoadModules&&window.modLoadModules();
   if(p==='kalender'){window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();}
+  if(p==='sessions'){window._startSessInterval&&window._startSessInterval();}
+  else{window._stopSessInterval&&window._stopSessInterval();}
+  if(p==='ai'&&window._curUser&&(window._isVip||window._isAdmin)){window.aiRenderQuota&&window.aiRenderQuota();}
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
@@ -2121,22 +2192,34 @@ window.jTab=function(n,el){
 /* VIP nav dropdown */
 window.toggleVipMenu=function(e){
   if(e)e.stopPropagation();
+  document.getElementById('tools-dropdown').classList.remove('open');
   document.getElementById('vip-dropdown').classList.toggle('open');
 };
 window.closeVipMenu=function(){
   document.getElementById('vip-dropdown').classList.remove('open');
 };
+
+/* Trading Tools nav dropdown */
+window.toggleToolsMenu=function(e){
+  if(e)e.stopPropagation();
+  document.getElementById('vip-dropdown').classList.remove('open');
+  document.getElementById('tools-dropdown').classList.toggle('open');
+};
+window.closeToolsMenu=function(){
+  document.getElementById('tools-dropdown').classList.remove('open');
+};
+
 document.addEventListener('click',function(e){
   var dd=document.getElementById('vip-dropdown');
   if(dd&&dd.classList.contains('open')&&!dd.contains(e.target)) dd.classList.remove('open');
+  var td=document.getElementById('tools-dropdown');
+  if(td&&td.classList.contains('open')&&!td.contains(e.target)) td.classList.remove('open');
 });
 
-/* Jump straight into a Journal tab (requires login, gated by VIP lock inside the tab) */
+/* goJournalTab — backward compat, now routes to standalone pages */
 window.goJournalTab=function(n){
-  requireVipNav();
-  if(!window._curUser) return;
-  var btn=document.getElementById('tab-btn-'+n);
-  if(btn) jTab(n,btn);
+  var pageMap={dash:'journal',history:'journal',notes:'journal',ecal:'kalender',sessions:'sessions',calc:'calc',swap:'swap',ai:'ai'};
+  goPage(pageMap[n]||'journal');
 };
 window.fltHist=function(f,btn){window._histFlt=f;document.querySelectorAll('.flt-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');window._renderHistory&&window._renderHistory();};
 window._histFlt='all';
@@ -2182,6 +2265,144 @@ window.calcLotRisk=function(){
   }
 
   document.getElementById('calc-result').style.display='block';
+};
+
+/* ===== MARKET SESSIONS ===== */
+(function(){
+  // Sessions defined in UTC hours
+  var SESSIONS=[
+    {name:'Sydney',   utcOpen:21, utcClose:6,  color:'#4A9EE0', focus:'AUD, NZD, Asia-Pacific handoff', wib:'04:00–13:00'},
+    {name:'Tokyo',    utcOpen:23, utcClose:8,  color:'#E0A84A', focus:'JPY, AUD, NZD, Asia liquidity', wib:'06:00–15:00'},
+    {name:'London',   utcOpen:7,  utcClose:16, color:'#4AE0A8', focus:'EUR, GBP, gold, major FX liquidity', wib:'14:00–23:00'},
+    {name:'New York', utcOpen:12, utcClose:21, color:'#E05A5A', focus:'USD, yields, equities, gold, event risk', wib:'19:00–04:00'},
+  ];
+  function isOpen(s){
+    var now=new Date();
+    var h=now.getUTCHours()+(now.getUTCMinutes()/60);
+    if(s.utcOpen<s.utcClose) return h>=s.utcOpen&&h<s.utcClose;
+    return h>=s.utcOpen||h<s.utcClose; // overnight
+  }
+  function renderSessions(){
+    var now=new Date();
+    // Clock WIB
+    var wibOffset=7*60;
+    var wibMs=now.getTime()+(now.getTimezoneOffset()+wibOffset)*60000;
+    var wib=new Date(wibMs);
+    var hh=String(wib.getHours()).padStart(2,'0');
+    var mm=String(wib.getMinutes()).padStart(2,'0');
+    var ss=String(wib.getSeconds()).padStart(2,'0');
+    var clk=document.getElementById('sess-clock');
+    if(clk) clk.textContent=hh+':'+mm+':'+ss;
+
+    // Active sessions
+    var active=SESSIONS.filter(isOpen);
+    var actEl=document.getElementById('sess-active-now');
+    var actvEl=document.getElementById('sess-activity-now');
+    if(actEl){
+      if(active.length===0){actEl.textContent='Sepi / Weekend';actEl.style.color='var(--text3)';}
+      else{actEl.textContent=active.map(function(s){return s.name;}).join(' + ');actEl.style.color='var(--gold)';}
+    }
+    if(actvEl){
+      var act=active.length===0?'No Active Session':active.length>=2?'High Activity — Overlap':active.length===1?'Medium Activity':'—';
+      actvEl.textContent=act;
+      actvEl.style.color=active.length>=2?'var(--green)':active.length===1?'var(--gold)':'var(--text3)';
+    }
+
+    // Session cards
+    var grid=document.getElementById('sess-cards-grid');
+    if(grid){
+      grid.innerHTML=SESSIONS.map(function(s){
+        var open=isOpen(s);
+        return '<div style="background:var(--bg3);border:1px solid '+(open?s.color+' ':'var(--card-border)')+';border-radius:8px;padding:18px 20px;transition:border-color .3s">'
+          +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
+          +'<span style="font-size:.54rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)">'+s.name+'</span>'
+          +'<span style="font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:2px;'+(open?'background:'+s.color+'22;border:1px solid '+s.color+';color:'+s.color:'background:var(--bg4);border:1px solid var(--card-border);color:var(--text3)')+'">'+( open?'OPEN NOW':'CLOSED')+'</span>'
+          +'</div>'
+          +'<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.8rem;font-weight:600;color:var(--text);line-height:1;margin-bottom:8px">'+s.name+'</div>'
+          +'<div style="font-size:.62rem;color:var(--text2);margin-bottom:4px"><b style="color:var(--text)">Market focus:</b> '+s.focus+'</div>'
+          +'<div style="font-size:.58rem;color:var(--text3);margin-top:6px">WIB: '+s.wib+'</div>'
+          +'</div>';
+      }).join('');
+    }
+
+    // 24hr bar
+    var bar=document.getElementById('sess-bar-24');
+    if(bar){
+      var totalMins=24*60;
+      bar.innerHTML=SESSIONS.map(function(s){
+        var openMins=(s.utcOpen+7)*60%1440;
+        var closeMins=(s.utcClose+7)*60%1440;
+        var dur=(closeMins>openMins)?(closeMins-openMins):(1440-openMins+closeMins);
+        var leftPct=openMins/totalMins*100;
+        var widthPct=dur/totalMins*100;
+        return '<div style="position:absolute;top:6px;height:32px;border-radius:3px;background:'+s.color+'55;border:1px solid '+s.color+';opacity:'+(isOpen(s)?1:.55)+';left:'+leftPct+'%;width:'+widthPct+'%;min-width:2px" title="'+s.name+'"></div>';
+      }).join('');
+      // Current time marker
+      var nowMins=wib.getHours()*60+wib.getMinutes();
+      var pct=nowMins/totalMins*100;
+      bar.innerHTML+='<div style="position:absolute;top:0;bottom:0;width:2px;background:var(--gold);left:'+pct+'%;border-radius:1px;box-shadow:0 0 6px var(--gold)"></div>';
+    }
+  }
+  window._renderSessions=renderSessions;
+  // Start ticker when tab activated
+  var _sessInterval=null;
+  window._startSessInterval=function(){
+    if(_sessInterval) return;
+    renderSessions();
+    _sessInterval=setInterval(renderSessions,1000);
+  };
+  window._stopSessInterval=function(){
+    if(_sessInterval){clearInterval(_sessInterval);_sessInterval=null;}
+  };
+})();
+
+/* ===== SWAP CALCULATOR (VIP) ===== */
+window.autoFillSwapPrice=async function(){
+  try{
+    var r=await fetch('https://api.gold-api.com/price/XAU',{cache:'no-cache'});
+    var d=await r.json();
+    var p=d.price||d.Price||d.ask||null;
+    if(p){
+      document.getElementById('swap-price').value=parseFloat(p).toFixed(2);
+      toast('Swap','Harga XAU/USD berhasil diambil: $'+parseFloat(p).toFixed(2),'var(--gold)');
+    }
+  }catch(e){toast('Error','Gagal ambil harga live','var(--red)');}
+};
+window.calcSwap=function(){
+  var lot=parseFloat(document.getElementById('swap-lot').value);
+  var dir=document.getElementById('swap-dir').value;
+  var days=parseInt(document.getElementById('swap-days').value)||1;
+  var rateBuy=parseFloat(document.getElementById('swap-rate-buy').value);
+  var rateSell=parseFloat(document.getElementById('swap-rate-sell').value);
+  var price=parseFloat(document.getElementById('swap-price').value);
+  if(!(lot>0)||isNaN(rateBuy)||isNaN(rateSell)||!(days>0)){
+    toast('MGF','Lengkapi semua kolom swap','var(--red)');return;
+  }
+  var POINT_VAL=0.1; // 1 point = $0.1 per 0.01 lot (standard XAU 100 oz = $1 per 0.01 lot point)
+  var rate=dir==='buy'?rateBuy:rateSell;
+  var swapPerNight=rate*(lot/1)*10; // swap in USD: rate poin × lot × $10/lot/poin
+  var totalSwap=swapPerNight*days;
+  var isPos=totalSwap>=0;
+
+  var html='';
+  html+='<div class="scard"><div class="scard-l">Swap per Malam</div><div class="scard-v '+(swapPerNight>=0?'g':'r')+'">'+(swapPerNight>=0?'+':'')+swapPerNight.toFixed(2)+' USD</div><div class="scard-sub">'+dir.toUpperCase()+' '+lot+' lot</div></div>';
+  html+='<div class="scard"><div class="scard-l">Total Swap ('+days+' malam)</div><div class="scard-v '+(totalSwap>=0?'g':'r')+'">'+(totalSwap>=0?'+':'')+totalSwap.toFixed(2)+' USD</div><div class="scard-sub">Rate: '+rate+' poin/lot</div></div>';
+  if(price>0){
+    var swapPct=Math.abs(totalSwap)/(price*lot*100)*100;
+    html+='<div class="scard"><div class="scard-l">% dari Nilai Posisi</div><div class="scard-v">'+swapPct.toFixed(4)+'%</div><div class="scard-sub">Nilai posisi ~$'+(price*lot*100).toFixed(0)+'</div></div>';
+  }
+  document.getElementById('swap-stats').innerHTML=html;
+
+  var tripleDay='Rabu';
+  var detail='<b>Arah:</b> '+(dir==='buy'?'Buy (Long)':'Sell (Short)')+'<br>'
+    +'<b>Swap Rate '+dir+':</b> '+rate+' poin/lot/malam<br>'
+    +'<b>Lot:</b> '+lot+'<br>'
+    +'<b>Durasi:</b> '+days+' malam<br>'
+    +'<b>Triple Swap:</b> Hari '+tripleDay+' dihitung 3x (weekend rollover)<br><br>'
+    +'<span style="color:'+(isPos?'var(--green)':'var(--red)')+'">'+( isPos?'✦ Swap Positif — kamu mendapat kredit':'⚠ Swap Negatif — biaya dibebankan ke akun')+' sebesar <b>'+Math.abs(totalSwap).toFixed(2)+' USD</b> untuk '+days+' malam.</span>';
+  var detEl=document.getElementById('swap-detail');
+  detEl.innerHTML=detail;
+  document.getElementById('swap-result').style.display='block';
 };
 
 /* Slug generator */
@@ -2815,13 +3036,18 @@ function showLoggedIn(user){
   document.getElementById('vdm-membership').style.display=(isVip||isAdmin)?'none':'block';
   const mobMembership=document.getElementById('mob-vdm-membership');
   if(mobMembership)mobMembership.style.display=(isVip||isAdmin)?'none':'block';
-  ['dash','hist','notes','calc','ai'].forEach(k=>{
+  ['dash','hist','notes'].forEach(k=>{
     document.getElementById('vip-lock-'+k).style.display=(isVip||isAdmin)?'none':'block';
     document.getElementById('vip-cnt-'+k).style.display=(isVip||isAdmin)?'block':'none';
   });
-  /* ecal (Kalender) is always public — no VIP lock */
-  document.getElementById('vip-lock-ecal').style.display='none';
-  document.getElementById('vip-cnt-ecal').style.display='block';
+  /* Standalone tool pages VIP lock */
+  ['calc','swap','ai'].forEach(k=>{
+    var lockEl=document.getElementById('vip-lock-'+k);
+    var cntEl=document.getElementById('vip-cnt-'+k);
+    if(lockEl) lockEl.style.display=(isVip||isAdmin)?'none':'block';
+    if(cntEl) cntEl.style.display=(isVip||isAdmin)?'block':'none';
+  });
+  /* Kalender is standalone FREE page, no lock needed */
   if(isVip||isAdmin){window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();}
   setSaveStatus('saved');
   renderAll();
