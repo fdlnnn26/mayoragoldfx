@@ -510,6 +510,32 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .auth-err{font-size:.65rem;color:var(--red);margin-top:8px;min-height:16px;line-height:1.5}
 .auth-success{font-size:.65rem;color:var(--green);margin-top:8px;min-height:16px;line-height:1.5;display:none}
 .auth-info{font-size:.65rem;color:var(--text3);text-align:center;padding:16px;line-height:1.9;letter-spacing:.04em}
+/* Google Sign In */
+.auth-divider{display:flex;align-items:center;gap:10px;margin:12px 24px 8px}
+.auth-divider-line{flex:1;height:1px;background:var(--card-border)}
+.auth-divider-txt{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
+.btn-google{width:calc(100% - 48px);margin:0 24px 4px;display:flex;align-items:center;justify-content:center;gap:10px;background:transparent;border:1px solid var(--card-border);color:var(--text);font-size:.7rem;letter-spacing:.06em;padding:11px 16px;cursor:pointer;border-radius:var(--radius);transition:all .25s}
+.btn-google:hover{background:rgba(201,168,76,0.06);border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.btn-google svg{flex-shrink:0}
+.auth-forgot{display:block;text-align:right;font-size:.62rem;color:var(--text3);margin-top:6px;cursor:pointer;transition:color .2s;background:none;border:none;padding:0;letter-spacing:.04em}
+.auth-forgot:hover{color:var(--gold);text-decoration:underline}
+/* Forgot password overlay */
+.fp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
+.fp-overlay.open{display:flex}
+.fp-card{background:var(--bg3);border:1px solid var(--card-border);border-radius:10px;padding:32px 28px;width:100%;max-width:380px;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.fp-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:6px;color:var(--text)}
+.fp-sub{font-size:.7rem;color:var(--text3);margin-bottom:22px;line-height:1.8}
+.fp-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px}
+.fp-input{width:100%;background:var(--bg4);border:1px solid var(--card-border);color:var(--text);font-size:.8rem;padding:11px 14px;border-radius:var(--radius);outline:none;transition:border-color .2s;margin-bottom:12px}
+.fp-input:focus{border-color:rgba(201,168,76,0.5)}
+.fp-err{font-size:.68rem;color:var(--red);margin-bottom:10px;display:none;background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.2);padding:8px 12px;border-radius:4px}
+.fp-ok{font-size:.68rem;color:var(--green);margin-bottom:10px;display:none;background:rgba(61,186,122,.06);border:1px solid rgba(61,186,122,.2);padding:8px 12px;border-radius:4px}
+.fp-actions{display:flex;gap:10px}
+.fp-cancel{flex:1;background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
+.fp-cancel:hover{border-color:rgba(201,168,76,.3)}
+.fp-submit{flex:2;background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.65rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:10px;cursor:pointer;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s}
+.fp-submit:hover{opacity:.85}
+.fp-submit:disabled{opacity:.5;cursor:default}
 .spin{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--bg);border-radius:50%;animation:rotateMark .6s linear infinite}
 
 /* JOURNAL APP */
@@ -1482,11 +1508,20 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
       <div class="auth-form on" id="form-login" role="tabpanel">
         <div class="auth-group"><label class="auth-label" for="li-email">Email</label><input class="auth-input" id="li-email" type="email" placeholder="email@kamu.com" autocomplete="email"></div>
-        <div class="auth-group"><label class="auth-label" for="li-pass">Password</label><input class="auth-input" id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+        <div class="auth-group">
+          <label class="auth-label" for="li-pass">Password</label>
+          <input class="auth-input" id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+          <button class="auth-forgot" onclick="openForgotPassword()">Lupa password?</button>
+        </div>
         <div class="auth-err" id="li-err" role="alert" aria-live="polite"></div>
         <div class="auth-success" id="li-ok" role="status">✓ Login berhasil! Mengalihkan...</div>
         <button class="auth-submit" id="li-btn" onclick="doLogin()"><span>Sign In →</span></button>
       </div>
+      <div class="auth-divider"><div class="auth-divider-line"></div><span class="auth-divider-txt">atau</span><div class="auth-divider-line"></div></div>
+      <button class="btn-google" id="google-btn" onclick="doGoogleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+        Lanjutkan dengan Google
+      </button>
       <div class="auth-form" id="form-reg" role="tabpanel">
         <div class="auth-group"><label class="auth-label" for="ri-name">Nama</label><input class="auth-input" id="ri-name" type="text" placeholder="Nama lengkap kamu" autocomplete="name"></div>
         <div class="auth-group"><label class="auth-label" for="ri-email">Email</label><input class="auth-input" id="ri-email" type="email" placeholder="email@kamu.com" autocomplete="email"></div>
@@ -2575,7 +2610,7 @@ window.updateHeroCard=updateHeroCard;
 <!-- FIREBASE MODULE -->
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile,GoogleAuthProvider,signInWithPopup}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import{getFirestore,doc,getDoc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,query,orderBy,limit,where,serverTimestamp,writeBatch,onSnapshot}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const FB={
@@ -2823,6 +2858,67 @@ window.doLogout = async ()=>{
   goPage('home');
   toast('Mayora GFX','Logout berhasil','#C9A84C');
 };
+
+/* ── Google Sign-In ── */
+window.doGoogleLogin = async ()=>{
+  const btn = document.getElementById('google-btn');
+  if(btn){ btn.disabled=true; btn.innerHTML='<div class="spin"></div>'; }
+  try{
+    const provider = new GoogleAuthProvider();
+    const cred = await signInWithPopup(auth, provider);
+    /* Ensure user doc exists in Firestore */
+    const userRef = doc(db,'users',cred.user.uid);
+    const snap = await getDoc(userRef);
+    if(!snap.exists()){
+      await setDoc(userRef,{
+        displayName: cred.user.displayName||cred.user.email.split('@')[0],
+        email: cred.user.email,
+        vip: false, admin: false, createdAt: serverTimestamp()
+      });
+    }
+  }catch(e){
+    const err = document.getElementById('li-err');
+    if(err) err.textContent = e.code==='auth/popup-closed-by-user' ? 'Login dibatalkan.' : fmsg(e.code);
+    if(btn){ btn.disabled=false; btn.innerHTML=`<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg> Lanjutkan dengan Google`; }
+  }
+};
+
+/* ── Forgot Password Modal ── */
+window.openForgotPassword = function(){
+  const liEmail = document.getElementById('li-email').value.trim();
+  if(liEmail) document.getElementById('fp-email').value = liEmail;
+  document.getElementById('fp-err').style.display='none';
+  document.getElementById('fp-ok').style.display='none';
+  document.getElementById('fp-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('fp-email').focus(),100);
+};
+window.closeForgotPassword = function(){
+  document.getElementById('fp-overlay').classList.remove('open');
+};
+window.doForgotPassword = async ()=>{
+  const email = document.getElementById('fp-email').value.trim();
+  const errEl = document.getElementById('fp-err');
+  const okEl  = document.getElementById('fp-ok');
+  const btn   = document.getElementById('fp-btn');
+  errEl.style.display='none'; okEl.style.display='none';
+  if(!email){ errEl.textContent='Masukkan email kamu.'; errEl.style.display='block'; return; }
+  btn.disabled=true; btn.innerHTML='<div class="spin" style="border-top-color:var(--bg)"></div>';
+  try{
+    await sendPasswordResetEmail(auth, email);
+    okEl.style.display='block';
+    btn.innerHTML='✓ Terkirim';
+    setTimeout(()=>{ closeForgotPassword(); btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Kirim Link Reset'; }, 3000);
+  }catch(e){
+    errEl.textContent = fmsg(e.code)||'Gagal mengirim email. Cek kembali alamat email.';
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Kirim Link Reset';
+  }
+};
+/* Close forgot password overlay on backdrop click */
+document.getElementById('fp-overlay').addEventListener('click', function(e){
+  if(e.target===this) closeForgotPassword();
+});
 
 window.doReset = async ()=>{
   const email=window._curUser?.email;if(!email)return;
@@ -4446,5 +4542,24 @@ function afterAuth(){
   else{setTimeout(waitDB,300);}
 })();
 </script>
+<!-- FORGOT PASSWORD MODAL -->
+<div class="fp-overlay" id="fp-overlay" role="dialog" aria-modal="true" aria-labelledby="fp-title">
+  <div class="fp-card">
+    <div class="fp-title" id="fp-title">Reset Password</div>
+    <div class="fp-sub">Masukkan email kamu. Kami akan kirimkan link untuk membuat password baru.</div>
+    <label class="fp-label" for="fp-email">Email</label>
+    <input class="fp-input" id="fp-email" type="email" placeholder="email@kamu.com" autocomplete="email">
+    <div class="fp-err" id="fp-err"></div>
+    <div class="fp-ok" id="fp-ok">✓ Link reset berhasil dikirim! Cek inbox atau folder spam kamu.</div>
+    <div class="fp-actions">
+      <button class="fp-cancel" onclick="closeForgotPassword()">Batal</button>
+      <button class="fp-submit" id="fp-btn" onclick="doForgotPassword()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Kirim Link Reset
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
