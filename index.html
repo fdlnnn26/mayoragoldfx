@@ -5000,57 +5000,118 @@ function afterAuth(){
     if(el) el.textContent = active + ' Lembar';
   }
 
-  window.rsAddLembar = function(){
-    var idx = _rsLembarSlots.length;
-    _rsLembarSlots.push({file:null, url:'', caption:'', header:'', teks:'', _removed:false});
-    var wrap = document.getElementById('rs-lembar-wrap');
-    var div = document.createElement('div');
-    div.id = 'rs-lembar-slot-'+idx;
-    div.style.cssText = 'border:1px solid var(--gold-border);border-radius:8px;padding:16px;background:var(--bg3)';
-    div.innerHTML =
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'
-      +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)">Lembar '+(idx+1)+'</span>'
-      +'<button type="button" onclick="rsRemoveLembar('+idx+')" style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);color:var(--red);cursor:pointer;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius)">Hapus</button>'
-      +'</div>'
-      // 1. Gambar
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Gambar</label>'
-      +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:6px" onchange="rsHandleLembarFile('+idx+',this)">'
-      +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:8px"></div>'
-      // 2. Caption gambar
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Caption Gambar</label>'
-      +'<input class="form-inp" type="text" id="rs-lembar-caption-'+idx+'" placeholder="Contoh: Chart XAUUSD H4 — Struktur Bullish" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarCaption('+idx+',this.value)">'
-      // 3. Header / judul lembar
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Header / Judul</label>'
-      +'<input class="form-inp" type="text" id="rs-lembar-header-'+idx+'" placeholder="Contoh: Analisa Supply & Demand" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarHeader('+idx+',this.value)">'
-      // 4. Teks analisa
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Teks Analisa</label>'
-      +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="4" placeholder="Tulis analisa lengkap di sini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)"></textarea>';
-    wrap.appendChild(div);
-    rsUpdateLembarCount();
-    setTimeout(function(){ div.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 50);
+  /* ── BLOCK-BASED LEMBAR SYSTEM ── */
+  // Each lembar slot now stores an array of blocks: [{type:'gambar'|'h2'|'teks', ...data}]
+  // _rsLembarSlots[idx] = {_removed, blocks:[...], _blockCount}
+
+  function rsRenderLembarBlocks(idx){
+    var slot = _rsLembarSlots[idx];
+    if(!slot) return;
+    var blocksWrap = document.getElementById('rs-lembar-blocks-'+idx);
+    if(!blocksWrap) return;
+    blocksWrap.innerHTML = '';
+    (slot.blocks||[]).forEach(function(block, bi){
+      var bdiv = document.createElement('div');
+      bdiv.id = 'rs-block-'+idx+'-'+bi;
+      bdiv.style.cssText = 'background:var(--bg4);border:1px solid var(--card-border);border-radius:6px;padding:12px;margin-bottom:8px;position:relative';
+      var removeBtn = '<button type="button" onclick="rsRemoveBlock('+idx+','+bi+')" style="position:absolute;top:8px;right:8px;background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.2);color:var(--red);cursor:pointer;font-size:.55rem;padding:2px 8px;border-radius:var(--radius)">✕</button>';
+      if(block.type === 'gambar'){
+        var hasImg = block.url||'';
+        bdiv.innerHTML = '<div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">🖼 Gambar</div>'
+          + removeBtn
+          +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:6px" onchange="rsBlockHandleFile('+idx+','+bi+',this)">'
+          +'<div id="rs-bprev-'+idx+'-'+bi+'" style="margin-bottom:6px">'
+          +(hasImg?'<div style="border-radius:4px;overflow:hidden;border:1px solid var(--card-border)"><img src="'+hasImg+'" style="width:100%;max-height:180px;object-fit:contain;display:block;background:var(--bg3)"></div>':'')
+          +'</div>'
+          +'<input class="form-inp" type="text" placeholder="Caption (opsional)" value="'+(block.caption||'')+'" style="font-size:.68rem" oninput="rsBlockUpdate('+idx+','+bi+',\'caption\',this.value)">';
+      } else if(block.type === 'h2'){
+        bdiv.innerHTML = '<div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">H2 Header</div>'
+          + removeBtn
+          +'<input class="form-inp" type="text" placeholder="Contoh: Analisa Supply & Demand" value="'+(block.value||'')+'" style="font-size:.8rem;font-weight:600" oninput="rsBlockUpdate('+idx+','+bi+',\'value\',this.value)">';
+      } else if(block.type === 'teks'){
+        bdiv.innerHTML = '<div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">¶ Teks</div>'
+          + removeBtn
+          +'<textarea class="form-inp form-textarea" rows="4" placeholder="Tulis analisa di sini..." style="font-size:.7rem;resize:vertical" oninput="rsBlockUpdate('+idx+','+bi+',\'value\',this.value)">'+(block.value||'')+'</textarea>';
+      }
+      blocksWrap.appendChild(bdiv);
+    });
+  }
+
+  window.rsBlockUpdate = function(idx, bi, key, val){
+    if(_rsLembarSlots[idx]&&_rsLembarSlots[idx].blocks[bi]) _rsLembarSlots[idx].blocks[bi][key]=val;
   };
 
-  window.rsHandleLembarFile = function(idx, inp){
-    var file = inp.files[0];
-    if(!file) return;
-    _rsLembarSlots[idx].file = file;
-    _rsLembarSlots[idx].url = '';
+  window.rsBlockHandleFile = function(idx, bi, inp){
+    var file = inp.files[0]; if(!file) return;
+    _rsLembarSlots[idx].blocks[bi].file = file;
+    _rsLembarSlots[idx].blocks[bi].url = '';
     var reader = new FileReader();
     reader.onload = function(e){
-      var prev = document.getElementById('rs-lembar-prev-'+idx);
-      if(prev) prev.innerHTML = '<div style="border-radius:6px;overflow:hidden;border:1px solid var(--card-border);position:relative">'
-        +'<img src="'+e.target.result+'" style="width:100%;max-height:220px;object-fit:contain;display:block;background:var(--bg4)">'
-        +'<div style="position:absolute;bottom:6px;right:8px;font-size:.55rem;color:var(--green);background:rgba(6,6,10,.75);padding:2px 8px;border-radius:3px">✓ Siap diupload</div>'
+      var prev = document.getElementById('rs-bprev-'+idx+'-'+bi);
+      if(prev) prev.innerHTML = '<div style="border-radius:4px;overflow:hidden;border:1px solid var(--card-border);position:relative">'
+        +'<img src="'+e.target.result+'" style="width:100%;max-height:180px;object-fit:contain;display:block;background:var(--bg3)">'
+        +'<div style="position:absolute;bottom:4px;right:6px;font-size:.5rem;color:var(--green);background:rgba(6,6,10,.8);padding:2px 6px;border-radius:3px">✓ Siap upload</div>'
         +'</div>';
     };
     reader.readAsDataURL(file);
   };
 
-  window.rsHandleLembarCaption = function(idx, val){ _rsLembarSlots[idx].caption = val; };
-  window.rsHandleLembarHeader  = function(idx, val){ _rsLembarSlots[idx].header  = val; };
-  window.rsHandleLembarInfo    = function(idx, val){ _rsLembarSlots[idx].info    = val; }; // compat
-  window.rsHandleLembarUrl     = function(idx, url){ _rsLembarSlots[idx].url = url.trim(); _rsLembarSlots[idx].file = null; };
-  window.rsHandleLembarTeks    = function(idx, val){ _rsLembarSlots[idx].teks = val; };
+  window.rsAddBlock = function(idx, type){
+    var slot = _rsLembarSlots[idx]; if(!slot) return;
+    slot.blocks = slot.blocks||[];
+    var block = {type:type};
+    if(type==='gambar') block = {type:'gambar', file:null, url:'', caption:''};
+    else if(type==='h2') block = {type:'h2', value:''};
+    else if(type==='teks') block = {type:'teks', value:''};
+    slot.blocks.push(block);
+    rsRenderLembarBlocks(idx);
+    // Scroll to new block
+    setTimeout(function(){
+      var el = document.getElementById('rs-block-'+idx+'-'+(slot.blocks.length-1));
+      if(el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 50);
+  };
+
+  window.rsRemoveBlock = function(idx, bi){
+    if(_rsLembarSlots[idx]&&_rsLembarSlots[idx].blocks) _rsLembarSlots[idx].blocks.splice(bi,1);
+    rsRenderLembarBlocks(idx);
+  };
+
+  window.rsAddLembar = function(){
+    var idx = _rsLembarSlots.length;
+    _rsLembarSlots.push({_removed:false, blocks:[]});
+    var wrap = document.getElementById('rs-lembar-wrap');
+    var div = document.createElement('div');
+    div.id = 'rs-lembar-slot-'+idx;
+    div.style.cssText = 'border:1px solid var(--gold-border);border-radius:8px;padding:16px;background:var(--bg3);margin-bottom:12px';
+    div.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+      +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)">Lembar '+(idx+1)+'</span>'
+      +'<button type="button" onclick="rsRemoveLembar('+idx+')" style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);color:var(--red);cursor:pointer;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius)">Hapus</button>'
+      +'</div>'
+      // blocks container
+      +'<div id="rs-lembar-blocks-'+idx+'"></div>'
+      // add block buttons
+      +'<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
+      +'<button type="button" onclick="rsAddBlock('+idx+',\'gambar\')" style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,.06);border:1px dashed var(--gold-border);color:var(--text2);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gold-border)\';this.style.color=\'var(--text2)\'">'
+      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> + Gambar</button>'
+      +'<button type="button" onclick="rsAddBlock('+idx+',\'h2\')" style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,.06);border:1px dashed var(--gold-border);color:var(--text2);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gold-border)\';this.style.color=\'var(--text2)\'">'
+      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M4 6h16M4 12h8M4 18h12"/></svg> + H2</button>'
+      +'<button type="button" onclick="rsAddBlock('+idx+',\'teks\')" style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,.06);border:1px dashed var(--gold-border);color:var(--text2);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gold-border)\';this.style.color=\'var(--text2)\'">'
+      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg> + Teks</button>'
+      +'</div>';
+    wrap.appendChild(div);
+    rsUpdateLembarCount();
+    setTimeout(function(){ div.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 50);
+  };
+
+  // Legacy compat stubs (replaced by block system)
+  window.rsHandleLembarFile    = function(){};
+  window.rsHandleLembarCaption = function(){};
+  window.rsHandleLembarHeader  = function(){};
+  window.rsHandleLembarInfo    = function(){};
+  window.rsHandleLembarUrl     = function(){};
+  window.rsHandleLembarTeks    = function(){};
 
   window.rsRemoveLembar = function(idx){
     _rsLembarSlots[idx]._removed = true;
@@ -5117,36 +5178,40 @@ function afterAuth(){
         document.getElementById('rs-thumbnail-url').value = editData.thumbnail;
         document.getElementById('rs-thumb-prev').innerHTML = '<img src="'+editData.thumbnail+'" style="max-width:100%;max-height:120px;object-fit:contain;border-radius:4px;border:1px solid var(--card-border)">';
       }
-      // Restore lembaran
+      // Restore lembaran (block-based, with legacy fallback)
       var lembaran = editData.lembaran||[];
       // fallback: old images array
       if(!lembaran.length && (editData.images||[]).length){
-        lembaran = (editData.images||[]).map(function(url){ return {gambar:url, info:'', teks:''}; });
+        lembaran = (editData.images||[]).map(function(url){ return {blocks:[{type:'gambar',url:url,caption:''}]}; });
       }
       lembaran.forEach(function(l){
+        // Convert legacy format {gambar, header, teks} -> blocks
+        var blocks = l.blocks;
+        if(!blocks){
+          blocks = [];
+          if(l.gambar) blocks.push({type:'gambar', url:l.gambar, caption:l.caption||l.info||''});
+          if(l.header) blocks.push({type:'h2', value:l.header});
+          if(l.teks)   blocks.push({type:'teks', value:l.teks});
+        }
         var idx = _rsLembarSlots.length;
-        _rsLembarSlots.push({file:null, url:l.gambar||'', caption:l.caption||l.info||'', header:l.header||'', teks:l.teks||'', _removed:false});
+        _rsLembarSlots.push({_removed:false, blocks: blocks.map(function(b){ return Object.assign({},b); })});
         var wrap = document.getElementById('rs-lembar-wrap');
         var div = document.createElement('div');
         div.id = 'rs-lembar-slot-'+idx;
-        div.style.cssText = 'border:1px solid var(--gold-border);border-radius:8px;padding:16px;background:var(--bg3)';
+        div.style.cssText = 'border:1px solid var(--gold-border);border-radius:8px;padding:16px;background:var(--bg3);margin-bottom:12px';
         div.innerHTML =
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
           +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)">Lembar '+(idx+1)+'</span>'
           +'<button type="button" onclick="rsRemoveLembar('+idx+')" style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);color:var(--red);cursor:pointer;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius)">Hapus</button>'
           +'</div>'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Gambar</label>'
-          +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:6px" onchange="rsHandleLembarFile('+idx+',this)">'
-          +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:8px">'
-          +(l.gambar?'<div style="border-radius:6px;overflow:hidden;border:1px solid var(--card-border)"><img src="'+l.gambar+'" style="width:100%;max-height:220px;object-fit:contain;display:block;background:var(--bg4)"></div>':'')
-          +'</div>'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Caption Gambar</label>'
-          +'<input class="form-inp" type="text" id="rs-lembar-caption-'+idx+'" value="'+(l.caption||l.info||'')+'" placeholder="Contoh: Chart XAUUSD H4 — Struktur Bullish" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarCaption('+idx+',this.value)">'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Header / Judul</label>'
-          +'<input class="form-inp" type="text" id="rs-lembar-header-'+idx+'" value="'+(l.header||'')+'" placeholder="Contoh: Analisa Supply & Demand" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarHeader('+idx+',this.value)">'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Teks Analisa</label>'
-          +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="4" placeholder="Tulis analisa lengkap di sini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)">'+(l.teks||'')+'</textarea>';
+          +'<div id="rs-lembar-blocks-'+idx+'"></div>'
+          +'<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
+          +'<button type="button" onclick="rsAddBlock('+idx+',\'gambar\')" style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,.06);border:1px dashed var(--gold-border);color:var(--text2);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:var(--radius);cursor:pointer">+ Gambar</button>'
+          +'<button type="button" onclick="rsAddBlock('+idx+',\'h2\')" style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,.06);border:1px dashed var(--gold-border);color:var(--text2);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:var(--radius);cursor:pointer">+ H2</button>'
+          +'<button type="button" onclick="rsAddBlock('+idx+',\'teks\')" style="display:flex;align-items:center;gap:5px;background:rgba(201,168,76,.06);border:1px dashed var(--gold-border);color:var(--text2);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:var(--radius);cursor:pointer">+ Teks</button>'
+          +'</div>';
         wrap.appendChild(div);
+        rsRenderLembarBlocks(idx);
       });
       rsUpdateLembarCount();
     }
@@ -5175,17 +5240,30 @@ function afterAuth(){
     btn.disabled = true;
     btn.innerHTML = '<div class="spin" style="border-top-color:var(--bg)"></div>';
     try{
-      // Upload lembaran
+      // Upload lembaran (block-based)
       var lembaranData = [];
       for(var i=0;i<_rsLembarSlots.length;i++){
         var slot = _rsLembarSlots[i];
         if(!slot || slot._removed) continue;
-        var gambarUrl = slot.url||'';
-        if(slot.file){
-          toast('Research','Mengupload lembar '+(i+1)+'...','var(--gold)');
-          gambarUrl = await rsUploadImg(slot.file, i);
+        var blocks = slot.blocks||[];
+        var uploadedBlocks = [];
+        for(var bi=0;bi<blocks.length;bi++){
+          var block = blocks[bi];
+          if(block.type==='gambar'){
+            var imgUrl = block.url||'';
+            if(block.file){
+              toast('Research','Mengupload gambar lembar '+(i+1)+' blok '+(bi+1)+'...','var(--gold)');
+              imgUrl = await rsUploadImg(block.file, i*100+bi);
+              block.url = imgUrl; block.file = null;
+            }
+            uploadedBlocks.push({type:'gambar', url:imgUrl, caption:block.caption||''});
+          } else if(block.type==='h2'){
+            uploadedBlocks.push({type:'h2', value:block.value||''});
+          } else if(block.type==='teks'){
+            uploadedBlocks.push({type:'teks', value:block.value||''});
+          }
         }
-        lembaranData.push({gambar:gambarUrl, caption:slot.caption||slot.info||'', header:slot.header||'', teks:slot.teks||''});
+        lembaranData.push({blocks:uploadedBlocks});
       }
       // Upload thumbnail
       var thumbUrl = _rsThumbSlot.url||'';
@@ -5193,9 +5271,12 @@ function afterAuth(){
         toast('Research','Mengupload thumbnail...','var(--gold)');
         thumbUrl = await rsUploadImg(_rsThumbSlot.file, 99);
       }
-      // Fallback thumbnail = gambar lembar pertama
-      if(!thumbUrl && lembaranData.length && lembaranData[0].gambar){
-        thumbUrl = lembaranData[0].gambar;
+      // Fallback thumbnail = gambar pertama dari blocks
+      if(!thumbUrl && lembaranData.length){
+        for(var _li=0;_li<lembaranData.length;_li++){
+          var _bl = (lembaranData[_li].blocks||[]).find(function(b){return b.type==='gambar'&&b.url;});
+          if(_bl){ thumbUrl=_bl.url; break; }
+        }
       }
       var {collection, addDoc, updateDoc, doc, serverTimestamp} = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
       var db = getDB();
@@ -5252,7 +5333,13 @@ function afterAuth(){
     _rsCache.forEach(function(r){ window._rsCacheMap[r.id] = r; });
     el.innerHTML = _rsCache.map(function(r){
       var lembarCount = (r.lembaran||[]).length || (r.images||[]).length;
-      var thumb = r.thumbnail || (r.lembaran&&r.lembaran[0]&&r.lembaran[0].gambar) || (r.images&&r.images[0]) || '';
+      var thumb = r.thumbnail || '';
+      if(!thumb && r.lembaran && r.lembaran[0]){
+        var _lb = r.lembaran[0];
+        if(_lb.blocks){ var _gb=(_lb.blocks||[]).find(function(b){return b.type==='gambar'&&b.url;}); if(_gb) thumb=_gb.url; }
+        else { thumb = _lb.gambar||''; }
+      }
+      if(!thumb && r.images && r.images[0]) thumb = r.images[0];
       return '<div style="background:var(--bg3);border:1px solid var(--card-border);border-radius:4px;padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">'
         +(thumb?'<div style="width:52px;height:52px;flex-shrink:0;border-radius:4px;overflow:hidden;background:var(--bg4);border:1px solid var(--card-border)"><img src="'+thumb+'" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>':'')
         +'<div style="flex:1;min-width:0">'
@@ -5384,6 +5471,31 @@ function afterAuth(){
     window.scrollTo(0,0);
   };
 
+  function rsGetLembarThumb(l){
+    if(l.blocks){ var gb=(l.blocks||[]).find(function(b){return b.type==='gambar'&&b.url;}); return gb?gb.url:''; }
+    return l.gambar||'';
+  }
+
+  function rsRenderLembarBlocksHtml(blocks, legacy){
+    if(!blocks && legacy){
+      blocks = [];
+      if(legacy.gambar) blocks.push({type:'gambar',url:legacy.gambar,caption:legacy.caption||legacy.info||''});
+      if(legacy.header) blocks.push({type:'h2',value:legacy.header});
+      if(legacy.teks)   blocks.push({type:'teks',value:legacy.teks});
+    }
+    if(!blocks||!blocks.length) return '<div style="height:100px;border-radius:6px;background:var(--bg4);border:1px dashed var(--card-border);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--text3)">Lembar kosong</div>';
+    return (blocks||[]).map(function(b){
+      if(b.type==='gambar') return '<div style="margin-bottom:12px">'
+        +'<div style="width:100%;border-radius:8px;overflow:hidden;background:var(--bg4);border:1px solid var(--card-border)">'
+        +'<img src="'+b.url+'" style="width:100%;display:block;object-fit:contain;max-height:520px" loading="lazy"></div>'
+        +(b.caption?'<div style="font-size:.62rem;color:var(--text3);text-align:center;padding:6px 4px;letter-spacing:.03em;font-style:italic">'+b.caption+'</div>':'')
+        +'</div>';
+      if(b.type==='h2') return '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin:16px 0 10px;line-height:1.3">'+b.value+'</h3>';
+      if(b.type==='teks') return '<div style="font-size:.78rem;color:var(--text2);line-height:2;white-space:pre-line;margin-bottom:16px">'+b.value+'</div>';
+      return '';
+    }).join('');
+  }
+
   function rsRenderLembar(lembaran, idx){
     var viewer = document.getElementById('rs-lembar-viewer');
     if(!viewer) return;
@@ -5392,62 +5504,35 @@ function afterAuth(){
     var pct = Math.round(((idx+1)/total)*100);
 
     viewer.innerHTML =
-      // Progress bar
       '<div style="margin-bottom:16px">'
       +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
       +'<span style="font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)">Lembaran</span>'
-      +'<span style="font-size:.72rem;font-weight:500;color:var(--gold)">'+  (idx+1)+' / '+total+'</span>'
+      +'<span style="font-size:.72rem;font-weight:500;color:var(--gold)">'+(idx+1)+' / '+total+'</span>'
       +'</div>'
       +'<div style="height:3px;background:var(--bg4);border-radius:2px;overflow:hidden">'
       +'<div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--gold-d),var(--gold));transition:width .3s"></div>'
       +'</div></div>'
-
-      // Gambar lembar
-      +(lembar.gambar
-        ?'<div style="width:100%;border-radius:8px;overflow:hidden;background:var(--bg4);border:1px solid var(--card-border)">'
-          +'<img src="'+lembar.gambar+'" style="width:100%;display:block;object-fit:contain;max-height:520px" loading="lazy"></div>'
-        :'<div style="height:160px;border-radius:8px;background:var(--bg4);border:1px dashed var(--card-border);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:.65rem;color:var(--text3)">Tidak ada gambar</div>')
-
-      // Caption gambar
-      +(lembar.caption
-        ?'<div style="font-size:.62rem;color:var(--text3);text-align:center;padding:8px 4px 16px;letter-spacing:.03em;font-style:italic;border-bottom:1px solid var(--card-border);margin-bottom:20px">'+lembar.caption+'</div>'
-        :'<div style="margin-bottom:20px"></div>')
-
-      // Header / judul lembar
-      +(lembar.header
-        ?'<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.3">'+lembar.header+'</h3>'
-        :'')
-
-      // Teks analisa
-      +(lembar.teks
-        ?'<div style="font-size:.78rem;color:var(--text2);line-height:2;white-space:pre-line;margin-bottom:24px">'+lembar.teks+'</div>'
-        :(lembar.header?'<div style="margin-bottom:24px"></div>':''))
-
-      // Navigasi lembar
-      +'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px">'
+      + rsRenderLembarBlocksHtml(lembar.blocks||null, lembar.blocks?null:lembar)
+      +'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px">'
       +(idx>0
         ?'<button onclick="rsNavLembar(-1)" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.62rem;padding:9px 18px;border-radius:var(--radius);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--card-border)\'">'
           +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="15 18 9 12 15 6"/></svg> Sebelumnya</button>'
         :'<span></span>')
-
-      // Thumbnail strip
       +'<div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0">'
       +lembaran.map(function(l,i){
         var active = i===idx;
+        var thumb = rsGetLembarThumb(l);
         return '<div onclick="rsGoLembar('+i+')" style="flex-shrink:0;width:44px;height:44px;border-radius:4px;overflow:hidden;border:2px solid '+(active?'var(--gold)':'var(--card-border)')+';cursor:pointer;background:var(--bg4);transition:border-color .2s;position:relative">'
-          +(l.gambar?'<img src="'+l.gambar+'" style="width:100%;height:100%;object-fit:cover">':'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:var(--text3)">'+(i+1)+'</div>')
+          +(thumb?'<img src="'+thumb+'" style="width:100%;height:100%;object-fit:cover">':'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:var(--text3)">'+(i+1)+'</div>')
           +'</div>';
       }).join('')
       +'</div>'
-
       +(idx<total-1
         ?'<button onclick="rsNavLembar(1)" style="background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08));border:1px solid var(--gold-border);color:var(--gold);font-size:.62rem;padding:9px 18px;border-radius:var(--radius);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px" onmouseover="this.style.background=\'rgba(201,168,76,.25)\'" onmouseout="this.style.background=\'linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08))\'">'
           +'Selanjutnya <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg></button>'
         :'<button style="background:rgba(61,186,122,.1);border:1px solid rgba(61,186,122,.3);color:var(--green);font-size:.62rem;padding:9px 18px;border-radius:var(--radius);cursor:default;display:flex;align-items:center;gap:6px">'
           +'✓ Selesai</button>')
       +'</div>'
-
-      // Dots indicator
       +(total>1
         ?'<div style="display:flex;gap:5px;justify-content:center;margin-top:14px">'
           +lembaran.map(function(l,i){
@@ -5455,12 +5540,9 @@ function afterAuth(){
           }).join('')
           +'</div>'
         :'');
-
-    // Store lembaran ref
     viewer._lembaran = lembaran;
     viewer._idx = idx;
   }
-
   window.rsNavLembar = function(delta){
     var viewer = document.getElementById('rs-lembar-viewer');
     if(!viewer||!viewer._lembaran) return;
