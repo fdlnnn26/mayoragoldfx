@@ -1021,6 +1021,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
     </div>
     <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
+    <button class="nav-link" id="nl-research" onclick="goPage('research')">Research</button>
     <button class="nav-link" id="nl-modul" onclick="goPage('modul')">Modul Materi</button>
     <button class="nav-link" id="nl-admin" onclick="goPage('admin')" style="display:none">Admin</button>
   </div>
@@ -1061,6 +1062,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <span class="mob-sublink" onclick="goPage('ai');toggleMob()">AI Analisa Chart<span class="mob-tool-label vip">VIP ✦</span></span>
   <div class="mob-group-label">Pusat Edukasi</div>
   <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip');toggleMob()">✦ Membership VIP</span>
+  <span class="mob-link" onclick="goPage('research');toggleMob()">Research</span>
   <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul Materi</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
   <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
@@ -1256,6 +1258,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
           <span class="footer-link" onclick="goPage('berita')">Berita & Analisa</span>
           <span class="footer-link" onclick="goPage('vip')">VIP Gratis</span>
           <span class="footer-link" onclick="goPage('modul')">Modul Belajar</span>
+          <span class="footer-link" onclick="goPage('research')">Research Harian</span>
           <span class="footer-link" onclick="goPage('auth')">Login Member</span>
         </div>
         <div>
@@ -1864,6 +1867,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <button class="admin-tab on" onclick="admTab('news',this)">Kelola Berita</button>
     <button class="admin-tab" onclick="admTab('users',this)">Kelola User</button>
     <button class="admin-tab" onclick="admTab('stats',this)">Statistik</button>
+    <button class="admin-tab" onclick="admTab('research',this)">Research Harian</button>
   </div>
   <div class="admin-page on" id="adm-news">
     <div class="admin-main">
@@ -1970,6 +1974,103 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
     </div>
   </div>
+
+  <!-- ADMIN: RESEARCH TAB -->
+  <div class="admin-page" id="adm-research">
+    <div class="admin-main">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div class="sec-label" style="margin-bottom:0">Manajemen Research Harian</div>
+        <button class="btn-add-news" onclick="rsShowForm()">+ Tambah Research</button>
+      </div>
+      <div class="news-form-wrap" id="rs-form-wrap" style="display:none">
+        <div class="news-form-title">
+          <span id="rs-form-title-lbl">Tambah Research Baru</span>
+          <button class="btn-cancel-news" onclick="rsHideForm()">✕ Batal</button>
+        </div>
+        <input type="hidden" id="rs-edit-id">
+        <div class="nf-grid">
+          <div class="nf-full">
+            <label class="form-lbl" for="rs-judul">Judul Research *</label>
+            <input class="form-inp" id="rs-judul" type="text" placeholder="Research XAUUSD 25 Juni 2026..." autocomplete="off">
+          </div>
+          <div>
+            <label class="form-lbl" for="rs-tgl">Tanggal *</label>
+            <input class="form-inp" id="rs-tgl" type="date">
+          </div>
+          <div>
+            <label class="form-lbl" for="rs-kat">Kategori</label>
+            <select class="form-inp" id="rs-kat">
+              <option value="Daily Research">Daily Research</option>
+              <option value="Weekly Outlook">Weekly Outlook</option>
+              <option value="Bias Harian">Bias Harian</option>
+              <option value="Key Level">Key Level</option>
+              <option value="Analisa Teknikal">Analisa Teknikal</option>
+              <option value="Fundamental">Fundamental</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-lbl" for="rs-akses">Akses</label>
+            <select class="form-inp" id="rs-akses">
+              <option value="vip">VIP Only</option>
+              <option value="free">Gratis (Semua)</option>
+            </select>
+          </div>
+          <div class="nf-full">
+            <label class="form-lbl" for="rs-ringkasan">Ringkasan / Bias Singkat *</label>
+            <textarea class="form-inp form-textarea" id="rs-ringkasan" rows="3" placeholder="Bias hari ini: Bullish. Key level support 3280, resistance 3320..."></textarea>
+          </div>
+          <div class="nf-full">
+            <label class="form-lbl" for="rs-konten">Analisa Lengkap</label>
+            <textarea class="form-inp form-textarea" id="rs-konten" rows="5" placeholder="Detail analisa, level entry, SL/TP rekomendasi..."></textarea>
+          </div>
+          <div class="nf-full">
+            <label class="form-lbl">Gambar Research (Chart, Annotasi, dll.)</label>
+            <div id="rs-images-wrap" style="display:flex;flex-direction:column;gap:10px;margin-bottom:8px"></div>
+            <button onclick="rsAddImageSlot()" style="background:transparent;border:1px dashed var(--gold-border);color:var(--gold);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;border-radius:var(--radius);cursor:pointer;transition:all .2s;width:100%">+ Tambah Gambar</button>
+          </div>
+        </div>
+        <div id="rs-save-err" style="display:none;font-size:.68rem;color:var(--red);background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.2);padding:10px 14px;border-radius:4px;margin-top:10px"></div>
+        <div class="form-actions">
+          <button class="btn-cancel-news" onclick="rsHideForm()">Batal</button>
+          <button class="btn-save-news" id="rs-save-btn" onclick="rsSaveResearch()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Simpan Research
+          </button>
+        </div>
+      </div>
+      <div id="rs-admin-list" style="margin-top:16px"><div class="empty-state"><div class="empty-icon">✦</div>Memuat research...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: RESEARCH HARIAN -->
+<div class="page" id="page-research" role="main" aria-label="Research Harian XAU/USD">
+  <div style="max-width:900px;margin:0 auto;padding:calc(var(--nav-h) + 32px) 20px 80px">
+    <div class="eyebrow" style="justify-content:center;margin-bottom:16px"><div class="eyebrow-line"></div><span class="eyebrow-txt">Analisa Mendalam</span><div class="eyebrow-line r"></div></div>
+    <h1 class="section-title">Research <span class="gold-text">Harian</span></h1>
+    <p class="section-sub" style="max-width:520px;margin:0 auto 32px">Analisa dan research mendalam XAU/USD dari tim analis Mayora Gold FX. Update rutin setiap hari trading.</p>
+
+    <!-- Filter bar -->
+    <div class="mod-filter-bar" style="margin-bottom:24px">
+      <span class="mod-filter-label">Filter:</span>
+      <button class="flt-btn on" onclick="rsSetFilter('all',this)">Semua</button>
+      <button class="flt-btn" onclick="rsSetFilter('Daily Research',this)">Daily</button>
+      <button class="flt-btn" onclick="rsSetFilter('Weekly Outlook',this)">Weekly</button>
+      <button class="flt-btn" onclick="rsSetFilter('Bias Harian',this)">Bias</button>
+      <button class="flt-btn" onclick="rsSetFilter('Key Level',this)">Key Level</button>
+    </div>
+
+    <!-- Detail view (saat buka satu research) -->
+    <div id="rs-detail-view" style="display:none">
+      <button onclick="rsCloseDetail()" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius);cursor:pointer;margin-bottom:20px;transition:all .2s">← Kembali</button>
+      <div id="rs-detail-content"></div>
+    </div>
+
+    <!-- List view -->
+    <div id="rs-list-view">
+      <div id="rs-public-list"><div class="empty-state"><div class="empty-icon">✦</div>Memuat research...</div></div>
+    </div>
+  </div>
 </div>
 
 <!-- TRADE MODAL -->
@@ -2017,7 +2118,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
 /* Page routing */
-var pages=['home','berita','vip','auth','journal','admin','modul','kalender','sessions','calc','swap','ai'];
+var pages=['home','berita','vip','auth','journal','admin','modul','kalender','sessions','calc','swap','ai','research'];
 
 /* Deep link handler — support path (/berita, /vip, dll) + ?artikel=slug untuk artikel + 404 redirect (?p=) */
 (function(){
@@ -2119,7 +2220,8 @@ var PAGE_META = {
   sessions:{ title: 'Market Sessions — Jam Aktif Sesi Forex | Mayora Gold FX', desc: 'Pantau sesi forex aktif secara real-time: Sydney, Tokyo, London, New York. Rencanakan entry di jam likuiditas tinggi XAU/USD.', url: 'https://mayoragoldfx.com/sessions' },
   calc:    { title: 'Kalkulator Lot & Risk XAU/USD — Mayora Gold FX', desc: 'Hitung ukuran lot dan risk management optimal untuk trading emas XAU/USD. Fitur VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/calc' },
   swap:    { title: 'Kalkulator Swap XAU/USD — Mayora Gold FX', desc: 'Hitung biaya atau pendapatan swap overnight untuk posisi gold XAU/USD. Fitur VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/swap' },
-  ai:      { title: 'AI Analisa Chart XAU/USD — Mayora Gold FX', desc: 'Analisa screenshot chart XAU/USD dengan AI secara instan. Identifikasi setup, support/resistance, dan peluang trading. Fitur VIP eksklusif.', url: 'https://mayoragoldfx.com/ai' }
+  ai:      { title: 'AI Analisa Chart XAU/USD — Mayora Gold FX', desc: 'Analisa screenshot chart XAU/USD dengan AI secara instan. Identifikasi setup, support/resistance, dan peluang trading. Fitur VIP eksklusif.', url: 'https://mayoragoldfx.com/ai' },
+  research:{ title: 'Research Harian XAU/USD — Mayora Gold FX', desc: 'Research dan analisa mendalam harian untuk trader emas XAU/USD. Update rutin dari tim analis Mayora Gold FX.', url: 'https://mayoragoldfx.com/research' }
 };
 
 /* Canonical link tag — update per halaman */
@@ -2135,9 +2237,9 @@ function goPage(p){
   var vipPages=['journal','calc','swap','ai'];
   if(vipPages.indexOf(p)!==-1&&!window._curUser){goPage('auth');return;}
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
-  ['home','berita','vip','modul'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
+  ['home','berita','vip','modul','research'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   /* Trading Tools dropdown — highlight when on any tool page */
-  var toolPages=['kalender','sessions','journal','calc','swap','ai'];
+  var toolPages=['kalender','sessions','journal','calc','swap','ai','research'];
   var nlTools=document.getElementById('nl-tools');
   if(nlTools) nlTools.classList.toggle('active', toolPages.indexOf(p)!==-1);
   document.getElementById('mob-nav').classList.remove('open');
@@ -2163,6 +2265,7 @@ function goPage(p){
   if(p==='sessions'){window._startSessInterval&&window._startSessInterval();}
   else{window._stopSessInterval&&window._stopSessInterval();}
   if(p==='ai'&&window._curUser&&(window._isVip||window._isAdmin)){window.aiRenderQuota&&window.aiRenderQuota();}
+  if(p==='research') window.rsLoadResearch&&window.rsLoadResearch();
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
@@ -2191,6 +2294,7 @@ window.admTab=function(n,el){
   el.classList.add('on');
   if(n==='users'&&window._loadUsers) window._loadUsers();
   if(n==='stats'&&window._loadStats) window._loadStats();
+  if(n==='research'){ window.rsLoadResearch&&window.rsLoadResearch(); window.rsRenderAdminList&&window.rsRenderAdminList(); }
 };
 
 window.jTab=function(n,el){
@@ -4805,6 +4909,320 @@ function afterAuth(){
   if(window._db){afterAuth();}
   else{setTimeout(waitDB,300);}
 })();
+
+/* ══════════════════════════════════════════
+   RESEARCH HARIAN — CRUD + PUBLIC VIEW
+══════════════════════════════════════════ */
+(function(){
+  var _rsCache=[];
+  var _rsFilter='all';
+  var _rsImageSlots=[];   // [{file, url}]
+
+  /* ── helpers ── */
+  function getDB(){ return window._db || window.getDB(); }
+
+  function fmtDate(d){
+    if(!d) return '';
+    var dt = d.toDate ? d.toDate() : new Date(d);
+    return dt.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+  }
+
+  function rsKatColor(k){
+    var m={'Daily Research':'#C9A84C','Weekly Outlook':'#3DBA7A','Bias Harian':'#9B59B6','Key Level':'#E05A5A','Analisa Teknikal':'#3498DB','Fundamental':'#E67E22'};
+    return m[k]||'var(--text3)';
+  }
+
+  /* ── upload single image to Cloudinary ── */
+  async function rsUploadImg(file, idx){
+    return new Promise(function(resolve, reject){
+      var fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', 'mayoragold_preset');
+      fd.append('public_id', 'research-'+Date.now()+'-'+idx);
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST','https://api.cloudinary.com/v1_1/dktcrzfck/image/upload');
+      xhr.onload = function(){
+        try{ var r=JSON.parse(xhr.responseText); resolve(r.secure_url||r.url); }
+        catch(e){ reject(new Error('Upload gagal')); }
+      };
+      xhr.onerror = function(){ reject(new Error('Network error')); };
+      xhr.send(fd);
+    });
+  }
+
+  /* ── IMAGE SLOTS (admin form) ── */
+  window.rsAddImageSlot = function(){
+    var idx = _rsImageSlots.length;
+    _rsImageSlots.push({file:null, url:''});
+    var wrap = document.getElementById('rs-images-wrap');
+    var div = document.createElement('div');
+    div.id = 'rs-img-slot-'+idx;
+    div.style.cssText = 'border:1px solid var(--card-border);border-radius:4px;padding:10px;background:var(--bg3);position:relative';
+    div.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+      +'<span style="font-size:.62rem;color:var(--text3);letter-spacing:.08em">Gambar '+(idx+1)+'</span>'
+      +'<button onclick="rsRemoveSlot('+idx+')" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:.7rem">✕ Hapus</button>'
+      +'</div>'
+      +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%" onchange="rsHandleSlotFile('+idx+',this)">'
+      +'<div id="rs-slot-prev-'+idx+'" style="margin-top:6px"></div>'
+      +'<input class="form-inp" type="text" id="rs-slot-url-'+idx+'" placeholder="Atau tempel URL gambar langsung..." style="margin-top:6px;font-size:.65rem" oninput="rsHandleSlotUrl('+idx+',this.value)">';
+    wrap.appendChild(div);
+  };
+
+  window.rsHandleSlotFile = function(idx, inp){
+    var file = inp.files[0];
+    if(!file) return;
+    _rsImageSlots[idx] = {file:file, url:''};
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var prev = document.getElementById('rs-slot-prev-'+idx);
+      if(prev) prev.innerHTML = '<img src="'+e.target.result+'" style="max-width:100%;max-height:140px;object-fit:contain;border-radius:4px;border:1px solid var(--card-border)">'
+        +'<div style="font-size:.55rem;color:var(--text3);margin-top:2px">✓ File siap diupload</div>';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.rsHandleSlotUrl = function(idx, url){
+    _rsImageSlots[idx] = {file:null, url:url.trim()};
+    var prev = document.getElementById('rs-slot-prev-'+idx);
+    if(prev && url.trim()){
+      prev.innerHTML = '<img src="'+url.trim()+'" style="max-width:100%;max-height:140px;object-fit:contain;border-radius:4px;border:1px solid var(--card-border)" onerror="this.style.display=\'none\'">';
+    } else if(prev){ prev.innerHTML=''; }
+  };
+
+  window.rsRemoveSlot = function(idx){
+    _rsImageSlots[idx] = {file:null, url:'__removed__'};
+    var slot = document.getElementById('rs-img-slot-'+idx);
+    if(slot) slot.style.opacity='0.3';
+  };
+
+  /* ── FORM show/hide ── */
+  window.rsShowForm = function(editData){
+    _rsImageSlots = [];
+    document.getElementById('rs-images-wrap').innerHTML = '';
+    document.getElementById('rs-edit-id').value = '';
+    document.getElementById('rs-form-title-lbl').textContent = 'Tambah Research Baru';
+    document.getElementById('rs-judul').value = '';
+    document.getElementById('rs-tgl').value = new Date().toISOString().slice(0,10);
+    document.getElementById('rs-kat').value = 'Daily Research';
+    document.getElementById('rs-akses').value = 'vip';
+    document.getElementById('rs-ringkasan').value = '';
+    document.getElementById('rs-konten').value = '';
+    document.getElementById('rs-save-err').style.display = 'none';
+    if(editData){
+      document.getElementById('rs-edit-id').value = editData.id;
+      document.getElementById('rs-form-title-lbl').textContent = 'Edit Research';
+      document.getElementById('rs-judul').value = editData.judul||'';
+      if(editData.tgl){ document.getElementById('rs-tgl').value = editData.tgl; }
+      document.getElementById('rs-kat').value = editData.kat||'Daily Research';
+      document.getElementById('rs-akses').value = editData.akses||'vip';
+      document.getElementById('rs-ringkasan').value = editData.ringkasan||'';
+      document.getElementById('rs-konten').value = editData.konten||'';
+      // Restore existing images as URL slots
+      (editData.images||[]).forEach(function(url){
+        var idx = _rsImageSlots.length;
+        _rsImageSlots.push({file:null, url:url});
+        var wrap = document.getElementById('rs-images-wrap');
+        var div = document.createElement('div');
+        div.id = 'rs-img-slot-'+idx;
+        div.style.cssText = 'border:1px solid var(--card-border);border-radius:4px;padding:10px;background:var(--bg3)';
+        div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+          +'<span style="font-size:.62rem;color:var(--text3)">Gambar '+(idx+1)+'</span>'
+          +'<button onclick="rsRemoveSlot('+idx+')" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:.7rem">✕ Hapus</button>'
+          +'</div>'
+          +'<img src="'+url+'" style="max-width:100%;max-height:120px;object-fit:contain;border-radius:4px;border:1px solid var(--card-border)">'
+          +'<input class="form-inp" type="text" id="rs-slot-url-'+idx+'" value="'+url+'" style="margin-top:6px;font-size:.65rem" oninput="rsHandleSlotUrl('+idx+',this.value)">';
+        wrap.appendChild(div);
+      });
+    }
+    document.getElementById('rs-form-wrap').style.display = 'block';
+    document.getElementById('rs-form-wrap').scrollIntoView({behavior:'smooth'});
+  };
+
+  window.rsHideForm = function(){
+    document.getElementById('rs-form-wrap').style.display = 'none';
+    _rsImageSlots = [];
+  };
+
+  /* ── SAVE ── */
+  window.rsSaveResearch = async function(){
+    var btn = document.getElementById('rs-save-btn');
+    var errEl = document.getElementById('rs-save-err');
+    errEl.style.display = 'none';
+    var judul = document.getElementById('rs-judul').value.trim();
+    var tgl = document.getElementById('rs-tgl').value;
+    var kat = document.getElementById('rs-kat').value;
+    var akses = document.getElementById('rs-akses').value;
+    var ringkasan = document.getElementById('rs-ringkasan').value.trim();
+    var konten = document.getElementById('rs-konten').value.trim();
+    if(!judul||!tgl||!ringkasan){ errEl.textContent='⚠ Judul, tanggal, dan ringkasan wajib diisi.'; errEl.style.display='block'; return; }
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spin" style="border-top-color:var(--bg)"></div>';
+    try{
+      // Upload images
+      var imageUrls = [];
+      for(var i=0;i<_rsImageSlots.length;i++){
+        var slot = _rsImageSlots[i];
+        if(!slot || slot.url==='__removed__') continue;
+        if(slot.file){
+          toast('Research','Mengupload gambar '+(i+1)+'...','var(--gold)');
+          var uploadedUrl = await rsUploadImg(slot.file, i);
+          imageUrls.push(uploadedUrl);
+        } else if(slot.url && slot.url!=='__removed__'){
+          imageUrls.push(slot.url);
+        }
+      }
+      var {collection, addDoc, updateDoc, doc, serverTimestamp} = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      var db = getDB();
+      var editId = document.getElementById('rs-edit-id').value||null;
+      var payload = {judul, tgl, kat, akses, ringkasan, konten, images:imageUrls, updatedAt:serverTimestamp()};
+      if(editId){ await updateDoc(doc(db,'research',editId), payload); }
+      else { payload.createdAt = serverTimestamp(); await addDoc(collection(db,'research'), payload); }
+      toast('Research', editId?'Research diperbarui!':'Research ditambahkan!','#3DBA7A');
+      window.rsHideForm();
+      await window.rsLoadResearch();
+      window.rsRenderAdminList();
+    } catch(e){
+      console.error('[rsSave]',e);
+      errEl.textContent='⚠ '+(e.message||'Gagal menyimpan.');
+      errEl.style.display='block';
+    } finally {
+      btn.disabled=false;
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Research';
+    }
+  };
+
+  /* ── DELETE ── */
+  window.rsDeleteResearch = async function(id){
+    if(!confirm('Hapus research ini secara permanen?')) return;
+    try{
+      var {deleteDoc, doc} = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      await deleteDoc(doc(getDB(),'research',id));
+      toast('Research','Research dihapus','#E05A5A');
+      await window.rsLoadResearch();
+      window.rsRenderAdminList();
+      window.rsRenderPublic();
+    } catch(e){ toast('Error',e.message,'#E05A5A'); }
+  };
+
+  /* ── LOAD FROM FIREBASE ── */
+  window.rsLoadResearch = async function(){
+    try{
+      var {collection, getDocs, query, orderBy} = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      var q = query(collection(getDB(),'research'), orderBy('tgl','desc'));
+      var snap = await getDocs(q);
+      _rsCache = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+    } catch(e){ console.error('[rsLoad]',e); _rsCache=[]; }
+    window.rsRenderPublic();
+    if(window._isAdmin) window.rsRenderAdminList();
+  };
+
+  /* ── RENDER ADMIN LIST ── */
+  window.rsRenderAdminList = function(){
+    var el = document.getElementById('rs-admin-list');
+    if(!el) return;
+    if(!_rsCache.length){ el.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada research.</div>'; return; }
+    el.innerHTML = _rsCache.map(function(r){
+      var imgs = (r.images||[]).length;
+      return '<div style="background:var(--bg3);border:1px solid var(--card-border);border-radius:4px;padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:.72rem;font-weight:500;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+r.judul+'</div>'
+        +'<div style="font-size:.6rem;color:var(--text3);display:flex;gap:8px;flex-wrap:wrap">'
+        +'<span style="color:'+rsKatColor(r.kat)+'">'+r.kat+'</span>'
+        +'<span>'+fmtDate(r.tgl||r.createdAt)+'</span>'
+        +'<span style="color:'+(r.akses==='vip'?'var(--gold)':'var(--green)')+'">'+( r.akses==='vip'?'VIP':'FREE')+'</span>'
+        +(imgs?'<span>📷 '+imgs+' gambar</span>':'')
+        +'</div></div>'
+        +'<div style="display:flex;gap:6px;flex-shrink:0">'
+        +'<button onclick="rsShowForm('+JSON.stringify(r).replace(/</g,'&lt;').replace(/>/g,'&gt;')+')" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:var(--radius);cursor:pointer">Edit</button>'
+        +'<button onclick="rsDeleteResearch(\''+r.id+'\')" style="background:transparent;border:1px solid rgba(224,90,90,.25);color:var(--red);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:var(--radius);cursor:pointer">Hapus</button>'
+        +'</div></div>';
+    }).join('');
+  };
+
+  /* ── FILTER (public) ── */
+  window.rsSetFilter = function(f, btn){
+    _rsFilter = f;
+    document.querySelectorAll('.flt-btn').forEach(function(b){ b.classList.remove('on'); });
+    if(btn) btn.classList.add('on');
+    window.rsRenderPublic();
+  };
+
+  /* ── RENDER PUBLIC LIST ── */
+  window.rsRenderPublic = function(){
+    var el = document.getElementById('rs-public-list');
+    if(!el) return;
+    var isVip = window._isVip || window._isAdmin;
+    var data = _rsCache.filter(function(r){
+      if(_rsFilter!=='all' && r.kat!==_rsFilter) return false;
+      return true;
+    });
+    if(!data.length){ el.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada research tersedia.</div>'; return; }
+    el.innerHTML = data.map(function(r){
+      var locked = (r.akses==='vip') && !isVip;
+      var firstImg = (r.images||[])[0]||'';
+      return '<div onclick="rsOpenDetail(\''+r.id+'\')" style="cursor:pointer;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;display:flex;gap:0;margin-bottom:12px;transition:border-color .2s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--card-border)\'">'
+        +(firstImg?'<div style="width:110px;min-width:110px;height:90px;overflow:hidden;background:var(--bg4)"><img src="'+firstImg+'" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>':'')
+        +'<div style="padding:14px 16px;flex:1;min-width:0">'
+        +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">'
+        +'<span style="font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+rsKatColor(r.kat)+'">'+r.kat+'</span>'
+        +(locked?'<span style="font-size:.52rem;background:rgba(201,168,76,.12);color:var(--gold);padding:2px 7px;border-radius:10px;border:1px solid var(--gold-border)">VIP ✦</span>':'')
+        +'<span style="font-size:.58rem;color:var(--text3);margin-left:auto">'+fmtDate(r.tgl||r.createdAt)+'</span>'
+        +'</div>'
+        +'<div style="font-size:.8rem;font-weight:500;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+r.judul+'</div>'
+        +(locked?'<div style="font-size:.65rem;color:var(--text3)">🔒 Konten khusus member VIP — <span style="color:var(--gold);cursor:pointer" onclick="event.stopPropagation();goPage(\'vip\')">Upgrade gratis →</span></div>'
+          :'<div style="font-size:.65rem;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.ringkasan+'</div>')
+        +'</div></div>';
+    }).join('');
+  };
+
+  /* ── OPEN / CLOSE DETAIL ── */
+  window.rsOpenDetail = function(id){
+    var r = _rsCache.find(function(x){ return x.id===id; });
+    if(!r) return;
+    var isVip = window._isVip || window._isAdmin;
+    var locked = (r.akses==='vip') && !isVip;
+    var el = document.getElementById('rs-detail-content');
+    if(!el) return;
+    if(locked){
+      el.innerHTML = '<div style="text-align:center;padding:48px 24px">'
+        +'<div style="font-family:\'Cormorant Garamond\',serif;font-size:3rem;color:var(--gold);opacity:.3;margin-bottom:12px">✦</div>'
+        +'<div style="font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:8px">Konten VIP Terkunci</div>'
+        +'<div style="font-size:.72rem;color:var(--text2);margin-bottom:20px">Research ini hanya untuk member VIP. Upgrade gratis sekarang!</div>'
+        +'<button onclick="goPage(\'vip\')" class="btn-hero-primary">JOIN VIP GRATIS ✦</button></div>';
+    } else {
+      var imgs = (r.images||[]);
+      var imgsHtml = imgs.length ? '<div style="display:flex;flex-direction:column;gap:12px;margin:20px 0">'
+        +imgs.map(function(url){ return '<img src="'+url+'" style="max-width:100%;border-radius:6px;border:1px solid var(--card-border)" loading="lazy">'; }).join('')
+        +'</div>' : '';
+      el.innerHTML = '<div>'
+        +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">'
+        +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+rsKatColor(r.kat)+'">'+r.kat+'</span>'
+        +'<span style="font-size:.62rem;color:var(--text3)">'+fmtDate(r.tgl||r.createdAt)+'</span>'
+        +'</div>'
+        +'<h2 style="font-family:\'Cormorant Garamond\',serif;font-size:1.7rem;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.3">'+r.judul+'</h2>'
+        +'<div style="background:rgba(201,168,76,.06);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 4px 4px 0;margin-bottom:16px;font-size:.75rem;color:var(--text2);line-height:1.75">'+r.ringkasan+'</div>'
+        +imgsHtml
+        +(r.konten?'<div style="font-size:.76rem;color:var(--text2);line-height:1.9;white-space:pre-line">'+r.konten+'</div>':'')
+        +'</div>';
+    }
+    document.getElementById('rs-list-view').style.display = 'none';
+    document.getElementById('rs-detail-view').style.display = 'block';
+    window.scrollTo(0,0);
+  };
+
+  window.rsCloseDetail = function(){
+    document.getElementById('rs-detail-view').style.display = 'none';
+    document.getElementById('rs-list-view').style.display = 'block';
+  };
+
+  /* ── Init: poll for Firebase ── */
+  (function waitRs(){
+    if(window._db){ window.rsLoadResearch(); }
+    else { setTimeout(waitRs, 400); }
+  })();
+})();
+
 </script>
 <!-- FORGOT PASSWORD MODAL -->
 <div class="fp-overlay" id="fp-overlay" role="dialog" aria-modal="true" aria-labelledby="fp-title">
