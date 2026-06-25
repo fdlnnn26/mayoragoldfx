@@ -3050,6 +3050,7 @@ function compressImage(file, maxPx, quality){
     img.src = url;
   });
 }
+window.compressImage = compressImage; // expose to other module/script blocks
 
 async function uploadToCloudinary(file, filename, onProgress){
   file = await compressImage(file);
@@ -3816,6 +3817,9 @@ function ecalSubscribeFirestore(){
 /* Main entry */
 async function startEcalPolling(){
   if(window._ecalStarted){renderEcal();return;}
+  if(window._ecalStarting){await window._ecalStarting;renderEcal();return;}
+  let resolveLock;
+  window._ecalStarting=new Promise(r=>{resolveLock=r;});
   window._ecalStarted=true;
   if(window._ecalPoll){clearTimeout(window._ecalPoll);window._ecalPoll=null;}
 
@@ -3916,6 +3920,7 @@ async function startEcalPolling(){
     },delay);
   }
   scheduleNext();
+  if(resolveLock)resolveLock();
 }
 window._startEcalListener=startEcalPolling;
 
@@ -4807,7 +4812,7 @@ function getDB(){return window._db;}
 
 const CLOUD_NAME='dktcrzfck',CLOUD_PRESET='mayoragold_preset';
 async function modUploadImg(file,slug,onProg){
-  file = await compressImage(file);
+  file = await window.compressImage(file);
   return new Promise((res,rej)=>{
     const fd=new FormData();
     fd.append('file',file,slug+'.webp');
@@ -4849,7 +4854,7 @@ window.modLoadModules=async function(){
 
 window.modSubBlockUploadImage=async function(li,si,input){
   let file=input.files[0];if(!file)return;
-  file = await compressImage(file);
+  file = await window.compressImage(file);
   const progWrap=document.getElementById(`msb-prog-${li}-${si}`);
   const progBar=document.getElementById(`msb-prog-bar-${li}-${si}`);
   const preview=document.getElementById(`msb-img-preview-${li}-${si}`);
@@ -5000,7 +5005,7 @@ function afterAuth(){
 
   /* ── upload single image to Cloudinary ── */
   async function rsUploadImg(file, idx){
-    var compressed = await compressImage(file);
+    var compressed = await window.compressImage(file);
     return new Promise(function(resolve, reject){
       var fd = new FormData();
       fd.append('file', compressed);
