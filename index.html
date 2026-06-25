@@ -2933,13 +2933,42 @@ function renderPricebar(){
 window.renderPricebar=renderPricebar;
 
 var xauHistory=[];
+var _xau24h={high:null,low:null,prevClose:null};
+
+async function fetch24hXau(){
+  // Try goldprice.org — returns open, high, low for the day
+  try{
+    var r=await fetch('https://data-asg.goldprice.org/dbXRates/USD',{signal:AbortSignal.timeout(6000)});
+    var d=await r.json();
+    var item=d?.items?.[0];
+    if(item){
+      if(item.xauHighPrice) _xau24h.high=parseFloat(item.xauHighPrice);
+      if(item.xauLowPrice)  _xau24h.low=parseFloat(item.xauLowPrice);
+      if(item.xauOpenPrice) _xau24h.prevClose=parseFloat(item.xauOpenPrice);
+      return;
+    }
+  }catch(_){}
+  // Fallback: Binance XAUUSDT 24h ticker
+  try{
+    var r2=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=XAUUSDT',{signal:AbortSignal.timeout(6000)});
+    var d2=await r2.json();
+    if(d2.highPrice) _xau24h.high=parseFloat(d2.highPrice);
+    if(d2.lowPrice)  _xau24h.low=parseFloat(d2.lowPrice);
+    if(d2.openPrice) _xau24h.prevClose=parseFloat(d2.openPrice);
+  }catch(_){}
+}
+
 function updateHeroCard(p,prev){
   if(!p)return;
   document.getElementById('hcc-price').textContent=p.toFixed(2);
-  var chgPct=prev?((p-prev)/prev*100):0;
+
+  // 24h change: pakai prevClose dari API jika tersedia, fallback ke prev session tick
+  var base=_xau24h.prevClose||prev;
+  var chgPct=base?((p-base)/base*100):0;
   var el=document.getElementById('hcc-chg');
   el.textContent=(chgPct>=0?'▲ +':'▼ ')+Math.abs(chgPct).toFixed(3)+'%';
   el.className='hcc-change '+(chgPct>=0?'up':'dn');
+
   xauHistory.push(p);if(xauHistory.length>40)xauHistory.shift();
   if(xauHistory.length>1){
     var mn=Math.min.apply(null,xauHistory),mx=Math.max.apply(null,xauHistory),rng=mx-mn||1;
@@ -2951,9 +2980,12 @@ function updateHeroCard(p,prev){
     document.getElementById('hcc-line').setAttribute('points',pts);
     document.getElementById('hcc-fill').setAttribute('d',dPath);
   }
-  var mn2=Math.min.apply(null,xauHistory),mx2=Math.max.apply(null,xauHistory);
-  document.getElementById('hcc-high').textContent=mx2.toFixed(2);
-  document.getElementById('hcc-low').textContent=mn2.toFixed(2);
+
+  // 24H HIGH & LOW: pakai data API jika tersedia, fallback ke session history
+  var highVal = _xau24h.high || Math.max.apply(null,xauHistory);
+  var lowVal  = _xau24h.low  || Math.min.apply(null,xauHistory);
+  document.getElementById('hcc-high').textContent=highVal.toFixed(2);
+  document.getElementById('hcc-low').textContent=lowVal.toFixed(2);
   document.getElementById('hcc-pct').textContent=(chgPct>=0?'+':'')+chgPct.toFixed(2)+'%';
   document.getElementById('hcc-pct').className='hcc-metric-v '+(chgPct>=0?'up':'dn');
 }
@@ -4276,6 +4308,9 @@ async function tick(){
 
 fetchPrices().then(()=>{ renderTicker(); updateHeroCard(window._lp.XAUUSD,null); });
 setInterval(()=>fetchPrices().then(()=>{ renderTicker(); updateHeroCard(window._lp.XAUUSD,window._prevLp.XAUUSD); }),15000);
+// Fetch 24h high/low dari API — jalankan sekali saat load, lalu tiap 5 menit
+fetch24hXau();
+setInterval(fetch24hXau, 5*60*1000);
 </script>
 
 <!-- ══════════ MODUL BELAJAR SCRIPT ══════════ -->
