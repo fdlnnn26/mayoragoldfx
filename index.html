@@ -3023,10 +3023,39 @@ function setBtnLoad(id,loading,txt){
   b.innerHTML=loading?'<div class="spin"></div>':`<span>${txt}</span>`;
 }
 
-function uploadToCloudinary(file, filename, onProgress){
+/* ═══ GLOBAL IMAGE COMPRESS — dipakai semua upload ke Cloudinary ═══
+   Max 1200px, quality 0.82, output WebP. Kalau sudah kecil, skip.       */
+function compressImage(file, maxPx, quality){
+  maxPx = maxPx || 1200;
+  quality = quality || 0.82;
+  return new Promise(function(resolve){
+    if(file.size < 300*1024){
+      // Sudah kecil, langsung pakai
+      resolve(file); return;
+    }
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var w = img.naturalWidth, h = img.naturalHeight;
+      var scale = Math.min(1, maxPx / Math.max(w, h));
+      if(scale === 1 && file.size < 500*1024){ resolve(file); return; }
+      var canvas = document.createElement('canvas');
+      canvas.width  = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(function(blob){ resolve(blob || file); }, 'image/webp', quality);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
+async function uploadToCloudinary(file, filename, onProgress){
+  file = await compressImage(file);
   return new Promise((resolve, reject)=>{
     const formData = new FormData();
-    formData.append('file', file, filename + '.' + file.name.split('.').pop());
+    formData.append('file', file, filename + '.webp');
     formData.append('upload_preset', CLOUDINARY_PRESET);
     formData.append('folder', 'news-images');
     const xhr = new XMLHttpRequest();
@@ -4766,10 +4795,11 @@ import{getFirestore,doc,setDoc,getDocs,collection,addDoc,updateDoc,deleteDoc,que
 function getDB(){return window._db;}
 
 const CLOUD_NAME='dktcrzfck',CLOUD_PRESET='mayoragold_preset';
-function modUploadImg(file,slug,onProg){
+async function modUploadImg(file,slug,onProg){
+  file = await compressImage(file);
   return new Promise((res,rej)=>{
     const fd=new FormData();
-    fd.append('file',file,slug+'.'+file.name.split('.').pop());
+    fd.append('file',file,slug+'.webp');
     fd.append('upload_preset',CLOUD_PRESET);
     fd.append('folder','module-images');
     const xhr=new XMLHttpRequest();
@@ -4807,7 +4837,8 @@ window.modLoadModules=async function(){
 };
 
 window.modSubBlockUploadImage=async function(li,si,input){
-  const file=input.files[0];if(!file)return;
+  let file=input.files[0];if(!file)return;
+  file = await compressImage(file);
   const progWrap=document.getElementById(`msb-prog-${li}-${si}`);
   const progBar=document.getElementById(`msb-prog-bar-${li}-${si}`);
   const preview=document.getElementById(`msb-img-preview-${li}-${si}`);
@@ -4818,7 +4849,7 @@ window.modSubBlockUploadImage=async function(li,si,input){
     let pct=0;
     const url=await new Promise((res,rej)=>{
       const fd=new FormData();
-      fd.append('file',file,slug+'.'+file.name.split('.').pop());
+      fd.append('file',file,slug+'.webp');
       fd.append('upload_preset','mayoragold_preset');
       fd.append('folder','module-images');
       const xhr=new XMLHttpRequest();
@@ -4956,32 +4987,9 @@ function afterAuth(){
     return dt.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
   }
 
-  /* ── compress image before upload (max 1200px, quality 0.82, WebP) ── */
-  function rsCompressImg(file){
-    return new Promise(function(resolve){
-      var MAX=1200, Q=0.82;
-      var img=new Image();
-      var url=URL.createObjectURL(file);
-      img.onload=function(){
-        URL.revokeObjectURL(url);
-        var w=img.naturalWidth, h=img.naturalHeight;
-        if(w<=MAX && h<=MAX && file.size<300*1024){ resolve(file); return; }
-        var scale=Math.min(1,MAX/Math.max(w,h));
-        var canvas=document.createElement('canvas');
-        canvas.width=Math.round(w*scale);
-        canvas.height=Math.round(h*scale);
-        var ctx=canvas.getContext('2d');
-        ctx.drawImage(img,0,0,canvas.width,canvas.height);
-        canvas.toBlob(function(blob){ resolve(blob||file); },'image/webp',Q);
-      };
-      img.onerror=function(){ resolve(file); };
-      img.src=url;
-    });
-  }
-
   /* ── upload single image to Cloudinary ── */
   async function rsUploadImg(file, idx){
-    var compressed = await rsCompressImg(file);
+    var compressed = await compressImage(file);
     return new Promise(function(resolve, reject){
       var fd = new FormData();
       fd.append('file', compressed);
