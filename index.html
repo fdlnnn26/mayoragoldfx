@@ -3050,7 +3050,7 @@ function compressImage(file, maxPx, quality){
     img.src = url;
   });
 }
-window.compressImage = compressImage; // expose to other module/script blocks
+window.compressImage = compressImage;
 
 async function uploadToCloudinary(file, filename, onProgress){
   file = await compressImage(file);
