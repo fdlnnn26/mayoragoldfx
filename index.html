@@ -2030,7 +2030,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
             </button>
           </div>
           <!-- Hidden fields untuk kompatibilitas -->
-          <input type="hidden" id="rs-kat" value="Daily Research">
           <input type="hidden" id="rs-ringkasan" value="">
           <input type="hidden" id="rs-konten" value="">
         </div>
@@ -2055,15 +2054,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
     <h1 class="section-title">Research <span class="gold-text">Harian</span></h1>
     <p class="section-sub" style="max-width:520px;margin:0 auto 32px">Analisa dan research mendalam XAU/USD dari tim analis Mayora Gold FX. Update rutin setiap hari trading.</p>
 
-    <!-- Filter bar -->
-    <div class="mod-filter-bar" style="margin-bottom:24px">
-      <span class="mod-filter-label">Filter:</span>
-      <button class="flt-btn on" onclick="rsSetFilter('all',this)">Semua</button>
-      <button class="flt-btn" onclick="rsSetFilter('Daily Research',this)">Daily</button>
-      <button class="flt-btn" onclick="rsSetFilter('Weekly Outlook',this)">Weekly</button>
-      <button class="flt-btn" onclick="rsSetFilter('Bias Harian',this)">Bias</button>
-      <button class="flt-btn" onclick="rsSetFilter('Key Level',this)">Key Level</button>
-    </div>
+
 
     <!-- Detail view (saat buka satu research) -->
     <div id="rs-detail-view" style="display:none">
@@ -4954,7 +4945,6 @@ function afterAuth(){
 ══════════════════════════════════════════ */
 (function(){
   var _rsCache=[];
-  var _rsFilter='all';
   var _rsImageSlots=[];   // [{file, url}]
 
   /* ── helpers ── */
@@ -4964,11 +4954,6 @@ function afterAuth(){
     if(!d) return '';
     var dt = d.toDate ? d.toDate() : new Date(d);
     return dt.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
-  }
-
-  function rsKatColor(k){
-    var m={'Daily Research':'#C9A84C','Weekly Outlook':'#3DBA7A','Bias Harian':'#9B59B6','Key Level':'#E05A5A','Analisa Teknikal':'#3498DB','Fundamental':'#E67E22'};
-    return m[k]||'var(--text3)';
   }
 
   /* ── compress image before upload (max 1200px, quality 0.82, WebP) ── */
@@ -5179,7 +5164,6 @@ function afterAuth(){
     document.getElementById('rs-form-title-lbl').textContent = 'Tambah Research Baru';
     document.getElementById('rs-judul').value = '';
     document.getElementById('rs-tgl').value = new Date().toISOString().slice(0,10);
-    document.getElementById('rs-kat').value = 'Daily Research';
     document.getElementById('rs-akses').value = 'vip';
     document.getElementById('rs-ringkasan').value = '';
     document.getElementById('rs-konten').value = '';
@@ -5192,7 +5176,6 @@ function afterAuth(){
       document.getElementById('rs-form-title-lbl').textContent = 'Edit Research';
       document.getElementById('rs-judul').value = editData.judul||'';
       if(editData.tgl){ document.getElementById('rs-tgl').value = editData.tgl; }
-      document.getElementById('rs-kat').value = editData.kat||'Daily Research';
       document.getElementById('rs-akses').value = editData.akses||'vip';
       document.getElementById('rs-ringkasan').value = editData.ringkasan||'';
       document.getElementById('rs-konten').value = editData.konten||'';
@@ -5256,7 +5239,6 @@ function afterAuth(){
     errEl.style.display = 'none';
     var judul = document.getElementById('rs-judul').value.trim();
     var tgl = document.getElementById('rs-tgl').value;
-    var kat = document.getElementById('rs-kat').value;
     var akses = document.getElementById('rs-akses').value;
     var ringkasan = document.getElementById('rs-ringkasan').value.trim();
     var konten = document.getElementById('rs-konten').value.trim();
@@ -5305,7 +5287,7 @@ function afterAuth(){
       var {collection, addDoc, updateDoc, doc, serverTimestamp} = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
       var db = getDB();
       var editId = document.getElementById('rs-edit-id').value||null;
-      var payload = {judul, tgl, kat, akses, ringkasan, konten, lembaran:lembaranData, thumbnail:thumbUrl, updatedAt:serverTimestamp()};
+      var payload = {judul, tgl, akses, ringkasan, konten, lembaran:lembaranData, thumbnail:thumbUrl, updatedAt:serverTimestamp()};
       if(editId){ await updateDoc(doc(db,'research',editId), payload); }
       else { payload.createdAt = serverTimestamp(); await addDoc(collection(db,'research'), payload); }
       toast('Research', editId?'Research diperbarui!':'Research ditambahkan!','#3DBA7A');
@@ -5369,7 +5351,7 @@ function afterAuth(){
         +'<div style="flex:1;min-width:0">'
         +'<div style="font-size:.72rem;font-weight:500;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+r.judul+'</div>'
         +'<div style="font-size:.6rem;color:var(--text3);display:flex;gap:8px;flex-wrap:wrap">'
-        +'<span style="color:'+rsKatColor(r.kat)+'">'+r.kat+'</span>'
+
         +'<span>'+fmtDate(r.tgl||r.createdAt)+'</span>'
         +'<span style="color:'+(r.akses==='vip'?'var(--gold)':'var(--green)')+'">'+( r.akses==='vip'?'VIP':'FREE')+'</span>'
         +(lembarCount?'<span style="color:var(--text2)">📄 '+lembarCount+' lembar</span>':'<span style="color:var(--text3)">— belum ada lembar</span>')
@@ -5387,14 +5369,6 @@ function afterAuth(){
   };
 
   /* ── FILTER (public) ── */
-  window.rsSetFilter = function(f, btn){
-    _rsFilter = f;
-    _rsPage = 0;
-    document.querySelectorAll('.flt-btn').forEach(function(b){ b.classList.remove('on'); });
-    if(btn) btn.classList.add('on');
-    window.rsRenderPublic();
-  };
-
   var _rsPage = 0;
   var RS_PER_PAGE = 5;
 
@@ -5403,10 +5377,7 @@ function afterAuth(){
     var el = document.getElementById('rs-public-list');
     if(!el) return;
     var isVip = window._isVip || window._isAdmin;
-    var data = _rsCache.filter(function(r){
-      if(_rsFilter!=='all' && r.kat!==_rsFilter) return false;
-      return true;
-    });
+    var data = _rsCache.slice();
     if(!data.length){ el.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada research tersedia.</div>'; return; }
 
     el.innerHTML = data.map(function(r){
@@ -5424,7 +5395,7 @@ function afterAuth(){
           :'')
         +'<div style="padding:14px 16px">'
         +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">'
-        +'<span style="font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+rsKatColor(r.kat)+'">'+r.kat+'</span>'
+
         +(locked?'<span style="font-size:.52rem;background:rgba(201,168,76,.12);color:var(--gold);padding:2px 7px;border-radius:10px;border:1px solid var(--gold-border)">VIP ✦</span>':'')
         +'<span style="font-size:.58rem;color:var(--text3);margin-left:auto">'+fmtDate(r.tgl||r.createdAt)+'</span>'
         +'</div>'
@@ -5460,7 +5431,7 @@ function afterAuth(){
       +'<button onclick="rsCloseDetail()" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s">← Kembali</button>'
       +'<div style="display:flex;align-items:center;gap:6px">'
       +'<span style="font-size:.6rem;color:var(--text3)">'+fmtDate(r.tgl||r.createdAt)+'</span>'
-      +'<span style="font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+rsKatColor(r.kat)+';margin-left:4px">'+r.kat+'</span>'
+
       +'</div></div>';
 
     if(locked){
