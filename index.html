@@ -4971,11 +4971,35 @@ function afterAuth(){
     return m[k]||'var(--text3)';
   }
 
+  /* ── compress image before upload (max 1200px, quality 0.82, WebP) ── */
+  function rsCompressImg(file){
+    return new Promise(function(resolve){
+      var MAX=1200, Q=0.82;
+      var img=new Image();
+      var url=URL.createObjectURL(file);
+      img.onload=function(){
+        URL.revokeObjectURL(url);
+        var w=img.naturalWidth, h=img.naturalHeight;
+        if(w<=MAX && h<=MAX && file.size<300*1024){ resolve(file); return; }
+        var scale=Math.min(1,MAX/Math.max(w,h));
+        var canvas=document.createElement('canvas');
+        canvas.width=Math.round(w*scale);
+        canvas.height=Math.round(h*scale);
+        var ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        canvas.toBlob(function(blob){ resolve(blob||file); },'image/webp',Q);
+      };
+      img.onerror=function(){ resolve(file); };
+      img.src=url;
+    });
+  }
+
   /* ── upload single image to Cloudinary ── */
   async function rsUploadImg(file, idx){
+    var compressed = await rsCompressImg(file);
     return new Promise(function(resolve, reject){
       var fd = new FormData();
-      fd.append('file', file);
+      fd.append('file', compressed);
       fd.append('upload_preset', 'mayoragold_preset');
       fd.append('public_id', 'research-'+Date.now()+'-'+idx);
       var xhr = new XMLHttpRequest();
