@@ -3669,7 +3669,7 @@ function ecalNormalize(response){
       impact: isRealHigh?'High':'Medium',
       forecast: e.forecast||'',
       previous: e.previous||'',
-      actual: e.actual||'',
+      actual: (e.actual!=null&&e.actual!==undefined&&e.actual!=='')?String(e.actual):'',
     };
   });
 }
@@ -3855,7 +3855,13 @@ async function startEcalPolling(){
     }
   };
 
-  if(!ecalCacheValid(cached)) await doFetchFCS();
+  /* Fetch FCS jika: cache invalid/expired ATAU ada event yang sudah lewat tapi actual masih kosong */
+  const now0=Date.now();
+  const hasMissedActuals=ecalCacheValid(cached)&&(cached.data||[]).some(e=>{
+    const t=new Date(e.date).getTime();
+    return (e.actual===''||e.actual==null)&&t<now0-10*60000;
+  });
+  if(!ecalCacheValid(cached)||hasMissedActuals) await doFetchFCS();
 
   /* 4. Smart schedule — hanya fetch FCS saat window aktif event
         Di luar window: onSnapshot Firestore sudah cukup untuk realtime update
@@ -3897,9 +3903,14 @@ async function startEcalPolling(){
         // Masuk window aktif → fetch FCS
         await doFetchFCS();
       }else{
-        // Cek kalau cache Firestore perlu refresh (ganti minggu / >23 jam)
+        // Cek kalau ada event yang sudah lewat tapi masih belum ada actual (missed window)
+        const missedActual=(window._ecalData||[]).some(e=>{
+          const t=new Date(e.date).getTime();
+          return (e.actual===''||e.actual==null)&&t<now2-10*60000;
+        });
+        // Cek kalau cache Firestore perlu refresh (ganti minggu / >23 jam / missed actual)
         const c=await ecalReadFirestore();
-        if(!ecalCacheValid(c)) await doFetchFCS();
+        if(!ecalCacheValid(c)||missedActual) await doFetchFCS();
       }
       scheduleNext();
     },delay);
