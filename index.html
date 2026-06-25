@@ -5002,30 +5002,31 @@ function afterAuth(){
 
   window.rsAddLembar = function(){
     var idx = _rsLembarSlots.length;
-    _rsLembarSlots.push({file:null, url:'', info:'', teks:'', _removed:false});
+    _rsLembarSlots.push({file:null, url:'', caption:'', header:'', teks:'', _removed:false});
     var wrap = document.getElementById('rs-lembar-wrap');
     var div = document.createElement('div');
     div.id = 'rs-lembar-slot-'+idx;
     div.style.cssText = 'border:1px solid var(--gold-border);border-radius:8px;padding:16px;background:var(--bg3)';
     div.innerHTML =
-      // Header lembar
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'
       +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)">Lembar '+(idx+1)+'</span>'
       +'<button type="button" onclick="rsRemoveLembar('+idx+')" style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);color:var(--red);cursor:pointer;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius)">Hapus</button>'
       +'</div>'
-      // Upload gambar
+      // 1. Gambar
       +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Gambar</label>'
       +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:6px" onchange="rsHandleLembarFile('+idx+',this)">'
-      +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:12px"></div>'
-      // Info pair/TF/dll (1 baris)
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Info (Pair · TF · Setup · dll)</label>'
-      +'<input class="form-inp" type="text" id="rs-lembar-info-'+idx+'" placeholder="XAUUSD · M15 · Bullish OB · Entry 3290" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarInfo('+idx+',this.value)">'
-      // Caption / teks
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Keterangan</label>'
-      +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="2" placeholder="Penjelasan singkat untuk lembar ini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)"></textarea>';
+      +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:8px"></div>'
+      // 2. Caption gambar
+      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Caption Gambar</label>'
+      +'<input class="form-inp" type="text" id="rs-lembar-caption-'+idx+'" placeholder="Contoh: Chart XAUUSD H4 — Struktur Bullish" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarCaption('+idx+',this.value)">'
+      // 3. Header / judul lembar
+      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Header / Judul</label>'
+      +'<input class="form-inp" type="text" id="rs-lembar-header-'+idx+'" placeholder="Contoh: Analisa Supply & Demand" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarHeader('+idx+',this.value)">'
+      // 4. Teks analisa
+      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Teks Analisa</label>'
+      +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="4" placeholder="Tulis analisa lengkap di sini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)"></textarea>';
     wrap.appendChild(div);
     rsUpdateLembarCount();
-    // Scroll ke slot baru
     setTimeout(function(){ div.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 50);
   };
 
@@ -5037,35 +5038,24 @@ function afterAuth(){
     var reader = new FileReader();
     reader.onload = function(e){
       var prev = document.getElementById('rs-lembar-prev-'+idx);
-      if(prev) prev.innerHTML = '<div style="position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--card-border)">'
-        +'<img src="'+e.target.result+'" style="width:100%;max-height:200px;object-fit:contain;display:block;background:var(--bg4)">'
-        +'<div style="position:absolute;bottom:6px;right:8px;font-size:.55rem;color:var(--green);background:rgba(6,6,10,.7);padding:2px 7px;border-radius:3px">✓ Siap diupload</div>'
+      if(prev) prev.innerHTML = '<div style="border-radius:6px;overflow:hidden;border:1px solid var(--card-border);position:relative">'
+        +'<img src="'+e.target.result+'" style="width:100%;max-height:220px;object-fit:contain;display:block;background:var(--bg4)">'
+        +'<div style="position:absolute;bottom:6px;right:8px;font-size:.55rem;color:var(--green);background:rgba(6,6,10,.75);padding:2px 8px;border-radius:3px">✓ Siap diupload</div>'
         +'</div>';
     };
     reader.readAsDataURL(file);
   };
 
-  window.rsHandleLembarInfo = function(idx, val){
-    _rsLembarSlots[idx].info = val;
-  };
-
-  window.rsHandleLembarUrl = function(idx, url){
-    _rsLembarSlots[idx].url = url.trim();
-    _rsLembarSlots[idx].file = null;
-    var prev = document.getElementById('rs-lembar-prev-'+idx);
-    if(prev && url.trim()){
-      prev.innerHTML = '<img src="'+url.trim()+'" style="max-width:100%;max-height:160px;object-fit:contain;border-radius:4px;border:1px solid var(--card-border)" onerror="this.style.display=\'none\'">';
-    } else if(prev){ prev.innerHTML=''; }
-  };
-
-  window.rsHandleLembarTeks = function(idx, val){
-    _rsLembarSlots[idx].teks = val;
-  };
+  window.rsHandleLembarCaption = function(idx, val){ _rsLembarSlots[idx].caption = val; };
+  window.rsHandleLembarHeader  = function(idx, val){ _rsLembarSlots[idx].header  = val; };
+  window.rsHandleLembarInfo    = function(idx, val){ _rsLembarSlots[idx].info    = val; }; // compat
+  window.rsHandleLembarUrl     = function(idx, url){ _rsLembarSlots[idx].url = url.trim(); _rsLembarSlots[idx].file = null; };
+  window.rsHandleLembarTeks    = function(idx, val){ _rsLembarSlots[idx].teks = val; };
 
   window.rsRemoveLembar = function(idx){
     _rsLembarSlots[idx]._removed = true;
     var slot = document.getElementById('rs-lembar-slot-'+idx);
-    if(slot) slot.remove(); // benar-benar hapus dari DOM
+    if(slot) slot.remove();
     rsUpdateLembarCount();
   };
 
@@ -5135,7 +5125,7 @@ function afterAuth(){
       }
       lembaran.forEach(function(l){
         var idx = _rsLembarSlots.length;
-        _rsLembarSlots.push({file:null, url:l.gambar||'', info:l.info||'', teks:l.teks||'', _removed:false});
+        _rsLembarSlots.push({file:null, url:l.gambar||'', caption:l.caption||l.info||'', header:l.header||'', teks:l.teks||'', _removed:false});
         var wrap = document.getElementById('rs-lembar-wrap');
         var div = document.createElement('div');
         div.id = 'rs-lembar-slot-'+idx;
@@ -5147,13 +5137,15 @@ function afterAuth(){
           +'</div>'
           +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Gambar</label>'
           +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:6px" onchange="rsHandleLembarFile('+idx+',this)">'
-          +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:12px">'
-          +(l.gambar?'<div style="border-radius:6px;overflow:hidden;border:1px solid var(--card-border)"><img src="'+l.gambar+'" style="width:100%;max-height:200px;object-fit:contain;display:block;background:var(--bg4)"></div>':'')
+          +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:8px">'
+          +(l.gambar?'<div style="border-radius:6px;overflow:hidden;border:1px solid var(--card-border)"><img src="'+l.gambar+'" style="width:100%;max-height:220px;object-fit:contain;display:block;background:var(--bg4)"></div>':'')
           +'</div>'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Info (Pair · TF · Setup · dll)</label>'
-          +'<input class="form-inp" type="text" id="rs-lembar-info-'+idx+'" value="'+(l.info||'')+'" placeholder="XAUUSD · M15 · Bullish OB · Entry 3290" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarInfo('+idx+',this.value)">'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Keterangan</label>'
-          +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="2" placeholder="Penjelasan singkat untuk lembar ini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)">'+(l.teks||'')+'</textarea>';
+          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Caption Gambar</label>'
+          +'<input class="form-inp" type="text" id="rs-lembar-caption-'+idx+'" value="'+(l.caption||l.info||'')+'" placeholder="Contoh: Chart XAUUSD H4 — Struktur Bullish" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarCaption('+idx+',this.value)">'
+          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Header / Judul</label>'
+          +'<input class="form-inp" type="text" id="rs-lembar-header-'+idx+'" value="'+(l.header||'')+'" placeholder="Contoh: Analisa Supply & Demand" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarHeader('+idx+',this.value)">'
+          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Teks Analisa</label>'
+          +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="4" placeholder="Tulis analisa lengkap di sini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)">'+(l.teks||'')+'</textarea>';
         wrap.appendChild(div);
       });
       rsUpdateLembarCount();
@@ -5193,7 +5185,7 @@ function afterAuth(){
           toast('Research','Mengupload lembar '+(i+1)+'...','var(--gold)');
           gambarUrl = await rsUploadImg(slot.file, i);
         }
-        lembaranData.push({gambar:gambarUrl, info:slot.info||'', teks:slot.teks||''});
+        lembaranData.push({gambar:gambarUrl, caption:slot.caption||slot.info||'', header:slot.header||'', teks:slot.teks||''});
       }
       // Upload thumbnail
       var thumbUrl = _rsThumbSlot.url||'';
@@ -5412,21 +5404,24 @@ function afterAuth(){
 
       // Gambar lembar
       +(lembar.gambar
-        ?'<div style="width:100%;border-radius:8px;overflow:hidden;background:var(--bg4);border:1px solid var(--card-border);margin-bottom:0">'
+        ?'<div style="width:100%;border-radius:8px;overflow:hidden;background:var(--bg4);border:1px solid var(--card-border)">'
           +'<img src="'+lembar.gambar+'" style="width:100%;display:block;object-fit:contain;max-height:520px" loading="lazy"></div>'
         :'<div style="height:160px;border-radius:8px;background:var(--bg4);border:1px dashed var(--card-border);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:.65rem;color:var(--text3)">Tidak ada gambar</div>')
 
-      // Info pair/TF/dll
-      +(lembar.info
-        ?'<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 2px;margin-bottom:10px">'
-          +lembar.info.split(/[·\|·,]/).map(function(s){ s=s.trim(); return s?'<span style="font-size:.58rem;letter-spacing:.08em;background:rgba(201,168,76,.1);border:1px solid var(--gold-border);color:var(--gold);padding:3px 9px;border-radius:3px">'+s+'</span>':''; }).join('')
-          +'</div>'
-        :(lembar.gambar?'<div style="margin-bottom:16px"></div>':''))
+      // Caption gambar
+      +(lembar.caption
+        ?'<div style="font-size:.62rem;color:var(--text3);text-align:center;padding:8px 4px 16px;letter-spacing:.03em;font-style:italic;border-bottom:1px solid var(--card-border);margin-bottom:20px">'+lembar.caption+'</div>'
+        :'<div style="margin-bottom:20px"></div>')
 
-      // Teks penjelasan lembar
-      +(lembar.teks
-        ?'<div style="font-size:.76rem;color:var(--text2);line-height:1.9;white-space:pre-line;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;padding:16px 18px;margin-bottom:20px">'+lembar.teks+'</div>'
+      // Header / judul lembar
+      +(lembar.header
+        ?'<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.3">'+lembar.header+'</h3>'
         :'')
+
+      // Teks analisa
+      +(lembar.teks
+        ?'<div style="font-size:.78rem;color:var(--text2);line-height:2;white-space:pre-line;margin-bottom:24px">'+lembar.teks+'</div>'
+        :(lembar.header?'<div style="margin-bottom:24px"></div>':''))
 
       // Navigasi lembar
       +'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px">'
