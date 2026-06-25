@@ -2062,7 +2062,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 
     <!-- Detail view (saat buka satu research) -->
     <div id="rs-detail-view" style="display:none">
-      <button onclick="rsCloseDetail()" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius);cursor:pointer;margin-bottom:20px;transition:all .2s">← Kembali</button>
       <div id="rs-detail-content"></div>
     </div>
 
@@ -2531,7 +2530,7 @@ window.calcSwap=function(){
     +'<b>Swap per Malam:</b> '+swapPerNight.toFixed(4)+' USD<br>'
     +'<b>Durasi:</b> '+days+' malam<br>'
     +'<b>Triple Swap:</b> Hari '+tripleDay+' dihitung 3x (weekend rollover)<br><br>'
-    +'<span style="color:'+(isPos?'var(--green)':'var(--red)')+'">'+( isPos?'✦ Swap Positif — kamu mendapat kredit':'⚠ Swap Negatif — biaya dibebankan ke akun')+' sebesar <b>'+Math.abs(totalSwap).toFixed(4)+' USD</b> untuk '+days+' malam.</span>';
+    +'<span style="color:var(--red)">Total biaya swap: <b>-'+Math.abs(totalSwap).toFixed(4)+' USD</b> selama '+days+' malam.</span>';
   var detEl=document.getElementById('swap-detail');
   detEl.innerHTML=detail;
   document.getElementById('swap-result').style.display='block';
@@ -5157,6 +5156,9 @@ function afterAuth(){
     var el = document.getElementById('rs-admin-list');
     if(!el) return;
     if(!_rsCache.length){ el.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada research.</div>'; return; }
+    // Simpan cache ke window supaya bisa dipanggil dari onclick tanpa JSON.stringify
+    window._rsCacheMap = {};
+    _rsCache.forEach(function(r){ window._rsCacheMap[r.id] = r; });
     el.innerHTML = _rsCache.map(function(r){
       var imgs = (r.images||[]).length;
       return '<div style="background:var(--bg3);border:1px solid var(--card-border);border-radius:4px;padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">'
@@ -5169,19 +5171,28 @@ function afterAuth(){
         +(imgs?'<span>📷 '+imgs+' gambar</span>':'')
         +'</div></div>'
         +'<div style="display:flex;gap:6px;flex-shrink:0">'
-        +'<button onclick="rsShowForm('+JSON.stringify(r).replace(/</g,'&lt;').replace(/>/g,'&gt;')+')" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:var(--radius);cursor:pointer">Edit</button>'
+        +'<button onclick="rsEditById(\''+r.id+'\')" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:var(--radius);cursor:pointer">Edit</button>'
         +'<button onclick="rsDeleteResearch(\''+r.id+'\')" style="background:transparent;border:1px solid rgba(224,90,90,.25);color:var(--red);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:var(--radius);cursor:pointer">Hapus</button>'
         +'</div></div>';
     }).join('');
   };
 
+  window.rsEditById = function(id){
+    var r = window._rsCacheMap && window._rsCacheMap[id];
+    if(r) window.rsShowForm(r);
+  };
+
   /* ── FILTER (public) ── */
   window.rsSetFilter = function(f, btn){
     _rsFilter = f;
+    _rsPage = 0;
     document.querySelectorAll('.flt-btn').forEach(function(b){ b.classList.remove('on'); });
     if(btn) btn.classList.add('on');
     window.rsRenderPublic();
   };
+
+  var _rsPage = 0;
+  var RS_PER_PAGE = 5;
 
   /* ── RENDER PUBLIC LIST ── */
   window.rsRenderPublic = function(){
@@ -5193,22 +5204,29 @@ function afterAuth(){
       return true;
     });
     if(!data.length){ el.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada research tersedia.</div>'; return; }
+
     el.innerHTML = data.map(function(r){
       var locked = (r.akses==='vip') && !isVip;
       var firstImg = (r.images||[])[0]||'';
-      return '<div onclick="rsOpenDetail(\''+r.id+'\')" style="cursor:pointer;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;display:flex;gap:0;margin-bottom:12px;transition:border-color .2s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--card-border)\'">'
-        +(firstImg?'<div style="width:110px;min-width:110px;height:90px;overflow:hidden;background:var(--bg4)"><img src="'+firstImg+'" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>':'')
-        +'<div style="padding:14px 16px;flex:1;min-width:0">'
+      return '<div onclick="rsOpenDetail(\''+r.id+'\')" style="cursor:pointer;background:var(--bg3);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;margin-bottom:12px;transition:border-color .2s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--card-border)\'">'
+        +(firstImg?'<div style="width:100%;height:180px;overflow:hidden;background:var(--bg4)"><img src="'+firstImg+'" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>':'')
+        +'<div style="padding:14px 16px">'
         +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">'
         +'<span style="font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+rsKatColor(r.kat)+'">'+r.kat+'</span>'
         +(locked?'<span style="font-size:.52rem;background:rgba(201,168,76,.12);color:var(--gold);padding:2px 7px;border-radius:10px;border:1px solid var(--gold-border)">VIP ✦</span>':'')
         +'<span style="font-size:.58rem;color:var(--text3);margin-left:auto">'+fmtDate(r.tgl||r.createdAt)+'</span>'
         +'</div>'
-        +'<div style="font-size:.8rem;font-weight:500;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+r.judul+'</div>'
+        +'<div style="font-size:.8rem;font-weight:500;color:var(--text);margin-bottom:6px">'+r.judul+'</div>'
         +(locked?'<div style="font-size:.65rem;color:var(--text3)">🔒 Konten khusus member VIP — <span style="color:var(--gold);cursor:pointer" onclick="event.stopPropagation();goPage(\'vip\')">Upgrade gratis →</span></div>'
-          :'<div style="font-size:.65rem;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.ringkasan+'</div>')
+          :'<div style="font-size:.65rem;color:var(--text2);line-height:1.6">'+r.ringkasan+'</div>')
         +'</div></div>';
     }).join('');
+  };
+
+  window.rsGoPage = function(p){
+    _rsPage = p;
+    window.rsRenderPublic();
+    window.scrollTo(0,0);
   };
 
   /* ── OPEN / CLOSE DETAIL ── */
@@ -5219,27 +5237,48 @@ function afterAuth(){
     var locked = (r.akses==='vip') && !isVip;
     var el = document.getElementById('rs-detail-content');
     if(!el) return;
+
+    // Cari index untuk navigasi prev/next
+    var filtered = _rsCache.filter(function(x){
+      if(_rsFilter!=='all' && x.kat!==_rsFilter) return false;
+      return true;
+    });
+    var idx = filtered.findIndex(function(x){ return x.id===id; });
+    var prevId = idx > 0 ? filtered[idx-1].id : null;
+    var nextId = idx < filtered.length-1 ? filtered[idx+1].id : null;
+    var total = filtered.length;
+
+    var navHtml = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px">'
+      +'<button onclick="rsCloseDetail()" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius);cursor:pointer;transition:all .2s">← Kembali</button>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +(prevId?'<button onclick="rsOpenDetail(\''+prevId+'\')" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.6rem;padding:6px 12px;border-radius:var(--radius);cursor:pointer">← Prev</button>':'<span></span>')
+      +'<span style="font-size:.6rem;color:var(--text3)">'+(idx+1)+' / '+total+'</span>'
+      +(nextId?'<button onclick="rsOpenDetail(\''+nextId+'\')" style="background:transparent;border:1px solid var(--card-border);color:var(--text2);font-size:.6rem;padding:6px 12px;border-radius:var(--radius);cursor:pointer">Next →</button>':'<span></span>')
+      +'</div></div>';
+
     if(locked){
-      el.innerHTML = '<div style="text-align:center;padding:48px 24px">'
+      el.innerHTML = navHtml
+        +'<div style="text-align:center;padding:48px 24px">'
         +'<div style="font-family:\'Cormorant Garamond\',serif;font-size:3rem;color:var(--gold);opacity:.3;margin-bottom:12px">✦</div>'
         +'<div style="font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:8px">Konten VIP Terkunci</div>'
         +'<div style="font-size:.72rem;color:var(--text2);margin-bottom:20px">Research ini hanya untuk member VIP. Upgrade gratis sekarang!</div>'
         +'<button onclick="goPage(\'vip\')" class="btn-hero-primary">JOIN VIP GRATIS ✦</button></div>';
     } else {
       var imgs = (r.images||[]);
-      var imgsHtml = imgs.length ? '<div style="display:flex;flex-direction:column;gap:12px;margin:20px 0">'
-        +imgs.map(function(url){ return '<img src="'+url+'" style="max-width:100%;border-radius:6px;border:1px solid var(--card-border)" loading="lazy">'; }).join('')
-        +'</div>' : '';
-      el.innerHTML = '<div>'
+      var imgsHtml = imgs.length
+        ? '<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">'
+          +imgs.map(function(url){ return '<img src="'+url+'" style="max-width:100%;border-radius:6px;border:1px solid var(--card-border)" loading="lazy">'; }).join('')
+          +'</div>'
+        : '';
+      el.innerHTML = navHtml
         +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">'
         +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:'+rsKatColor(r.kat)+'">'+r.kat+'</span>'
         +'<span style="font-size:.62rem;color:var(--text3)">'+fmtDate(r.tgl||r.createdAt)+'</span>'
         +'</div>'
         +'<h2 style="font-family:\'Cormorant Garamond\',serif;font-size:1.7rem;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.3">'+r.judul+'</h2>'
-        +'<div style="background:rgba(201,168,76,.06);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 4px 4px 0;margin-bottom:16px;font-size:.75rem;color:var(--text2);line-height:1.75">'+r.ringkasan+'</div>'
+        +'<div style="background:rgba(201,168,76,.06);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 4px 4px 0;margin-bottom:20px;font-size:.75rem;color:var(--text2);line-height:1.75">'+r.ringkasan+'</div>'
         +imgsHtml
-        +(r.konten?'<div style="font-size:.76rem;color:var(--text2);line-height:1.9;white-space:pre-line">'+r.konten+'</div>':'')
-        +'</div>';
+        +(r.konten?'<div style="font-size:.76rem;color:var(--text2);line-height:1.9;white-space:pre-line">'+r.konten+'</div>':'');
     }
     document.getElementById('rs-list-view').style.display = 'none';
     document.getElementById('rs-detail-view').style.display = 'block';
