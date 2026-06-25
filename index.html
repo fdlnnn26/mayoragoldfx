@@ -1989,24 +1989,15 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
         </div>
         <input type="hidden" id="rs-edit-id">
         <div class="nf-grid">
+          <!-- Baris 1: Judul -->
           <div class="nf-full">
             <label class="form-lbl" for="rs-judul">Judul Research *</label>
             <input class="form-inp" id="rs-judul" type="text" placeholder="Research XAUUSD 25 Juni 2026..." autocomplete="off">
           </div>
+          <!-- Baris 2: Tanggal + Akses -->
           <div>
             <label class="form-lbl" for="rs-tgl">Tanggal *</label>
             <input class="form-inp" id="rs-tgl" type="date">
-          </div>
-          <div>
-            <label class="form-lbl" for="rs-kat">Kategori</label>
-            <select class="form-inp" id="rs-kat">
-              <option value="Daily Research">Daily Research</option>
-              <option value="Weekly Outlook">Weekly Outlook</option>
-              <option value="Bias Harian">Bias Harian</option>
-              <option value="Key Level">Key Level</option>
-              <option value="Analisa Teknikal">Analisa Teknikal</option>
-              <option value="Fundamental">Fundamental</option>
-            </select>
           </div>
           <div>
             <label class="form-lbl" for="rs-akses">Akses</label>
@@ -2015,28 +2006,33 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
               <option value="free">Gratis (Semua)</option>
             </select>
           </div>
+          <!-- Thumbnail -->
           <div class="nf-full">
-            <label class="form-lbl" for="rs-ringkasan">Ringkasan / Bias Singkat *</label>
-            <textarea class="form-inp form-textarea" id="rs-ringkasan" rows="3" placeholder="Bias hari ini: Bullish. Key level support 3280, resistance 3320..."></textarea>
+            <label class="form-lbl">Thumbnail Cover <span style="color:var(--text3);font-weight:300">— opsional, otomatis dari gambar lembar pertama</span></label>
+            <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
+              <div style="flex:1;min-width:200px">
+                <input class="form-inp" id="rs-thumbnail-file" type="file" accept="image/jpeg,image/png,image/webp" onchange="rsHandleThumb(this)" style="margin-bottom:6px">
+                <input class="form-inp" id="rs-thumbnail-url" type="text" placeholder="Atau paste URL thumbnail..." style="font-size:.65rem" oninput="rsPreviewThumb(this.value)">
+              </div>
+              <div id="rs-thumb-prev" style="flex-shrink:0"></div>
+            </div>
           </div>
+          <!-- Lembaran -->
           <div class="nf-full">
-            <label class="form-lbl" for="rs-konten">Analisa Lengkap</label>
-            <textarea class="form-inp form-textarea" id="rs-konten" rows="5" placeholder="Detail analisa, level entry, SL/TP rekomendasi..."></textarea>
-          </div>
-          <div class="nf-full">
-            <label class="form-lbl" style="display:flex;align-items:center;justify-content:space-between">
-              <span>Lembaran Research <span style="color:var(--text3);font-weight:300">(Gambar + Teks per Lembar)</span></span>
-              <span id="rs-lembar-count" style="font-size:.55rem;color:var(--text3);letter-spacing:.1em">0 Lembar</span>
+            <label class="form-lbl" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span>Lembaran</span>
+              <span id="rs-lembar-count" style="font-size:.55rem;color:var(--gold);letter-spacing:.1em;background:rgba(201,168,76,.08);border:1px solid var(--gold-border);padding:2px 8px;border-radius:10px">0 Lembar</span>
             </label>
-            <div id="rs-lembar-wrap" style="display:flex;flex-direction:column;gap:14px;margin-bottom:10px"></div>
-            <button onclick="rsAddLembar()" style="background:transparent;border:1px dashed var(--gold-border);color:var(--gold);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;border-radius:var(--radius);cursor:pointer;transition:all .2s;width:100%">+ Tambah Lembaran</button>
+            <div id="rs-lembar-wrap" style="display:flex;flex-direction:column;gap:16px;margin-bottom:12px"></div>
+            <button onclick="rsAddLembar()" style="background:transparent;border:1px dashed var(--gold-border);color:var(--gold);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 16px;border-radius:var(--radius);cursor:pointer;transition:all .2s;width:100%;display:flex;align-items:center;justify-content:center;gap:6px" onmouseover="this.style.background='rgba(201,168,76,.06)'" onmouseout="this.style.background='transparent'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Lembaran
+            </button>
           </div>
-          <div class="nf-full">
-            <label class="form-lbl" for="rs-thumbnail">Thumbnail (Cover Kartu) <span style="color:var(--text3);font-weight:300">— opsional, default ke gambar lembar pertama</span></label>
-            <input class="form-inp" id="rs-thumbnail-file" type="file" accept="image/jpeg,image/png,image/webp" onchange="rsHandleThumb(this)">
-            <input class="form-inp" id="rs-thumbnail-url" type="text" placeholder="Atau tempel URL thumbnail..." style="margin-top:6px;font-size:.65rem" oninput="rsPreviewThumb(this.value)">
-            <div id="rs-thumb-prev" style="margin-top:6px"></div>
-          </div>
+          <!-- Hidden fields untuk kompatibilitas -->
+          <input type="hidden" id="rs-kat" value="Daily Research">
+          <input type="hidden" id="rs-ringkasan" value="">
+          <input type="hidden" id="rs-konten" value="">
         </div>
         <div id="rs-save-err" style="display:none;font-size:.68rem;color:var(--red);background:rgba(224,90,90,.06);border:1px solid rgba(224,90,90,.2);padding:10px 14px;border-radius:4px;margin-top:10px"></div>
         <div class="form-actions">
@@ -5006,26 +5002,31 @@ function afterAuth(){
 
   window.rsAddLembar = function(){
     var idx = _rsLembarSlots.length;
-    _rsLembarSlots.push({file:null, url:'', teks:'', _removed:false});
+    _rsLembarSlots.push({file:null, url:'', info:'', teks:'', _removed:false});
     var wrap = document.getElementById('rs-lembar-wrap');
     var div = document.createElement('div');
     div.id = 'rs-lembar-slot-'+idx;
-    div.style.cssText = 'border:1px solid var(--card-border);border-radius:6px;padding:14px;background:var(--bg3);position:relative';
+    div.style.cssText = 'border:1px solid var(--gold-border);border-radius:8px;padding:16px;background:var(--bg3)';
     div.innerHTML =
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
-      +'<span style="font-size:.65rem;font-weight:500;color:var(--gold);letter-spacing:.08em">✦ Lembar '+(idx+1)+'</span>'
-      +'<button onclick="rsRemoveLembar('+idx+')" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:.7rem;padding:2px 6px">✕ Hapus</button>'
+      // Header lembar
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'
+      +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)">Lembar '+(idx+1)+'</span>'
+      +'<button type="button" onclick="rsRemoveLembar('+idx+')" style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);color:var(--red);cursor:pointer;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius)">Hapus</button>'
       +'</div>'
-      // Gambar: file + URL
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Gambar</label>'
-      +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:4px" onchange="rsHandleLembarFile('+idx+',this)">'
-      +'<input class="form-inp" type="text" id="rs-lembar-url-'+idx+'" placeholder="Atau tempel URL gambar..." style="font-size:.65rem;margin-bottom:6px" oninput="rsHandleLembarUrl('+idx+',this.value)">'
-      +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:10px"></div>'
-      // Teks penjelasan
-      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Teks Penjelasan</label>'
-      +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="3" placeholder="Penjelasan untuk lembar ini..." style="font-size:.7rem" oninput="rsHandleLembarTeks('+idx+',this.value)"></textarea>';
+      // Upload gambar
+      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Gambar</label>'
+      +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:6px" onchange="rsHandleLembarFile('+idx+',this)">'
+      +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:12px"></div>'
+      // Info pair/TF/dll (1 baris)
+      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Info (Pair · TF · Setup · dll)</label>'
+      +'<input class="form-inp" type="text" id="rs-lembar-info-'+idx+'" placeholder="XAUUSD · M15 · Bullish OB · Entry 3290" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarInfo('+idx+',this.value)">'
+      // Caption / teks
+      +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Keterangan</label>'
+      +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="2" placeholder="Penjelasan singkat untuk lembar ini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)"></textarea>';
     wrap.appendChild(div);
     rsUpdateLembarCount();
+    // Scroll ke slot baru
+    setTimeout(function(){ div.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 50);
   };
 
   window.rsHandleLembarFile = function(idx, inp){
@@ -5036,10 +5037,16 @@ function afterAuth(){
     var reader = new FileReader();
     reader.onload = function(e){
       var prev = document.getElementById('rs-lembar-prev-'+idx);
-      if(prev) prev.innerHTML = '<img src="'+e.target.result+'" style="max-width:100%;max-height:160px;object-fit:contain;border-radius:4px;border:1px solid var(--card-border)">'
-        +'<div style="font-size:.55rem;color:var(--green);margin-top:3px">✓ File siap diupload</div>';
+      if(prev) prev.innerHTML = '<div style="position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--card-border)">'
+        +'<img src="'+e.target.result+'" style="width:100%;max-height:200px;object-fit:contain;display:block;background:var(--bg4)">'
+        +'<div style="position:absolute;bottom:6px;right:8px;font-size:.55rem;color:var(--green);background:rgba(6,6,10,.7);padding:2px 7px;border-radius:3px">✓ Siap diupload</div>'
+        +'</div>';
     };
     reader.readAsDataURL(file);
+  };
+
+  window.rsHandleLembarInfo = function(idx, val){
+    _rsLembarSlots[idx].info = val;
   };
 
   window.rsHandleLembarUrl = function(idx, url){
@@ -5058,7 +5065,7 @@ function afterAuth(){
   window.rsRemoveLembar = function(idx){
     _rsLembarSlots[idx]._removed = true;
     var slot = document.getElementById('rs-lembar-slot-'+idx);
-    if(slot){ slot.style.opacity='0.3'; slot.style.pointerEvents='none'; }
+    if(slot) slot.remove(); // benar-benar hapus dari DOM
     rsUpdateLembarCount();
   };
 
@@ -5124,28 +5131,29 @@ function afterAuth(){
       var lembaran = editData.lembaran||[];
       // fallback: old images array
       if(!lembaran.length && (editData.images||[]).length){
-        lembaran = (editData.images||[]).map(function(url){ return {gambar:url, teks:''}; });
+        lembaran = (editData.images||[]).map(function(url){ return {gambar:url, info:'', teks:''}; });
       }
       lembaran.forEach(function(l){
         var idx = _rsLembarSlots.length;
-        _rsLembarSlots.push({file:null, url:l.gambar||'', teks:l.teks||'', _removed:false});
+        _rsLembarSlots.push({file:null, url:l.gambar||'', info:l.info||'', teks:l.teks||'', _removed:false});
         var wrap = document.getElementById('rs-lembar-wrap');
         var div = document.createElement('div');
         div.id = 'rs-lembar-slot-'+idx;
-        div.style.cssText = 'border:1px solid var(--card-border);border-radius:6px;padding:14px;background:var(--bg3)';
+        div.style.cssText = 'border:1px solid var(--gold-border);border-radius:8px;padding:16px;background:var(--bg3)';
         div.innerHTML =
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
-          +'<span style="font-size:.65rem;font-weight:500;color:var(--gold);letter-spacing:.08em">✦ Lembar '+(idx+1)+'</span>'
-          +'<button onclick="rsRemoveLembar('+idx+')" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:.7rem;padding:2px 6px">✕ Hapus</button>'
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'
+          +'<span style="font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)">Lembar '+(idx+1)+'</span>'
+          +'<button type="button" onclick="rsRemoveLembar('+idx+')" style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);color:var(--red);cursor:pointer;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius)">Hapus</button>'
           +'</div>'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Gambar</label>'
-          +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:4px" onchange="rsHandleLembarFile('+idx+',this)">'
-          +'<input class="form-inp" type="text" id="rs-lembar-url-'+idx+'" value="'+(l.gambar||'')+'" placeholder="Atau tempel URL gambar..." style="font-size:.65rem;margin-bottom:6px" oninput="rsHandleLembarUrl('+idx+',this.value)">'
-          +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:10px">'
-          +(l.gambar?'<img src="'+l.gambar+'" style="max-width:100%;max-height:160px;object-fit:contain;border-radius:4px;border:1px solid var(--card-border)">':'')
+          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Gambar</label>'
+          +'<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:.65rem;color:var(--text2);width:100%;margin-bottom:6px" onchange="rsHandleLembarFile('+idx+',this)">'
+          +'<div id="rs-lembar-prev-'+idx+'" style="margin-bottom:12px">'
+          +(l.gambar?'<div style="border-radius:6px;overflow:hidden;border:1px solid var(--card-border)"><img src="'+l.gambar+'" style="width:100%;max-height:200px;object-fit:contain;display:block;background:var(--bg4)"></div>':'')
           +'</div>'
-          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Teks Penjelasan</label>'
-          +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="3" placeholder="Penjelasan untuk lembar ini..." style="font-size:.7rem" oninput="rsHandleLembarTeks('+idx+',this.value)">'+( l.teks||'')+'</textarea>';
+          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Info (Pair · TF · Setup · dll)</label>'
+          +'<input class="form-inp" type="text" id="rs-lembar-info-'+idx+'" value="'+(l.info||'')+'" placeholder="XAUUSD · M15 · Bullish OB · Entry 3290" style="font-size:.7rem;margin-bottom:12px" oninput="rsHandleLembarInfo('+idx+',this.value)">'
+          +'<label style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px">Keterangan</label>'
+          +'<textarea class="form-inp form-textarea" id="rs-lembar-teks-'+idx+'" rows="2" placeholder="Penjelasan singkat untuk lembar ini..." style="font-size:.7rem;resize:vertical" oninput="rsHandleLembarTeks('+idx+',this.value)">'+(l.teks||'')+'</textarea>';
         wrap.appendChild(div);
       });
       rsUpdateLembarCount();
@@ -5171,7 +5179,7 @@ function afterAuth(){
     var akses = document.getElementById('rs-akses').value;
     var ringkasan = document.getElementById('rs-ringkasan').value.trim();
     var konten = document.getElementById('rs-konten').value.trim();
-    if(!judul||!tgl||!ringkasan){ errEl.textContent='⚠ Judul, tanggal, dan ringkasan wajib diisi.'; errEl.style.display='block'; return; }
+    if(!judul||!tgl){ errEl.textContent='⚠ Judul dan tanggal wajib diisi.'; errEl.style.display='block'; return; }
     btn.disabled = true;
     btn.innerHTML = '<div class="spin" style="border-top-color:var(--bg)"></div>';
     try{
@@ -5185,7 +5193,7 @@ function afterAuth(){
           toast('Research','Mengupload lembar '+(i+1)+'...','var(--gold)');
           gambarUrl = await rsUploadImg(slot.file, i);
         }
-        lembaranData.push({gambar:gambarUrl, teks:slot.teks||''});
+        lembaranData.push({gambar:gambarUrl, info:slot.info||'', teks:slot.teks||''});
       }
       // Upload thumbnail
       var thumbUrl = _rsThumbSlot.url||'';
@@ -5404,9 +5412,16 @@ function afterAuth(){
 
       // Gambar lembar
       +(lembar.gambar
-        ?'<div style="width:100%;border-radius:8px;overflow:hidden;background:var(--bg4);border:1px solid var(--card-border);margin-bottom:16px">'
+        ?'<div style="width:100%;border-radius:8px;overflow:hidden;background:var(--bg4);border:1px solid var(--card-border);margin-bottom:0">'
           +'<img src="'+lembar.gambar+'" style="width:100%;display:block;object-fit:contain;max-height:520px" loading="lazy"></div>'
         :'<div style="height:160px;border-radius:8px;background:var(--bg4);border:1px dashed var(--card-border);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:.65rem;color:var(--text3)">Tidak ada gambar</div>')
+
+      // Info pair/TF/dll
+      +(lembar.info
+        ?'<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 2px;margin-bottom:10px">'
+          +lembar.info.split(/[·\|·,]/).map(function(s){ s=s.trim(); return s?'<span style="font-size:.58rem;letter-spacing:.08em;background:rgba(201,168,76,.1);border:1px solid var(--gold-border);color:var(--gold);padding:3px 9px;border-radius:3px">'+s+'</span>':''; }).join('')
+          +'</div>'
+        :(lembar.gambar?'<div style="margin-bottom:16px"></div>':''))
 
       // Teks penjelasan lembar
       +(lembar.teks
