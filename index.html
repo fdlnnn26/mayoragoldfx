@@ -1286,6 +1286,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <div class="mod-app-tabs">
     <button class="mod-app-tab on" id="mat-all" onclick="modSwitchTab('all')">Semua Modul</button>
     <button class="mod-app-tab" id="mat-my" onclick="modSwitchTab('my')">Progress Saya</button>
+    <button class="mod-app-tab" id="mat-lb" onclick="modSwitchTab('leaderboard')">🏆 Leaderboard</button>
     <button class="mod-app-tab" id="mat-adm" style="display:none" onclick="modSwitchTab('admin')">✦ Admin Modul</button>
   </div>
 
@@ -1323,6 +1324,23 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
       </div>
       <div class="mod-grid" id="mod-grid-my">
         <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;opacity:.1;margin-bottom:10px;color:var(--gold)">✦</div><div style="font-size:.72rem;line-height:1.85">Belum ada progress. Mulai belajar dari tab Semua Modul!</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: LEADERBOARD -->
+  <div class="mod-page-sec" id="mod-sec-leaderboard">
+    <div class="mod-list-wrap">
+      <div class="mod-list-top">
+        <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-txt">Hall of Fame</span><div class="eyebrow-line r"></div></div>
+        <h2 class="page-title">Most <span class="gold-text">Edukated</span></h2>
+        <p class="page-sub">Trader paling rajin belajar berdasarkan total modul yang diselesaikan.</p>
+      </div>
+      <div id="mod-lb-container" style="max-width:640px;margin:0 auto;padding:0 0 48px">
+        <div style="text-align:center;padding:48px 24px;color:var(--text3)">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;opacity:.1;color:var(--gold);margin-bottom:10px">🏆</div>
+          <div style="font-size:.72rem">Memuat leaderboard...</div>
+        </div>
       </div>
     </div>
   </div>
@@ -4364,15 +4382,17 @@ window._modCurLesson=0;
 
 /* ── Tab switching ── */
 window.modSwitchTab=function(t){
-  ['all','my','admin'].forEach(n=>{
-    document.getElementById('mod-sec-'+n).classList.toggle('on',n===t);
+  ['all','my','admin','leaderboard'].forEach(n=>{
+    const el=document.getElementById('mod-sec-'+n);
+    if(el) el.classList.toggle('on',n===t);
   });
   document.querySelectorAll('.mod-app-tab').forEach(el=>el.classList.remove('on'));
-  const map={all:'mat-all',my:'mat-my',admin:'mat-adm'};
+  const map={all:'mat-all',my:'mat-my',admin:'mat-adm',leaderboard:'mat-lb'};
   if(document.getElementById(map[t]))document.getElementById(map[t]).classList.add('on');
   if(t==='my')modRenderMyModules();
   if(t==='admin')modRenderAdminList();
   if(t==='all')modCloseReader();
+  if(t==='leaderboard')modLoadLeaderboard();
   window.scrollTo(0,0);
 };
 
@@ -4975,6 +4995,123 @@ window.modDeleteModule=async function(id){
     applyTheme(isLight ? 'dark' : 'light');
   };
 })();
+
+/* ── LEADERBOARD ── */
+window.modLoadLeaderboard=async function(){
+  const container=document.getElementById('mod-lb-container');
+  if(!container)return;
+  container.innerHTML='<div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:\'Cormorant Garamond\',serif;font-size:2.8rem;opacity:.1;color:var(--gold);margin-bottom:10px">🏆</div><div style="font-size:.72rem">Memuat leaderboard...</div></div>';
+  const db=getDB();if(!db)return;
+  try{
+    const {getDocs,collection,collectionGroup}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
+    /* Ambil semua dokumen dari collectionGroup 'progress' */
+    const pgSnap=await getDocs(collectionGroup(db,'progress'));
+    /* Hitung completed modules per user */
+    const userMap={};
+    pgSnap.forEach(d=>{
+      const uid=d.ref.parent.parent.id;
+      const prog=d.data();
+      const lessons=prog.completedLessons||[];
+      /* Cek apakah modul ini sudah selesai semua lessonnya */
+      const mod=(window._modAllModules||[]).find(m=>m.id===d.id);
+      const totalLessons=mod?(mod.lessons||[]).length:0;
+      const isDone=totalLessons>0&&lessons.length>=totalLessons;
+      if(!userMap[uid])userMap[uid]={uid,completedModules:0,totalLessons:0,displayName:'',email:''};
+      if(isDone)userMap[uid].completedModules++;
+      userMap[uid].totalLessons+=lessons.length;
+    });
+
+    /* Ambil data display name dari users collection */
+    const usersSnap=await getDocs(collection(db,'users'));
+    usersSnap.forEach(d=>{
+      if(userMap[d.id]){
+        const u=d.data();
+        userMap[d.id].displayName=u.displayName||u.name||u.email||('User #'+d.id.slice(0,6));
+        userMap[d.id].email=u.email||'';
+      }
+    });
+
+    /* Isi displayName untuk uid yang tidak ada di 'users' */
+    Object.values(userMap).forEach(u=>{
+      if(!u.displayName)u.displayName='Trader #'+u.uid.slice(0,6);
+    });
+
+    /* Sort berdasarkan modul selesai, lalu total pelajaran */
+    const ranked=Object.values(userMap)
+      .filter(u=>u.completedModules>0||u.totalLessons>0)
+      .sort((a,b)=>b.completedModules-a.completedModules||b.totalLessons-a.totalLessons);
+
+    if(!ranked.length){
+      container.innerHTML='<div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:\'Cormorant Garamond\',serif;font-size:2.8rem;opacity:.15;color:var(--gold);margin-bottom:10px">🏆</div><div style="font-size:.72rem;line-height:1.9">Belum ada data. Jadilah yang pertama menyelesaikan modul!</div></div>';
+      return;
+    }
+
+    const medals=['🥇','🥈','🥉'];
+    const podiumColors=['#C9A84C','#A0A0A0','#CD7F32'];
+    const podiumBg=['rgba(201,168,76,0.12)','rgba(160,160,160,0.08)','rgba(205,127,50,0.08)'];
+
+    /* TOP 3 PODIUM */
+    let podiumHtml='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px">';
+    ranked.slice(0,3).forEach((u,i)=>{
+      const initials=(u.displayName||'?').split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+      podiumHtml+=`<div style="background:${podiumBg[i]||'var(--bg3)'};border:1px solid ${i===0?'rgba(201,168,76,0.4)':'var(--card-border)'};border-radius:10px;padding:20px 12px;text-align:center;position:relative;${i===0?'transform:translateY(-8px)':''}">
+        <div style="font-size:1.6rem;margin-bottom:8px">${medals[i]||''}</div>
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--bg4);border:2px solid ${podiumColors[i]||'var(--card-border)'};margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:${podiumColors[i]||'var(--text2)'};font-weight:600">${initials}</div>
+        <div style="font-size:.72rem;font-weight:500;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${mesc(u.displayName)}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:${podiumColors[i]||'var(--gold)'};font-weight:600;line-height:1">${u.completedModules}</div>
+        <div style="font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-top:4px">Modul Selesai</div>
+        <div style="font-size:.58rem;color:var(--text3);margin-top:3px">${u.totalLessons} pelajaran</div>
+      </div>`;
+    });
+    podiumHtml+='</div>';
+
+    /* RANKING TABLE for rank 4+ */
+    let tableHtml='';
+    if(ranked.length>3){
+      tableHtml='<div style="background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;overflow:hidden">';
+      tableHtml+='<div style="padding:12px 18px;border-bottom:1px solid var(--card-border);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3)">Peringkat Lainnya</div>';
+      ranked.slice(3).forEach((u,i)=>{
+        const rank=i+4;
+        const initials=(u.displayName||'?').split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+        tableHtml+=`<div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid rgba(201,168,76,0.04)">
+          <div style="width:24px;text-align:center;font-size:.7rem;color:var(--text3);font-weight:500">${rank}</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--bg4);border:1px solid var(--card-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text3);font-family:'Cormorant Garamond',serif">${initials}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.74rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${mesc(u.displayName)}</div>
+            <div style="font-size:.58rem;color:var(--text3)">${u.totalLessons} pelajaran selesai</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold)">${u.completedModules}</div>
+            <div style="font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">Modul</div>
+          </div>
+        </div>`;
+      });
+      tableHtml+='</div>';
+    }
+
+    /* Current user highlight */
+    const myUid=window._curUser?.uid;
+    let myRankHtml='';
+    if(myUid){
+      const myRank=ranked.findIndex(u=>u.uid===myUid);
+      if(myRank>=0){
+        myRankHtml=`<div style="margin-top:16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Peringkat Kamu</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);margin-left:auto">#${myRank+1}</div>
+          <div style="font-size:.72rem;color:var(--text2)">${ranked[myRank].completedModules} modul · ${ranked[myRank].totalLessons} pelajaran</div>
+        </div>`;
+      } else {
+        myRankHtml=`<div style="margin-top:16px;background:var(--bg3);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;font-size:.72rem;color:var(--text3);text-align:center">Kamu belum menyelesaikan modul apapun. Yuk mulai belajar! 🚀</div>`;
+      }
+    }
+
+    container.innerHTML=podiumHtml+tableHtml+myRankHtml;
+  }catch(e){
+    console.error('[leaderboard]',e);
+    container.innerHTML='<div style="text-align:center;padding:32px;color:var(--text3);font-size:.72rem">Gagal memuat leaderboard. Pastikan kamu sudah login.</div>';
+  }
+};
 
 /* Hook into existing Firebase auth state — load modules once auth resolves */
 const _origAuthReady=window._onAuthReady;
