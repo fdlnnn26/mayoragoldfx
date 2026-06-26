@@ -1067,6 +1067,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
   <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
   <button id="mob-vip-btn" class="btn-hero-sec" style="margin-top:8px;width:100%;text-align:center;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:12px 20px" onclick="goPage('vip');toggleMob()">JOIN VIP GRATIS ✦</button>
+  <button id="mob-logout-btn" class="btn-logout" style="display:none;margin-top:16px;width:100%;text-align:center;padding:12px 20px;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase" onclick="doLogout();toggleMob()">⏻ Keluar</button>
 </div>
 <div id="mob-nav-backdrop" onclick="toggleMob()"></div>
 
@@ -3216,6 +3217,8 @@ onAuthStateChanged(auth, async user=>{
       if(mobLoginBtn)mobLoginBtn.style.display='block';
       const mobVipBtn=document.getElementById('mob-vip-btn');
       if(mobVipBtn)mobVipBtn.style.display='block';
+      const mobLogoutBtn=document.getElementById('mob-logout-btn');
+      if(mobLogoutBtn)mobLogoutBtn.style.display='none';
       stopTick();
     }
   }catch(err){ console.error('onAuthStateChanged error:',err); }
@@ -3230,6 +3233,8 @@ function showLoggedIn(user){
   if(mobLoginBtn)mobLoginBtn.style.display='none';
   const mobVipBtn=document.getElementById('mob-vip-btn');
   if(mobVipBtn)mobVipBtn.style.display='none';
+  const mobLogoutBtn=document.getElementById('mob-logout-btn');
+  if(mobLogoutBtn)mobLogoutBtn.style.display='block';
   document.getElementById('nav-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('nav-uname').textContent=name;
   document.getElementById('nav-vip-pill').style.display=isVip?'block':'none';
@@ -5003,44 +5008,37 @@ window.modLoadLeaderboard=async function(){
   container.innerHTML='<div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:\'Cormorant Garamond\',serif;font-size:2.8rem;opacity:.1;color:var(--gold);margin-bottom:10px">🏆</div><div style="font-size:.72rem">Memuat leaderboard...</div></div>';
   const db=getDB();if(!db)return;
   try{
-    const {getDocs,collection,collectionGroup}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const {getDocs,collection}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
 
-    /* Ambil semua dokumen dari collectionGroup 'progress' */
-    const pgSnap=await getDocs(collectionGroup(db,'progress'));
-    /* Hitung completed modules per user */
-    const userMap={};
-    pgSnap.forEach(d=>{
-      const uid=d.ref.parent.parent.id;
-      const prog=d.data();
-      const lessons=prog.completedLessons||[];
-      /* Cek apakah modul ini sudah selesai semua lessonnya */
-      const mod=(window._modAllModules||[]).find(m=>m.id===d.id);
-      const totalLessons=mod?(mod.lessons||[]).length:0;
-      const isDone=totalLessons>0&&lessons.length>=totalLessons;
-      if(!userMap[uid])userMap[uid]={uid,completedModules:0,totalLessons:0,displayName:'',email:''};
-      if(isDone)userMap[uid].completedModules++;
-      userMap[uid].totalLessons+=lessons.length;
-    });
-
-    /* Ambil data display name dari users collection */
+    /* Ambil semua users */
     const usersSnap=await getDocs(collection(db,'users'));
-    usersSnap.forEach(d=>{
-      if(userMap[d.id]){
-        const u=d.data();
-        userMap[d.id].displayName=u.displayName||u.name||u.email||('User #'+d.id.slice(0,6));
-        userMap[d.id].email=u.email||'';
-      }
-    });
+    const userList=[];
+    usersSnap.forEach(d=>userList.push({uid:d.id,...d.data()}));
 
-    /* Isi displayName untuk uid yang tidak ada di 'users' */
-    Object.values(userMap).forEach(u=>{
-      if(!u.displayName)u.displayName='Trader #'+u.uid.slice(0,6);
-    });
+    const allMods=window._modAllModules||[];
 
-    /* Sort berdasarkan modul selesai, lalu total pelajaran */
-    const ranked=Object.values(userMap)
-      .filter(u=>u.completedModules>0||u.totalLessons>0)
-      .sort((a,b)=>b.completedModules-a.completedModules||b.totalLessons-a.totalLessons);
+    /* Untuk setiap user, ambil progress subcollection */
+    const ranked=[];
+    await Promise.all(userList.map(async u=>{
+      try{
+        const pSnap=await getDocs(collection(db,'users',u.uid,'progress'));
+        let completedModules=0,totalLessons=0;
+        pSnap.forEach(d=>{
+          const prog=d.data();
+          const lessons=prog.completedLessons||[];
+          totalLessons+=lessons.length;
+          const mod=allMods.find(m=>m.id===d.id);
+          const totalL=mod?(mod.lessons||[]).length:0;
+          if(totalL>0&&lessons.length>=totalL)completedModules++;
+        });
+        if(completedModules>0||totalLessons>0){
+          const displayName=u.displayName||u.name||u.email||('Trader #'+u.uid.slice(0,6));
+          ranked.push({uid:u.uid,displayName,completedModules,totalLessons});
+        }
+      }catch(_){}
+    }));
+
+    ranked.sort((a,b)=>b.completedModules-a.completedModules||b.totalLessons-a.totalLessons);
 
     if(!ranked.length){
       container.innerHTML='<div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:\'Cormorant Garamond\',serif;font-size:2.8rem;opacity:.15;color:var(--gold);margin-bottom:10px">🏆</div><div style="font-size:.72rem;line-height:1.9">Belum ada data. Jadilah yang pertama menyelesaikan modul!</div></div>';
@@ -5109,7 +5107,7 @@ window.modLoadLeaderboard=async function(){
     container.innerHTML=podiumHtml+tableHtml+myRankHtml;
   }catch(e){
     console.error('[leaderboard]',e);
-    container.innerHTML='<div style="text-align:center;padding:32px;color:var(--text3);font-size:.72rem">Gagal memuat leaderboard. Pastikan kamu sudah login.</div>';
+    container.innerHTML='<div style="text-align:center;padding:32px;color:var(--text3);font-size:.72rem">Gagal memuat leaderboard: '+mesc(e.message||'unknown error')+'</div>';
   }
 };
 
