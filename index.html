@@ -41,7 +41,7 @@
 <meta name="msapplication-TileColor" content="#06060A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucentF">
 <meta name="apple-mobile-web-app-title" content="Mayora Gold FX">
 <link rel="icon" type="image/webp" href="logomayora.webp">
 <link rel="shortcut icon" type="image/webp" href="logomayora.webp">
@@ -2660,7 +2660,6 @@ window.aiClearAll = function() {
 };
 
 function aiFormatResult(text) {
-  // Convert markdown-like to clean HTML
   return text
     .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--gold)">$1</strong>')
     .replace(/^#{1,3}\s+(.+)$/gm, '<div style="font-weight:600;color:var(--gold);margin:14px 0 6px;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase">$1</div>')
@@ -2674,7 +2673,6 @@ window.aiAnalyze = async function() {
   if (!uid) { toast('Error', 'Kamu harus login dulu', '#E05A5A'); return; }
   if (!window._aiImageBase64) { toast('Error', 'Upload chart terlebih dahulu', '#E05A5A'); return; }
 
-  // Check quota
   const used = await aiGetQuota(uid);
   if (used >= AI_DAILY_LIMIT) {
     document.getElementById('ai-error').style.display = 'block';
@@ -2682,7 +2680,6 @@ window.aiAnalyze = async function() {
     return;
   }
 
-  // UI loading state
   const btn = document.getElementById('ai-analyze-btn');
   const loading = document.getElementById('ai-loading');
   const result = document.getElementById('ai-result');
@@ -2724,8 +2721,8 @@ ${userPrompt ? `\nFokus tambahan dari trader: ${userPrompt}` : ''}
 Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan generik.`;
 
   try {
-    // Memanggil backend lokal, mengirimkan prompt dan gambar
-    const res = await fetch('/api/gemini', {
+    // ⚠️ NYAMBUNG KE SERVER VERCEL LU DI SINI ⚠️
+    const res = await fetch('https://mayoragoldfx.vercel.app/api/gemini', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -2735,9 +2732,7 @@ Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan gen
       })
     });
 
-    if (!res.ok) {
-      throw new Error('Gagal menghubungi server backend.');
-    }
+    if (!res.ok) throw new Error('Gagal menghubungi server backend.');
 
     const data = await res.json();
     clearInterval(ltInterval);
@@ -2745,11 +2740,9 @@ Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan gen
     const text = data.text || '';
     if (!text) throw new Error('Respons AI kosong. Coba lagi.');
 
-    // Increment quota
     await aiIncrementQuota(uid);
     await aiRenderQuota();
 
-    // Show result
     loading.style.display = 'none';
     btn.style.display = 'flex';
     result.style.display = 'block';
@@ -2765,14 +2758,12 @@ Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan gen
   }
 };
 
-/* Render quota when switching to AI tab */
 const _origJTab = window.jTab;
 window.jTab = function(n, el) {
   _origJTab(n, el);
   if (n === 'ai') aiRenderQuota();
 };
 
-/* Cloudinary URL optimizer */
 function getOptUrl(url, width){
   if(!url) return '';
   var clMatch = url.match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/);
