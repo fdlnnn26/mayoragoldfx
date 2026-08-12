@@ -2722,7 +2722,7 @@ Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan gen
 
   try {
     // ⚠️ NYAMBUNG KE SERVER VERCEL LU DI SINI ⚠️
-    const res = await fetch('https://mayoragoldfx.vercel.app/api/gemini', {
+    const res = await fetch('/api/gemini', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
