@@ -2562,7 +2562,6 @@ function generateSlug(text){
 window.generateSlug=generateSlug;
 
 /* ===== AI ANALISA CHART — Gemini Vision ===== */
-const GEMINI_API_KEY = 'AQ.Ab8RN6KlqG4ptvP2DF0iOdz4gQBYRXn04W3Dspszyq6g-LfNrA';
 const AI_DAILY_LIMIT = 3;
 
 function aiGetTodayKey() {
@@ -2725,26 +2724,25 @@ ${userPrompt ? `\nFokus tambahan dari trader: ${userPrompt}` : ''}
 Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan generik.`;
 
   try {
-    // Pakai SDK resmi @google/genai (bukan fetch manual) — SDK ini yang terbaru
-    // dan paling mungkin menangani auth key format "AQ." dengan benar.
-    const { GoogleGenAI } = await import('https://esm.run/@google/genai');
-    const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-
-    const genResponse = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: [{
-        role: 'user',
-        parts: [
-          { text: systemPrompt },
-          { inlineData: { mimeType: window._aiImageMime, data: window._aiImageBase64 } }
-        ]
-      }],
-      config: { temperature: 0.4, maxOutputTokens: 1500 }
+    // Memanggil backend lokal, mengirimkan prompt dan gambar
+    const res = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: systemPrompt,
+        image: window._aiImageBase64,
+        mimeType: window._aiImageMime
+      })
     });
 
+    if (!res.ok) {
+      throw new Error('Gagal menghubungi server backend.');
+    }
+
+    const data = await res.json();
     clearInterval(ltInterval);
 
-    const text = genResponse.text || '';
+    const text = data.text || '';
     if (!text) throw new Error('Respons AI kosong. Coba lagi.');
 
     // Increment quota
@@ -2774,7 +2772,6 @@ window.jTab = function(n, el) {
   if (n === 'ai') aiRenderQuota();
 };
 
-
 /* Cloudinary URL optimizer */
 function getOptUrl(url, width){
   if(!url) return '';
@@ -2786,7 +2783,6 @@ function getOptUrl(url, width){
   return base+transform+'/'+rest;
 }
 window.getOptUrl = getOptUrl;
-
 /* SEO meta helpers */
 var DEFAULT_META = {
   title: 'Mayora Gold FX — Komunitas Trading Emas XAU/USD Indonesia | Sinyal & Edukasi Premium',
