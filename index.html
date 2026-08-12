@@ -2728,7 +2728,7 @@ Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan gen
     // Pakai SDK resmi @google/genai (bukan fetch manual) — SDK ini yang terbaru
     // dan paling mungkin menangani auth key format "AQ." dengan benar.
     const { GoogleGenAI } = await import('https://esm.run/@google/genai');
-    const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+    const ai = new GoogleGenAI({ apiKey: AQ.Ab8RN6KlqG4ptvP2DF0iOdz4gQBYRXn04W3Dspszyq6g-LfNrA });
 
     const genResponse = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
