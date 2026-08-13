@@ -40,17 +40,17 @@ export default async function handler(req, res) {
     }
 
     // Panggil model Gemini (model stabil terbaru per Agustus 2026)
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.6-flash',
-      contents: [{
-        role: 'user',
-        parts: parts
-      }],
-      config: {
-        temperature: 0.4,
-        maxOutputTokens: 1500
-      }
-    });
+const response = await ai.models.generateContent({
+  model: 'gemini-3.6-flash',
+  contents: [{
+    role: 'user',
+    parts: parts
+  }],
+  config: {
+    maxOutputTokens: 1500
+    // temperature dihapus — deprecated di Gemini 3.6 Flash
+  }
+});
 
     // Kembalikan hasil teks ke frontend
     return res.status(200).json({ text: response.text });
