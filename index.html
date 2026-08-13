@@ -2706,18 +2706,25 @@ window.aiAnalyze = async function() {
 ATURAN WAJIB — HARUS DIPATUHI, TIDAK BOLEH DILANGGAR:
 1. Tentukan HANYA SATU arah sinyal: BUY atau SELL. DILARANG KERAS memberikan dua arah sekaligus, dan DILARANG memberikan lebih dari satu skenario/opsi entry (contoh yang DILARANG: "Skenario 1 & Skenario 2", "Setup Agresif vs Konservatif", "opsi A atau opsi B"). Pilih HANYA SATU zona entry paling optimal berdasarkan struktur market, price action, dan konfluensi teknikal paling dominan di chart.
    - Pengecualian: jika trader HANYA meminta referensi zona/level (support/resistance/order block/FVG/liquidity) dan TIDAK meminta sinyal entry, maka jangan tentukan arah — ikuti FORMAT ZONA di bawah.
-2. Entry WAJIB berupa satu harga spesifik (bukan rentang/zona lebar), supaya perhitungan Stop Loss dan Take Profit presisi dan konsisten.
-3. Stop Loss WAJIB memakai jarak TETAP dari harga Entry sesuai timeframe chart (SL = Entry ± jarak berikut, BUKAN dihitung dari swing high/low manual):
+2. ATURAN PALING PENTING — VALIDITAS ZONA ENTRY: Entry WAJIB berada tepat di dalam zona teknikal yang benar-benar valid dan terlihat jelas di chart, berdasarkan minimal salah satu konsep berikut:
+   - SNR (Support & Resistance klasik — level yang sudah terbukti beberapa kali menahan harga)
+   - SND (Supply & Demand zone)
+   - SMC (Order Block, Breaker Block, Break of Structure/BOS, Change of Character/CHoCH)
+   - ICT (Fair Value Gap/FVG, Liquidity Pool, Optimal Trade Entry/OTE, Mitigation Block)
+   DILARANG KERAS menentukan harga entry secara sembarangan/asal tebak yang tidak bersandar pada zona-zona di atas (mis. asal ambil harga di tengah candle tanpa dasar). Entry harus jelas menempel/berada di dalam salah satu zona tersebut, bukan di ruang kosong tanpa konfluensi. WAJIB sebutkan secara eksplisit zona & konsep apa yang menjadi dasar entry (contoh: "Entry di Order Block M15" atau "Entry di area FVG + Demand Zone lama").
+3. Entry WAJIB berupa satu harga spesifik (bukan rentang/zona lebar), supaya perhitungan Stop Loss dan Take Profit presisi dan konsisten.
+4. Stop Loss WAJIB memakai jarak TETAP dari harga Entry sesuai timeframe chart (SL = Entry ± jarak berikut, BUKAN dihitung dari swing high/low manual):
    - Timeframe M3: SL = 40–50 pips (4–5 point) dari Entry
    - Timeframe M5: SL = 60–70 pips (6–7 point) dari Entry
    - Timeframe di atas M5 (M15 ke atas): SL = 100 pips (10 point) dari Entry
    Jika timeframe chart tidak terlihat jelas, gunakan asumsi timeframe M15 ke atas (SL 100 pips) dan sebutkan bahwa itu asumsi.
-4. Take Profit WAJIB dihitung agar Risk:Reward MINIMAL 1:2 dari jarak Stop Loss pada poin 3 (jarak TP ke Entry minimal 2x jarak SL ke Entry), diarahkan ke level struktur/likuiditas terdekat yang mendukung jarak tersebut. Sebutkan RR aktualnya.
-5. Jawaban HARUS singkat, padat, HANYA SATU setup — tanpa opsi ganda, tanpa basa-basi panjang.
+5. Take Profit WAJIB dihitung agar Risk:Reward MINIMAL 1:2 dari jarak Stop Loss pada poin 4 (jarak TP ke Entry minimal 2x jarak SL ke Entry), diarahkan ke level struktur/likuiditas terdekat yang mendukung jarak tersebut. Sebutkan RR aktualnya.
+6. Jawaban HARUS singkat, padat, HANYA SATU setup — tanpa opsi ganda, tanpa basa-basi panjang.
 
 FORMAT JAWABAN — SINYAL ENTRY (dipakai jika trader minta setup/peluang entry):
 **Arah:** BUY atau SELL (satu saja, tidak boleh dua-duanya, tidak boleh lebih dari 1 skenario)
-**Entry:** satu harga spesifik
+**Zona/Konfluensi:** nama zona & konsep dasar entry (SNR/SND/SMC/ICT) — wajib diisi, tidak boleh kosong
+**Entry:** satu harga spesifik, harus berada di dalam zona di atas
 **Stop Loss:** harga SL persis + timeframe & jarak acuan (contoh: "4381.00 (M3, -5 point/50 pips)")
 **Take Profit:** satu harga TP + RR aktual (contoh: "4356.00 (RR 1:2.4)")
 **Alasan Singkat:** maksimal 2 kalimat berdasarkan price action/struktur yang terlihat
