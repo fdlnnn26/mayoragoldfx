@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     
     // Key aman di sisi server Vercel
     // Catatan: Ke depannya sangat disarankan menggunakan process.env.GEMINI_API_KEY
-    const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6KlqG4ptvP2DF0iOdz4gQBYRXn04W3Dspszyq6g-LfNrA" });
+    const ai = new GoogleGenAI({ apiKey: "AIzaSyDp6QHB2uU7dhE54ZOfu8PAClbSKL7DvQk" });
     
     // Siapkan array parts untuk menampung teks
     const parts = [{ text: prompt }];
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     
     // Panggil model Gemini
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash', 
+      model: 'gemini-3.6-flash', 
       contents: [{
         role: 'user',
         parts: parts
