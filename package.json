@@ -7,6 +7,6 @@
     "start": "node api/gemini.js"
   },
   "dependencies": {
-    "@google/genai": "latest"
+    "@google/genai": "^2.17.0"
   }
 }
