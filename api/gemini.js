@@ -47,11 +47,12 @@ const response = await ai.models.generateContent({
     parts: parts
   }],
   config: {
-    maxOutputTokens: 1500
-    // temperature dihapus — deprecated di Gemini 3.6 Flash
+    maxOutputTokens: 4000,        // dinaikkan dari 1500
+    thinkingConfig: {
+      thinkingLevel: 'low'        // kurangi porsi token buat "mikir", sisain lebih banyak buat jawaban
+    }
   }
 });
-
     // Kembalikan hasil teks ke frontend
     return res.status(200).json({ text: response.text });
 
