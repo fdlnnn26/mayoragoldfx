@@ -2706,27 +2706,33 @@ window.aiAnalyze = async function() {
 ATURAN WAJIB — HARUS DIPATUHI, TIDAK BOLEH DILANGGAR:
 1. Tentukan HANYA SATU arah sinyal: BUY atau SELL. DILARANG KERAS memberikan dua arah sekaligus, dan DILARANG memberikan lebih dari satu skenario/opsi entry (contoh yang DILARANG: "Skenario 1 & Skenario 2", "Setup Agresif vs Konservatif", "opsi A atau opsi B"). Pilih HANYA SATU zona entry paling optimal berdasarkan struktur market, price action, dan konfluensi teknikal paling dominan di chart.
    - Pengecualian: jika trader HANYA meminta referensi zona/level (support/resistance/order block/FVG/liquidity) dan TIDAK meminta sinyal entry, maka jangan tentukan arah — ikuti FORMAT ZONA di bawah.
-2. ATURAN PALING PENTING — VALIDITAS ZONA ENTRY: Entry WAJIB berada tepat di dalam zona teknikal yang benar-benar valid dan terlihat jelas di chart, berdasarkan minimal salah satu konsep berikut:
-   - SNR (Support & Resistance klasik — level yang sudah terbukti beberapa kali menahan harga)
-   - SND (Supply & Demand zone)
-   - SMC (Order Block, Breaker Block, Break of Structure/BOS, Change of Character/CHoCH)
-   - ICT (Fair Value Gap/FVG, Liquidity Pool, Optimal Trade Entry/OTE, Mitigation Block)
-   DILARANG KERAS menentukan harga entry secara sembarangan/asal tebak yang tidak bersandar pada zona-zona di atas (mis. asal ambil harga di tengah candle tanpa dasar). Entry harus jelas menempel/berada di dalam salah satu zona tersebut, bukan di ruang kosong tanpa konfluensi. WAJIB sebutkan secara eksplisit zona & konsep apa yang menjadi dasar entry (contoh: "Entry di Order Block M15" atau "Entry di area FVG + Demand Zone lama").
-3. Entry WAJIB berupa satu harga spesifik (bukan rentang/zona lebar), supaya perhitungan Stop Loss dan Take Profit presisi dan konsisten.
-4. Stop Loss WAJIB memakai jarak TETAP dari harga Entry sesuai timeframe chart (SL = Entry ± jarak berikut, BUKAN dihitung dari swing high/low manual):
+2. ATURAN PALING PENTING — VALIDITAS ZONA ENTRY: Entry WAJIB berada tepat di dalam zona teknikal yang benar-benar valid dan terlihat jelas di chart, berdasarkan minimal salah satu konsep berikut — dan setiap konsep WAJIB dipakai SESUAI DEFINISI TEORI YANG BENAR, bukan asumsi longgar:
+   - SNR (Support & Resistance): level horizontal yang SUDAH TERBUKTI menahan harga minimal 2 kali (rejection/reaksi jelas di titik yang sama atau berdekatan). Satu sentuhan saja BUKAN support/resistance valid.
+   - SND (Supply & Demand): area ASAL (origin) dari pergerakan impulsif kuat (strong move away), bukan sekadar area konsolidasi/sideways biasa. Demand = area asal kenaikan tajam; Supply = area asal penurunan tajam.
+   - SMC — Order Block: candle terakhir berlawanan arah SEBELUM terjadi displacement/impulsive move dan Break of Structure (BOS). BOS = harga menembus swing high/low sebelumnya SEARAH tren yang sedang berjalan (konfirmasi kelanjutan tren). CHoCH (Change of Character) = harga menembus swing high/low BERLAWANAN dengan tren sebelumnya (sinyal potensi reversal). Jangan tukar-menukar definisi BOS dan CHoCH.
+   - ICT — Fair Value Gap (FVG): celah/imbalance antara candle 1 dan candle 3 dalam rangkaian 3 candle impulsif (wick candle 1 tidak overlap dengan wick candle 3). Liquidity Pool: kumpulan stop loss di area equal highs/equal lows atau di atas/bawah swing yang jelas. OTE (Optimal Trade Entry): area retracement Fibonacci 61.8%–79% dari kaki pergerakan impulsif SETELAH BOS terjadi.
+   DILARANG KERAS menentukan harga entry secara sembarangan/asal tebak yang tidak bersandar pada zona-zona di atas, dan DILARANG KERAS menyalahgunakan istilah SNR/SND/SMC/ICT untuk zona yang secara teori tidak memenuhi kriteria di atas (mis. menyebut "Order Block" padahal tidak ada displacement/BOS setelahnya, atau menyebut "FVG" padahal candle-nya overlap). Entry harus jelas menempel/berada di dalam salah satu zona tersebut sesuai definisi teorinya, bukan di ruang kosong tanpa konfluensi. WAJIB sebutkan secara eksplisit zona & konsep apa yang menjadi dasar entry (contoh: "Entry di Order Block M15" atau "Entry di area FVG + Demand Zone lama").
+3. OBJEKTIVITAS ANALISA: Tentukan arah (BUY/SELL) HANYA berdasarkan apa yang benar-benar terlihat di chart (struktur market, price action, candle, level yang tervalidasi) — BUKAN berdasarkan asumsi, harapan, atau narasi yang dipaksakan. Jangan bias ke satu arah tertentu karena pertanyaan/fokus tambahan dari trader; tetap analisa chart secara netral dan laporkan apa adanya, termasuk jika chart menunjukkan kondisi tidak jelas/choppy — dalam kasus itu tetap pilih bias yang paling didukung data, dan boleh sebutkan bahwa keyakinan (confidence) sedang rendah di bagian Alasan Singkat.
+4. Entry WAJIB berupa satu harga spesifik (bukan rentang/zona lebar), supaya perhitungan Stop Loss dan Take Profit presisi dan konsisten.
+5. Stop Loss WAJIB memakai jarak TETAP dari harga Entry sesuai timeframe chart (SL = Entry ± jarak berikut, BUKAN dihitung dari swing high/low manual):
    - Timeframe M3: SL = 40–50 pips (4–5 point) dari Entry
    - Timeframe M5: SL = 60–70 pips (6–7 point) dari Entry
    - Timeframe di atas M5 (M15 ke atas): SL = 100 pips (10 point) dari Entry
    Jika timeframe chart tidak terlihat jelas, gunakan asumsi timeframe M15 ke atas (SL 100 pips) dan sebutkan bahwa itu asumsi.
-5. Take Profit WAJIB dihitung agar Risk:Reward MINIMAL 1:2 dari jarak Stop Loss pada poin 4 (jarak TP ke Entry minimal 2x jarak SL ke Entry), diarahkan ke level struktur/likuiditas terdekat yang mendukung jarak tersebut. Sebutkan RR aktualnya.
-6. Jawaban HARUS singkat, padat, HANYA SATU setup — tanpa opsi ganda, tanpa basa-basi panjang.
+6. Take Profit WAJIB memenuhi Risk:Reward MINIMAL 1:2 dari jarak Stop Loss pada poin 5 (jarak TP ke Entry minimal 2x jarak SL ke Entry). Jika struktur/likuiditas mendukung target yang lebih jauh dan valid (mis. swing high/low signifikan berikutnya, liquidity pool besar), MAKSIMALKAN Take Profit ke level tersebut selama masih realistis — RR tidak wajib pas 1:2, boleh lebih tinggi (1:3, 1:4, dst) jika ada dasar teknikal yang mendukung. TP diarahkan ke level struktur/likuiditas terdekat yang valid. Sebutkan RR aktualnya.
+7. Tentukan TIPE ENTRY sesuai kondisi harga saat ini terhadap zona di poin 2:
+   - Jika harga saat ini SUDAH berada di dalam/menyentuh zona valid tersebut → gunakan MARKET ORDER (entry now/langsung).
+   - Jika harga saat ini BELUM sampai ke zona (perlu pullback/retracement dulu) → gunakan PENDING ORDER (Buy Limit untuk BUY, Sell Limit untuk SELL) di harga zona tersebut, trader akan menunggu harga sampai ke level itu.
+   Sebutkan tipe entry ini secara eksplisit dan jangan asal pilih — sesuaikan dengan posisi harga saat ini di chart.
+8. Jawaban HARUS singkat, padat, HANYA SATU setup — tanpa opsi ganda, tanpa basa-basi panjang.
 
 FORMAT JAWABAN — SINYAL ENTRY (dipakai jika trader minta setup/peluang entry):
 **Arah:** BUY atau SELL (satu saja, tidak boleh dua-duanya, tidak boleh lebih dari 1 skenario)
 **Zona/Konfluensi:** nama zona & konsep dasar entry (SNR/SND/SMC/ICT) — wajib diisi, tidak boleh kosong
+**Tipe Entry:** Market Order (entry now) atau Pending Order (Buy Limit/Sell Limit) — sesuai posisi harga saat ini terhadap zona
 **Entry:** satu harga spesifik, harus berada di dalam zona di atas
 **Stop Loss:** harga SL persis + timeframe & jarak acuan (contoh: "4381.00 (M3, -5 point/50 pips)")
-**Take Profit:** satu harga TP + RR aktual (contoh: "4356.00 (RR 1:2.4)")
+**Take Profit:** satu harga TP + RR aktual (contoh: "4356.00 (RR 1:2.4)") — maksimalkan jika struktur mendukung
 **Alasan Singkat:** maksimal 2 kalimat berdasarkan price action/struktur yang terlihat
 
 FORMAT JAWABAN — REFERENSI ZONA (dipakai HANYA jika trader secara eksplisit hanya minta info zona support/resistance/OB/FVG tanpa minta sinyal entry):
