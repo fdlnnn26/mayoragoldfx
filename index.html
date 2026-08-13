@@ -2561,8 +2561,7 @@ function generateSlug(text){
 }
 window.generateSlug=generateSlug;
 
-/* ===== AI ANALISA CHART — Gemini Vision ===== */
-const GEMINI_API_KEY = 'AIzaSyDp6QHB2uU7dhE54ZOfu8PAClbSKL7DvQk';
+/* ===== AI ANALISA CHART — Gemini Vision (via /api/gemini, key aman di server) ===== */
 const AI_DAILY_LIMIT = 3;
 
 function aiGetTodayKey() {
@@ -2725,32 +2724,25 @@ ${userPrompt ? `\nFokus tambahan dari trader: ${userPrompt}` : ''}
 Berikan analisa yang spesifik berdasarkan apa yang terlihat di chart. Jangan generik.`;
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
-        body: JSON.stringify({
-          contents: [{
-            parts: [
-              { text: systemPrompt },
-              { inline_data: { mime_type: window._aiImageMime, data: window._aiImageBase64 } }
-            ]
-          }],
-          generationConfig: { temperature: 0.4, maxOutputTokens: 1500 }
-        })
-      }
-    );
+    const response = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: systemPrompt,
+        image: window._aiImageBase64,
+        mimeType: window._aiImageMime
+      })
+    });
 
     clearInterval(ltInterval);
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      throw new Error(err?.error?.message || `HTTP ${response.status}`);
+      throw new Error(err?.error || `HTTP ${response.status}`);
     }
 
     const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = data.text || '';
     if (!text) throw new Error('Respons AI kosong. Coba lagi.');
 
     // Increment quota
