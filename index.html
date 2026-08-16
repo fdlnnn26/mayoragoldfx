@@ -370,6 +370,10 @@ button,input,select,textarea{font-family:inherit;outline:none}
 
 /* BERITA PAGE */
 #page-berita{padding:var(--nav-h) 40px 80px}
+.news-skel{display:flex;flex-direction:column;gap:14px}
+.news-skel-feat{height:280px;border-radius:14px;background:linear-gradient(90deg,rgba(201,168,76,.06),rgba(201,168,76,.14),rgba(201,168,76,.06));background-size:200% 100%;animation:newsSkelPulse 1.6s ease-in-out infinite}
+.news-skel-row{height:84px;border-radius:12px;background:linear-gradient(90deg,rgba(201,168,76,.06),rgba(201,168,76,.14),rgba(201,168,76,.06));background-size:200% 100%;animation:newsSkelPulse 1.6s ease-in-out infinite}
+@keyframes newsSkelPulse{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .news-inner{max-width:1200px;margin:0 auto}
 .news-top{padding:60px 0 48px;text-align:center}
 .news-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px}
@@ -1612,7 +1616,14 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
         <p class="section-sub" style="max-width:480px;margin:0 auto">Update terkini seputar emas XAU/USD, forex, dan pasar keuangan global dari tim analis Mayora Gold FX.</p>
       </div>
       <div class="news-grid">
-        <div class="news-main" id="news-main"></div>
+        <div class="news-main" id="news-main">
+          <div class="news-skel" aria-hidden="true">
+            <div class="news-skel-feat"></div>
+            <div class="news-skel-row"></div>
+            <div class="news-skel-row"></div>
+            <div class="news-skel-row"></div>
+          </div>
+        </div>
         <div class="news-sidebar">
           <div class="ecal-widget" id="ecal-widget">
             <div class="ecal-header">
@@ -2293,6 +2304,23 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 <script>
 document.getElementById('fyear').textContent = new Date().getFullYear();
 
+/* ══ FIREBASE READY SIGNAL ══
+   Firebase (module script) di-load & di-init secara async dan bisa selesai
+   kapan saja — kadang jauh setelah goPage() pertama kali dipanggil (terutama
+   di koneksi/HP yang lambat). window._fbReadyPromise resolve begitu Firebase
+   selesai init (lihat "window._fbReadyResolve && window._fbReadyResolve();"
+   di FIREBASE MODULE script). invokeWhenReady() dipakai supaya pemanggilan
+   fungsi loader (mis. _renderNews) TIDAK cuma di-skip diam-diam kalau
+   Firebase belum siap, tapi otomatis dipanggil ulang begitu siap. ══ */
+window._fbReadyPromise = new Promise(function(res){ window._fbReadyResolve = res; });
+function invokeWhenReady(name, args){
+  if(typeof window[name] === 'function'){ window[name].apply(null, args||[]); return; }
+  window._fbReadyPromise.then(function(){
+    if(typeof window[name] === 'function') window[name].apply(null, args||[]);
+  });
+}
+window._invokeWhenReady = invokeWhenReady;
+
 /* Page routing */
 var pages=['home','berita','vip','auth','journal','admin','modul','kalender','sessions','calc','swap','ai','research'];
 
@@ -2329,7 +2357,7 @@ var pages=['home','berita','vip','auth','journal','admin','modul','kalender','se
         goPage('berita');
         setTimeout(function(){ window.openNews(found.id); }, 150);
       }
-      if(attempts > 60) {
+      if(attempts > 100) {
         clearInterval(tryOpen);
         window._pendingArticleSlug = null;
         goPage('berita');
@@ -2339,10 +2367,10 @@ var pages=['home','berita','vip','auth','journal','admin','modul','kalender','se
         }, 300);
       }
     }, 300);
-    /* Render news lebih awal supaya Firebase fetch segera dimulai */
-    setTimeout(function(){
-      if(window._renderNews) window._renderNews();
-    }, 200);
+    /* Render news lebih awal supaya Firebase fetch segera dimulai —
+       tunggu Firebase siap (bukan cuma coba sekali di 200ms) supaya
+       tidak gagal diam-diam di koneksi/HP yang lambat. */
+    invokeWhenReady('_renderNews');
   }
 })();
 
@@ -2544,14 +2572,14 @@ function goPage(p){
     updateCanonical(meta.url);
   }
 
-  if(p==='berita'){closeNewsDetail();window._renderNews&&window._renderNews();window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();watchdogNews();}
-  if(p==='admin') window._loadAdminData&&window._loadAdminData();
-  if(p==='modul') window.modLoadModules&&window.modLoadModules();
-  if(p==='kalender'){window._startEcalListener&&window._startEcalListener();window._renderEcal&&window._renderEcal();}
+  if(p==='berita'){closeNewsDetail();invokeWhenReady('_renderNews');invokeWhenReady('_startEcalListener');invokeWhenReady('_renderEcal');watchdogNews();}
+  if(p==='admin') invokeWhenReady('_loadAdminData');
+  if(p==='modul') invokeWhenReady('modLoadModules');
+  if(p==='kalender'){invokeWhenReady('_startEcalListener');invokeWhenReady('_renderEcal');}
   if(p==='sessions'){window._startSessInterval&&window._startSessInterval();}
   else{window._stopSessInterval&&window._stopSessInterval();}
   if(p==='ai'&&window._curUser&&(window._isVip||window._isAdmin)){window.aiRenderQuota&&window.aiRenderQuota();}
-  if(p==='research') window.rsLoadResearch&&window.rsLoadResearch();
+  if(p==='research') invokeWhenReady('rsLoadResearch');
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
@@ -3312,6 +3340,8 @@ const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
 window._db=db;
 window.getDB=function(){return window._db;};
 window._fsQuery=query;window._fsCollection=collection;window._fsOnSnapshot=onSnapshot;window._fsOrderBy=orderBy;window._fsWhere=where;
+/* Beri tahu semua pemanggil (goPage, deep-link handler, dll) bahwa Firebase sudah siap dipakai */
+window._fbReadyResolve && window._fbReadyResolve();
 
 let trades=[],isVip=false,isAdmin=false,tickInterval=null,saveDebounce=null;
 window._curUser=null;
@@ -3749,12 +3779,14 @@ function setSaveStatus(s){
 }
 
 async function loadNewsFromDB(){
-  try{
+  /* De-dupe: kalau ada fetch yang lagi jalan (misal dipicu bareng oleh
+     goPage('berita') DAN handler slug artikel), pakai fetch yang sama —
+     jangan query Firestore dua kali secara paralel. */
+  if(window._newsFetchInFlight) return window._newsFetchInFlight;
+
+  const fetchPromise=(async function(){
     const q=query(collection(db,'news'),orderBy('createdAt','desc'));
-    /* Timeout 7 detik — kalau koneksi (terutama mobile) lambat/nyangkut,
-       jangan biarkan menggantung selamanya. Fallback ke getStaticNews(). */
-    const timeout=new Promise((_,reject)=>setTimeout(function(){reject(new Error('news-fetch-timeout'));},7000));
-    const snap=await Promise.race([getDocs(q),timeout]);
+    const snap=await getDocs(q);
     const arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));
     window.allNewsCache=arr;
     /* Cek apakah ada artikel yang sedang menunggu untuk dibuka (dari deep link) */
@@ -3768,7 +3800,26 @@ async function loadNewsFromDB(){
       }
     }
     return arr;
-  }catch(e){ return getStaticNews(); }
+  })();
+  window._newsFetchInFlight=fetchPromise;
+  fetchPromise.finally(function(){ window._newsFetchInFlight=null; });
+
+  /* Timeout 7 detik cuma supaya user gak nunggu lama tanpa kepastian —
+     kalau kelewat, tampilkan dulu data statis. TAPI fetchPromise di atas
+     TETAP JALAN di background (tidak dibatalkan/dibuang). Begitu dia
+     selesai — walau telat — tampilan di-refresh diam-diam dengan data
+     ASLI, supaya user tidak nyangkut lihat berita dummy/gagal padahal
+     datanya sebenarnya berhasil dimuat. */
+  const timeout=new Promise(res=>setTimeout(()=>res('__TIMEOUT__'),3000));
+  const winner=await Promise.race([fetchPromise, timeout]);
+  if(winner!=='__TIMEOUT__') return winner;
+
+  fetchPromise.then(function(arr){
+    var onBerita=document.getElementById('page-berita')&&document.getElementById('page-berita').classList.contains('active');
+    if(onBerita) window._renderNewsFromData&&window._renderNewsFromData(arr);
+  }).catch(function(){ /* fetch akhirnya gagal juga — biarkan, halaman sudah nampilin fallback statis */ });
+
+  return getStaticNews();
 }
 
 function getStaticNews(){
@@ -3781,8 +3832,7 @@ function getStaticNews(){
   ];
 }
 
-async function renderNews(){
-  const newsData=await loadNewsFromDB();
+function renderNewsFromData(newsData){
   const main=document.getElementById('news-main');
   const featured=newsData.find(n=>n.featured)||newsData[0];
   let html='';
@@ -3820,6 +3870,7 @@ async function renderNews(){
   });
   html+='</div>';
   main.innerHTML=html;
+  if(window._enhanceMotion) window._enhanceMotion(main);
 
   const pw=document.getElementById('price-widget');
   const pRows=[['XAU/USD',window._lp?.XAUUSD,'up'],['BTC/USDT',window._lp?.BTCUSDT,'up'],['ETH/USDT',window._lp?.ETHUSDT,'dn']];
@@ -3827,6 +3878,18 @@ async function renderNews(){
 
   const aside=document.getElementById('news-aside');
   aside.innerHTML=`<div class="nsc-header">Artikel Terpopuler</div>`+newsData.slice(0,4).map(a=>`<div class="nsc-item" onclick="openNews('${a.id}')"><div class="nsc-title">${a.title}</div><div class="nsc-meta">${fmtDate(a.date||a.createdAt)}</div></div>`).join('');
+}
+window._renderNewsFromData=renderNewsFromData;
+
+async function renderNews(){
+  /* Kalau lagi nampilin skeleton kosong, jangan diapa-apain — biarin animasi
+     jalan sampai data datang, biar gak keliatan "kosong" ke user. */
+  const main=document.getElementById('news-main');
+  if(main && main.querySelector('.news-skel')===null && main.innerHTML.trim()===''){
+    main.innerHTML='<div class="news-skel" aria-hidden="true"><div class="news-skel-feat"></div><div class="news-skel-row"></div><div class="news-skel-row"></div><div class="news-skel-row"></div></div>';
+  }
+  const newsData=await loadNewsFromDB();
+  renderNewsFromData(newsData);
 }
 window._renderNews=renderNews;
 
