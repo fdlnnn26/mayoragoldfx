@@ -2329,7 +2329,15 @@ var pages=['home','berita','vip','auth','journal','admin','modul','kalender','se
         goPage('berita');
         setTimeout(function(){ window.openNews(found.id); }, 150);
       }
-      if(attempts > 60) { clearInterval(tryOpen); window._pendingArticleSlug = null; }
+      if(attempts > 60) {
+        clearInterval(tryOpen);
+        window._pendingArticleSlug = null;
+        goPage('berita');
+        setTimeout(function(){
+          var main=document.getElementById('news-main');
+          if(main && (main.innerHTML.trim()==='' || !window._renderNews)) renderArticleLoadFailed();
+        }, 300);
+      }
     }, 300);
     /* Render news lebih awal supaya Firebase fetch segera dimulai */
     setTimeout(function(){
@@ -2479,14 +2487,32 @@ function renderFallbackNews(){
   if(aside) aside.innerHTML='<div class="nsc-header">Artikel Terpopuler</div>'+FALLBACK_NEWS.map(function(a){return '<div class="nsc-item"><div class="nsc-title">'+a.title+'</div><div class="nsc-meta">'+a.date+'</div></div>';}).join('');
   if(window._enhanceMotion) window._enhanceMotion(main);
 }
+function renderArticleLoadFailed(){
+  var main=document.getElementById('news-main');
+  if(!main) return;
+  main.innerHTML='<div class="empty-state" style="padding:60px 20px;text-align:center">'+
+    '<div class="empty-icon" style="font-size:2rem;margin-bottom:12px">⚠</div>'+
+    '<p style="margin-bottom:18px;color:var(--text-dim)">Artikel gagal dimuat. Ini biasanya terjadi kalau link dibuka lewat browser bawaan aplikasi chat (WhatsApp/Instagram).</p>'+
+    '<button class="btn-hero-primary" onclick="location.reload()" style="margin-right:8px">Coba Lagi</button>'+
+    '<button class="btn-hero-sec" onclick="(function(){var a=document.createElement(\'a\');a.href=location.href;a.target=\'_blank\';a.rel=\'noopener\';a.click();})()">Buka di Browser</button>'+
+  '</div>';
+}
 function watchdogNews(){
+  /* Kalau ada slug artikel pending, JANGAN tampilkan daftar generik —
+     biarkan proses buka-artikel-spesifik (tryOpen loop, max 18 detik)
+     yang menentukan. Watchdog generik cuma untuk halaman /berita biasa. */
+  if(window._pendingArticleSlug) return;
   setTimeout(function(){
+    /* Kalau Firebase module berhasil load (window._renderNews ada),
+       biarkan try/catch internalnya sendiri yang menangani gagal/fallback —
+       jangan timpa dengan data statis supaya tidak balapan dgn data asli. */
+    if(window._renderNews) return;
     var main=document.getElementById('news-main');
     var onBerita=document.getElementById('page-berita')&&document.getElementById('page-berita').classList.contains('active');
     if(onBerita && main && main.innerHTML.trim()===''){
       renderFallbackNews();
     }
-  },4500);
+  },8000);
 }
 window._watchdogNews=watchdogNews;
 
