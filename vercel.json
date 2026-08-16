@@ -3,9 +3,7 @@
     "api/**/*.js": {
       "includeFiles": "node_modules/@google/genai/**"
     }
-  }
-}
-{
+  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
