@@ -3479,7 +3479,10 @@ function setSaveStatus(s){
 async function loadNewsFromDB(){
   try{
     const q=query(collection(db,'news'),orderBy('createdAt','desc'));
-    const snap=await getDocs(q);
+    /* Timeout 7 detik — kalau koneksi (terutama mobile) lambat/nyangkut,
+       jangan biarkan menggantung selamanya. Fallback ke getStaticNews(). */
+    const timeout=new Promise((_,reject)=>setTimeout(function(){reject(new Error('news-fetch-timeout'));},7000));
+    const snap=await Promise.race([getDocs(q),timeout]);
     const arr=[];snap.forEach(d=>arr.push({id:d.id,...d.data()}));
     window.allNewsCache=arr;
     /* Cek apakah ada artikel yang sedang menunggu untuk dibuka (dari deep link) */
