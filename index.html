@@ -592,53 +592,53 @@ button,input,select,textarea{font-family:inherit;outline:none}
 
 /* JOURNAL APP */
 #page-journal{padding-top:var(--nav-h)}
-.app-header{background:rgba(10,10,13,0.96);border-bottom:1px solid var(--card-border);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:var(--nav-h);z-index:300;backdrop-filter:blur(20px)}
-.app-htitle{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:400}
+.app-header{background:rgba(10,10,13,0.96);border-bottom:1px solid var(--card-border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:var(--nav-h);z-index:300;backdrop-filter:blur(20px)}
+.app-htitle{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:500;letter-spacing:-.01em}
 .app-htitle span{color:var(--gold)}
-.app-subtitle{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.app-subtitle{font-size:.62rem;letter-spacing:.1em;color:var(--text3);margin-top:2px}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:.6rem;letter-spacing:.08em;color:var(--text2);border:1px solid var(--card-border);padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.03)}
+.save-status{font-size:.6rem;letter-spacing:.06em;color:var(--text3);display:flex;align-items:center;gap:5px}
+.save-status.saved .save-dot{background:var(--green)}
+.save-status.saving .save-dot{background:var(--gold);animation:pulse 1s infinite}
+.save-status.error .save-dot{background:var(--red)}
+.pricebar{background:rgba(16,16,19,0.96);border-bottom:1px solid var(--card-border);padding:10px 28px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;position:sticky;top:calc(var(--nav-h) + 62px);z-index:299}
+.pricebar::-webkit-scrollbar{display:none}
+.app-tabs{display:flex;gap:4px;background:var(--bg2);border-bottom:1px solid var(--card-border);padding:10px 28px;overflow-x:auto;scrollbar-width:none}
+.app-tabs::-webkit-scrollbar{display:none}
+.app-tab{font-size:.72rem;font-weight:400;letter-spacing:.01em;color:var(--text2);padding:9px 18px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;background:none;border:none;border-radius:999px}
+.app-tab:hover{color:var(--text);background:rgba(255,255,255,0.06)}
+.app-tab.on{color:var(--bg);background:var(--gold);font-weight:500}
+.journal-page{display:none}.journal-page.on{display:block}
+.jmain{padding:32px 28px;max-width:1400px;margin:0 auto}
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
+.scard{background:var(--bg3);border:1px solid var(--card-border);padding:20px 18px 16px;border-radius:16px;transition:all .25s}
+.scard:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px)}
+.scard-l{font-size:.62rem;letter-spacing:.06em;color:var(--text3);margin-bottom:10px}
+.scard-v{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:600;line-height:1}
+.scard-v.g{color:var(--green)}.scard-v.r{color:var(--red)}
+.scard-sub{font-size:.65rem;color:var(--text3);margin-top:8px}
+.sec-label{font-size:.7rem;font-weight:500;letter-spacing:.02em;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:3px;height:14px;border-radius:2px;background:var(--gold)}
+.tbl-wrap{background:var(--bg3);border:1px solid var(--card-border);border-radius:18px;overflow:hidden;margin-bottom:24px}
+.tbl-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--card-border);flex-wrap:wrap;gap:10px}
+.flt-btns{display:flex;gap:6px}
+.flt-btn{font-size:.65rem;letter-spacing:.01em;background:none;border:1px solid var(--card-border);color:var(--text2);padding:6px 14px;cursor:pointer;border-radius:999px;transition:all .2s}
+.flt-btn.on,.flt-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
 .app-hright{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.live-badge{display:flex;align-items:center;gap:6px;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text2);border:1px solid var(--card-border);padding:5px 10px;border-radius:var(--radius)}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--text3)}
 .live-dot.on{background:var(--green)}
 .btn-newtrade{background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;color:var(--bg);font-size:.6rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:8px 16px;cursor:pointer;border-radius:var(--radius);transition:opacity .2s}
 .btn-newtrade:hover{opacity:.85}
-.save-status{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:5px}
 .save-dot{width:5px;height:5px;border-radius:50%;background:var(--text3)}
-.save-status.saved .save-dot{background:var(--green)}
-.save-status.saving .save-dot{background:var(--gold);animation:pulse 1s infinite}
-.save-status.error .save-dot{background:var(--red)}
-.pricebar{background:rgba(16,16,19,0.96);border-bottom:1px solid var(--card-border);padding:7px 28px;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;position:sticky;top:calc(var(--nav-h) + 54px);z-index:299}
-.pricebar::-webkit-scrollbar{display:none}
-.pb-item{display:flex;align-items:center;gap:7px;flex-shrink:0}
-.pb-sym{font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
-.pb-price{font-family:'Space Grotesk',sans-serif;font-size:.9rem}
-.pb-chg{font-size:.58rem}
+.pb-item{display:flex;align-items:center;gap:7px;flex-shrink:0;background:var(--bg3);border:1px solid var(--card-border);padding:6px 12px;border-radius:999px}
+.pb-sym{font-size:.58rem;letter-spacing:.06em;color:var(--text3)}
+.pb-price{font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:500}
+.pb-chg{font-size:.6rem}
 .up{color:var(--green)}.dn{color:var(--red)}
-.app-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--card-border);padding:0 28px;overflow-x:auto;scrollbar-width:none}
-.app-tabs::-webkit-scrollbar{display:none}
-.app-tab{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);padding:14px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;background:none;border:none;border-bottom:2px solid transparent}
-.app-tab:hover{color:var(--text2)}
-.app-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
-.journal-page{display:none}.journal-page.on{display:block}
-.jmain{padding:24px 28px;max-width:1400px;margin:0 auto}
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
-.scard{background:var(--bg3);border:1px solid var(--card-border);padding:18px 16px 14px;border-radius:16px;transition:border-color .3s}
-.scard:hover{border-color:rgba(201,168,76,0.3)}
-.scard-l{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
-.scard-v{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;font-weight:300;line-height:1}
-.scard-v.g{color:var(--green)}.scard-v.r{color:var(--red)}
-.scard-sub{font-size:.6rem;color:var(--text3);margin-top:6px}
-.sec-label{font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.sec-label::before{content:'';width:14px;height:1px;background:var(--gold);opacity:.5}
-.tbl-wrap{background:var(--bg3);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;margin-bottom:24px}
-.tbl-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--card-border);flex-wrap:wrap;gap:8px}
-.tbl-ttl{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:400}
-.flt-btns{display:flex;gap:6px}
-.flt-btn{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid var(--card-border);color:var(--text3);padding:5px 10px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
-.flt-btn.on,.flt-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tbl-ttl{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:500}
 .tbl-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--card-border) transparent}
 table{width:100%;border-collapse:collapse;min-width:540px}
-th{font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);padding:11px 16px;text-align:left;border-bottom:1px solid var(--card-border);font-weight:400;white-space:nowrap}
+th{font-size:.62rem;letter-spacing:.04em;color:var(--text3);padding:13px 16px;text-align:left;border-bottom:1px solid var(--card-border);font-weight:500;white-space:nowrap;background:rgba(255,255,255,0.02)}
 th:last-child{text-align:right}
 td{font-size:.74rem;color:var(--text2);padding:12px 16px;border-bottom:1px solid rgba(201,168,76,0.04);transition:background .15s;vertical-align:middle}
 tr:last-child td{border-bottom:none}
@@ -676,7 +676,7 @@ td:last-child{text-align:right}
 .note-date{font-size:.54rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
 .note-txt{font-size:.72rem;color:var(--text2);line-height:1.75}
 .note-tag{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:10px;opacity:.7}
-.acc-sec{background:var(--bg3);border:1px solid var(--card-border);padding:20px;border-radius:16px;margin-bottom:14px}
+.acc-sec{background:var(--bg3);border:1px solid var(--card-border);padding:22px;border-radius:18px;margin-bottom:16px}
 .acc-sec-t{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:16px;font-weight:400}
 .acc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--card-border);flex-wrap:wrap;gap:8px}
 .acc-row:last-child{border-bottom:none}
@@ -812,8 +812,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 .page-sub{font-size:.82rem;color:var(--text2);line-height:1.9;max-width:520px}
 .mod-filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
 .mod-filter-label{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3)}
-.flt-btn{font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid var(--card-border);color:var(--text3);padding:5px 12px;cursor:pointer;border-radius:var(--radius);transition:all .2s}
-.flt-btn.on,.flt-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
 .mod-search{background:var(--bg3);border:1px solid var(--card-border);color:var(--text);font-size:.72rem;font-weight:300;padding:6px 12px;border-radius:var(--radius);width:220px;transition:border-color .2s;margin-left:auto}
 .mod-search::placeholder{color:var(--text3)}
 .mod-search:focus{border-color:var(--gold)}
@@ -976,7 +974,6 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 
 
 @media(max-width:960px){
-  .hero-right{max-width:400px;margin-left:auto;margin-right:auto}
   .about-grid,.testi-grid{grid-template-columns:1fr 1fr}
   .news-grid{grid-template-columns:1fr}
   .news-sidebar{display:none}
@@ -1033,6 +1030,13 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
   .mblock-term-symbol{font-size:1.2rem;padding:8px 14px;min-width:unset;width:fit-content}
   .mblock-term-name{font-size:.84rem}
   .mblock-term-def{font-size:.76rem;line-height:1.9}
+  .feat-section{padding:64px 20px 56px}
+  .feat-head{margin-bottom:40px}
+  .feat-row{padding:32px 0;gap:20px}
+  .feat-preview{padding:18px}
+  .app-header,.pricebar,.app-tabs{padding-left:16px;padding-right:16px}
+  .jmain{padding:20px 16px}
+  .acc-row{flex-direction:column;align-items:flex-start;gap:4px}
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1300,27 +1304,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <div class="hero-stats">
         <div class="hero-stat"><div class="v">Excelent</div><div class="l">Signal</div></div>
         <div class="hero-stat"><div class="v">500+</div><div class="l">Member Aktif</div></div>
-        <div class="hero-stat"><div class="v">4 Tahun+</div><div class="l">Track Record</div></div>
-      </div>
-      <div class="hero-right" aria-hidden="true" style="margin-top:8px">
-        <div class="hero-chart-card">
-          <div class="hcc-header">
-            <span class="hcc-sym">XAU/USD SPOT</span>
-            <div class="hcc-live"><div class="hcc-dot"></div>LIVE</div>
-          </div>
-          <div class="hcc-price" id="hcc-price">—</div>
-          <div class="hcc-change up" id="hcc-chg">Loading...</div>
-          <svg class="hcc-svg" id="hcc-svg" viewBox="0 0 400 80" fill="none" aria-hidden="true">
-            <defs><linearGradient id="hcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".2"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs>
-            <polyline id="hcc-line" points="" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linejoin="round"/>
-            <path id="hcc-fill" d="" fill="url(#hcg)"/>
-          </svg>
-          <div class="hcc-metrics">
-            <div class="hcc-metric"><div class="hcc-metric-l">24H High</div><div class="hcc-metric-v up" id="hcc-high">—</div></div>
-            <div class="hcc-metric"><div class="hcc-metric-l">24H Low</div><div class="hcc-metric-v dn" id="hcc-low">—</div></div>
-            <div class="hcc-metric"><div class="hcc-metric-l">24H Chg</div><div class="hcc-metric-v" id="hcc-pct">—</div></div>
-          </div>
-        </div>
+        <div class="hero-stat"><div class="v">4 Thn++</div><div class="l">Track Record</div></div>
       </div>
     </div>
   </section>
@@ -1407,8 +1391,37 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           <div class="feat-chips"><span class="feat-chip">Fundamental</span><span class="feat-chip">Strategi</span></div>
         </div>
       </div>
+
+      <div class="feat-row rev reveal">
+        <div class="feat-body">
+          <div class="feat-num">06</div>
+          <h3 class="feat-h3">AI Analisa Chart</h3>
+          <p class="feat-p">Upload screenshot chart XAU/USD kamu dan biarkan AI kami membacakan struktur market, order block, dan level penting secara instan — bantu kamu ambil keputusan lebih cepat.</p>
+        </div>
+        <div class="feat-preview">
+          <div class="feat-preview-top"><span class="feat-tag">AI Analisa</span><span class="feat-pill">Instan</span></div>
+          <div class="feat-mini-title">Membaca struktur chart…</div>
+          <div class="feat-bars"><span style="height:50%"></span><span style="height:65%"></span><span style="height:40%"></span><span style="height:80%"></span><span style="height:55%"></span><span style="height:95%"></span><span style="height:70%"></span></div>
+          <div class="feat-chips"><span class="feat-chip">Upload Chart</span><span class="feat-chip">Struktur Market</span><span class="feat-chip">Order Block</span></div>
+        </div>
+      </div>
+
+      <div class="feat-row reveal">
+        <div class="feat-body">
+          <div class="feat-num">07</div>
+          <h3 class="feat-h3">Modul Pembelajaran</h3>
+          <p class="feat-p">Belajar trading emas dari dasar hingga strategi advanced Smart Money Concept lewat modul interaktif — lengkap dengan teks, gambar, dan latihan soal.</p>
+        </div>
+        <div class="feat-preview">
+          <div class="feat-preview-top"><span class="feat-tag">Modul Belajar</span><span class="feat-pill">Progress 40%</span></div>
+          <div class="feat-mini-title">Market Structure Dasar</div>
+          <div class="feat-bars"><span style="height:100%;background:linear-gradient(180deg,var(--gold),var(--gold-d))"></span><span style="height:100%;background:linear-gradient(180deg,var(--gold),var(--gold-d))"></span><span style="height:60%"></span><span style="height:60%"></span><span style="height:60%"></span></div>
+          <div class="feat-chips"><span class="feat-chip">Dasar</span><span class="feat-chip">SMC Advanced</span><span class="feat-chip">Latihan Soal</span></div>
+        </div>
+      </div>
     </div>
   </section>
+
 
   <section class="seo-section" aria-labelledby="seo-h1-main">
     <div class="seo-inner">
@@ -3406,7 +3419,9 @@ async function fetch24hXau(){
 
 function updateHeroCard(p,prev){
   if(!p)return;
-  document.getElementById('hcc-price').textContent=p.toFixed(2);
+  var priceEl=document.getElementById('hcc-price');
+  if(!priceEl)return; // hero card sudah dihapus, cukup ticker bar yang jalan
+  priceEl.textContent=p.toFixed(2);
 
   // 24h change: pakai prevClose dari API jika tersedia, fallback ke prev session tick
   var base=_xau24h.prevClose||prev;
