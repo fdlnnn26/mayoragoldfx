@@ -1260,23 +1260,23 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 </nav>
 
 <div id="mob-nav" role="dialog" aria-label="Menu mobile">
-  <span class="mob-link" onclick="goPage('home');toggleMob()">Beranda</span>
-  <span class="mob-link" onclick="goPage('berita');toggleMob()">Berita</span>
+  <span class="mob-link" onclick="goPage('home')">Beranda</span>
+  <span class="mob-link" onclick="goPage('berita')">Berita</span>
   <div class="mob-group-label">Trading Tools</div>
-  <span class="mob-sublink" onclick="goPage('kalender');toggleMob()">Kalender Ekonomi<span class="mob-tool-label free">FREE</span></span>
-  <span class="mob-sublink" onclick="goPage('sessions');toggleMob()">Market Sessions<span class="mob-tool-label free">FREE</span></span>
-  <span class="mob-sublink" onclick="goPage('journal');toggleMob()">Trading Journal<span class="mob-tool-label vip">VIP ✦</span></span>
-  <span class="mob-sublink" onclick="goPage('calc');toggleMob()">Kalkulator Lot &amp; Risk<span class="mob-tool-label vip">VIP ✦</span></span>
-  <span class="mob-sublink" onclick="goPage('swap');toggleMob()">Kalkulator Swap<span class="mob-tool-label vip">VIP ✦</span></span>
-  <span class="mob-sublink" onclick="goPage('ai');toggleMob()">AI Analisa Chart<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('kalender')">Kalender Ekonomi<span class="mob-tool-label free">FREE</span></span>
+  <span class="mob-sublink" onclick="goPage('sessions')">Market Sessions<span class="mob-tool-label free">FREE</span></span>
+  <span class="mob-sublink" onclick="goPage('journal')">Trading Journal<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('calc')">Kalkulator Lot &amp; Risk<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('swap')">Kalkulator Swap<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('ai')">AI Analisa Chart<span class="mob-tool-label vip">VIP ✦</span></span>
   <div class="mob-group-label">Pusat Edukasi</div>
-  <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip');toggleMob()">✦ Membership VIP</span>
-  <span class="mob-link" onclick="goPage('research');toggleMob()">Research</span>
-  <span class="mob-link" onclick="goPage('modul');toggleMob()">Modul Materi</span>
-  <span class="mob-link" id="mob-admin-link" onclick="goPage('admin');toggleMob()" style="display:none">Admin</span>
-  <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth');toggleMob()">Login Member →</button>
-  <button id="mob-vip-btn" class="btn-hero-sec" style="margin-top:8px;width:100%;text-align:center;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:12px 20px" onclick="goPage('vip');toggleMob()">JOIN VIP GRATIS ✦</button>
-  <button id="mob-logout-btn" class="btn-logout" style="display:none;margin-top:16px;width:100%;text-align:center;padding:12px 20px;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase" onclick="doLogout();toggleMob()">⏻ Keluar</button>
+  <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip')">✦ Membership VIP</span>
+  <span class="mob-link" onclick="goPage('research')">Research</span>
+  <span class="mob-link" onclick="goPage('modul')">Modul Materi</span>
+  <span class="mob-link" id="mob-admin-link" onclick="goPage('admin')" style="display:none">Admin</span>
+  <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth')">Login Member →</button>
+  <button id="mob-vip-btn" class="btn-hero-sec" style="margin-top:8px;width:100%;text-align:center;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:12px 20px" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
+  <button id="mob-logout-btn" class="btn-logout" style="display:none;margin-top:16px;width:100%;text-align:center;padding:12px 20px;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase" onclick="doLogout()">⏻ Keluar</button>
 </div>
 <div id="mob-nav-backdrop" onclick="toggleMob()"></div>
 
@@ -1322,20 +1322,48 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <div class="feat-row reveal">
         <div class="feat-body">
           <div class="feat-num">01</div>
-          <h3 class="feat-h3">Sinyal Harian XAU/USD</h3>
-          <p class="feat-p">Setiap hari kamu mendapatkan sinyal entry akurat berbasis Smart Money Concept, lengkap dengan level entry, stop loss, dan target profit yang bisa langsung dieksekusi.</p>
+          <h3 class="feat-h3">AI Analisa Chart</h3>
+          <p class="feat-p">Upload screenshot chart XAU/USD kamu dan biarkan AI kami membacakan struktur market, order block, dan level penting secara instan — bantu kamu ambil keputusan lebih cepat.</p>
         </div>
         <div class="feat-preview">
-          <div class="feat-preview-top"><span class="feat-tag">Sinyal Harian</span><span class="feat-pill">Live</span></div>
-          <div class="feat-mini-title">XAU/USD · BUY 2,441.20</div>
-          <div class="feat-bars"><span style="height:35%"></span><span style="height:55%"></span><span style="height:40%"></span><span style="height:70%"></span><span style="height:50%"></span><span style="height:85%"></span><span style="height:60%"></span></div>
-          <div class="feat-chips"><span class="feat-chip">SMC</span><span class="feat-chip">Entry Presisi</span><span class="feat-chip">SL/TP Jelas</span></div>
+          <div class="feat-preview-top"><span class="feat-tag">AI Analisa</span><span class="feat-pill">Instan</span></div>
+          <div class="feat-mini-title">Membaca struktur chart…</div>
+          <div class="feat-bars"><span style="height:50%"></span><span style="height:65%"></span><span style="height:40%"></span><span style="height:80%"></span><span style="height:55%"></span><span style="height:95%"></span><span style="height:70%"></span></div>
+          <div class="feat-chips"><span class="feat-chip">Upload Chart</span><span class="feat-chip">Struktur Market</span><span class="feat-chip">Order Block</span></div>
         </div>
       </div>
 
       <div class="feat-row rev reveal">
         <div class="feat-body">
           <div class="feat-num">02</div>
+          <h3 class="feat-h3">Modul Pembelajaran</h3>
+          <p class="feat-p">Belajar trading emas dari dasar hingga strategi advanced Smart Money Concept lewat modul interaktif — lengkap dengan teks, gambar, dan latihan soal.</p>
+        </div>
+        <div class="feat-preview">
+          <div class="feat-preview-top"><span class="feat-tag">Modul Belajar</span><span class="feat-pill">Progress 40%</span></div>
+          <div class="feat-mini-title">Market Structure Dasar</div>
+          <div class="feat-bars"><span style="height:100%;background:linear-gradient(180deg,var(--gold),var(--gold-d))"></span><span style="height:100%;background:linear-gradient(180deg,var(--gold),var(--gold-d))"></span><span style="height:60%"></span><span style="height:60%"></span><span style="height:60%"></span></div>
+          <div class="feat-chips"><span class="feat-chip">Dasar</span><span class="feat-chip">SMC Advanced</span><span class="feat-chip">Latihan Soal</span></div>
+        </div>
+      </div>
+
+      <div class="feat-row reveal">
+        <div class="feat-body">
+          <div class="feat-num">03</div>
+          <h3 class="feat-h3">Analisa Harian XAU/USD</h3>
+          <p class="feat-p">Setiap hari kamu mendapatkan analisa market XAU/USD berbasis Smart Money Concept — struktur pasar, area penting, dan konteksnya, sebagai bahan pertimbangan sebelum kamu ambil keputusan sendiri.</p>
+        </div>
+        <div class="feat-preview">
+          <div class="feat-preview-top"><span class="feat-tag">Analisa Harian</span><span class="feat-pill">Ilustrasi</span></div>
+          <div class="feat-mini-title">Struktur &amp; Area Penting Market</div>
+          <div class="feat-bars"><span style="height:35%"></span><span style="height:55%"></span><span style="height:40%"></span><span style="height:70%"></span><span style="height:50%"></span><span style="height:85%"></span><span style="height:60%"></span></div>
+          <div class="feat-chips"><span class="feat-chip">SMC</span><span class="feat-chip">Struktur Market</span><span class="feat-chip">Bukan Ajakan Trading</span></div>
+        </div>
+      </div>
+
+      <div class="feat-row rev reveal">
+        <div class="feat-body">
+          <div class="feat-num">04</div>
           <h3 class="feat-h3">Live Trading Session</h3>
           <p class="feat-p">Belajar langsung cara membaca market bersama trader berpengalaman secara real-time — mulai dari analisa struktur pasar hingga eksekusi entry.</p>
         </div>
@@ -1351,7 +1379,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 
       <div class="feat-row reveal">
         <div class="feat-body">
-          <div class="feat-num">03</div>
+          <div class="feat-num">05</div>
           <h3 class="feat-h3">Trading Journal Otomatis</h3>
           <p class="feat-p">Lacak win rate dan performa trading kamu setiap bulan menggunakan journal otomatis kami, agar keputusan trading semakin objektif dan konsisten.</p>
         </div>
@@ -1365,21 +1393,21 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 
       <div class="feat-row rev reveal">
         <div class="feat-body">
-          <div class="feat-num">04</div>
+          <div class="feat-num">06</div>
           <h3 class="feat-h3">Komunitas VIP 24 Jam</h3>
           <p class="feat-p">Diskusi langsung dengan founder dan 500+ trader lain di komunitas VIP kami — tanya jawab market, sharing strategi, kapan saja.</p>
         </div>
         <div class="feat-preview">
           <div class="feat-preview-top"><span class="feat-tag">#komunitas</span><span class="feat-pill">500+ online</span></div>
-          <div class="feat-chat-bubble">Farhan: Level entry hari ini di mana min? 🙏</div>
-          <div class="feat-chat-bubble">Admin: Cek sinyal terbaru di grup ya, sudah update 🔥</div>
+          <div class="feat-chat-bubble">Farhan: Cara baca order block gimana ya min? 🙏</div>
+          <div class="feat-chat-bubble">Admin: Yuk cek modul & analisa terbaru di grup 🔥</div>
           <div class="feat-chat-online"><span class="feat-chat-dot"></span>Dewi sedang mengetik…</div>
         </div>
       </div>
 
       <div class="feat-row reveal">
         <div class="feat-body">
-          <div class="feat-num">05</div>
+          <div class="feat-num">07</div>
           <h3 class="feat-h3">Webinar Mingguan</h3>
           <p class="feat-p">Update fundamental market emas global dan strategi terbaru setiap minggu, agar kamu selalu satu langkah lebih siap menghadapi market.</p>
         </div>
@@ -1391,36 +1419,9 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           <div class="feat-chips"><span class="feat-chip">Fundamental</span><span class="feat-chip">Strategi</span></div>
         </div>
       </div>
-
-      <div class="feat-row rev reveal">
-        <div class="feat-body">
-          <div class="feat-num">06</div>
-          <h3 class="feat-h3">AI Analisa Chart</h3>
-          <p class="feat-p">Upload screenshot chart XAU/USD kamu dan biarkan AI kami membacakan struktur market, order block, dan level penting secara instan — bantu kamu ambil keputusan lebih cepat.</p>
-        </div>
-        <div class="feat-preview">
-          <div class="feat-preview-top"><span class="feat-tag">AI Analisa</span><span class="feat-pill">Instan</span></div>
-          <div class="feat-mini-title">Membaca struktur chart…</div>
-          <div class="feat-bars"><span style="height:50%"></span><span style="height:65%"></span><span style="height:40%"></span><span style="height:80%"></span><span style="height:55%"></span><span style="height:95%"></span><span style="height:70%"></span></div>
-          <div class="feat-chips"><span class="feat-chip">Upload Chart</span><span class="feat-chip">Struktur Market</span><span class="feat-chip">Order Block</span></div>
-        </div>
-      </div>
-
-      <div class="feat-row reveal">
-        <div class="feat-body">
-          <div class="feat-num">07</div>
-          <h3 class="feat-h3">Modul Pembelajaran</h3>
-          <p class="feat-p">Belajar trading emas dari dasar hingga strategi advanced Smart Money Concept lewat modul interaktif — lengkap dengan teks, gambar, dan latihan soal.</p>
-        </div>
-        <div class="feat-preview">
-          <div class="feat-preview-top"><span class="feat-tag">Modul Belajar</span><span class="feat-pill">Progress 40%</span></div>
-          <div class="feat-mini-title">Market Structure Dasar</div>
-          <div class="feat-bars"><span style="height:100%;background:linear-gradient(180deg,var(--gold),var(--gold-d))"></span><span style="height:100%;background:linear-gradient(180deg,var(--gold),var(--gold-d))"></span><span style="height:60%"></span><span style="height:60%"></span><span style="height:60%"></span></div>
-          <div class="feat-chips"><span class="feat-chip">Dasar</span><span class="feat-chip">SMC Advanced</span><span class="feat-chip">Latihan Soal</span></div>
-        </div>
-      </div>
     </div>
   </section>
+
 
 
   <section class="seo-section" aria-labelledby="seo-h1-main">
@@ -2691,6 +2692,10 @@ function goPage(p){
   var nlTools=document.getElementById('nl-tools');
   if(nlTools) nlTools.classList.toggle('active', toolPages.indexOf(p)!==-1);
   document.getElementById('mob-nav').classList.remove('open');
+  var _hamBtn=document.getElementById('ham');
+  if(_hamBtn){_hamBtn.classList.remove('open');_hamBtn.setAttribute('aria-expanded','false');}
+  var _mobBackdrop=document.getElementById('mob-nav-backdrop');
+  if(_mobBackdrop)_mobBackdrop.classList.remove('open');
   window.scrollTo(0,0);
 
   /* Update URL path untuk SEO (path-based routing, home = "/") */
