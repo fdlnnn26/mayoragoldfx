@@ -1346,11 +1346,10 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           <div class="feat-chips"><span class="feat-chip">Dasar</span><span class="feat-chip">SMC Advanced</span><span class="feat-chip">Latihan Soal</span></div>
         </div>
       </div>
-
       <div class="feat-row reveal">
         <div class="feat-body">
           <div class="feat-num">03</div>
-          <h3 class="feat-h3">Analisa Harian XAU/USD</h3>
+          <h3 class="feat-h3">Analisa & Signal Harian XAU/USD</h3>
           <p class="feat-p">Setiap hari kamu mendapatkan analisa market XAU/USD berbasis Smart Money Concept — struktur pasar, area penting, dan konteksnya, sebagai bahan pertimbangan sebelum kamu ambil keputusan sendiri.</p>
         </div>
         <div class="feat-preview">
@@ -2242,7 +2241,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           <div class="nf-full">
             <label class="form-lbl" for="nf-excerpt">
               Ringkasan / Excerpt *
-              <span id="nf-excerpt-count" style="color:var(--text3);font-weight:300;margin-left:6px">0/160</span>
+              <span id="nf-excerpt-count" style="color:var(--text3);font-weight:300;margin-left:6px">0/200</span>
             </label>
             <textarea class="form-inp form-textarea" id="nf-excerpt" rows="3" maxlength="300" placeholder="Ringkasan singkat artikel..."></textarea>
           </div>
@@ -3269,7 +3268,7 @@ window.openNews = function(id){
   if(!n) return;
 
   var seoTitle = (n.metaTitle || n.title) + ' — Mayora Gold FX';
-  var seoDesc  = (n.metaDescription || n.excerpt || '').substring(0,160);
+  var seoDesc  = (n.metaDescription || n.excerpt || '').substring(0,200);
   var seoImg   = n.imageUrl ? getOptUrl(n.imageUrl, 1200) : DEFAULT_META.image;
   updateSeoMeta({ title: seoTitle, desc: seoDesc, image: seoImg });
 
@@ -3328,7 +3327,7 @@ document.getElementById('nf-judul')&&document.getElementById('nf-judul').addEven
 document.getElementById('nf-excerpt')&&document.getElementById('nf-excerpt').addEventListener('input',function(){
   var n=this.value.length;
   var el=document.getElementById('nf-excerpt-count');
-  if(el){el.textContent=n+'/160';el.style.color=n>160?'var(--red)':n>130?'var(--gold)':'var(--text3)';}
+  if(el){el.textContent=n+'/200';el.style.color=n>200?'var(--red)':n>130?'var(--gold)':'var(--text3)';}
 });
 
 window.showNewsForm=function(){
@@ -3342,7 +3341,7 @@ window.showNewsForm=function(){
   document.getElementById('nf-tgl').value=new Date().toISOString().slice(0,10);
   document.getElementById('nf-featured').checked=false;
   document.getElementById('nf-foto').value='';
-  document.getElementById('nf-excerpt-count').textContent='0/160';
+  document.getElementById('nf-excerpt-count').textContent='0/200';
   document.getElementById('nf-slug-preview').textContent='—';
   document.getElementById('nf-save-err').style.display='none';
   clearImg();
@@ -3613,7 +3612,7 @@ window.saveNews = async ()=>{
     const payload={
       title:judul, slug, cat:kat, date:tgl, excerpt, konten, featured, imageUrl,
       metaTitle:judul,
-      metaDescription:excerpt.substring(0,160),
+      metaDescription:excerpt.substring(0,200),
       updatedAt:serverTimestamp(),
     };
     if(editId){ await updateDoc(doc(db,'news',editId),payload); }
@@ -4553,7 +4552,7 @@ window._editNews=async id=>{
   document.getElementById('nf-save-err').style.display='none';
   const exc=n.excerpt||'';
   const excEl=document.getElementById('nf-excerpt-count');
-  if(excEl) excEl.textContent=exc.length+'/160';
+  if(excEl) excEl.textContent=exc.length+'/200';
   const slugEl=document.getElementById('nf-slug-preview');
   if(slugEl) slugEl.textContent=n.slug?'/?berita='+n.slug:(n.title?'/?berita='+generateSlug(n.title):'—');
   if(n.imageUrl){
