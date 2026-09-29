@@ -2203,13 +2203,25 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 @keyframes csBlink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 #page-consult .cs-btn{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06060A;font-weight:600;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:14px;padding:10px 18px;cursor:pointer;font-family:inherit}
 #page-consult .cs-btn:disabled{opacity:.45;cursor:not-allowed}
+#page-consult .cs-seg{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--card-border);border-radius:16px;background:var(--bg3)}
+#page-consult .cs-seg-b{background:transparent;border:none;color:var(--text2);font-family:inherit;font-size:.68rem;letter-spacing:.06em;padding:9px 18px;border-radius:12px;cursor:pointer;transition:all .2s}
+#page-consult .cs-seg-b:hover{color:var(--gold)}
+#page-consult .cs-seg-b.on{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06060A;font-weight:600}
 @media(max-width:768px){#page-consult .cs-wrap{padding-left:16px;padding-right:16px}#page-consult .cs-b{max-width:94%}}
 </style>
   <div class="cs-wrap">
     <div style="padding:60px 0 32px;text-align:center">
       <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Trading Tools</span><div class="eyebrow-line r"></div></div>
       <h1 class="section-title">✦ AI Konsultasi <span class="gold-text">Trading</span></h1>
-      <p class="section-sub" style="max-width:500px;margin:0 auto">Konsultasi soal psikologi trading, teknikal analisis, manajemen risiko, strategi, atau masalah trading lainnya — AI bantu cari akar masalahnya dan kasih saran konkret. Butuh sinyal entry? Pakai AI Analisa Chart.</p>
+      <p class="section-sub" style="max-width:500px;margin:0 auto">Dua mode: <b>Konsultasi</b> untuk saran soal masalah trading kamu, atau <b>Belajar</b> untuk dapat pelajaran berdasarkan teori & buku trading terbaik. Butuh sinyal entry? Pakai AI Analisa Chart.</p>
+    </div>
+
+    <div style="text-align:center;margin-bottom:14px">
+      <div class="cs-seg" id="cs-mode-seg">
+        <button class="cs-seg-b on" data-m="advice" onclick="consultSetMode('advice')">💬 Konsultasi</button>
+        <button class="cs-seg-b" data-m="learn" onclick="consultSetMode('learn')">📚 Belajar <span class="vip-pill">VIP ✦</span></button>
+      </div>
+      <div id="cs-mode-desc" style="font-size:.6rem;color:var(--text3);margin-top:8px;line-height:1.7"></div>
     </div>
 
     <div class="cs-card" style="padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
@@ -2553,6 +2565,13 @@ document.getElementById('fyear').textContent = new Date().getFullYear();
    fungsi loader (mis. _renderNews) TIDAK cuma di-skip diam-diam kalau
    Firebase belum siap, tapi otomatis dipanggil ulang begitu siap. ══ */
 window._fbReadyPromise = new Promise(function(res){ window._fbReadyResolve = res; });
+/* Sinyal "status login sudah diketahui". Tanpa ini, refresh di halaman VIP dianggap belum login
+   (Firebase Auth butuh waktu memulihkan sesi) lalu dilempar ke halaman login. */
+window._authReady = false;
+window._authReadyPromise = new Promise(function(res){
+  window._authReadyResolve = function(){ window._authReady = true; res(); };
+});
+setTimeout(function(){ window._authReadyResolve && window._authReadyResolve(); }, 10000); /* jaring pengaman kalau Firebase gagal load */
 function invokeWhenReady(name, args){
   if(typeof window[name] === 'function'){ window[name].apply(null, args||[]); return; }
   window._fbReadyPromise.then(function(){
@@ -2790,8 +2809,11 @@ function goPage(p){
   if(p==='auth'&&window._curUser){p='home';}
   /* VIP-gated tool pages: redirect to auth jika belum login */
   var vipPages=['journal','calc','swap','ai'];
-  if(vipPages.indexOf(p)!==-1&&!window._curUser){goPage('auth');return;}
-  if(p==='consult'&&!window._curUser){goPage('auth');return;}
+  if((vipPages.indexOf(p)!==-1||p==='consult')&&!window._curUser){
+    /* Status login belum diketahui (baru refresh) -> tunggu dulu, jangan langsung ke halaman login */
+    if(!window._authReady){ window._authReadyPromise.then(function(){ goPage(p); }); return; }
+    goPage('auth');return;
+  }
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
   ['home','berita','vip','modul','research'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   /* Trading Tools dropdown — highlight when on any tool page */
@@ -3333,9 +3355,11 @@ window.aiAnalyze = async function() {
   const usedMode = window._aiMode;
 
   try {
+    const _aiHdr = { 'Content-Type': 'application/json' };
+    try { if (window._curUser && window._curUser.getIdToken) _aiHdr['Authorization'] = 'Bearer ' + await window._curUser.getIdToken(); } catch (_) {}
     const response = await fetch('/api/gemini', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: _aiHdr,
       body: JSON.stringify({
         mode: 'chart',
         analysisMode: usedMode,
@@ -3416,7 +3440,27 @@ async function csSave(uid, st){
   }catch(e){ console.error('[consultSave]',e); return false; }
 }
 
-const CS_CHIPS = ['Saya overtrading & susah disiplin ikut plan','Gimana cara validasi order block yang benar?','Analisa saya sering benar tapi SL kena dulu, kenapa?','Cara menentukan lot & risk sesuai modal saya'];
+const CS_CHIPS_ADVICE = ['Saya overtrading & susah disiplin ikut plan','Gimana cara validasi order block yang benar?','Analisa saya sering benar tapi SL kena dulu, kenapa?','Cara menentukan lot & risk sesuai modal saya'];
+const CS_CHIPS_LEARN = ['Saya sering FOMO masuk telat, ajarin dasarnya','Ajarin market structure yang benar dari buku','Saya nggak paham position sizing & R-multiple','Kenapa saya susah terima loss? Ajarin psikologinya'];
+const CS_MODE_DESC = {
+  advice: 'Konsultasi: ceritakan masalahmu, AI kasih diagnosis & saran konkret.',
+  learn:  'Belajar: sebutkan keluhan atau topik, AI ajarkan konsepnya berdasarkan buku & teori trading terbaik + latihan + rekomendasi bacaan.'
+};
+let _csMode = 'advice';
+try{ const m = localStorage.getItem('mgf_cs_mode'); if(m==='learn'||m==='advice') _csMode = m; }catch(e){}
+function csChips(){ return _csMode==='learn' ? CS_CHIPS_LEARN : CS_CHIPS_ADVICE; }
+window.consultSetMode = function(m){
+  if(_csBusy) return;
+  if(m==='learn' && !csIsVip()){
+    toast('AI Belajar','Mode Belajar khusus member VIP ✦ Konsultasi tetap bisa dipakai.','#C9A84C');
+    _csMode = 'advice';
+    consultRender();
+    return;
+  }
+  _csMode = (m==='learn') ? 'learn' : 'advice';
+  try{ localStorage.setItem('mgf_cs_mode', _csMode); }catch(e){}
+  consultRender();
+};
 
 function csUpsellHtml(limitHit){
   return `<div class="cs-card" style="padding:22px;border-color:rgba(201,168,76,.35);background:linear-gradient(160deg,rgba(201,168,76,.07),var(--bg3))">
@@ -3436,6 +3480,7 @@ function consultRender(pending){
   const st = window._consultState || csDefault();
   const lim = csLim();
   const vip = csIsVip();
+  if(_csMode==='learn' && !vip) _csMode = 'advice';   /* non-VIP tidak boleh di mode Belajar (mis. sisa pilihan lama di localStorage) */
 
   /* quota */
   const sessLeft = Math.max(0, lim.sessions - st.sessions);
@@ -3458,7 +3503,11 @@ function consultRender(pending){
   const box = document.getElementById('cs-msgs');
   let html = '';
   if(!st.history.length && !pending){
-    html += `<div class="cs-b m">Halo! Aku AI konsultan trading Mayora Gold FX ✦<br>Konsultasi bareng aku soal <b>psikologi</b> (overtrading, FOMO, susah disiplin), <b>teknikal analisis</b> (market structure, order block, validasi zona), <b>manajemen risiko</b>, strategi, atau masalah trading lainnya. Aku bantu cari akar masalahnya dan kasih saran yang bisa langsung dipraktikkan.<br><span style="color:var(--text3)">Catatan: di sini tidak ada sinyal buy/sell atau prediksi harga — setup entry ada di menu AI Analisa Chart.</span></div>`;
+    if(_csMode==='learn'){
+      html += `<div class="cs-b m">Halo! Aku AI mentor belajar Mayora Gold FX 📚<br>Sebutkan <b>keluhan atau topik</b> yang mau kamu kuasai (mis. FOMO, market structure, position sizing). Aku ajarkan <b>konsep intinya</b> berdasarkan teori & buku trading terbaik, kasih <b>latihan</b>, dan rekomendasi <b>bacaan lanjut</b>.<br><span style="color:var(--text3)">Catatan: ini ringkasan pembelajaran, bukan pengganti buku aslinya. Tidak ada sinyal buy/sell atau prediksi harga — setup entry ada di menu AI Analisa Chart.</span></div>`;
+    } else {
+      html += `<div class="cs-b m">Halo! Aku AI konsultan trading Mayora Gold FX ✦<br>Konsultasi bareng aku soal <b>psikologi</b> (overtrading, FOMO, susah disiplin), <b>teknikal analisis</b> (market structure, order block, validasi zona), <b>manajemen risiko</b>, strategi, atau masalah trading lainnya. Aku bantu cari akar masalahnya dan kasih saran yang bisa langsung dipraktikkan.<br><span style="color:var(--text3)">Catatan: di sini tidak ada sinyal buy/sell atau prediksi harga — setup entry ada di menu AI Analisa Chart.</span></div>`;
+    }
   }
   st.history.forEach(h=>{ html += `<div class="cs-b ${h.r==='u'?'u':'m'}">${h.r==='u'?csEsc(h.t):aiFormatResult(csEsc(h.t))}</div>`; });
   if(pending){
@@ -3470,7 +3519,7 @@ function consultRender(pending){
   /* chips */
   const chips = document.getElementById('cs-chips');
   chips.innerHTML = (!st.history.length && !pending && !blocked)
-    ? CS_CHIPS.map((c,i)=>`<button class="cs-chip" onclick="consultSend(CS_CHIPS[${i}])">${csEsc(c)}</button>`).join('') : '';
+    ? csChips().map((c,i)=>`<button class="cs-chip" onclick="consultSend(csChips()[${i}])">${csEsc(c)}</button>`).join('') : '';
 
   /* notifikasi limit */
   const nt = document.getElementById('cs-notice');
@@ -3484,9 +3533,13 @@ function consultRender(pending){
   }
   nt.innerHTML = n; nt.style.display = n ? 'block' : 'none';
 
+  /* toggle mode */
+  document.querySelectorAll('#cs-mode-seg .cs-seg-b').forEach(b=>b.classList.toggle('on', b.dataset.m===_csMode));
+  const md = document.getElementById('cs-mode-desc'); if(md) md.textContent = CS_MODE_DESC[_csMode];
+
   /* input state */
   const inp = document.getElementById('cs-input'), btn = document.getElementById('cs-send');
-  if(inp){ inp.disabled = blocked || _csBusy; inp.placeholder = blocked ? 'Batas percakapan tercapai' : 'Ceritakan masalah trading kamu...'; }
+  if(inp){ inp.disabled = blocked || _csBusy; inp.placeholder = blocked ? 'Batas percakapan tercapai' : (_csMode==='learn' ? 'Tulis keluhan / topik yang mau dipelajari...' : 'Ceritakan masalah trading kamu...'); }
   if(btn) btn.disabled = blocked || _csBusy;
 
   /* upsell non-VIP */
@@ -3542,6 +3595,10 @@ window.consultSend = async function(pre){
   if(!text) return;
   if(text.length > 500){ toast('Error','Pesan maksimal 500 karakter','#E05A5A'); return; }
 
+  if(_csMode==='learn' && !csIsVip()){
+    toast('AI Belajar','Mode Belajar khusus member VIP ✦','#C9A84C');
+    _csMode='advice'; consultRender(); return;
+  }
   _csBusy = true;
   try{
     /* selalu ambil state terbaru dari Firestore (aman dari tab ganda / ganti hari) */
@@ -3568,9 +3625,11 @@ window.consultSend = async function(pre){
     consultRender(text);
 
     const history = st.history.slice(-16).map(h=>({role: h.r==='u' ? 'user' : 'model', text: h.t}));
+    const hdrs = {'Content-Type':'application/json'};
+    try{ if(window._curUser && window._curUser.getIdToken) hdrs['Authorization'] = 'Bearer ' + await window._curUser.getIdToken(); }catch(_){}
     const res = await fetch('/api/gemini', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({mode:'consult', prompt:text, history})
+      method:'POST', headers:hdrs,
+      body: JSON.stringify({mode:'consult', style:_csMode, prompt:text, history})
     });
     if(!res.ok){
       const err = await res.json().catch(()=>({}));
@@ -4020,6 +4079,7 @@ onAuthStateChanged(auth, async user=>{
       await loadData(user.uid);
       startRoleListener(user);
       showLoggedIn(user);
+      refreshRoleDependentViews();
       setBtnLoad('li-btn',false,'Sign In →');
       setBtnLoad('ri-btn',false,'Buat Akun →');
       resetGoogleBtn();
@@ -4058,8 +4118,21 @@ onAuthStateChanged(auth, async user=>{
       stopTick();
     }
   }catch(err){ console.error('onAuthStateChanged error:',err); }
-  finally{ document.getElementById('loader').classList.add('out'); }
+  finally{
+    window._authReadyResolve && window._authReadyResolve();
+    document.getElementById('loader').classList.add('out');
+  }
 });
+
+/* Render ulang tampilan yang bergantung pada status VIP (modul, research, konsultasi, kuota AI).
+   Dipanggil setelah login/refresh selesai & saat status VIP berubah, supaya kartu modul tidak tetap
+   terkunci gara-gara sempat dirender sebelum status VIP diketahui. */
+function refreshRoleDependentViews(){
+  try{ if(window._modAllModules && window.modLoadModules) window.modLoadModules(); }catch(e){ console.warn(e); }
+  try{ window.rsRenderPublic && window.rsRenderPublic(); }catch(e){ console.warn(e); }
+  try{ window._consultOnRoleChange && window._consultOnRoleChange(); }catch(e){ console.warn(e); }
+  try{ window.aiRenderQuota && window.aiRenderQuota(); }catch(e){ console.warn(e); }
+}
 
 function showLoggedIn(user){
   const name=user.displayName||user.email.split('@')[0];
@@ -4259,8 +4332,7 @@ function startRoleListener(user){
       isVip=nv; isAdmin=na;
       window._isVip=nv; window._isAdmin=na;
       showLoggedIn(window._curUser||user);        /* refresh semua UI: pill, lock, menu */
-      window._consultOnRoleChange&&window._consultOnRoleChange();
-      window.aiRenderQuota&&window.aiRenderQuota();
+      refreshRoleDependentViews();
       if(!wasVip&&nv) toast('MGF','Akun VIP kamu sudah aktif ✦','#C9A84C');
       else if(wasVip&&!nv&&!na) toast('MGF','Status VIP kamu dicabut','#E05A5A');
     },err=>console.warn('[role listener]',err));
@@ -5336,6 +5408,21 @@ window.modSetFilter=function(val,btn){
   modRenderGrid();
 };
 
+/* Migrasi sekali jalan (admin): pindahkan lessons dari dokumen utama ke private/content. Aman diulang. */
+window.modMigrateAll=async function(){
+  if(!window._isAdmin){console.warn('Khusus admin');return;}
+  const fs=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');const db=getDB();let n=0;
+  const snap=await fs.getDocs(fs.collection(db,'modules'));
+  for(const d of snap.docs){
+    const data=d.data();if(!Array.isArray(data.lessons))continue;
+    await fs.setDoc(fs.doc(db,'modules',d.id,'private','content'),{lessons:data.lessons});
+    await fs.updateDoc(fs.doc(db,'modules',d.id),{lessonCount:data.lessons.length,lessons:fs.deleteField()});
+    n++;
+  }
+  console.log('Migrasi modul selesai:',n);toast('Admin','Migrasi modul selesai: '+n,'#3DBA7A');
+  await window.modLoadModules();
+};
+
 /* ── escHtml helper ── */
 function mesc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
@@ -5352,7 +5439,7 @@ window.modRenderGrid=function(){
   grid.innerHTML=mods.map(m=>{
     const thumb=m.coverUrl?m.coverUrl:'';
     const progress=window._modProgress[m.id]||{completedLessons:[]};
-    const total=(m.lessons||[]).length||1;
+    const total=modCount(m)||1;
     const done=progress.completedLessons?.length||0;
     const pct=Math.round((done/total)*100);
     const locked=m.vip&&!isVip&&!isAdmin;
@@ -5369,7 +5456,7 @@ window.modRenderGrid=function(){
         <div class="mod-excerpt">${mesc(m.excerpt||'')}</div>
         <div class="mod-meta">
           ${m.duration?`<span class="mod-meta-item">⏱ ${m.duration} mnt</span>`:''}
-          <span class="mod-meta-item">📖 ${(m.lessons||[]).length||0} pelajaran</span>
+          <span class="mod-meta-item">📖 ${modCount(m)||0} pelajaran</span>
           ${m.vip?`<span class="mod-meta-item" style="color:var(--gold)">✦ VIP</span>`:'<span class="mod-meta-item" style="color:var(--green)">✓ Gratis</span>'}
         </div>
         ${done>0?`<div class="mod-progress-bar"><div class="mod-progress-fill" style="width:${pct}%"></div></div>`:''}
@@ -5393,7 +5480,7 @@ window.modRenderMyModules=function(){
   grid.innerHTML=started.map(m=>{
     const thumb=m.coverUrl||'';
     const progress=window._modProgress[m.id]||{completedLessons:[]};
-    const total=(m.lessons||[]).length||1;
+    const total=modCount(m)||1;
     const done=progress.completedLessons?.length||0;
     const pct=Math.round((done/total)*100);
     return`<div class="mod-card" onclick="window.modOpenById('${m.id}')">
@@ -5452,8 +5539,10 @@ window.modCheckQuiz=function(qid,chosen,correct){
 };
 
 /* ── Module reader ── */
-window.modOpenById=function(id){
+window.modOpenById=async function(id){
   const mod=(window._modAllModules||[]).find(m=>m.id===id);if(!mod)return;
+  await modHydrate(mod);
+  if(!(mod.lessons||[]).length){toast('MGF','Isi modul tidak bisa dimuat. Pastikan kamu sudah login & punya akses.','#E05A5A');return;}
   window._modCurModule=mod;window._modCurLesson=0;
   document.getElementById('mod-list-view').style.display='none';
   document.getElementById('mod-reader-view').style.display='block';
@@ -5557,7 +5646,7 @@ window.modRenderAdminList=function(){
           ${m.vip?`<span style="font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;background:rgba(201,168,76,.1);border:1px solid var(--gold-border);color:var(--gold);border-radius:8px">VIP</span>`:''}
         </div>
         <div class="ami-title-m">${mesc(m.title||'—')}</div>
-        <div class="ami-meta-m">${(m.lessons||[]).length||0} pelajaran · ${m.duration||'?'} menit</div>
+        <div class="ami-meta-m">${modCount(m)||0} pelajaran · ${m.duration||'?'} menit</div>
         <div class="ami-actions-m">
           <button class="btn-edit-m" onclick="modEditModule('${m.id}')">✎ Edit</button>
           <button class="btn-del-m" onclick="modDeleteModule('${m.id}')">✕ Hapus</button>
@@ -5726,8 +5815,9 @@ window.modDelSubBlock=function(li,si){
   const c=document.getElementById(`mlesson-blocks-${li}`);
   if(c)c.innerHTML=window._modFormBlocks[li].lessonBlocks.map((b,idx)=>modBuildSubBlock(b,li,idx)).join('');
 };
-window.modEditModule=function(id){
+window.modEditModule=async function(id){
   const mod=(window._modAllModules||[]).find(m=>m.id===id);if(!mod)return;
+  await modHydrate(mod);
   document.getElementById('mf-form-title').textContent='Edit Modul';
   document.getElementById('mf-edit-id').value=id;
   document.getElementById('mf-title').value=mod.title||'';
@@ -5777,6 +5867,21 @@ async function modUploadImg(file,slug,onProg){
   });
 }
 
+/* ── Isi materi VIP disimpan di subcollection {koleksi}/{id}/private/content, yang dijaga Firestore Rules.
+   Dokumen utama hanya berisi data untuk daftar/kartu (judul, cover, level, jumlah pelajaran, dll). ── */
+window._loadPrivate=async function(coll,id){
+  try{
+    const {getDoc,doc}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const sn=await getDoc(doc(getDB(),coll,id,'private','content'));
+    return sn.exists()?sn.data():null;
+  }catch(e){console.warn('[private '+coll+']',e.code||e);return null;}
+};
+function modCount(m){return m.lessonCount!=null?m.lessonCount:(m.lessons||[]).length;}
+async function modHydrate(mod){
+  if(mod._hyd)return mod;
+  if(!mod.lessons){const c=await window._loadPrivate('modules',mod.id);if(c&&c.lessons)mod.lessons=c.lessons;}
+  mod._hyd=true;return mod;
+}
 window.modLoadModules=async function(){
   const db=getDB();if(!db)return;
   try{
@@ -5882,9 +5987,12 @@ window.modSaveModule=async function(){
     const lessons=(window._modFormBlocks||[])
       .filter(b=>b.type==='_lesson')
       .map(b=>({title:b.lessonTitle||'Pelajaran',duration:b.lessonDuration||10,blocks:b.lessonBlocks||[]}));
-    const payload={title,num,cat,level,duration,vip,excerpt,coverUrl,lessons,updatedAt:serverTimestamp()};
-    if(editId){await updateDoc(doc(db,'modules',editId),payload);}
-    else{payload.createdAt=serverTimestamp();await addDoc(collection(db,'modules'),payload);}
+    const payload={title,num,cat,level,duration,vip,excerpt,coverUrl,lessonCount:lessons.length,updatedAt:serverTimestamp()};
+    const _fs=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    let modId=editId;
+    if(editId){payload.lessons=_fs.deleteField();await updateDoc(doc(db,'modules',editId),payload);}
+    else{payload.createdAt=serverTimestamp();const ref=await addDoc(collection(db,'modules'),payload);modId=ref.id;}
+    await _fs.setDoc(_fs.doc(db,'modules',modId,'private','content'),{lessons,updatedAt:serverTimestamp()});
     toast('Admin',editId?'Modul diperbarui!':'Modul ditambahkan!','#3DBA7A');
     window.modHideForm();
     await window.modLoadModules();
@@ -5953,7 +6061,7 @@ window.modLoadLeaderboard=async function(){
           const lessons=prog.completedLessons||[];
           totalLessons+=lessons.length;
           const mod=allMods.find(m=>m.id===d.id);
-          const totalL=mod?(mod.lessons||[]).length:0;
+          const totalL=mod?modCount(mod):0;
           if(totalL>0&&lessons.length>=totalL)completedModules++;
         });
         if(completedModules>0||totalLessons>0){
@@ -6371,9 +6479,12 @@ function afterAuth(){
       var {collection, addDoc, updateDoc, doc, serverTimestamp} = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
       var db = getDB();
       var editId = document.getElementById('rs-edit-id').value||null;
-      var payload = {judul, tgl, akses, ringkasan, konten, lembaran:lembaranData, thumbnail:thumbUrl, updatedAt:serverTimestamp()};
-      if(editId){ await updateDoc(doc(db,'research',editId), payload); }
-      else { payload.createdAt = serverTimestamp(); await addDoc(collection(db,'research'), payload); }
+      var _fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      var payload = {judul, tgl, akses, ringkasan, thumbnail:thumbUrl, lembarCount:lembaranData.length, updatedAt:serverTimestamp()};
+      var rsId = editId;
+      if(editId){ payload.konten=_fs.deleteField(); payload.lembaran=_fs.deleteField(); payload.images=_fs.deleteField(); await updateDoc(doc(db,'research',editId), payload); }
+      else { payload.createdAt = serverTimestamp(); var _ref = await addDoc(collection(db,'research'), payload); rsId = _ref.id; }
+      await _fs.setDoc(_fs.doc(db,'research',rsId,'private','content'), {konten:konten, lembaran:lembaranData, updatedAt:serverTimestamp()});
       toast('Research', editId?'Research diperbarui!':'Research ditambahkan!','#3DBA7A');
       window.rsHideForm();
       await window.rsLoadResearch();
@@ -6402,6 +6513,21 @@ function afterAuth(){
   };
 
   /* ── LOAD FROM FIREBASE ── */
+  window.rsMigrateAll = async function(){
+    if(!window._isAdmin){ console.warn('Khusus admin'); return; }
+    var fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'); var db = getDB(); var n = 0;
+    var snap = await fs.getDocs(fs.collection(db,'research'));
+    for(var i=0;i<snap.docs.length;i++){
+      var d = snap.docs[i], x = d.data();
+      if(x.lembaran===undefined && x.konten===undefined && x.images===undefined) continue;
+      await fs.setDoc(fs.doc(db,'research',d.id,'private','content'), {konten:x.konten||'', lembaran:x.lembaran||[], images:x.images||[]});
+      await fs.updateDoc(fs.doc(db,'research',d.id), {lembarCount:(x.lembaran||[]).length||(x.images||[]).length, konten:fs.deleteField(), lembaran:fs.deleteField(), images:fs.deleteField()});
+      n++;
+    }
+    console.log('Migrasi research selesai:', n); toast('Admin','Migrasi research selesai: '+n,'#3DBA7A');
+    await window.rsLoadResearch();
+  };
+
   window.rsLoadResearch = async function(){
     try{
       var {collection, getDocs, query, orderBy} = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
@@ -6422,7 +6548,7 @@ function afterAuth(){
     window._rsCacheMap = {};
     _rsCache.forEach(function(r){ window._rsCacheMap[r.id] = r; });
     el.innerHTML = _rsCache.map(function(r){
-      var lembarCount = (r.lembaran||[]).length || (r.images||[]).length;
+      var lembarCount = r.lembarCount!=null ? r.lembarCount : ((r.lembaran||[]).length || (r.images||[]).length);
       var thumb = r.thumbnail || '';
       if(!thumb && r.lembaran && r.lembaran[0]){
         var _lb = r.lembaran[0];
@@ -6447,9 +6573,17 @@ function afterAuth(){
     }).join('');
   };
 
-  window.rsEditById = function(id){
+  window._rsHydrate = async function(r){
+    if(r._hyd) return r;
+    if(!r.lembaran && !r.konten && !(r.images||[]).length){
+      var c = await window._loadPrivate('research', r.id);
+      if(c){ r.konten=c.konten||''; r.lembaran=c.lembaran||[]; r.images=c.images||[]; }
+    }
+    r._hyd = true; return r;
+  };
+  window.rsEditById = async function(id){
     var r = window._rsCacheMap && window._rsCacheMap[id];
-    if(r) window.rsShowForm(r);
+    if(r){ await window._rsHydrate(r); window.rsShowForm(r); }
   };
 
   /* ── FILTER (public) ── */
@@ -6467,7 +6601,7 @@ function afterAuth(){
     el.innerHTML = data.map(function(r){
       var locked = (r.akses==='vip') && !isVip;
       var thumb = r.thumbnail || (r.lembaran&&r.lembaran[0]&&r.lembaran[0].gambar) || (r.images&&r.images[0]) || '';
-      var lembarCount = (r.lembaran||[]).length || (r.images||[]).length;
+      var lembarCount = r.lembarCount!=null ? r.lembarCount : ((r.lembaran||[]).length || (r.images||[]).length);
       return '<div onclick="rsOpenDetail(\''+r.id+'\')" style="cursor:pointer;background:var(--bg3);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;margin-bottom:12px;transition:border-color .2s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--card-border)\'">'
         +(thumb
           ?'<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg4);position:relative">'
@@ -6505,6 +6639,7 @@ function afterAuth(){
     if(!r) return;
     var isVip = window._isVip || window._isAdmin;
     var locked = (r.akses==='vip') && !isVip;
+    if(!locked && !r._hyd){ window._rsHydrate(r).then(function(){ window.rsOpenDetail(id); }); return; }
     var el = document.getElementById('rs-detail-content');
     if(!el) return;
 
