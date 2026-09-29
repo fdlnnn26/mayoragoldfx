@@ -1227,6 +1227,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('calc')"><span>Kalkulator Lot &amp; Risk</span><span class="nav-di-label vip">VIP ✦</span></button>
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('swap')"><span>Kalkulator Swap</span><span class="nav-di-label vip">VIP ✦</span></button>
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('ai')"><span>AI Analisa Chart</span><span class="nav-di-label vip">VIP ✦</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('consult')"><span>AI Konsultasi Trading</span><span class="nav-di-label free">FREE</span></button>
       </div>
     </div>
     <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
@@ -1269,6 +1270,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   <span class="mob-sublink" onclick="goPage('calc')">Kalkulator Lot &amp; Risk<span class="mob-tool-label vip">VIP ✦</span></span>
   <span class="mob-sublink" onclick="goPage('swap')">Kalkulator Swap<span class="mob-tool-label vip">VIP ✦</span></span>
   <span class="mob-sublink" onclick="goPage('ai')">AI Analisa Chart<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('consult')">AI Konsultasi Trading<span class="mob-tool-label free">FREE</span></span>
   <div class="mob-group-label">Pusat Edukasi</div>
   <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip')">✦ Membership VIP</span>
   <span class="mob-link" onclick="goPage('research')">Research</span>
@@ -2082,11 +2084,37 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 
 <!-- PAGE: AI ANALISA CHART (standalone, VIP) -->
 <div class="page" id="page-ai" role="main" aria-label="AI Analisa Chart">
+<style>
+#page-ai .ai-lbl{font-size:.62rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+#page-ai .ai-seg{display:flex;gap:8px}
+#page-ai .ai-seg-b,#page-ai .ai-chip{background:var(--bg3);border:1px solid var(--card-border);color:var(--text2);font-family:inherit;cursor:pointer;transition:all .2s}
+#page-ai .ai-seg-b{flex:1;padding:10px 12px;border-radius:14px;font-size:.68rem;letter-spacing:.04em}
+#page-ai .ai-chips{display:flex;flex-wrap:wrap;gap:8px}
+#page-ai .ai-chip{padding:7px 14px;border-radius:14px;font-size:.66rem}
+#page-ai .ai-seg-b:hover,#page-ai .ai-chip:hover{border-color:var(--gold);color:var(--gold)}
+#page-ai .ai-seg-b.on,#page-ai .ai-chip.on{background:rgba(201,168,76,.14);border-color:var(--gold);color:var(--gold);font-weight:600}
+#page-ai .ai-sig{border:1px solid var(--card-border);border-radius:18px;overflow:hidden;background:var(--bg3)}
+#page-ai .ai-sig-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;border-bottom:1px solid var(--card-border);flex-wrap:wrap}
+#page-ai .ai-dir{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:.06em}
+#page-ai .ai-dir.buy{color:var(--green)}#page-ai .ai-dir.sell{color:var(--red)}
+#page-ai .ai-tag{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:10px;border:1px solid var(--gold-border);color:var(--gold);background:rgba(201,168,76,.1)}
+#page-ai .ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 18px}
+#page-ai .ai-cell{border:1px solid var(--card-border);border-radius:14px;padding:10px 12px;background:var(--bg)}
+#page-ai .ai-cell-l{font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+#page-ai .ai-cell-v{font-size:.8rem;font-weight:600;color:var(--text);line-height:1.5;word-break:break-word}
+#page-ai .ai-cell.e{border-color:var(--gold-border)}#page-ai .ai-cell.e .ai-cell-v{color:var(--gold)}
+#page-ai .ai-cell.s{border-color:rgba(224,90,90,.35)}#page-ai .ai-cell.s .ai-cell-v{color:var(--red)}
+#page-ai .ai-cell.t{border-color:rgba(61,186,122,.35)}#page-ai .ai-cell.t .ai-cell-v{color:var(--green)}
+#page-ai .ai-row{padding:0 18px 14px;font-size:.7rem;line-height:1.8;color:var(--text)}
+#page-ai .ai-row b{color:var(--gold);font-weight:600;letter-spacing:.04em}
+#page-ai .ai-disc{padding:12px 18px;border-top:1px solid var(--card-border);font-size:.58rem;color:var(--text3);line-height:1.7}
+@media(max-width:560px){#page-ai .ai-grid{grid-template-columns:1fr}}
+</style>
   <div style="padding:var(--nav-h) 40px 80px;max-width:760px;margin:0 auto">
     <div style="padding:60px 0 40px;text-align:center">
       <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">VIP Trading Tools</span><div class="eyebrow-line r"></div></div>
       <h1 class="section-title">✦ AI Analisa <span class="gold-text">Chart</span></h1>
-      <p class="section-sub" style="max-width:480px;margin:0 auto">Upload screenshot chart XAU/USD dan dapatkan analisa AI secara instan.</p>
+      <p class="section-sub" style="max-width:480px;margin:0 auto">Upload screenshot chart XAU/USD, pilih mode &amp; timeframe, lalu dapatkan analisa AI secara instan.</p>
     </div>
     <div id="vip-lock-ai" class="vip-lock-box" style="display:none"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">AI Analisa Chart hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
     <div id="vip-cnt-ai" style="display:none">
@@ -2111,8 +2139,26 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
         <button onclick="aiClearPreview()" style="position:absolute;top:8px;right:8px;background:rgba(10,10,13,.75);border:1px solid var(--card-border);border-radius:12px;color:var(--text2);padding:4px 8px;font-size:.62rem;cursor:pointer">✕ Hapus</button>
       </div>
       <div style="margin-bottom:14px">
-        <div style="font-size:.62rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Pertanyaan/Fokus Analisa (opsional)</div>
-        <textarea id="ai-prompt-input" placeholder="cth: Apakah ada setup entry yang bagus? Dimana level support/resistance terdekat?" style="width:100%;background:var(--bg3);border:1px solid var(--card-border);border-radius:16px;color:var(--text);font-size:.72rem;font-family:inherit;padding:10px 12px;resize:vertical;min-height:64px;line-height:1.7"></textarea>
+        <div class="ai-lbl">Mode Analisa</div>
+        <div class="ai-seg" id="ai-mode-seg">
+          <button type="button" class="ai-seg-b on" data-m="signal" onclick="aiSetMode('signal')">Sinyal Entry</button>
+          <button type="button" class="ai-seg-b" data-m="zona" onclick="aiSetMode('zona')">Referensi Zona</button>
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div class="ai-lbl">Timeframe Chart</div>
+        <div class="ai-chips" id="ai-tf-chips">
+          <button type="button" class="ai-chip on" data-tf="auto" onclick="aiSetTf('auto')">Auto</button>
+          <button type="button" class="ai-chip" data-tf="m3" onclick="aiSetTf('m3')">M3</button>
+          <button type="button" class="ai-chip" data-tf="m5" onclick="aiSetTf('m5')">M5</button>
+          <button type="button" class="ai-chip" data-tf="m15" onclick="aiSetTf('m15')">M15</button>
+          <button type="button" class="ai-chip" data-tf="h1" onclick="aiSetTf('h1')">H1</button>
+          <button type="button" class="ai-chip" data-tf="h4" onclick="aiSetTf('h4')">H4+</button>
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:.62rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Catatan Tambahan (opsional)</div>
+        <textarea id="ai-prompt-input" placeholder="cth: Fokus ke area sekitar 4380, harga baru saja sweep low" style="width:100%;background:var(--bg3);border:1px solid var(--card-border);border-radius:16px;color:var(--text);font-size:.72rem;font-family:inherit;padding:10px 12px;resize:vertical;min-height:64px;line-height:1.7"></textarea>
       </div>
       <button id="ai-analyze-btn" onclick="aiAnalyze()" style="width:100%;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06060A;font-weight:600;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;padding:13px;border:none;border-radius:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -2127,13 +2173,73 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
           Hasil Analisa AI
         </div>
-        <div id="ai-result-body" style="background:var(--bg3);border:1px solid var(--card-border);border-radius:18px;padding:20px;font-size:.72rem;line-height:1.85;color:var(--text)"></div>
-        <div style="margin-top:10px;display:flex;justify-content:flex-end">
-          <button onclick="aiClearAll()" style="background:transparent;border:1px solid var(--card-border);border-radius:12px;color:var(--text3);padding:5px 12px;font-size:.62rem;cursor:pointer">Analisa Baru</button>
+        <div id="ai-result-body" style="font-size:.72rem;line-height:1.85;color:var(--text)"></div>
+        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="font-size:.58rem;color:var(--text3);line-height:1.7;max-width:420px">Hasil AI bukan jaminan profit. Selalu konfirmasi sendiri &amp; patuhi manajemen risiko.</div>
+          <div style="display:flex;gap:8px">
+            <button onclick="aiCopyResult()" id="ai-copy-btn" style="background:transparent;border:1px solid var(--gold-border);border-radius:12px;color:var(--gold);padding:5px 12px;font-size:.62rem;cursor:pointer;font-family:inherit">Salin Hasil</button>
+            <button onclick="aiClearAll()" style="background:transparent;border:1px solid var(--card-border);border-radius:12px;color:var(--text3);padding:5px 12px;font-size:.62rem;cursor:pointer;font-family:inherit">Analisa Baru</button>
+          </div>
         </div>
       </div>
       <div id="ai-error" style="display:none;margin-top:14px;background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);border-radius:16px;padding:12px 14px;font-size:.68rem;color:var(--red)"></div>
     </div>
+  </div>
+</div>
+
+<!-- PAGE: AI KONSULTASI TRADING -->
+<div class="page" id="page-consult" role="main" aria-label="AI Konsultasi Trading">
+<style>
+#page-consult .cs-wrap{padding:var(--nav-h) 40px 80px;max-width:760px;margin:0 auto}
+#page-consult .cs-card{background:var(--bg3);border:1px solid var(--card-border);border-radius:18px}
+#page-consult .cs-msgs{padding:16px;min-height:280px;max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+#page-consult .cs-b{max-width:86%;padding:10px 14px;border-radius:16px;font-size:.72rem;line-height:1.8;word-wrap:break-word}
+#page-consult .cs-b.u{align-self:flex-end;background:rgba(201,168,76,.14);border:1px solid var(--gold-border);color:var(--text);border-bottom-right-radius:4px}
+#page-consult .cs-b.m{align-self:flex-start;background:var(--bg4,rgba(255,255,255,.04));border:1px solid var(--card-border);color:var(--text);border-bottom-left-radius:4px}
+#page-consult .cs-chip{background:transparent;border:1px solid var(--card-border);color:var(--text2);border-radius:14px;padding:6px 12px;font-size:.62rem;cursor:pointer;font-family:inherit;transition:all .2s}
+#page-consult .cs-chip:hover{border-color:var(--gold);color:var(--gold)}
+#page-consult .cs-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:4px;animation:csBlink 1.2s infinite}
+#page-consult .cs-dot:nth-child(2){animation-delay:.2s}#page-consult .cs-dot:nth-child(3){animation-delay:.4s}
+@keyframes csBlink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+#page-consult .cs-btn{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06060A;font-weight:600;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:14px;padding:10px 18px;cursor:pointer;font-family:inherit}
+#page-consult .cs-btn:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:768px){#page-consult .cs-wrap{padding-left:16px;padding-right:16px}#page-consult .cs-b{max-width:94%}}
+</style>
+  <div class="cs-wrap">
+    <div style="padding:60px 0 32px;text-align:center">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Trading Tools</span><div class="eyebrow-line r"></div></div>
+      <h1 class="section-title">✦ AI Konsultasi <span class="gold-text">Trading</span></h1>
+      <p class="section-sub" style="max-width:500px;margin:0 auto">Konsultasi soal psikologi trading, teknikal analisis, manajemen risiko, strategi, atau masalah trading lainnya — AI bantu cari akar masalahnya dan kasih saran konkret. Butuh sinyal entry? Pakai AI Analisa Chart.</p>
+    </div>
+
+    <div class="cs-card" style="padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:150px">
+        <div style="font-size:.58rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Konsultasi Hari Ini <span id="cs-tier" class="vip-pill" style="margin-left:6px"></span></div>
+        <div style="display:flex;gap:6px" id="cs-sess-dots"></div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:.58rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Percakapan Sesi Ini</div>
+        <div id="cs-msg-txt" style="font-size:.78rem;color:var(--gold);font-weight:600">0/5</div>
+      </div>
+    </div>
+
+    <div id="cs-notice" style="display:none;margin-bottom:14px"></div>
+
+    <div class="cs-card">
+      <div class="cs-msgs" id="cs-msgs"></div>
+      <div id="cs-chips" style="padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:8px"></div>
+      <div style="border-top:1px solid var(--card-border);padding:12px;display:flex;gap:10px;align-items:flex-end">
+        <textarea id="cs-input" maxlength="500" rows="1" placeholder="Ceritakan masalah trading kamu..." style="flex:1;background:var(--bg);border:1px solid var(--card-border);border-radius:14px;color:var(--text);font-size:.74rem;font-family:inherit;padding:10px 12px;resize:none;line-height:1.6;max-height:120px" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();consultSend();}"></textarea>
+        <button class="cs-btn" id="cs-send" onclick="consultSend()">Kirim</button>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px;flex-wrap:wrap">
+      <div style="font-size:.58rem;color:var(--text3);line-height:1.7;max-width:480px">Konsultasi &amp; edukasi trading — tanpa sinyal atau prediksi harga. Butuh setup entry? <a href="#" onclick="event.preventDefault();goPage('ai')" style="color:var(--gold);text-decoration:underline">Buka AI Analisa Chart (VIP)</a>. Bukan saran finansial; trading berisiko tinggi.</div>
+      <button onclick="consultNew()" style="background:transparent;border:1px solid var(--card-border);border-radius:12px;color:var(--text2);padding:6px 14px;font-size:.62rem;cursor:pointer;font-family:inherit">+ Konsultasi Baru</button>
+    </div>
+
+    <div id="cs-upsell" style="display:none;margin-top:22px"></div>
   </div>
 </div>
 
@@ -2456,7 +2562,7 @@ function invokeWhenReady(name, args){
 window._invokeWhenReady = invokeWhenReady;
 
 /* Page routing */
-var pages=['home','berita','vip','auth','journal','admin','modul','kalender','sessions','calc','swap','ai','research'];
+var pages=['home','berita','vip','auth','journal','admin','modul','kalender','sessions','calc','swap','ai','research','consult'];
 
 /* Deep link handler — support path (/berita, /vip, dll) + ?artikel=slug untuk artikel + 404 redirect (?p=) */
 (function(){
@@ -2609,6 +2715,7 @@ var PAGE_META = {
   modul:   { title: 'Modul Belajar Trading Emas XAU/USD — Dari Dasar hingga SMC | Mayora Gold FX', desc: 'Pelajari trading emas XAU/USD dari nol: dasar trading, market structure, Smart Money Concept, manajemen risiko, hingga strategi advanced. Gratis untuk member VIP.', url: 'https://mayoragoldfx.com/modul' },
   auth:    { title: 'Login Member — Mayora Gold FX', desc: 'Login atau daftar akun Mayora Gold FX untuk akses trading journal, modul edukasi, dan fitur VIP eksklusif.', url: 'https://mayoragoldfx.com/auth' },
   journal: { title: 'Trading Journal Pro — Mayora Gold FX', desc: 'Catat dan analisa performa trading emas XAU/USD kamu. Fitur eksklusif untuk member VIP Mayora Gold FX.', url: 'https://mayoragoldfx.com/journal' },
+  consult: { title: 'AI Konsultasi Trading Emas — Mayora Gold FX', desc: 'Konsultasi trading XAU/USD dengan AI: strategi, manajemen risiko, dan psikologi trading.', url: 'https://mayoragoldfx.com/consult' },
   admin:   { title: 'Admin Dashboard — Mayora Gold FX', desc: 'Dashboard administrasi Mayora Gold FX.', url: 'https://mayoragoldfx.com/admin' },
   kalender:{ title: 'Kalender Ekonomi Forex — High Impact USD | Mayora Gold FX', desc: 'Kalender ekonomi real-time untuk event high-impact USD. Pantau NFP, CPI, FOMC, GDP dan data makro lainnya yang mempengaruhi XAU/USD.', url: 'https://mayoragoldfx.com/kalender' },
   sessions:{ title: 'Market Sessions — Jam Aktif Sesi Forex | Mayora Gold FX', desc: 'Pantau sesi forex aktif secara real-time: Sydney, Tokyo, London, New York. Rencanakan entry di jam likuiditas tinggi XAU/USD.', url: 'https://mayoragoldfx.com/sessions' },
@@ -2684,10 +2791,11 @@ function goPage(p){
   /* VIP-gated tool pages: redirect to auth jika belum login */
   var vipPages=['journal','calc','swap','ai'];
   if(vipPages.indexOf(p)!==-1&&!window._curUser){goPage('auth');return;}
+  if(p==='consult'&&!window._curUser){goPage('auth');return;}
   pages.forEach(function(n){document.getElementById('page-'+n).classList.toggle('active',n===p);});
   ['home','berita','vip','modul','research'].forEach(function(n){var el=document.getElementById('nl-'+n);if(el)el.classList.toggle('active',n===p);});
   /* Trading Tools dropdown — highlight when on any tool page */
-  var toolPages=['kalender','sessions','journal','calc','swap','ai','research'];
+  var toolPages=['kalender','sessions','journal','calc','swap','ai','research','consult'];
   var nlTools=document.getElementById('nl-tools');
   if(nlTools) nlTools.classList.toggle('active', toolPages.indexOf(p)!==-1);
   document.getElementById('mob-nav').classList.remove('open');
@@ -2718,6 +2826,7 @@ function goPage(p){
   else{window._stopSessInterval&&window._stopSessInterval();}
   if(p==='ai'&&window._curUser&&(window._isVip||window._isAdmin)){window.aiRenderQuota&&window.aiRenderQuota();}
   if(p==='research') invokeWhenReady('rsLoadResearch');
+  if(p==='consult') invokeWhenReady('consultInit');
   if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
@@ -3048,19 +3157,61 @@ async function aiRenderQuota() {
 window._aiImageBase64 = null;
 window._aiImageMime = null;
 
-function aiHandleFile(file) {
+window._aiMode = 'signal';
+window._aiTf = 'auto';
+window._aiLastText = '';
+
+window.aiSetMode = function(m){
+  window._aiMode = m;
+  document.querySelectorAll('#ai-mode-seg .ai-seg-b').forEach(b=>b.classList.toggle('on', b.dataset.m===m));
+  const ta = document.getElementById('ai-prompt-input');
+  if(ta) ta.placeholder = m==='zona'
+    ? 'cth: Tandai support/resistance & order block terdekat dari harga sekarang'
+    : 'cth: Fokus ke area sekitar 4380, harga baru saja sweep low';
+};
+window.aiSetTf = function(t){
+  window._aiTf = t;
+  document.querySelectorAll('#ai-tf-chips .ai-chip').forEach(b=>b.classList.toggle('on', b.dataset.tf===t));
+};
+
+/* Kompres gambar di browser: max 1600px + JPEG, supaya aman di limit body Vercel (~4.5MB) & lebih cepat */
+function aiCompressImage(file){
+  return new Promise((resolve, reject)=>{
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        const MAX = 1600;
+        let w = img.naturalWidth, h = img.naturalHeight;
+        const sc = Math.min(1, MAX / Math.max(w, h));
+        w = Math.round(w*sc); h = Math.round(h*sc);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img,0,0,w,h);
+        let q = 0.9, out = c.toDataURL('image/jpeg', q);
+        while(out.length > 3000000 && q > 0.5){ q -= 0.1; out = c.toDataURL('image/jpeg', q); }
+        URL.revokeObjectURL(url);
+        resolve(out);
+      }catch(e){ URL.revokeObjectURL(url); reject(e); }
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('Gambar tidak bisa dibaca')); };
+    img.src = url;
+  });
+}
+
+async function aiHandleFile(file) {
   if (!file) return;
   if (!file.type.startsWith('image/')) {
     toast('Error', 'File harus berupa gambar (JPG, PNG, WEBP)', '#E05A5A'); return;
   }
-  if (file.size > 10 * 1024 * 1024) {
-    toast('Error', 'Ukuran gambar maksimal 10MB', '#E05A5A'); return;
+  if (file.size > 15 * 1024 * 1024) {
+    toast('Error', 'Ukuran gambar maksimal 15MB', '#E05A5A'); return;
   }
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const dataUrl = e.target.result;
+  try{
+    const dataUrl = await aiCompressImage(file);
     window._aiImageBase64 = dataUrl.split(',')[1];
-    window._aiImageMime = file.type;
+    window._aiImageMime = 'image/jpeg';
     const preview = document.getElementById('ai-preview-img');
     const wrap = document.getElementById('ai-preview-wrap');
     const uploadArea = document.getElementById('ai-upload-area');
@@ -3069,8 +3220,9 @@ function aiHandleFile(file) {
     if (uploadArea) uploadArea.style.display = 'none';
     document.getElementById('ai-error').style.display = 'none';
     document.getElementById('ai-result').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
+  }catch(e){
+    toast('Error', e.message || 'Gagal memproses gambar', '#E05A5A');
+  }
 }
 window.aiHandleFile = aiHandleFile;
 
@@ -3097,8 +3249,10 @@ window.aiClearAll = function() {
   aiRenderQuota();
 };
 
+function aiEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function aiFormatResult(text) {
-  // Convert markdown-like to clean HTML
+  // Convert markdown-like to clean HTML (input HARUS sudah di-escape)
   return text
     .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--gold)">$1</strong>')
     .replace(/^#{1,3}\s+(.+)$/gm, '<div style="font-weight:600;color:var(--gold);margin:14px 0 6px;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase">$1</div>')
@@ -3106,6 +3260,43 @@ function aiFormatResult(text) {
     .replace(/\n{2,}/g, '<div style="height:10px"></div>')
     .replace(/\n/g, '<br>');
 }
+
+function aiRenderResult(text, mode){
+  const t = String(text||'').replace(/\r/g,'').trim();
+  window._aiLastText = t.replace(/\*\*/g,'');
+  const field = (label)=>{
+    const m = t.match(new RegExp('\\*\\*\\s*'+label+'\\s*:?\\s*\\*\\*\\s*:?\\s*([^\\n]*)','i'));
+    return m ? m[1].replace(/\*\*/g,'').trim() : '';
+  };
+  if(mode !== 'zona'){
+    const arah = field('Arah'), entry = field('Entry'), sl = field('Stop Loss'), tp = field('Take Profit');
+    const dm = arah.match(/\b(BUY|SELL)\b/i);
+    if(dm && entry && sl && tp){
+      const dir = dm[1].toUpperCase();
+      const zona = field('Zona/Konfluensi'), tipe = field('Tipe Entry'), alasan = field('Alasan Singkat');
+      return `<div class="ai-sig">
+        <div class="ai-sig-h"><div class="ai-dir ${dir==='BUY'?'buy':'sell'}">${dir} XAU/USD</div>${tipe?`<span class="ai-tag">${aiEsc(tipe)}</span>`:''}</div>
+        <div class="ai-grid">
+          <div class="ai-cell e"><div class="ai-cell-l">Entry</div><div class="ai-cell-v">${aiEsc(entry)}</div></div>
+          <div class="ai-cell s"><div class="ai-cell-l">Stop Loss</div><div class="ai-cell-v">${aiEsc(sl)}</div></div>
+          <div class="ai-cell t"><div class="ai-cell-l">Take Profit</div><div class="ai-cell-v">${aiEsc(tp)}</div></div>
+        </div>
+        ${zona?`<div class="ai-row"><b>Zona/Konfluensi:</b> ${aiEsc(zona)}</div>`:''}
+        ${alasan?`<div class="ai-row"><b>Alasan:</b> ${aiEsc(alasan)}</div>`:''}
+        <div class="ai-disc">Analisa berbasis screenshot &amp; bukan jaminan profit. Gunakan lot sesuai risk kamu (Kalkulator Lot &amp; Risk) dan konfirmasi sendiri sebelum eksekusi.</div>
+      </div>`;
+    }
+  }
+  return `<div style="font-size:.72rem;line-height:1.85">${aiFormatResult(aiEsc(t))}</div>`;
+}
+
+window.aiCopyResult = async function(){
+  try{
+    await navigator.clipboard.writeText(window._aiLastText || '');
+    const b = document.getElementById('ai-copy-btn');
+    if(b){ const o=b.textContent; b.textContent='Tersalin ✓'; setTimeout(()=>b.textContent=o,1600); }
+  }catch(e){ toast('Error','Gagal menyalin hasil','#E05A5A'); }
+};
 
 window.aiAnalyze = async function() {
   const uid = window._curUser?.uid;
@@ -3116,7 +3307,7 @@ window.aiAnalyze = async function() {
   const used = await aiGetQuota(uid);
   if (used >= AI_DAILY_LIMIT) {
     document.getElementById('ai-error').style.display = 'block';
-    document.getElementById('ai-error').textContent = '✦ Kuota analisa kamu hari ini sudah habis (3/3). Kuota akan reset besok pukul 00:00.';
+    document.getElementById('ai-error').textContent = `✦ Kuota analisa kamu hari ini sudah habis (${AI_DAILY_LIMIT}/${AI_DAILY_LIMIT}). Kuota akan reset besok pukul 00:00.`;
     return;
   }
 
@@ -3138,54 +3329,18 @@ window.aiAnalyze = async function() {
   const ltEl = document.getElementById('ai-loading-txt');
   const ltInterval = setInterval(() => { ltEl.textContent = loadingTexts[ltIdx++ % loadingTexts.length]; }, 1800);
 
-  const userPrompt = document.getElementById('ai-prompt-input').value.trim();
-  const systemPrompt = `Kamu adalah analis trading emas (XAU/USD) profesional dengan keahlian Smart Money Concept (SMC) dan price action. Analisa chart yang diberikan dalam Bahasa Indonesia.
-
-ATURAN WAJIB — HARUS DIPATUHI, TIDAK BOLEH DILANGGAR:
-1. Tentukan HANYA SATU arah sinyal: BUY atau SELL. DILARANG KERAS memberikan dua arah sekaligus, dan DILARANG memberikan lebih dari satu skenario/opsi entry (contoh yang DILARANG: "Skenario 1 & Skenario 2", "Setup Agresif vs Konservatif", "opsi A atau opsi B"). Pilih HANYA SATU zona entry paling optimal berdasarkan struktur market, price action, dan konfluensi teknikal paling dominan di chart.
-   - Pengecualian: jika trader HANYA meminta referensi zona/level (support/resistance/order block/FVG/liquidity) dan TIDAK meminta sinyal entry, maka jangan tentukan arah — ikuti FORMAT ZONA di bawah.
-2. ATURAN PALING PENTING — VALIDITAS ZONA ENTRY: Entry WAJIB berada tepat di dalam zona teknikal yang benar-benar valid dan terlihat jelas di chart, berdasarkan minimal salah satu konsep berikut — dan setiap konsep WAJIB dipakai SESUAI DEFINISI TEORI YANG BENAR, bukan asumsi longgar:
-   - SNR (Support & Resistance): level horizontal yang SUDAH TERBUKTI menahan harga minimal 2 kali (rejection/reaksi jelas di titik yang sama atau berdekatan). Satu sentuhan saja BUKAN support/resistance valid.
-   - SND (Supply & Demand): area ASAL (origin) dari pergerakan impulsif kuat (strong move away), bukan sekadar area konsolidasi/sideways biasa. Demand = area asal kenaikan tajam; Supply = area asal penurunan tajam. VALIDASI WAJIB: zona origin harus terdiri dari MINIMAL 3 candle yang berlawanan arah dengan leg impulsif setelahnya (contoh Demand: minimal 3 candle bearish/turun sebelum leg naik kuat; contoh Supply: minimal 3 candle bullish/naik sebelum leg turun kuat), DAN dari 3 candle tersebut MINIMAL 2 candle harus berupa candle engulfing (body candle menutupi/melebihi penuh body candle sebelumnya, searah dengan arah candle origin). Jika salah satu syarat ini tidak terpenuhi di chart, JANGAN sebut area tersebut sebagai zona SND yang valid.
-   - SMC — Order Block: rangkaian MINIMAL 3 candle yang berlawanan arah dari leg/pergerakan terakhir, SEBELUM terjadi displacement/impulsive move dan Break of Structure (BOS), DENGAN SYARAT dari 3 candle tersebut MINIMAL 2 candle harus berupa candle engulfing (body candle menutupi/melebihi penuh body candle sebelumnya). Jika di chart hanya ada 1-2 candle berlawanan arah, atau engulfing candle-nya kurang dari 2 dari 3, JANGAN sebut sebagai Order Block valid — anggap sebagai zona lemah/tidak memenuhi kriteria. BOS = harga menembus swing high/low sebelumnya SEARAH tren yang sedang berjalan (konfirmasi kelanjutan tren). CHoCH (Change of Character) = harga menembus swing high/low BERLAWANAN dengan tren sebelumnya (sinyal potensi reversal). Jangan tukar-menukar definisi BOS dan CHoCH.
-   - ICT — Fair Value Gap (FVG): celah/imbalance antara candle 1 dan candle 3 dalam rangkaian 3 candle impulsif (wick candle 1 tidak overlap dengan wick candle 3). Liquidity Pool: kumpulan stop loss di area equal highs/equal lows atau di atas/bawah swing yang jelas. OTE (Optimal Trade Entry): area retracement Fibonacci 61.8%–79% dari kaki pergerakan impulsif SETELAH BOS terjadi.
-   DILARANG KERAS menentukan harga entry secara sembarangan/asal tebak yang tidak bersandar pada zona-zona di atas, dan DILARANG KERAS menyalahgunakan istilah SNR/SND/SMC/ICT untuk zona yang secara teori tidak memenuhi kriteria di atas (mis. menyebut "Order Block" padahal candle berlawanan arahnya kurang dari 3 atau engulfing candle-nya kurang dari 2 dari 3, menyebut "SND" padahal origin candle-nya tidak memenuhi syarat 3 candle + 2 engulfing, atau menyebut "FVG" padahal candle-nya overlap). Entry harus jelas menempel/berada di dalam salah satu zona tersebut sesuai definisi teorinya, bukan di ruang kosong tanpa konfluensi. WAJIB sebutkan secara eksplisit zona & konsep apa yang menjadi dasar entry (contoh: "Entry di Order Block M15" atau "Entry di area FVG + Demand Zone lama").
-3. OBJEKTIVITAS ANALISA: Tentukan arah (BUY/SELL) HANYA berdasarkan apa yang benar-benar terlihat di chart (struktur market, price action, candle, level yang tervalidasi) — BUKAN berdasarkan asumsi, harapan, atau narasi yang dipaksakan. Jangan bias ke satu arah tertentu karena pertanyaan/fokus tambahan dari trader; tetap analisa chart secara netral dan laporkan apa adanya, termasuk jika chart menunjukkan kondisi tidak jelas/choppy — dalam kasus itu tetap pilih bias yang paling didukung data, dan boleh sebutkan bahwa keyakinan (confidence) sedang rendah di bagian Alasan Singkat.
-4. Entry WAJIB berupa satu harga spesifik (bukan rentang/zona lebar), supaya perhitungan Stop Loss dan Take Profit presisi dan konsisten.
-5. Stop Loss WAJIB memakai jarak TETAP dari harga Entry sesuai timeframe chart (SL = Entry ± jarak berikut, BUKAN dihitung dari swing high/low manual):
-   - Timeframe M3: SL = 40–50 pips (4–5 point) dari Entry
-   - Timeframe M5: SL = 60–70 pips (6–7 point) dari Entry
-   - Timeframe di atas M5 (M15 ke atas): SL = 100 pips (10 point) dari Entry
-   Jika timeframe chart tidak terlihat jelas, gunakan asumsi timeframe M15 ke atas (SL 100 pips) dan sebutkan bahwa itu asumsi.
-6. Take Profit WAJIB memenuhi Risk:Reward MINIMAL 1:2 dari jarak Stop Loss pada poin 5 (jarak TP ke Entry minimal 2x jarak SL ke Entry). Jika struktur/likuiditas mendukung target yang lebih jauh dan valid (mis. swing high/low signifikan berikutnya, liquidity pool besar), MAKSIMALKAN Take Profit ke level tersebut selama masih realistis — RR tidak wajib pas 1:2, boleh lebih tinggi (1:3, 1:4, dst) jika ada dasar teknikal yang mendukung. TP diarahkan ke level struktur/likuiditas terdekat yang valid. Sebutkan RR aktualnya.
-7. Tentukan TIPE ENTRY sesuai kondisi harga saat ini terhadap zona di poin 2:
-   - Jika harga saat ini SUDAH berada di dalam/menyentuh zona valid tersebut → gunakan MARKET ORDER (entry now/langsung).
-   - Jika harga saat ini BELUM sampai ke zona (perlu pullback/retracement dulu) → gunakan PENDING ORDER (Buy Limit untuk BUY, Sell Limit untuk SELL) di harga zona tersebut, trader akan menunggu harga sampai ke level itu.
-   Sebutkan tipe entry ini secara eksplisit dan jangan asal pilih — sesuaikan dengan posisi harga saat ini di chart.
-8. Jawaban HARUS singkat, padat, HANYA SATU setup — tanpa opsi ganda, tanpa basa-basi panjang.
-
-FORMAT JAWABAN — SINYAL ENTRY (dipakai jika trader minta setup/peluang entry):
-**Arah:** BUY atau SELL (satu saja, tidak boleh dua-duanya, tidak boleh lebih dari 1 skenario)
-**Zona/Konfluensi:** nama zona & konsep dasar entry (SNR/SND/SMC/ICT) — wajib diisi, tidak boleh kosong
-**Tipe Entry:** Market Order (entry now) atau Pending Order (Buy Limit/Sell Limit) — sesuai posisi harga saat ini terhadap zona
-**Entry:** satu harga spesifik, harus berada di dalam zona di atas
-**Stop Loss:** harga SL persis + timeframe & jarak acuan (contoh: "4381.00 (M3, -5 point/50 pips)")
-**Take Profit:** satu harga TP + RR aktual (contoh: "4356.00 (RR 1:2.4)") — maksimalkan jika struktur mendukung
-**Alasan Singkat:** maksimal 2 kalimat berdasarkan price action/struktur yang terlihat
-
-FORMAT JAWABAN — REFERENSI ZONA (dipakai HANYA jika trader secara eksplisit hanya minta info zona support/resistance/OB/FVG tanpa minta sinyal entry):
-Jelaskan RINCI setiap zona relevan: level harga pasti, jenis zona (support/resistance/order block/FVG/liquidity pool), kekuatan/validitas zona, dan konteks price action di sekitarnya (reaksi harga sebelumnya, apakah sudah/belum diuji ulang). Tidak perlu menentukan arah buy/sell pada mode ini.
-
-${userPrompt ? `\nFokus tambahan dari trader: ${userPrompt}` : ''}
-
-Sesuaikan analisa dengan apa yang benar-benar terlihat di chart. Jangan generik.`;
+  const userPrompt = document.getElementById('ai-prompt-input').value.trim().slice(0, 400);
+  const usedMode = window._aiMode;
 
   try {
     const response = await fetch('/api/gemini', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        prompt: systemPrompt,
+        mode: 'chart',
+        analysisMode: usedMode,
+        timeframe: window._aiTf,
+        prompt: userPrompt || (usedMode === 'zona' ? 'Tandai zona penting di chart' : 'Cari setup entry terbaik'),
         image: window._aiImageBase64,
         mimeType: window._aiImageMime
       })
@@ -3210,7 +3365,7 @@ Sesuaikan analisa dengan apa yang benar-benar terlihat di chart. Jangan generik.
     loading.style.display = 'none';
     btn.style.display = 'flex';
     result.style.display = 'block';
-    document.getElementById('ai-result-body').innerHTML = aiFormatResult(text);
+    document.getElementById('ai-result-body').innerHTML = aiRenderResult(text, usedMode);
 
   } catch(e) {
     clearInterval(ltInterval);
@@ -3229,6 +3384,230 @@ window.jTab = function(n, el) {
   if (n === 'ai') aiRenderQuota();
 };
 
+
+/* ===== AI KONSULTASI TRADING (chat terbatas: VIP 5x10, Non-VIP 2x5 per hari) ===== */
+const CONSULT_LIMITS = { vip: {sessions:5, msgs:10}, free: {sessions:2, msgs:5} };
+const CS_FS = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+window._consultState = null;
+let _csBusy = false;
+
+function csIsVip(){ return !!(window._isVip || window._isAdmin); }
+function csLim(){ return csIsVip() ? CONSULT_LIMITS.vip : CONSULT_LIMITS.free; }
+function csDefault(){ return {sessions:0, count:0, active:false, history:[]}; }
+function csEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function csLoad(uid){
+  try{
+    const db = window.getDB();
+    const {getDoc, doc} = await import(CS_FS);
+    const snap = await getDoc(doc(db,'users',uid,'aiUsage','consult-'+aiGetTodayKey()));
+    if(!snap.exists()) return csDefault();
+    const d = snap.data();
+    return {sessions:d.sessions||0, count:d.count||0, active:d.active===true, history:Array.isArray(d.history)?d.history:[]};
+  }catch(e){ console.error('[consultLoad]',e); return null; }
+}
+async function csSave(uid, st){
+  try{
+    const db = window.getDB();
+    const {setDoc, doc, serverTimestamp} = await import(CS_FS);
+    await setDoc(doc(db,'users',uid,'aiUsage','consult-'+aiGetTodayKey()),
+      {sessions:st.sessions, count:st.count, active:st.active, history:st.history, updatedAt:serverTimestamp()}, {merge:true});
+    return true;
+  }catch(e){ console.error('[consultSave]',e); return false; }
+}
+
+const CS_CHIPS = ['Saya overtrading & susah disiplin ikut plan','Gimana cara validasi order block yang benar?','Analisa saya sering benar tapi SL kena dulu, kenapa?','Cara menentukan lot & risk sesuai modal saya'];
+
+function csUpsellHtml(limitHit){
+  return `<div class="cs-card" style="padding:22px;border-color:rgba(201,168,76,.35);background:linear-gradient(160deg,rgba(201,168,76,.07),var(--bg3))">
+    <div style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">✦ Benefit VIP</div>
+    <div style="font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:8px">${limitHit?'Kuota konsultasi kamu sudah habis — upgrade VIP biar bisa lanjut':'Mau konsultasi lebih banyak? Upgrade ke VIP gratis'}</div>
+    <div style="font-size:.7rem;color:var(--text2);line-height:1.9;margin-bottom:14px">
+      <div>› <b style="color:var(--gold)">5 konsultasi/hari</b> × <b style="color:var(--gold)">10 percakapan</b> <span style="color:var(--text3)">(Non-VIP: 2 × 5)</span></div>
+      <div>› AI Analisa Chart (upload screenshot, dapat setup entry)</div>
+      <div>› Trading Journal, Kalkulator Lot &amp; Risk, Kalkulator Swap</div>
+      <div>› Sinyal harian XAU/USD, live session &amp; komunitas VIP 24 jam</div>
+    </div>
+    <a href="WA1" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="WA2" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="WA3" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a>
+  </div>`.replace('WA1','__WA1__').replace('WA2','__WA2__').replace('WA3','__WA3__');
+}
+
+function consultRender(pending){
+  const st = window._consultState || csDefault();
+  const lim = csLim();
+  const vip = csIsVip();
+
+  /* quota */
+  const sessLeft = Math.max(0, lim.sessions - st.sessions);
+  const dots = document.getElementById('cs-sess-dots');
+  if(dots){
+    let h=''; for(let i=0;i<lim.sessions;i++){ h+=`<div style="width:26px;height:8px;border-radius:12px;background:${i<sessLeft?'var(--gold)':'var(--bg4)'};border:1px solid var(--card-border);transition:background .3s"></div>`; }
+    dots.innerHTML = h + `<span style="font-size:.62rem;color:${sessLeft===0?'var(--red)':'var(--text2)'};margin-left:6px">${sessLeft}/${lim.sessions} tersisa</span>`;
+  }
+  const tier = document.getElementById('cs-tier'); if(tier) tier.textContent = window._isAdmin ? 'ADMIN' : (vip ? 'VIP ✦' : 'REGULAR');
+  const cnt = st.active ? st.count : 0;
+  const mt = document.getElementById('cs-msg-txt');
+  if(mt){ mt.textContent = `${cnt}/${lim.msgs}`; mt.style.color = cnt>=lim.msgs ? 'var(--red)' : 'var(--gold)'; }
+
+  /* status limit */
+  const sessionFull = st.active && st.count >= lim.msgs;
+  const allDone = st.sessions >= lim.sessions && (sessionFull || !st.active);
+  const blocked = sessionFull || allDone;
+
+  /* chat bubbles */
+  const box = document.getElementById('cs-msgs');
+  let html = '';
+  if(!st.history.length && !pending){
+    html += `<div class="cs-b m">Halo! Aku AI konsultan trading Mayora Gold FX ✦<br>Konsultasi bareng aku soal <b>psikologi</b> (overtrading, FOMO, susah disiplin), <b>teknikal analisis</b> (market structure, order block, validasi zona), <b>manajemen risiko</b>, strategi, atau masalah trading lainnya. Aku bantu cari akar masalahnya dan kasih saran yang bisa langsung dipraktikkan.<br><span style="color:var(--text3)">Catatan: di sini tidak ada sinyal buy/sell atau prediksi harga — setup entry ada di menu AI Analisa Chart.</span></div>`;
+  }
+  st.history.forEach(h=>{ html += `<div class="cs-b ${h.r==='u'?'u':'m'}">${h.r==='u'?csEsc(h.t):aiFormatResult(csEsc(h.t))}</div>`; });
+  if(pending){
+    html += `<div class="cs-b u">${csEsc(pending)}</div><div class="cs-b m"><span class="cs-dot"></span><span class="cs-dot"></span><span class="cs-dot"></span></div>`;
+  }
+  box.innerHTML = html;
+  box.scrollTop = box.scrollHeight;
+
+  /* chips */
+  const chips = document.getElementById('cs-chips');
+  chips.innerHTML = (!st.history.length && !pending && !blocked)
+    ? CS_CHIPS.map((c,i)=>`<button class="cs-chip" onclick="consultSend(CS_CHIPS[${i}])">${csEsc(c)}</button>`).join('') : '';
+
+  /* notifikasi limit */
+  const nt = document.getElementById('cs-notice');
+  let n = '';
+  if(allDone){
+    n = `<div style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.3);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--red);line-height:1.7">⚠ Kuota konsultasi hari ini habis (${lim.sessions}/${lim.sessions}). Reset besok pukul 00:00.</div>`;
+  } else if(sessionFull){
+    n = `<div style="background:rgba(201,168,76,.08);border:1px solid var(--gold-border);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--gold);line-height:1.7;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>✦ Batas ${lim.msgs} percakapan di konsultasi ini sudah tercapai. Sisa ${sessLeft} konsultasi hari ini.</span><button class="cs-btn" onclick="consultNew()">Mulai Konsultasi Baru</button></div>`;
+  } else if(!vip && st.active && lim.msgs - st.count === 1){
+    n = `<div style="background:rgba(201,168,76,.08);border:1px solid var(--gold-border);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--gold);line-height:1.7">✦ Sisa 1 percakapan di konsultasi ini.</div>`;
+  }
+  nt.innerHTML = n; nt.style.display = n ? 'block' : 'none';
+
+  /* input state */
+  const inp = document.getElementById('cs-input'), btn = document.getElementById('cs-send');
+  if(inp){ inp.disabled = blocked || _csBusy; inp.placeholder = blocked ? 'Batas percakapan tercapai' : 'Ceritakan masalah trading kamu...'; }
+  if(btn) btn.disabled = blocked || _csBusy;
+
+  /* upsell non-VIP */
+  const up = document.getElementById('cs-upsell');
+  if(up){
+    if(vip){ up.style.display='none'; up.innerHTML=''; }
+    else{
+      up.innerHTML = csUpsellHtml(blocked)
+        .replace('__WA1__','https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!')
+        .replace('__WA2__','https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!')
+        .replace('__WA3__','https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!');
+      up.style.display='block';
+    }
+  }
+}
+window.consultRender = consultRender;
+
+window.consultInit = async function(){
+  const uid = window._curUser?.uid;
+  if(!uid) return;
+  const st = await csLoad(uid);
+  if(!st){ toast('Error','Gagal memuat data konsultasi','#E05A5A'); window._consultState = csDefault(); }
+  else window._consultState = st;
+  consultRender();
+};
+window._consultOnRoleChange = function(){
+  const pg = document.getElementById('page-consult');
+  if(pg && pg.classList.contains('active')) consultRender();
+};
+
+window.consultNew = async function(){
+  const uid = window._curUser?.uid; if(!uid || _csBusy) return;
+  const st = await csLoad(uid);
+  if(!st){ toast('Error','Gagal memuat data konsultasi','#E05A5A'); return; }
+  const lim = csLim();
+  if(st.sessions >= lim.sessions){
+    window._consultState = st; consultRender();
+    toast('AI Konsultasi','Kuota konsultasi hari ini habis. Reset besok 00:00.','#E05A5A'); return;
+  }
+  st.active = false; st.count = 0; st.history = [];
+  await csSave(uid, st);
+  window._consultState = st;
+  consultRender();
+  const inp = document.getElementById('cs-input'); if(inp){ inp.value=''; inp.focus(); }
+};
+
+window.consultSend = async function(pre){
+  if(_csBusy) return;
+  const uid = window._curUser?.uid;
+  if(!uid){ toast('Error','Kamu harus login dulu','#E05A5A'); return; }
+  const inp = document.getElementById('cs-input');
+  const text = (typeof pre === 'string' ? pre : inp.value).trim();
+  if(!text) return;
+  if(text.length > 500){ toast('Error','Pesan maksimal 500 karakter','#E05A5A'); return; }
+
+  _csBusy = true;
+  try{
+    /* selalu ambil state terbaru dari Firestore (aman dari tab ganda / ganti hari) */
+    const st = await csLoad(uid);
+    if(!st) throw new Error('Gagal memuat kuota konsultasi. Coba lagi.');
+    const lim = csLim();
+
+    if(!st.active){
+      if(st.sessions >= lim.sessions){
+        window._consultState = st; _csBusy = false; consultRender();
+        toast('AI Konsultasi','Kuota konsultasi hari ini habis. Reset besok 00:00.','#E05A5A');
+        return;
+      }
+      st.active = true; st.sessions += 1; st.count = 0; st.history = [];
+    }
+    if(st.count >= lim.msgs){
+      window._consultState = st; _csBusy = false; consultRender();
+      toast('AI Konsultasi',`Batas ${lim.msgs} percakapan tercapai. Mulai konsultasi baru.`,'#C9A84C');
+      return;
+    }
+
+    if(inp) inp.value = '';
+    window._consultState = Object.assign({}, st, {history: st.history.slice()});
+    consultRender(text);
+
+    const history = st.history.slice(-16).map(h=>({role: h.r==='u' ? 'user' : 'model', text: h.t}));
+    const res = await fetch('/api/gemini', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({mode:'consult', prompt:text, history})
+    });
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      throw new Error(err?.error || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    const reply = (data.text || '').trim();
+    if(!reply) throw new Error('Respons AI kosong. Coba lagi.');
+
+    st.history.push({r:'u', t:text}, {r:'m', t:reply});
+    st.count += 1;
+    const ok = await csSave(uid, st);
+    if(!ok) toast('AI Konsultasi','Gagal menyimpan kuota, cek koneksi.','#E05A5A');
+    window._consultState = st;
+    _csBusy = false;
+    consultRender();
+
+    /* notifikasi limit */
+    const left = lim.sessions - st.sessions;
+    if(st.count >= lim.msgs){
+      if(left > 0) toast('AI Konsultasi',`Batas ${lim.msgs} percakapan tercapai. Mulai konsultasi baru (sisa ${left}).`,'#C9A84C');
+      else toast('AI Konsultasi', csIsVip() ? 'Kuota konsultasi hari ini habis. Reset besok 00:00.' : 'Kuota habis. Upgrade VIP untuk 5 konsultasi × 10 percakapan/hari ✦','#E05A5A');
+    } else if(!csIsVip() && lim.msgs - st.count === 1){
+      toast('AI Konsultasi','Sisa 1 percakapan. VIP dapat 10 percakapan per konsultasi ✦','#C9A84C');
+    }
+  }catch(e){
+    console.error('[consultSend]', e);
+    if(inp && !inp.value) inp.value = text;   /* kembalikan teks, kuota tidak terpotong */
+    _csBusy = false;
+    const st = await csLoad(uid).catch(()=>null);
+    window._consultState = st || window._consultState || csDefault();
+    consultRender();
+    toast('Error', e.message || 'Terjadi kesalahan. Coba lagi.', '#E05A5A');
+  }finally{
+    _csBusy = false;
+  }
+};
 
 /* Cloudinary URL optimizer */
 function getOptUrl(url, width){
@@ -3639,6 +4018,7 @@ onAuthStateChanged(auth, async user=>{
     if(user){
       window._curUser = user;
       await loadData(user.uid);
+      startRoleListener(user);
       showLoggedIn(user);
       setBtnLoad('li-btn',false,'Sign In →');
       setBtnLoad('ri-btn',false,'Buat Akun →');
@@ -3654,6 +4034,7 @@ onAuthStateChanged(auth, async user=>{
         },900);
       }
     }else{
+      stopRoleListener();
       window._curUser=null; isVip=false; isAdmin=false;
       window._isVip=false; window._isAdmin=false;
       document.getElementById('nav-guest').style.display='block';
@@ -3830,6 +4211,29 @@ window.doReset = async ()=>{
     toast('MGF','Reset email dikirim!','#3DBA7A');
   }catch(e){toast('MGF',fmsg(e.code),'#E05A5A');}
 };
+
+/* ===== Realtime listener role user (VIP/Admin) — VIP langsung aktif tanpa re-login ===== */
+var _roleUnsub=null;
+function stopRoleListener(){ if(_roleUnsub){ try{_roleUnsub();}catch(e){} _roleUnsub=null; } }
+function startRoleListener(user){
+  stopRoleListener();
+  try{
+    _roleUnsub=onSnapshot(doc(db,'users',user.uid),snap=>{
+      if(!snap.exists()) return;
+      const d=snap.data();
+      const nv=d.vip===true, na=d.admin===true;
+      if(nv===isVip && na===isAdmin) return;      /* tidak ada perubahan role */
+      const wasVip=isVip;
+      isVip=nv; isAdmin=na;
+      window._isVip=nv; window._isAdmin=na;
+      showLoggedIn(window._curUser||user);        /* refresh semua UI: pill, lock, menu */
+      window._consultOnRoleChange&&window._consultOnRoleChange();
+      window.aiRenderQuota&&window.aiRenderQuota();
+      if(!wasVip&&nv) toast('MGF','Akun VIP kamu sudah aktif ✦','#C9A84C');
+      else if(wasVip&&!nv&&!na) toast('MGF','Status VIP kamu dicabut','#E05A5A');
+    },err=>console.warn('[role listener]',err));
+  }catch(e){ console.warn('[role listener] gagal start:',e); }
+}
 
 async function loadData(uid){
   try{
