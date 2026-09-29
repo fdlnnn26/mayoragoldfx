@@ -124,6 +124,77 @@ Catatan trader: """${note}"""
 Sesuaikan analisa dengan apa yang benar-benar terlihat di chart. Jangan generik.`;
 }
 
+/* ---------- 3. KETAHANAN: retry, fallback model, multi API key ---------- */
+// Urutan model dicoba dari kiri ke kanan. Bisa di-override lewat Environment Variable
+// (pisahkan dengan koma), tanpa perlu edit kode. Cek nama model aktif di Google AI Studio.
+const listEnv = (name, def) => (process.env[name] || def).split(',').map(s => s.trim()).filter(Boolean);
+
+// KONSULTASI: boleh turun ke model yang lebih ringan kalau model utama sibuk
+const CONSULT_MODELS = listEnv('GEMINI_MODELS', 'gemini-3.6-flash,gemini-2.5-flash,gemini-2.5-flash-lite');
+// ANALISA CHART: hanya model utama (tidak boleh turun kelas → kualitas analisa terjaga).
+// Kalau sibuk, dicoba ulang beberapa kali di model yang sama.
+const CHART_MODELS = listEnv('GEMINI_CHART_MODELS', 'gemini-3.6-flash');
+
+// Boleh isi banyak key: GEMINI_API_KEYS="key1,key2" (atau tetap GEMINI_API_KEY satu saja)
+function getKeys() {
+  return (process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || '')
+    .split(',').map(s => s.trim()).filter(Boolean);
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function errStatus(e) {
+  if (e && typeof e.status === 'number') return e.status;
+  if (e && typeof e.code === 'number') return e.code;
+  try { const j = JSON.parse(e.message); return j?.error?.code || 0; } catch { return 0; }
+}
+function errText(e) { return String((e && e.message) || e || ''); }
+
+// Error sementara di sisi Google → layak dicoba lagi / pindah model / pindah key
+function isRetryable(e) {
+  const st = errStatus(e), m = errText(e);
+  return [429, 500, 502, 503, 504].includes(st) ||
+    /UNAVAILABLE|RESOURCE_EXHAUSTED|high demand|overloaded|deadline|timeout|fetch failed/i.test(m);
+}
+
+// Gemini 3 pakai thinkingLevel; model lama (2.5) pakai thinkingBudget
+function configFor(model, base) {
+  const c = { ...base };
+  if (!/^gemini-3/.test(model)) c.thinkingConfig = { thinkingBudget: 0 };
+  return c;
+}
+
+async function generateWithFallback(contents, baseConfig, models, minTries, baseDelay) {
+  const keys = getKeys();
+  const t0 = Date.now();
+  const startIdx = Math.floor(Math.random() * keys.length); // sebar beban antar key
+  let lastErr;
+
+  for (const model of models) {
+    const tries = Math.max(keys.length, minTries);
+    for (let i = 0; i < tries; i++) {
+      if (Date.now() - t0 > 40000) throw lastErr || new Error('timeout');
+      const ai = new GoogleGenAI({ apiKey: keys[(startIdx + i) % keys.length] });
+      try {
+        const response = await ai.models.generateContent({
+          model, contents, config: configFor(model, baseConfig)
+        });
+        const text = (response.text || '').trim();
+        if (!text) throw Object.assign(new Error('empty response'), { status: 503 });
+        if (model !== models[0]) console.warn('[Gemini] pakai model cadangan:', model);
+        return text;
+      } catch (e) {
+        lastErr = e;
+        console.warn(`[Gemini] ${model} percobaan ${i + 1} gagal:`, errStatus(e), errText(e).slice(0, 160));
+        if (errStatus(e) === 404) break;          // model tidak ada → langsung ke model berikutnya
+        if (!isRetryable(e)) throw e;             // error permanen (mis. 400) → jangan diulang
+        await sleep(baseDelay * (i + 1));
+      }
+    }
+  }
+  throw lastErr || new Error('Semua model gagal');
+}
+
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 
 export default async function handler(req, res) {
@@ -138,14 +209,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Prompt wajib diisi' });
     }
 
-    // API key dari Environment Variable Vercel (GEMINI_API_KEY)
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
+    // API key dari Environment Variable Vercel (GEMINI_API_KEY atau GEMINI_API_KEYS="k1,k2")
+    if (!getKeys().length) {
       console.error('[Gemini API Error]: GEMINI_API_KEY belum di-set di Environment Variables Vercel');
       return res.status(500).json({ error: 'Server belum dikonfigurasi (API key tidak ditemukan)' });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
     let contents;
     let config;
 
@@ -192,13 +261,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Mode tidak dikenali' });
     }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.6-flash',
-      contents,
-      config
-    });
-
-    let text = (response.text || '').trim();
+    let text = mode === 'chart'
+      ? await generateWithFallback(contents, config, CHART_MODELS, 4, 1200)     // model utama saja, retry lebih sabar
+      : await generateWithFallback(contents, config, CONSULT_MODELS, 2, 500);   // boleh fallback ke model bawah
 
     if (mode === 'chart' && text.startsWith('[BUKAN_CHART]')) {
       return res.status(422).json({ error: 'Gambar ini sepertinya bukan chart trading. Upload screenshot chart XAU/USD ya. (Kuota tidak terpotong)' });
@@ -211,6 +276,16 @@ export default async function handler(req, res) {
     return res.status(200).json({ text });
   } catch (error) {
     console.error('[Gemini API Error]:', error);
-    return res.status(500).json({ error: error.message || 'Terjadi kesalahan pada server' });
+    const st = errStatus(error), msg = errText(error);
+    if (st === 429 || /RESOURCE_EXHAUSTED|quota/i.test(msg)) {
+      return res.status(429).json({ error: 'Kuota AI server sedang penuh. Coba lagi beberapa menit lagi. (Kuota harian kamu tidak terpotong)' });
+    }
+    if (st === 503 || /UNAVAILABLE|high demand|overloaded/i.test(msg)) {
+      if (req.body && req.body.mode === 'chart') {
+        return res.status(503).json({ error: 'Server AI analisa lagi penuh. Coba lagi 1-2 menit lagi ya — analisa chart sengaja hanya pakai model terbaik demi akurasi. (Kuota harian kamu tidak terpotong)' });
+      }
+      return res.status(503).json({ error: 'Server AI lagi ramai. Coba lagi beberapa detik lagi ya. (Kuota harian kamu tidak terpotong)' });
+    }
+    return res.status(500).json({ error: 'Terjadi kesalahan pada server AI. Coba lagi sebentar lagi.' });
   }
 }
