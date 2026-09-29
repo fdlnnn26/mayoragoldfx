@@ -5375,6 +5375,14 @@ setInterval(fetch24hXau, 5*60*1000);
 
 <!-- ══════════ MODUL BELAJAR SCRIPT ══════════ -->
 <script>
+/* Helper modul — didefinisikan di script biasa (global) supaya bisa dipakai script biasa & module */
+function modCount(m){return m.lessonCount!=null?m.lessonCount:(m.lessons||[]).length;}
+async function modHydrate(mod){
+  if(mod._hyd)return mod;
+  if(!mod.lessons){const c=await window._loadPrivate('modules',mod.id);if(c&&c.lessons)mod.lessons=c.lessons;}
+  mod._hyd=true;return mod;
+}
+
 /* ── Module state ── */
 window._modAllModules=[];
 window._modProgress={};
@@ -5876,12 +5884,6 @@ window._loadPrivate=async function(coll,id){
     return sn.exists()?sn.data():null;
   }catch(e){console.warn('[private '+coll+']',e.code||e);return null;}
 };
-function modCount(m){return m.lessonCount!=null?m.lessonCount:(m.lessons||[]).length;}
-async function modHydrate(mod){
-  if(mod._hyd)return mod;
-  if(!mod.lessons){const c=await window._loadPrivate('modules',mod.id);if(c&&c.lessons)mod.lessons=c.lessons;}
-  mod._hyd=true;return mod;
-}
 window.modLoadModules=async function(){
   const db=getDB();if(!db)return;
   try{
