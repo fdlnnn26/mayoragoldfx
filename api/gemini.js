@@ -173,7 +173,7 @@ Sesuaikan analisa dengan apa yang benar-benar terlihat di chart. Jangan generik.
 const listEnv = (name, def) => (process.env[name] || def).split(',').map(s => s.trim()).filter(Boolean);
 
 // KONSULTASI: boleh turun ke model yang lebih ringan kalau model utama sibuk
-const CONSULT_MODELS = listEnv('GEMINI_MODELS', 'gemini-3.6-flash,gemini-2.5-flash,gemini-2.5-flash-lite');
+const CONSULT_MODELS = listEnv('GEMINI_MODELS', 'gemini-3.6-flash,gemini-3.5-flash-lite');
 // ANALISA CHART: hanya model utama (tidak boleh turun kelas → kualitas analisa terjaga).
 // Kalau sibuk, dicoba ulang beberapa kali di model yang sama.
 const CHART_MODELS = listEnv('GEMINI_CHART_MODELS', 'gemini-3.6-flash');
@@ -211,7 +211,7 @@ async function generateWithFallback(contents, baseConfig, models, minTries, base
   const keys = getKeys();
   const t0 = Date.now();
   const startIdx = Math.floor(Math.random() * keys.length); // sebar beban antar key
-  let lastErr;
+  let lastErr, quotaErr;
 
   for (const model of models) {
     const tries = Math.max(keys.length, minTries);
@@ -228,6 +228,7 @@ async function generateWithFallback(contents, baseConfig, models, minTries, base
         return text;
       } catch (e) {
         lastErr = e;
+        if (errStatus(e) === 429) quotaErr = e;
         console.warn(`[Gemini] ${model} percobaan ${i + 1} gagal:`, errStatus(e), errText(e).slice(0, 160));
         if (errStatus(e) === 404) break;          // model tidak ada → langsung ke model berikutnya
         if (!isRetryable(e)) throw e;             // error permanen (mis. 400) → jangan diulang
@@ -235,7 +236,7 @@ async function generateWithFallback(contents, baseConfig, models, minTries, base
       }
     }
   }
-  throw lastErr || new Error('Semua model gagal');
+  throw quotaErr || lastErr || new Error('Semua model gagal');
 }
 
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
