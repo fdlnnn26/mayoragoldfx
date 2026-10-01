@@ -139,7 +139,8 @@ Jelaskan RINCI setiap zona relevan: level harga pasti, jenis zona (support/resis
 const TF_LABEL = {
   m3: 'M3',
   m5: 'M5',
-  m15: 'M15',
+  m15: 'M15 (masuk kategori "di atas M5" → SL 100 pips)',
+   m30: 'M30 (masuk kategori "di atas M5" → SL 100 pips)',
   h1: 'H1 (masuk kategori "di atas M5" → SL 100 pips)',
   h4: 'H4 atau lebih tinggi (masuk kategori "di atas M5" → SL 100 pips)'
 };
