@@ -180,7 +180,7 @@ button,input,select,textarea{font-family:inherit;outline:none}
 .seo-h2 span{color:var(--gold)}
 .seo-list{list-style:none;margin:0 0 14px 0;padding:0}
 .seo-list li{font-size:.8rem;color:var(--text2);line-height:1.9;padding-left:18px;position:relative;margin-bottom:4px}
-.seo-list li::before{content:'✦';position:absolute;left:0;color:var(--gold);font-size:.55rem;top:4px}
+.seo-list li::before{content:'';position:absolute;left:0;width:4px;height:4px;border-radius:50%;background:var(--gold);top:.7em}
 .seo-divider{height:1px;background:linear-gradient(90deg,transparent,var(--card-border),transparent);margin:48px 0}
 .seo-cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:32px}
 .seo-col-card{background:var(--bg3);border:1px solid var(--card-border);border-radius:16px;padding:24px 20px}
@@ -888,7 +888,7 @@ footer{background:rgba(4,4,7,1);border-top:1px solid var(--card-border);padding:
 .mblock-warning-body{font-size:.76rem;color:var(--text2);line-height:1.85}
 .mblock-list{list-style:none;font-size:.8rem;color:var(--text2);line-height:2}
 .mblock-list li{padding-left:20px;position:relative;margin-bottom:6px}
-.mblock-list li::before{content:'✦';position:absolute;left:0;color:var(--gold);font-size:.52rem;top:5px}
+.mblock-list li::before{content:'';position:absolute;left:0;width:4px;height:4px;border-radius:50%;background:var(--gold);top:.7em}
 .mblock-divider{height:1px;background:linear-gradient(90deg,transparent,var(--card-border),transparent);margin:32px 0}
 .mblock-term{background:var(--bg4);border:1px solid var(--card-border);border-radius:16px;padding:20px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
 .mblock-term-symbol{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:600;color:var(--gold);background:rgba(201,168,76,.06);border:1px solid var(--gold-border);border-radius:12px;padding:6px 16px;text-align:center;min-width:80px}
@@ -1223,10 +1223,10 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <div class="nav-dropdown-menu" id="tools-dropdown-menu">
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('kalender')"><span>Kalender Ekonomi</span><span class="nav-di-label free">FREE</span></button>
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('sessions')"><span>Market Sessions</span><span class="nav-di-label free">FREE</span></button>
-        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('journal')"><span>Trading Journal</span><span class="nav-di-label vip">VIP ✦</span></button>
-        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('calc')"><span>Kalkulator Lot &amp; Risk</span><span class="nav-di-label vip">VIP ✦</span></button>
-        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('swap')"><span>Kalkulator Swap</span><span class="nav-di-label vip">VIP ✦</span></button>
-        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('ai')"><span>AI Analisa Chart</span><span class="nav-di-label vip">VIP ✦</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('journal')"><span>Trading Journal</span><span class="nav-di-label vip">VIP</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('calc')"><span>Kalkulator Lot &amp; Risk</span><span class="nav-di-label vip">VIP</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('swap')"><span>Kalkulator Swap</span><span class="nav-di-label vip">VIP</span></button>
+        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('ai')"><span>AI Analisa Chart</span><span class="nav-di-label vip">VIP</span></button>
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('consult')"><span>AI Konsultasi Trading</span><span class="nav-di-label free">FREE</span></button>
       </div>
     </div>
@@ -1239,14 +1239,14 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
     <div id="nav-guest">
       <div style="display:flex;gap:10px">
         <button class="nav-btn-login" onclick="goPage('auth')">Login</button>
-        <button class="nav-btn-vip" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
+        <button class="nav-btn-vip" onclick="goPage('vip')">JOIN VIP GRATIS</button>
       </div>
     </div>
     <div id="nav-loggedin" style="display:none">
       <div class="nav-user-wrap">
         <div class="nav-avatar" id="nav-avatar">–</div>
         <span class="nav-username" id="nav-uname">–</span>
-        <span class="vip-pill" id="nav-vip-pill" style="display:none">VIP ✦</span>
+        <span class="vip-pill" id="nav-vip-pill" style="display:none">VIP</span>
         <span class="admin-pill" id="nav-admin-pill" style="display:none">ADMIN</span>
         <button class="btn-logout" onclick="doLogout()">Keluar</button>
       </div>
@@ -1266,18 +1266,18 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   <div class="mob-group-label">Trading Tools</div>
   <span class="mob-sublink" onclick="goPage('kalender')">Kalender Ekonomi<span class="mob-tool-label free">FREE</span></span>
   <span class="mob-sublink" onclick="goPage('sessions')">Market Sessions<span class="mob-tool-label free">FREE</span></span>
-  <span class="mob-sublink" onclick="goPage('journal')">Trading Journal<span class="mob-tool-label vip">VIP ✦</span></span>
-  <span class="mob-sublink" onclick="goPage('calc')">Kalkulator Lot &amp; Risk<span class="mob-tool-label vip">VIP ✦</span></span>
-  <span class="mob-sublink" onclick="goPage('swap')">Kalkulator Swap<span class="mob-tool-label vip">VIP ✦</span></span>
-  <span class="mob-sublink" onclick="goPage('ai')">AI Analisa Chart<span class="mob-tool-label vip">VIP ✦</span></span>
+  <span class="mob-sublink" onclick="goPage('journal')">Trading Journal<span class="mob-tool-label vip">VIP</span></span>
+  <span class="mob-sublink" onclick="goPage('calc')">Kalkulator Lot &amp; Risk<span class="mob-tool-label vip">VIP</span></span>
+  <span class="mob-sublink" onclick="goPage('swap')">Kalkulator Swap<span class="mob-tool-label vip">VIP</span></span>
+  <span class="mob-sublink" onclick="goPage('ai')">AI Analisa Chart<span class="mob-tool-label vip">VIP</span></span>
   <span class="mob-sublink" onclick="goPage('consult')">AI Konsultasi Trading<span class="mob-tool-label free">FREE</span></span>
   <div class="mob-group-label">Pusat Edukasi</div>
-  <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip')">✦ Membership VIP</span>
+  <span class="mob-sublink" id="mob-vdm-membership" onclick="goPage('vip')">Membership VIP</span>
   <span class="mob-link" onclick="goPage('research')">Research</span>
   <span class="mob-link" onclick="goPage('modul')">Modul Materi</span>
   <span class="mob-link" id="mob-admin-link" onclick="goPage('admin')" style="display:none">Admin</span>
   <button id="mob-login-btn" class="btn-hero-primary" style="margin-top:16px;width:100%;text-align:center" onclick="goPage('auth')">Login Member →</button>
-  <button id="mob-vip-btn" class="btn-hero-sec" style="margin-top:8px;width:100%;text-align:center;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:12px 20px" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
+  <button id="mob-vip-btn" class="btn-hero-sec" style="margin-top:8px;width:100%;text-align:center;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;padding:12px 20px" onclick="goPage('vip')">JOIN VIP GRATIS</button>
   <button id="mob-logout-btn" class="btn-logout" style="display:none;margin-top:16px;width:100%;text-align:center;padding:12px 20px;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase" onclick="doLogout()">⏻ Keluar</button>
 </div>
 <div id="mob-nav-backdrop" onclick="toggleMob()"></div>
@@ -1296,7 +1296,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <p class="hero-desc">Mayora Gold FX membantu kamu meningkatkan akurasi entry, mengambil keputusan trading yang lebih baik, dan membangun konsistensi profit di pasar emas XAU/USD — gratis selamanya.</p>
       <!-- ✅ FIX: Tambah tombol Grup Public di hero -->
       <div class="hero-actions">
-        <button class="btn-hero-primary" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
+        <button class="btn-hero-primary" onclick="goPage('vip')">JOIN VIP GRATIS</button>
         <a href="https://chat.whatsapp.com/B9ZPf6eGUNvH1eFf6y5OYr?" target="_blank" rel="noopener noreferrer" class="btn-hero-pub">
           <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Grup Public
@@ -1318,7 +1318,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <div class="feat-head reveal">
         <span class="feat-kicker">Membership</span>
         <h2 class="feat-title" id="feat-title-main">Apa yang akan kamu <span class="gold-text">dapatkan?</span></h2>
-        <button class="btn-hero-primary" onclick="goPage('vip')">JOIN VIP GRATIS ✦</button>
+        <button class="btn-hero-primary" onclick="goPage('vip')">JOIN VIP GRATIS</button>
       </div>
 
       <div class="feat-row reveal">
@@ -1468,12 +1468,12 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <h2 class="seo-h1" id="seo-services-title">Layanan Lengkap <span>Trading Emas Premium</span> dalam Satu Platform</h2>
       <p class="seo-p" style="max-width:680px;margin-bottom:32px">Semua yang kamu butuhkan untuk trading emas XAU/USD secara profesional — tersedia dalam satu ekosistem terintegrasi, dapat diakses gratis sebagai member VIP Mayora Gold FX.</p>
       <div class="seo-cols3">
-        <div class="seo-col-card"><div class="seo-col-card-t">✦ Sinyal Harian XAU/USD</div><p class="seo-col-card-p">Sinyal trading emas harian dengan level entry, stop loss, dan take profit yang spesifik. Setiap sinyal dilengkapi analisa singkat basis setup-nya — apakah dari order block, liquidity sweep, atau fair value gap. Win rate 87% berdasarkan track record 4 tahun.</p></div>
-        <div class="seo-col-card"><div class="seo-col-card-t">✦ Analisa Market Structure</div><p class="seo-col-card-p">Analisa mendalam menggunakan metode Smart Money Concept (SMC) — identifikasi pergerakan institusional di pasar emas, baca struktur pasar multi-timeframe (M15, H1, H4, Daily), dan temukan area high-probability entry dengan rasio risk-reward optimal.</p></div>
-        <div class="seo-col-card"><div class="seo-col-card-t">✦ Live Trading Session</div><p class="seo-col-card-p">Sesi trading live bersama trader berpengalaman di Mayora Gold FX. Lihat secara real-time bagaimana trader profesional membaca market, memilih entry, mengelola posisi, dan mengambil keputusan di tengah volatilitas pasar emas.</p></div>
-        <div class="seo-col-card"><div class="seo-col-card-t">✦ Trading Journal Otomatis</div><p class="seo-col-card-p">Sistem trading journal premium terintegrasi langsung di platform. Catat setiap trade, hitung win rate, drawdown, dan risk-reward ratio secara otomatis. Fitur equity curve dan P&L per simbol membantu kamu mengidentifikasi pola dan area improvement.</p></div>
-        <div class="seo-col-card"><div class="seo-col-card-t">✦ Webinar & Edukasi Mingguan</div><p class="seo-col-card-p">Webinar rutin setiap minggu mencakup: analisa fundamental emas (inflasi, suku bunga, safe haven flow), update market structure mingguan, dan sesi Q&A langsung dengan analis. Rekaman tersedia untuk member yang tidak bisa hadir live.</p></div>
-        <div class="seo-col-card"><div class="seo-col-card-t">✦ Komunitas VIP Eksklusif</div><p class="seo-col-card-p">Grup VIP WhatsApp dengan ratusan trader aktif dari seluruh Indonesia. Diskusi ide trading, berbagi analisa, saling mendukung, dan belajar dari pengalaman trader lain. Admin aktif 24 jam untuk menjawab pertanyaan dan berbagi update market terkini.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">Sinyal Harian XAU/USD</div><p class="seo-col-card-p">Sinyal trading emas harian dengan level entry, stop loss, dan take profit yang spesifik. Setiap sinyal dilengkapi analisa singkat basis setup-nya — apakah dari order block, liquidity sweep, atau fair value gap. Win rate 87% berdasarkan track record 4 tahun.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">Analisa Market Structure</div><p class="seo-col-card-p">Analisa mendalam menggunakan metode Smart Money Concept (SMC) — identifikasi pergerakan institusional di pasar emas, baca struktur pasar multi-timeframe (M15, H1, H4, Daily), dan temukan area high-probability entry dengan rasio risk-reward optimal.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">Live Trading Session</div><p class="seo-col-card-p">Sesi trading live bersama trader berpengalaman di Mayora Gold FX. Lihat secara real-time bagaimana trader profesional membaca market, memilih entry, mengelola posisi, dan mengambil keputusan di tengah volatilitas pasar emas.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">Trading Journal Otomatis</div><p class="seo-col-card-p">Sistem trading journal premium terintegrasi langsung di platform. Catat setiap trade, hitung win rate, drawdown, dan risk-reward ratio secara otomatis. Fitur equity curve dan P&L per simbol membantu kamu mengidentifikasi pola dan area improvement.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">Webinar & Edukasi Mingguan</div><p class="seo-col-card-p">Webinar rutin setiap minggu mencakup: analisa fundamental emas (inflasi, suku bunga, safe haven flow), update market structure mingguan, dan sesi Q&A langsung dengan analis. Rekaman tersedia untuk member yang tidak bisa hadir live.</p></div>
+        <div class="seo-col-card"><div class="seo-col-card-t">Komunitas VIP Eksklusif</div><p class="seo-col-card-p">Grup VIP WhatsApp dengan ratusan trader aktif dari seluruh Indonesia. Diskusi ide trading, berbagi analisa, saling mendukung, dan belajar dari pengalaman trader lain. Admin aktif 24 jam untuk menjawab pertanyaan dan berbagi update market terkini.</p></div>
       </div>
     </div>
   </section>
@@ -1524,7 +1524,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 
   <section id="s-cta">
     <div class="cta-inner reveal">
-      <div class="cta-badge">✦ Bergabung Gratis Sekarang</div>
+      <div class="cta-badge">Bergabung Gratis Sekarang</div>
       <h2 class="cta-title">Siap Upgrade <span class="gold-text">Trading Emas</span> Kamu?</h2>
       <p class="cta-sub">Bergabung dengan 500+ trader elite Indonesia di grup VIP kami. Akses penuh sinyal XAU/USD, live session, dan journal premium — gratis selamanya.</p>
       <div class="cta-btns">
@@ -1579,7 +1579,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       </div>
       <div class="footer-bottom">
         <span class="footer-copy">© <span id="fyear"></span> Mayora Gold FX. All rights reserved.</span>
-        <span class="footer-craft">Crafted with <span>✦</span> for Elite Traders Indonesia</span>
+        <span class="footer-craft">Crafted for Elite Traders Indonesia</span>
       </div>
     </div>
   </footer>
@@ -1590,7 +1590,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
     <button class="mod-app-tab on" id="mat-all" onclick="modSwitchTab('all')">Semua Modul</button>
     <button class="mod-app-tab" id="mat-my" onclick="modSwitchTab('my')">Progress Saya</button>
     <button class="mod-app-tab" id="mat-lb" onclick="modSwitchTab('leaderboard')">🏆 Leaderboard</button>
-    <button class="mod-app-tab" id="mat-adm" style="display:none" onclick="modSwitchTab('admin')">✦ Admin Modul</button>
+    <button class="mod-app-tab" id="mat-adm" style="display:none" onclick="modSwitchTab('admin')">Admin Modul</button>
   </div>
 
   <!-- TAB: ALL MODULES -->
@@ -1612,7 +1612,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           <input class="mod-search" id="mod-search-inp" type="search" placeholder="Cari modul..." oninput="modRenderGrid()">
         </div>
         <div class="mod-grid" id="mod-grid-main">
-          <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Space Grotesk',sans-serif;font-size:2.8rem;opacity:.1;margin-bottom:10px;color:var(--gold)">✦</div><div style="font-size:.72rem;line-height:1.85">Memuat modul...</div></div>
+          <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:.72rem;line-height:1.85">Memuat modul...</div></div>
         </div>
       </div>
     </div>
@@ -1626,7 +1626,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
         <p class="page-sub">Modul yang sudah atau sedang kamu pelajari.</p>
       </div>
       <div class="mod-grid" id="mod-grid-my">
-        <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Space Grotesk',sans-serif;font-size:2.8rem;opacity:.1;margin-bottom:10px;color:var(--gold)">✦</div><div style="font-size:.72rem;line-height:1.85">Belum ada progress. Mulai belajar dari tab Semua Modul!</div></div>
+        <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:.72rem;line-height:1.85">Belum ada progress. Mulai belajar dari tab Semua Modul!</div></div>
       </div>
     </div>
   </div>
@@ -1734,7 +1734,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
         </div>
       </div>
       <div class="adm-mod-list-m" id="adm-mod-list-m">
-        <div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:2rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Memuat modul...</div></div>
+        <div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:.72rem">Memuat modul...</div></div>
       </div>
     </div>
   </div>
@@ -1809,17 +1809,16 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 <!-- PAGE: VIP -->
 <div class="page" id="page-vip" role="main">
   <div class="vip-hero">
-    <div class="vip-hero-badge">✦ Exclusive Membership</div>
+    <div class="vip-hero-badge">Exclusive Membership</div>
     <h1 class="vip-hero-title">Akses <span class="gold-text">VIP Eksklusif</span><br>Sepenuhnya Gratis</h1>
     <p class="vip-hero-sub">Bergabunglah dengan komunitas trader elite Indonesia. Sinyal harian XAU/USD, live session, journal premium, dan lebih banyak lagi — 100% gratis.</p>
     <div class="vip-price-card">
-      <div class="vpc-top">✦ MAYORA GOLD FX — VIP MEMBERSHIP ✦</div>
+      <div class="vpc-top">MAYORA GOLD FX — VIP MEMBERSHIP</div>
       <div class="vpc-body">
         <div class="vpc-price-area">
           <div class="vpc-price-label">Investasi Anda</div>
           <div class="vpc-price-val">Rp 0</div>
           <div class="vpc-price-note">GRATIS SELAMANYA</div>
-          <div style="color:var(--gold);font-size:.72rem;letter-spacing:4px;margin-top:10px">★ ★ ★ ★ ★</div>
         </div>
         <div class="vpc-benefits">
           <div class="vpc-benefit"><div class="vpc-benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div><div class="vb-title">Daily Gold Signals XAU/USD</div><div class="vb-desc">Sinyal emas harian dengan entry, TP & SL presisi berbasis SMC</div></div></div>
@@ -1909,7 +1908,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <div style="display:flex;align-items:center;gap:8px">
         <div class="nav-avatar" id="ap-avatar">–</div>
         <span class="nav-username" id="ap-uname">–</span>
-        <span class="vip-pill" id="ap-vip" style="display:none">VIP ✦</span>
+        <span class="vip-pill" id="ap-vip" style="display:none">VIP</span>
       </div>
     </div>
   </div>
@@ -1923,7 +1922,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   <div class="journal-page on" id="jp-dash">
     <div class="jmain">
       <div class="stats-row" id="stats-row"></div>
-      <div id="vip-lock-dash" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trading Journal hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+      <div id="vip-lock-dash" style="display:none" class="vip-lock-box"><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trading Journal hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
       <div id="vip-cnt-dash" style="display:none">
         <div class="sec-label">Live Positions</div>
         <div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Current</th><th>SL / TP</th><th>Size</th><th>Open P&amp;L</th><th>Progress</th><th>Status</th><th></th></tr></thead><tbody id="open-tbody"></tbody></table></div></div>
@@ -1936,7 +1935,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   </div>
   <div class="journal-page" id="jp-history">
     <div class="jmain">
-      <div id="vip-lock-hist" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trade History hanya tersedia untuk member VIP.</div><a href="https://wa.me/6282197231712" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+      <div id="vip-lock-hist" style="display:none" class="vip-lock-box"><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Trade History hanya tersedia untuk member VIP.</div><a href="https://wa.me/6282197231712" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
       <div id="vip-cnt-hist" style="display:none">
         <div class="tbl-wrap">
           <div class="tbl-head"><div class="tbl-ttl">Closed Trades</div><div class="flt-btns"><button class="flt-btn on" onclick="fltHist('all',this)">All</button><button class="flt-btn" onclick="fltHist('win',this)">Winners</button><button class="flt-btn" onclick="fltHist('loss',this)">Losers</button></div></div>
@@ -1947,7 +1946,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   </div>
   <div class="journal-page" id="jp-notes">
     <div class="jmain">
-      <div id="vip-lock-notes" style="display:none" class="vip-lock-box"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Journal Notes hanya tersedia untuk member VIP.</div><a href="https://wa.me/6282197231712" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+      <div id="vip-lock-notes" style="display:none" class="vip-lock-box"><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Journal Notes hanya tersedia untuk member VIP.</div><a href="https://wa.me/6282197231712" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
       <div id="vip-cnt-notes" style="display:none"><div class="sec-label">Journal Notes</div><div class="notes-grid" id="notes-grid"></div></div>
     </div>
   </div>
@@ -2021,7 +2020,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <h1 class="section-title">Kalkulator <span class="gold-text">Lot & Risk</span></h1>
       <p class="section-sub" style="max-width:480px;margin:0 auto">Hitung ukuran lot optimal berdasarkan modal, risk, dan jarak stop loss kamu.</p>
     </div>
-    <div id="vip-lock-calc" class="vip-lock-box" style="display:none"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalkulator Lot &amp; Risk hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+    <div id="vip-lock-calc" class="vip-lock-box" style="display:none"><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalkulator Lot &amp; Risk hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
     <div id="vip-cnt-calc" style="display:none">
       <div class="acc-sec">
         <div class="form-grid2m">
@@ -2052,7 +2051,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
       <h1 class="section-title">Kalkulator <span class="gold-text">Swap</span></h1>
       <p class="section-sub" style="max-width:480px;margin:0 auto">Hitung biaya atau pendapatan swap (overnight rollover) untuk posisi XAU/USD kamu.</p>
     </div>
-    <div id="vip-lock-swap" class="vip-lock-box" style="display:none"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalkulator Swap hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+    <div id="vip-lock-swap" class="vip-lock-box" style="display:none"><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">Kalkulator Swap hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
     <div id="vip-cnt-swap" style="display:none">
       <div class="acc-sec">
         <div class="form-grid2m">
@@ -2113,10 +2112,10 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   <div style="padding:var(--nav-h) 40px 80px;max-width:760px;margin:0 auto">
     <div style="padding:60px 0 40px;text-align:center">
       <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">VIP Trading Tools</span><div class="eyebrow-line r"></div></div>
-      <h1 class="section-title">✦ AI Analisa <span class="gold-text">Chart</span></h1>
+      <h1 class="section-title">AI Analisa <span class="gold-text">Chart</span></h1>
       <p class="section-sub" style="max-width:480px;margin:0 auto">Upload screenshot chart XAU/USD, pilih mode &amp; timeframe, lalu dapatkan analisa AI secara instan.</p>
     </div>
-    <div id="vip-lock-ai" class="vip-lock-box" style="display:none"><div class="vll-icon">✦</div><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">AI Analisa Chart hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
+    <div id="vip-lock-ai" class="vip-lock-box" style="display:none"><div class="vll-title">Fitur VIP Terkunci</div><div class="vll-sub">AI Analisa Chart hanya tersedia untuk member VIP.<br>Hubungi admin untuk upgrade akun kamu.</div><a href="https://wa.me/6282197231712?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn">Admin 1 →</a><a href="https://wa.me/6285773375679?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 2 →</a><a href="https://wa.me/6282138818361?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20VIP!" target="_blank" rel="noopener noreferrer" class="vll-btn" style="margin-left:8px">Admin 3 →</a></div>
     <div id="vip-cnt-ai" style="display:none">
       <!-- Quota Badge -->
       <div id="ai-quota-bar" style="display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--card-border);border-radius:16px;padding:12px 16px;margin-bottom:20px">
@@ -2212,14 +2211,14 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   <div class="cs-wrap">
     <div style="padding:60px 0 32px;text-align:center">
       <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span class="eyebrow-txt">Trading Tools</span><div class="eyebrow-line r"></div></div>
-      <h1 class="section-title">✦ AI Konsultasi <span class="gold-text">Trading</span></h1>
+      <h1 class="section-title">AI Konsultasi <span class="gold-text">Trading</span></h1>
       <p class="section-sub" style="max-width:500px;margin:0 auto">Dua mode: <b>Konsultasi</b> untuk saran soal masalah trading kamu, atau <b>Belajar</b> untuk dapat pelajaran berdasarkan teori & buku trading terbaik. Butuh sinyal entry? Pakai AI Analisa Chart.</p>
     </div>
 
     <div style="text-align:center;margin-bottom:14px">
       <div class="cs-seg" id="cs-mode-seg">
         <button class="cs-seg-b on" data-m="advice" onclick="consultSetMode('advice')">💬 Konsultasi</button>
-        <button class="cs-seg-b" data-m="learn" onclick="consultSetMode('learn')">📚 Belajar <span class="vip-pill">VIP ✦</span></button>
+        <button class="cs-seg-b" data-m="learn" onclick="consultSetMode('learn')">📚 Belajar <span class="vip-pill">VIP</span></button>
       </div>
       <div id="cs-mode-desc" style="font-size:.6rem;color:var(--text3);margin-top:8px;line-height:1.7"></div>
     </div>
@@ -2395,7 +2394,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           </button>
         </div>
       </div>
-      <div class="admin-news-list" id="admin-news-list"><div class="empty-state"><div class="empty-icon">✦</div>Memuat berita...</div></div>
+      <div class="admin-news-list" id="admin-news-list"><div class="empty-state">Memuat berita...</div></div>
     </div>
   </div>
   <div class="admin-page" id="adm-users">
@@ -2404,7 +2403,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
         <div class="sec-label" style="margin-bottom:0">Manajemen User</div>
         <span style="font-size:.65rem;color:var(--text3)" id="user-count-lbl">Loading...</span>
       </div>
-      <div class="user-list" id="user-list"><div class="empty-state"><div class="empty-icon">✦</div>Memuat user...</div></div>
+      <div class="user-list" id="user-list"><div class="empty-state">Memuat user...</div></div>
     </div>
   </div>
   <div class="admin-page" id="adm-stats">
@@ -2486,7 +2485,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
           </button>
         </div>
       </div>
-      <div id="rs-admin-list" style="margin-top:16px"><div class="empty-state"><div class="empty-icon">✦</div>Memuat research...</div></div>
+      <div id="rs-admin-list" style="margin-top:16px"><div class="empty-state">Memuat research...</div></div>
     </div>
   </div>
 </div>
@@ -2507,7 +2506,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 
     <!-- List view -->
     <div id="rs-list-view">
-      <div id="rs-public-list"><div class="empty-state"><div class="empty-icon">✦</div>Memuat research...</div></div>
+      <div id="rs-public-list"><div class="empty-state">Memuat research...</div></div>
     </div>
   </div>
 </div>
@@ -2945,7 +2944,7 @@ window.calcLotRisk=function(){
   var centNote=document.getElementById('calc-cent-note');
   if(lot<0.01){
     centNote.style.display='block';
-    centNote.innerHTML='<div class="acc-sec-t" style="color:var(--gold)">✦ Saran: Pakai Akun Cent</div><div style="font-size:.7rem;color:var(--text2);line-height:1.95">Dengan modal $'+modal.toFixed(2)+', risk '+risk+'%, dan SL '+sl+' poin, lot size yang dibutuhkan ('+lot.toFixed(4)+') lebih kecil dari minimum lot di akun standard (0.01). Supaya money management tetap presisi sesuai rencana risk kamu, lebih cocok pakai <strong style="color:var(--gold)">Akun Cent</strong> — modal yang sama akan terasa lebih besar (cth: $'+modal.toFixed(2)+' setara ¢'+(modal*100).toFixed(0)+'), sehingga lot size minimum jadi realistis untuk diterapkan tanpa memperbesar risk di luar rencana.</div>';
+    centNote.innerHTML='<div class="acc-sec-t" style="color:var(--gold)">Saran: Pakai Akun Cent</div><div style="font-size:.7rem;color:var(--text2);line-height:1.95">Dengan modal $'+modal.toFixed(2)+', risk '+risk+'%, dan SL '+sl+' poin, lot size yang dibutuhkan ('+lot.toFixed(4)+') lebih kecil dari minimum lot di akun standard (0.01). Supaya money management tetap presisi sesuai rencana risk kamu, lebih cocok pakai <strong style="color:var(--gold)">Akun Cent</strong> — modal yang sama akan terasa lebih besar (cth: $'+modal.toFixed(2)+' setara ¢'+(modal*100).toFixed(0)+'), sehingga lot size minimum jadi realistis untuk diterapkan tanpa memperbesar risk di luar rencana.</div>';
   }else{
     centNote.style.display='none';
   }
@@ -3330,7 +3329,7 @@ window.aiAnalyze = async function() {
   const used = await aiGetQuota(uid);
   if (used >= AI_DAILY_LIMIT) {
     document.getElementById('ai-error').style.display = 'block';
-    document.getElementById('ai-error').textContent = `✦ Kuota analisa kamu hari ini sudah habis (${AI_DAILY_LIMIT}/${AI_DAILY_LIMIT}). Kuota akan reset besok pukul 00:00.`;
+    document.getElementById('ai-error').textContent = `Kuota analisa kamu hari ini sudah habis (${AI_DAILY_LIMIT}/${AI_DAILY_LIMIT}). Kuota akan reset besok pukul 00:00.`;
     return;
   }
 
@@ -3453,7 +3452,7 @@ function csChips(){ return _csMode==='learn' ? CS_CHIPS_LEARN : CS_CHIPS_ADVICE;
 window.consultSetMode = function(m){
   if(_csBusy) return;
   if(m==='learn' && !csIsVip()){
-    toast('AI Belajar','Mode Belajar khusus member VIP ✦ Konsultasi tetap bisa dipakai.','#C9A84C');
+    toast('AI Belajar','Mode Belajar khusus member VIP. Konsultasi tetap bisa dipakai.','#C9A84C');
     _csMode = 'advice';
     consultRender();
     return;
@@ -3465,7 +3464,7 @@ window.consultSetMode = function(m){
 
 function csUpsellHtml(limitHit){
   return `<div class="cs-card" style="padding:22px;border-color:rgba(201,168,76,.35);background:linear-gradient(160deg,rgba(201,168,76,.07),var(--bg3))">
-    <div style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">✦ Benefit VIP</div>
+    <div style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Benefit VIP</div>
     <div style="font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:8px">${limitHit?'Kuota konsultasi kamu sudah habis — upgrade VIP biar bisa lanjut':'Mau konsultasi lebih banyak? Upgrade ke VIP gratis'}</div>
     <div style="font-size:.7rem;color:var(--text2);line-height:1.9;margin-bottom:14px">
       <div>› <b style="color:var(--gold)">5 konsultasi/hari</b> × <b style="color:var(--gold)">10 percakapan</b> <span style="color:var(--text3)">(Non-VIP: 2 × 5)</span></div>
@@ -3490,7 +3489,7 @@ function consultRender(pending){
     let h=''; for(let i=0;i<lim.sessions;i++){ h+=`<div style="width:26px;height:8px;border-radius:12px;background:${i<sessLeft?'var(--gold)':'var(--bg4)'};border:1px solid var(--card-border);transition:background .3s"></div>`; }
     dots.innerHTML = h + `<span style="font-size:.62rem;color:${sessLeft===0?'var(--red)':'var(--text2)'};margin-left:6px">${sessLeft}/${lim.sessions} tersisa</span>`;
   }
-  const tier = document.getElementById('cs-tier'); if(tier) tier.textContent = window._isAdmin ? 'ADMIN' : (vip ? 'VIP ✦' : 'REGULAR');
+  const tier = document.getElementById('cs-tier'); if(tier) tier.textContent = window._isAdmin ? 'ADMIN' : (vip ? 'VIP' : 'REGULAR');
   const cnt = st.active ? st.count : 0;
   const mt = document.getElementById('cs-msg-txt');
   if(mt){ mt.textContent = `${cnt}/${lim.msgs}`; mt.style.color = cnt>=lim.msgs ? 'var(--red)' : 'var(--gold)'; }
@@ -3507,7 +3506,7 @@ function consultRender(pending){
     if(_csMode==='learn'){
       html += `<div class="cs-b m">Halo! Aku AI mentor belajar Mayora Gold FX 📚<br>Sebutkan <b>keluhan atau topik</b> yang mau kamu kuasai (mis. FOMO, market structure, position sizing). Aku ajarkan <b>konsep intinya</b> berdasarkan teori & buku trading terbaik, kasih <b>latihan</b>, dan rekomendasi <b>bacaan lanjut</b>.<br><span style="color:var(--text3)">Catatan: ini ringkasan pembelajaran, bukan pengganti buku aslinya. Tidak ada sinyal buy/sell atau prediksi harga — setup entry ada di menu AI Analisa Chart.</span></div>`;
     } else {
-      html += `<div class="cs-b m">Halo! Aku AI konsultan trading Mayora Gold FX ✦<br>Konsultasi bareng aku soal <b>psikologi</b> (overtrading, FOMO, susah disiplin), <b>teknikal analisis</b> (market structure, order block, validasi zona), <b>manajemen risiko</b>, strategi, atau masalah trading lainnya. Aku bantu cari akar masalahnya dan kasih saran yang bisa langsung dipraktikkan.<br><span style="color:var(--text3)">Catatan: di sini tidak ada sinyal buy/sell atau prediksi harga — setup entry ada di menu AI Analisa Chart.</span></div>`;
+      html += `<div class="cs-b m">Halo! Aku AI konsultan trading Mayora Gold FX<br>Konsultasi bareng aku soal <b>psikologi</b> (overtrading, FOMO, susah disiplin), <b>teknikal analisis</b> (market structure, order block, validasi zona), <b>manajemen risiko</b>, strategi, atau masalah trading lainnya. Aku bantu cari akar masalahnya dan kasih saran yang bisa langsung dipraktikkan.<br><span style="color:var(--text3)">Catatan: di sini tidak ada sinyal buy/sell atau prediksi harga — setup entry ada di menu AI Analisa Chart.</span></div>`;
     }
   }
   st.history.forEach(h=>{ html += `<div class="cs-b ${h.r==='u'?'u':'m'}">${h.r==='u'?csEsc(h.t):aiFormatResult(csEsc(h.t))}</div>`; });
@@ -3528,9 +3527,9 @@ function consultRender(pending){
   if(allDone){
     n = `<div style="background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.3);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--red);line-height:1.7">⚠ Kuota konsultasi hari ini habis (${lim.sessions}/${lim.sessions}). Reset besok pukul 00:00.</div>`;
   } else if(sessionFull){
-    n = `<div style="background:rgba(201,168,76,.08);border:1px solid var(--gold-border);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--gold);line-height:1.7;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>✦ Batas ${lim.msgs} percakapan di konsultasi ini sudah tercapai. Sisa ${sessLeft} konsultasi hari ini.</span><button class="cs-btn" onclick="consultNew()">Mulai Konsultasi Baru</button></div>`;
+    n = `<div style="background:rgba(201,168,76,.08);border:1px solid var(--gold-border);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--gold);line-height:1.7;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>Batas ${lim.msgs} percakapan di konsultasi ini sudah tercapai. Sisa ${sessLeft} konsultasi hari ini.</span><button class="cs-btn" onclick="consultNew()">Mulai Konsultasi Baru</button></div>`;
   } else if(!vip && st.active && lim.msgs - st.count === 1){
-    n = `<div style="background:rgba(201,168,76,.08);border:1px solid var(--gold-border);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--gold);line-height:1.7">✦ Sisa 1 percakapan di konsultasi ini.</div>`;
+    n = `<div style="background:rgba(201,168,76,.08);border:1px solid var(--gold-border);border-radius:16px;padding:12px 16px;font-size:.7rem;color:var(--gold);line-height:1.7">Sisa 1 percakapan di konsultasi ini.</div>`;
   }
   nt.innerHTML = n; nt.style.display = n ? 'block' : 'none';
 
@@ -3597,7 +3596,7 @@ window.consultSend = async function(pre){
   if(text.length > 500){ toast('Error','Pesan maksimal 500 karakter','#E05A5A'); return; }
 
   if(_csMode==='learn' && !csIsVip()){
-    toast('AI Belajar','Mode Belajar khusus member VIP ✦','#C9A84C');
+    toast('AI Belajar','Mode Belajar khusus member VIP','#C9A84C');
     _csMode='advice'; consultRender(); return;
   }
   _csBusy = true;
@@ -3652,9 +3651,9 @@ window.consultSend = async function(pre){
     const left = lim.sessions - st.sessions;
     if(st.count >= lim.msgs){
       if(left > 0) toast('AI Konsultasi',`Batas ${lim.msgs} percakapan tercapai. Mulai konsultasi baru (sisa ${left}).`,'#C9A84C');
-      else toast('AI Konsultasi', csIsVip() ? 'Kuota konsultasi hari ini habis. Reset besok 00:00.' : 'Kuota habis. Upgrade VIP untuk 5 konsultasi × 10 percakapan/hari ✦','#E05A5A');
+      else toast('AI Konsultasi', csIsVip() ? 'Kuota konsultasi hari ini habis. Reset besok 00:00.' : 'Kuota habis. Upgrade VIP untuk 5 konsultasi × 10 percakapan/hari','#E05A5A');
     } else if(!csIsVip() && lim.msgs - st.count === 1){
-      toast('AI Konsultasi','Sisa 1 percakapan. VIP dapat 10 percakapan per konsultasi ✦','#C9A84C');
+      toast('AI Konsultasi','Sisa 1 percakapan. VIP dapat 10 percakapan per konsultasi','#C9A84C');
     }
   }catch(e){
     console.error('[consultSend]', e);
@@ -4159,7 +4158,7 @@ function showLoggedIn(user){
   document.getElementById('acc-email').textContent=user.email;
   document.getElementById('acc-name').textContent=name;
   document.getElementById('acc-trades').textContent=trades.length+' trades';
-  document.getElementById('acc-status').innerHTML=isAdmin?'<span style="color:var(--green)">✦ Administrator</span>':isVip?'<span style="color:var(--gold)">✦ VIP Member</span>':'<span style="color:var(--text3)">Regular — hubungi admin untuk upgrade</span>';
+  document.getElementById('acc-status').innerHTML=isAdmin?'<span style="color:var(--green)">Administrator</span>':isVip?'<span style="color:var(--gold)">VIP Member</span>':'<span style="color:var(--text3)">Regular — hubungi admin untuk upgrade</span>';
   document.getElementById('adm-avatar').textContent=name.charAt(0).toUpperCase();
   document.getElementById('adm-uname').textContent=name;
   const vdmMembership=document.getElementById('vdm-membership');
@@ -4334,7 +4333,7 @@ function startRoleListener(user){
       window._isVip=nv; window._isAdmin=na;
       showLoggedIn(window._curUser||user);        /* refresh semua UI: pill, lock, menu */
       refreshRoleDependentViews();
-      if(!wasVip&&nv) toast('MGF','Akun VIP kamu sudah aktif ✦','#C9A84C');
+      if(!wasVip&&nv) toast('MGF','Akun VIP kamu sudah aktif','#C9A84C');
       else if(wasVip&&!nv&&!na) toast('MGF','Status VIP kamu dicabut','#E05A5A');
     },err=>console.warn('[role listener]',err));
   }catch(e){ console.warn('[role listener] gagal start:',e); }
@@ -4491,7 +4490,7 @@ function renderNewsFromData(newsData){
       <div class="news-featured-thumb img-ar-16-9">
         ${featImg
           ?`<img src="${featImg}" alt="${featured.title}" loading="lazy">`
-          :`<svg viewBox="0 0 200 80" width="100%" height="100%" style="opacity:.06;position:absolute;inset:0"><path d="M0,40 Q50,10 100,40 T200,40" stroke="#C9A84C" stroke-width="2" fill="none"/></svg><svg viewBox="0 0 60 60" width="60" height="60" style="position:absolute"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="55%" text-anchor="middle" fill="#C9A84C" font-size="20" font-family="Space Grotesk,sans-serif">✦</text></svg>`
+          :`<svg viewBox="0 0 200 80" width="100%" height="100%" style="opacity:.06;position:absolute;inset:0"><path d="M0,40 Q50,10 100,40 T200,40" stroke="#C9A84C" stroke-width="2" fill="none"/></svg><svg viewBox="0 0 60 60" width="60" height="60" style="position:absolute"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/></svg>`
         }
         <div class="nf-cat">${featured.cat}</div>
       </div>
@@ -5020,15 +5019,15 @@ window._loadAdminData=loadAdminData;
 
 async function renderAdminNewsList(){
   const list=document.getElementById('admin-news-list');
-  list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Memuat...</div>';
+  list.innerHTML='<div class="empty-state">Memuat...</div>';
   const news=await loadNewsFromDB();
-  if(!news.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada berita</div>';return;}
+  if(!news.length){list.innerHTML='<div class="empty-state">Belum ada berita</div>';return;}
   list.innerHTML=news.map(n=>{
     const thumb=n.imageUrl?getOptUrl(n.imageUrl,144):'';
     return`<div class="admin-news-item">
       <div class="ani-thumb">${thumb
         ?`<img src="${thumb}" alt="${n.title}" loading="lazy">`
-        :'<div style="width:100%;height:100%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-family:Space Grotesk,sans-serif;color:var(--gold);opacity:.3;font-size:1.4rem">✦</div>'
+        :'<div style="width:100%;height:100%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-family:Space Grotesk,sans-serif;color:var(--gold);opacity:.3;font-size:1.4rem"></div>'
       }</div>
       <div class="ani-body">
         <div class="ani-cat">${n.cat}${n.featured?'<span class="ani-featured">FEATURED</span>':''}</div>
@@ -5104,7 +5103,7 @@ async function loadUsers(){
     const users=[];snap.forEach(d=>users.push({uid:d.id,...d.data()}));
     document.getElementById('user-count-lbl').textContent=users.length+' total user';
     if(!users.length){list.innerHTML='<div class="empty-state">Belum ada user</div>';return;}
-    list.innerHTML=users.map(u=>`<div class="user-item"><div class="user-av">${(u.displayName||u.email||'?').charAt(0).toUpperCase()}</div><div class="user-info-col"><div class="user-name">${u.displayName||'—'}</div><div class="user-email">${u.email||'—'}</div></div><div class="user-badges">${u.admin?'<span class="admin-pill">ADMIN</span>':''}<button class="toggle-vip ${u.vip?'is-vip':'not-vip'}" onclick="window._toggleUserVip('${u.uid}',${!u.vip})">${u.vip?'✦ VIP — Cabut':'Jadikan VIP'}</button></div></div>`).join('');
+    list.innerHTML=users.map(u=>`<div class="user-item"><div class="user-av">${(u.displayName||u.email||'?').charAt(0).toUpperCase()}</div><div class="user-info-col"><div class="user-name">${u.displayName||'—'}</div><div class="user-email">${u.email||'—'}</div></div><div class="user-badges">${u.admin?'<span class="admin-pill">ADMIN</span>':''}<button class="toggle-vip ${u.vip?'is-vip':'not-vip'}" onclick="window._toggleUserVip('${u.uid}',${!u.vip})">${u.vip?'VIP — Cabut':'Jadikan VIP'}</button></div></div>`).join('');
   }catch(e){list.innerHTML=`<div class="empty-state">Gagal memuat user: ${e.message}</div>`;}
 }
 window._loadUsers=loadUsers;
@@ -5210,7 +5209,7 @@ function renderOpen(){
   const open=trades.filter(t=>t.exit===null);
   const tb=document.getElementById('open-tbody');
   const SD=window.SYM_D||{};
-  if(!open.length){tb.innerHTML=`<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">✦</div>No open positions</div></td></tr>`;return;}
+  if(!open.length){tb.innerHTML=`<tr><td colspan="10"><div class="empty-state">No open positions</div></td></tr>`;return;}
   tb.innerHTML=open.map(t=>{
     const cp=window._lp[t.symbol],isLim=t.type==='limit'&&!t.activated;
     const pnl=isLim?null:calcOpnl(t),pnlPct=(pnl!==null&&t.entry&&t.size)?(pnl/(t.entry*t.size)*100):null;
@@ -5225,7 +5224,7 @@ function renderHistory(){
   if(window._histFlt==='win') data=data.filter(t=>calcPnl(t)>0);
   if(window._histFlt==='loss') data=data.filter(t=>calcPnl(t)<=0);
   const tb=document.getElementById('hist-tbody');
-  if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">✦</div>No trades found</div></td></tr>`;return;}
+  if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state">No trades found</div></td></tr>`;return;}
   tb.innerHTML=[...data].reverse().map(t=>{
     const pnl=calcPnl(t),r=calcR(t),rb=t.closedReason?`<span class="badge ${t.closedReason==='TP'?'tp':'sl'}" style="margin-left:4px">${t.closedReason}</span>`:'';
     return`<tr><td>${t.date_close||t.date}</td><td><span class="td-sym">${SD[t.symbol]||t.symbol}</span></td><td><span class="badge ${t.dir.toLowerCase()}">${t.dir}</span></td><td>${fmtP(t.entry,t.symbol)}</td><td>${fmtP(t.exit,t.symbol)}${rb}</td><td>${t.size}</td><td class="${pnl>0?'p-pos':'p-neg'}">${fmtM(pnl)}</td><td class="${r&&r>=1?'p-pos':r&&r<0?'p-neg':'p-neu'}">${r!==null?(r>0?'+':'')+r+'R':'—'}</td><td><div class="row-actions"><button class="act-btn" onclick="window._editTrade('${t._docId||t.id}')">Edit</button><button class="act-btn del" onclick="window._delTrade('${t._docId||t.id}')">Del</button></div></td></tr>`;
@@ -5257,8 +5256,8 @@ function renderNotes(){
   const SD=window.SYM_D||{};
   const notes=trades.filter(t=>t.notes);
   const g=document.getElementById('notes-grid');
-  if(!notes.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div>No journal notes yet</div>`;return;}
-  g.innerHTML=[...notes].reverse().map(t=>`<div class="note-card"><div class="note-sym">${SD[t.symbol]||t.symbol}</div><div class="note-date">${t.date} · ${t.dir}</div><div class="note-txt">${t.notes}</div>${t.tag?`<div class="note-tag">✦ ${t.tag}</div>`:''}</div>`).join('');
+  if(!notes.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1">No journal notes yet</div>`;return;}
+  g.innerHTML=[...notes].reverse().map(t=>`<div class="note-card"><div class="note-sym">${SD[t.symbol]||t.symbol}</div><div class="note-date">${t.date} · ${t.dir}</div><div class="note-txt">${t.notes}</div>${t.tag?`<div class="note-tag">${t.tag}</div>`:''}</div>`).join('');
 }
 
 function renderAll(){renderStats();renderOpen();renderHistory();renderEquity();renderBkd();renderNotes();}
@@ -5444,7 +5443,7 @@ window.modRenderGrid=function(){
   if(q)mods=mods.filter(m=>(m.title||'').toLowerCase().includes(q)||(m.excerpt||'').toLowerCase().includes(q)||(m.cat||'').toLowerCase().includes(q));
   const grid=document.getElementById('mod-grid-main');if(!grid)return;
   const isVip=window._isVip||false,isAdmin=window._isAdmin||false,uid=window._curUser?.uid||null;
-  if(!mods.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Space Grotesk',sans-serif;font-size:2.8rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem;line-height:1.85">${window._modAllModules.length===0?'Belum ada modul.':'Tidak ada modul yang cocok.'}</div></div>`;return;}
+  if(!mods.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:.72rem;line-height:1.85">${window._modAllModules.length===0?'Belum ada modul.':'Tidak ada modul yang cocok.'}</div></div>`;return;}
   grid.innerHTML=mods.map(m=>{
     const thumb=m.coverUrl?m.coverUrl:'';
     const progress=window._modProgress[m.id]||{completedLessons:[]};
@@ -5454,7 +5453,7 @@ window.modRenderGrid=function(){
     const locked=m.vip&&!isVip&&!isAdmin;
     return`<div class="mod-card" onclick="${locked?'window.modShowVipLock()':'window.modOpenById(\''+m.id+'\')'}">
       <div class="mod-card-thumb">
-        ${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:`<div class="mod-card-thumb-placeholder"><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="56%" text-anchor="middle" fill="#C9A84C" font-size="22" font-family="Space Grotesk,sans-serif">✦</text></svg></div>`}
+        ${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:`<div class="mod-card-thumb-placeholder"><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/></svg></div>`}
         <div class="mod-num-badge">Modul ${m.num||'?'}</div>
         <div class="mod-level-badge ${m.level||'pemula'}">${(m.level||'pemula').charAt(0).toUpperCase()+(m.level||'pemula').slice(1)}</div>
         ${locked?`<div class="mod-lock-overlay"><div class="mod-lock-icon">🔒</div><div class="mod-lock-txt">VIP Only</div></div>`:''}
@@ -5466,7 +5465,7 @@ window.modRenderGrid=function(){
         <div class="mod-meta">
           ${m.duration?`<span class="mod-meta-item">⏱ ${m.duration} mnt</span>`:''}
           <span class="mod-meta-item">📖 ${modCount(m)||0} pelajaran</span>
-          ${m.vip?`<span class="mod-meta-item" style="color:var(--gold)">✦ VIP</span>`:'<span class="mod-meta-item" style="color:var(--green)">✓ Gratis</span>'}
+          ${m.vip?`<span class="mod-meta-item" style="color:var(--gold)">VIP</span>`:'<span class="mod-meta-item" style="color:var(--green)">✓ Gratis</span>'}
         </div>
         ${done>0?`<div class="mod-progress-bar"><div class="mod-progress-fill" style="width:${pct}%"></div></div>`:''}
       </div>
@@ -5484,7 +5483,7 @@ window.modRenderMyModules=function(){
     const p=window._modProgress[m.id];return p&&p.completedLessons&&p.completedLessons.length>0;
   });
   const grid=document.getElementById('mod-grid-my');if(!grid)return;
-  if(!started.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-family:'Space Grotesk',sans-serif;font-size:2.8rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Belum ada progress. Mulai dari tab Semua Modul!</div></div>`;return;}
+  if(!started.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:.72rem">Belum ada progress. Mulai dari tab Semua Modul!</div></div>`;return;}
   const isVip=window._isVip||false,isAdmin=window._isAdmin||false;
   grid.innerHTML=started.map(m=>{
     const thumb=m.coverUrl||'';
@@ -5494,7 +5493,7 @@ window.modRenderMyModules=function(){
     const pct=Math.round((done/total)*100);
     return`<div class="mod-card" onclick="window.modOpenById('${m.id}')">
       <div class="mod-card-thumb">
-        ${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:`<div class="mod-card-thumb-placeholder"><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/><text x="50%" y="56%" text-anchor="middle" fill="#C9A84C" font-size="22" font-family="Space Grotesk,sans-serif">✦</text></svg></div>`}
+        ${thumb?`<img src="${thumb}" alt="${mesc(m.title)}" loading="lazy">`:`<div class="mod-card-thumb-placeholder"><svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="28" stroke="#C9A84C" stroke-width="1" fill="none" stroke-dasharray="4 4"/></svg></div>`}
         <div class="mod-num-badge">Modul ${m.num||'?'}</div>
         <div class="mod-level-badge ${m.level||'pemula'}">${(m.level||'pemula').charAt(0).toUpperCase()+(m.level||'pemula').slice(1)}</div>
       </div>
@@ -5607,9 +5606,9 @@ function modRenderReader(){
               <span class="mod-content-meta-item" style="color:var(--gold)">${mesc(mod.level||'pemula')}</span>
             </div>
           </div>
-          ${blocksHtml||'<div style="text-align:center;padding:48px;color:var(--text3)"><div style="font-size:2rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Konten pelajaran sedang disiapkan.</div></div>'}
+          ${blocksHtml||'<div style="text-align:center;padding:48px;color:var(--text3)"><div style="font-size:.72rem">Konten pelajaran sedang disiapkan.</div></div>'}
           <button class="btn-complete-mod ${isDone?'done':''}" onclick="window.modMarkDone(${li})">
-            ${isDone?'✓ Pelajaran Selesai':'Tandai Selesai ✦'}
+            ${isDone?'✓ Pelajaran Selesai':'Tandai Selesai'}
           </button>
         </div>
       </div>
@@ -5635,14 +5634,14 @@ window.modMarkDone=async function(i){
     await setDoc(doc(window._db,'users',uid,'progress',mod.id),p,{merge:true});
   }catch(e){console.warn('mod progress save:',e);}
   modRenderReader();
-  toast('✦',`Pelajaran ${i+1} selesai!`,'#3DBA7A');
+  toast('Modul',`Pelajaran ${i+1} selesai!`,'#3DBA7A');
 };
 
 /* ── Admin module list ── */
 window.modRenderAdminList=function(){
   const list=document.getElementById('adm-mod-list-m');if(!list)return;
   const mods=window._modAllModules||[];
-  if(!mods.length){list.innerHTML='<div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:2rem;opacity:.1;color:var(--gold)">✦</div><div style="font-size:.72rem">Belum ada modul.</div></div>';return;}
+  if(!mods.length){list.innerHTML='<div style="text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:.72rem">Belum ada modul.</div></div>';return;}
   list.innerHTML=mods.map(m=>{
     const thumb=m.coverUrl||'';
     return`<div class="adm-mod-item-m">
@@ -6546,7 +6545,7 @@ function afterAuth(){
   window.rsRenderAdminList = function(){
     var el = document.getElementById('rs-admin-list');
     if(!el) return;
-    if(!_rsCache.length){ el.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada research.</div>'; return; }
+    if(!_rsCache.length){ el.innerHTML='<div class="empty-state">Belum ada research.</div>'; return; }
     // Simpan cache ke window supaya bisa dipanggil dari onclick tanpa JSON.stringify
     window._rsCacheMap = {};
     _rsCache.forEach(function(r){ window._rsCacheMap[r.id] = r; });
@@ -6599,7 +6598,7 @@ function afterAuth(){
     if(!el) return;
     var isVip = window._isVip || window._isAdmin;
     var data = _rsCache.slice();
-    if(!data.length){ el.innerHTML='<div class="empty-state"><div class="empty-icon">✦</div>Belum ada research tersedia.</div>'; return; }
+    if(!data.length){ el.innerHTML='<div class="empty-state">Belum ada research tersedia.</div>'; return; }
 
     el.innerHTML = data.map(function(r){
       var locked = (r.akses==='vip') && !isVip;
@@ -6617,7 +6616,7 @@ function afterAuth(){
         +'<div style="padding:14px 16px">'
         +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">'
 
-        +(locked?'<span style="font-size:.52rem;background:rgba(201,168,76,.12);color:var(--gold);padding:2px 7px;border-radius:20px;border:1px solid var(--gold-border)">VIP ✦</span>':'')
+        +(locked?'<span style="font-size:.52rem;background:rgba(201,168,76,.12);color:var(--gold);padding:2px 7px;border-radius:20px;border:1px solid var(--gold-border)">VIP</span>':'')
         +'<span style="font-size:.58rem;color:var(--text3);margin-left:auto">'+fmtDate(r.tgl||r.createdAt)+'</span>'
         +'</div>'
         +'<div style="font-size:.8rem;font-weight:500;color:var(--text);margin-bottom:6px">'+r.judul+'</div>'
@@ -6659,10 +6658,10 @@ function afterAuth(){
     if(locked){
       el.innerHTML = navHtml
         +'<div style="text-align:center;padding:48px 24px">'
-        +'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:3rem;color:var(--gold);opacity:.3;margin-bottom:12px">✦</div>'
+        +''
         +'<div style="font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:8px">Konten VIP Terkunci</div>'
         +'<div style="font-size:.72rem;color:var(--text2);margin-bottom:20px">Research ini hanya untuk member VIP. Upgrade gratis sekarang!</div>'
-        +'<button onclick="goPage(\'vip\')" class="btn-hero-primary">JOIN VIP GRATIS ✦</button></div>';
+        +'<button onclick="goPage(\'vip\')" class="btn-hero-primary">JOIN VIP GRATIS</button></div>';
     } else {
       var lembaran = (r.lembaran||[]);
       // Fallback: jika data lama (pakai images array), jadikan lembaran single
