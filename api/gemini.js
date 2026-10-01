@@ -311,7 +311,7 @@ export default async function handler(req, res) {
           return res.status(503).json({ error: 'Gagal memverifikasi status VIP. Coba lagi sebentar lagi.' });
         }
         if (!vip) {
-          return res.status(403).json({ error: 'Mode Belajar khusus member VIP ✦ Konsultasi biasa tetap bisa dipakai.' });
+          return res.status(403).json({ error: 'Mode Belajar khusus member VIP. Konsultasi biasa tetap bisa dipakai.' });
         }
       }
       config = {
@@ -328,7 +328,7 @@ export default async function handler(req, res) {
         return res.status(503).json({ error: 'Gagal memverifikasi status VIP. Coba lagi sebentar lagi.' });
       }
       if (!chartVip) {
-        return res.status(403).json({ error: 'AI Analisa Chart khusus member VIP ✦' });
+        return res.status(403).json({ error: 'AI Analisa Chart khusus member VIP' });
       }
       if (!image || typeof image !== 'string' || !ALLOWED_MIME.includes(mimeType)) {
         return res.status(400).json({ error: 'Gambar chart tidak valid (JPG/PNG/WEBP)' });
