@@ -1361,7 +1361,41 @@ function renderNotes(){
   g.innerHTML=[...notes].reverse().map(t=>`<div class="note-card"><div class="note-sym">${mesc(SD[t.symbol]||t.symbol)}</div><div class="note-date">${mesc(t.date)} · ${mesc(t.dir)}</div><div class="note-txt">${mesc(t.notes)}</div>${t.tag?`<div class="note-tag">${mesc(t.tag)}</div>`:''}</div>`).join('');
 }
 
-function renderAll(){renderStats();renderOpen();renderHistory();renderEquity();renderBkd();renderNotes();}
+/* ── Share Card: statistik untuk kartu hasil + loader lazy ── */
+window._getJournalStats=function(days){
+  const dOf=t=>t.date_close||t.date||'';
+  const cut=days?new Date(Date.now()-days*864e5).toISOString().slice(0,10):null;
+  const cl=trades.filter(t=>t.exit!==null&&t.exit!==undefined&&(!cut||dOf(t)>=cut)).sort((a,b)=>dOf(a).localeCompare(dOf(b)));
+  const pn=cl.map(calcPnl);
+  const wins=pn.filter(p=>p>0).length,losses=cl.length-wins;
+  const gw=pn.filter(p=>p>0).reduce((a,p)=>a+p,0),gl=Math.abs(pn.filter(p=>p<0).reduce((a,p)=>a+p,0));
+  const rs=cl.map(calcR).filter(r=>r!==null);
+  let cum=0,streak=0,best=0;const eq=[0];
+  pn.forEach(p=>{cum+=p;eq.push(+cum.toFixed(2));if(p>0){streak++;if(streak>best)best=streak;}else streak=0;});
+  const u=window._curUser;
+  const d=new Date();
+  return{
+    n:cl.length,wins,losses,
+    wr:cl.length?wins/cl.length*100:0,
+    pnl:+pn.reduce((a,p)=>a+p,0).toFixed(2),
+    profitFactor:gl>0?gw/gl:(gw>0?Infinity:null),
+    rCount:rs.length,totalR:rs.reduce((a,r)=>a+r,0),avgR:rs.length?rs.reduce((a,r)=>a+r,0)/rs.length:0,
+    bestPnl:pn.length?Math.max(...pn):0,bestR:rs.length?Math.max(...rs):0,
+    streak:best,equity:eq,
+    from:cl.length?dOf(cl[0]):'',to:cl.length?dOf(cl[cl.length-1]):'',
+    name:(u&&u.displayName)||'Trader',vip:!!(isVip||isAdmin),
+    when:d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})
+  };
+};
+let _shareLoaded=false;
+function ensureShareCard(){
+  if(_shareLoaded||!(isVip||isAdmin))return;
+  _shareLoaded=true;
+  const s=document.createElement('script');s.src='/share-card.js?v=1';s.async=true;
+  s.onerror=()=>{_shareLoaded=false;};
+  document.head.appendChild(s);
+}
+function renderAll(){renderStats();renderOpen();renderHistory();renderEquity();renderBkd();renderNotes();ensureShareCard();}
 
 window.openModal=t=>{
   if(!isVip&&!isAdmin){toast('MGF','Fitur VIP — hubungi admin','#C9A84C');return;}
