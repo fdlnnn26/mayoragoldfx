@@ -1201,6 +1201,7 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
 /* Inputs: soften from flat blocks to gentle glass fields */
 .form-inp{border-radius:20px!important;background:var(--bg4)!important;backdrop-filter:blur(8px)}
 </style>
+<style>a.nav-link,a.nav-dropdown-item{text-decoration:none}a.nav-link{display:inline-block}</style>
 </head>
 <body>
 <canvas id="bg-canvas" aria-hidden="true"></canvas>
@@ -1217,12 +1218,12 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
   </a>
   <div class="nav-center">
     <button class="nav-link active" id="nl-home" onclick="goPage('home')">Beranda</button>
-    <button class="nav-link" id="nl-berita" onclick="goPage('berita')">Berita</button>
+    <a class="nav-link" id="nl-berita" href="/berita" onclick="event.preventDefault();goPage(\'berita\')">Berita</a>
     <div class="nav-dropdown" id="tools-dropdown">
       <button class="nav-link" id="nl-tools" onclick="toggleToolsMenu(event)">Trading Tools <span class="nav-caret">▾</span></button>
       <div class="nav-dropdown-menu" id="tools-dropdown-menu">
-        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('kalender')"><span>Kalender Ekonomi</span><span class="nav-di-label free">FREE</span></button>
-        <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('sessions')"><span>Market Sessions</span><span class="nav-di-label free">FREE</span></button>
+        <a class="nav-dropdown-item" href="/kalender" onclick="event.preventDefault();closeToolsMenu();goPage(\'kalender\')"><span>Kalender Ekonomi</span><span class="nav-di-label free">FREE</span></a>
+        <a class="nav-dropdown-item" href="/sessions" onclick="event.preventDefault();closeToolsMenu();goPage(\'sessions\')"><span>Market Sessions</span><span class="nav-di-label free">FREE</span></a>
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('journal')"><span>Trading Journal</span><span class="nav-di-label vip">VIP</span></button>
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('calc')"><span>Kalkulator Lot &amp; Risk</span><span class="nav-di-label vip">VIP</span></button>
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('swap')"><span>Kalkulator Swap</span><span class="nav-di-label vip">VIP</span></button>
@@ -1230,9 +1231,9 @@ html.light #nav.solid{background:rgba(245,240,232,0.72)!important}
         <button class="nav-dropdown-item" onclick="closeToolsMenu();goPage('consult')"><span>AI Konsultasi Trading</span><span class="nav-di-label free">FREE</span></button>
       </div>
     </div>
-    <button class="nav-link" id="nl-vip" onclick="goPage('vip')">VIP</button>
-    <button class="nav-link" id="nl-research" onclick="goPage('research')">Research</button>
-    <button class="nav-link" id="nl-modul" onclick="goPage('modul')">Modul Materi</button>
+    <a class="nav-link" id="nl-vip" href="/vip" onclick="event.preventDefault();goPage(\'vip\')">VIP</a>
+    <a class="nav-link" id="nl-research" href="/research" onclick="event.preventDefault();goPage(\'research\')">Research</a>
+    <a class="nav-link" id="nl-modul" href="/modul" onclick="event.preventDefault();goPage(\'modul\')">Modul Materi</a>
     <button class="nav-link" id="nl-admin" onclick="goPage('admin')" style="display:none">Admin</button>
   </div>
   <div class="nav-right">
@@ -2830,7 +2831,6 @@ function goPage(p){
   if(p==='ai'&&window._curUser&&(window._isVip||window._isAdmin)){window.aiRenderQuota&&window.aiRenderQuota();}
   if(p==='research') invokeWhenReady('rsLoadResearch');
   if(p==='consult') invokeWhenReady('consultInit');
-  if(p!=='berita') resetSeoMeta();
 }
 window.goPage=goPage;
 
