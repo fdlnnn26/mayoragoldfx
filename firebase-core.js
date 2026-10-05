@@ -1545,3 +1545,35 @@ setInterval(fetch24hXau, 5*60*1000);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+/* ── Admin berita: isi sumber default ke berita lama yang kolom sumbernya kosong ── */
+window.fillDefaultSource=async()=>{
+  const list=(window.allNewsCache||[]).filter(n=>!n.srcName&&!n.srcUrl);
+  const msg=document.getElementById('bulk-src-msg');
+  const say=(t,c)=>{if(msg){msg.textContent=t;msg.style.color=c||'var(--text3)';}};
+  if(!list.length){say('Semua berita sudah punya sumber. Tidak ada yang perlu diisi.');return;}
+  const name=(prompt('Isi "Sumber: …" ke '+list.length+' berita lama yang kolom sumbernya kosong.\nNama sumber:','Investing.com')||'').trim().slice(0,80);
+  if(!name)return;
+  if(!confirm('Yakin? '+list.length+' berita akan diberi "Sumber: '+name+'".\nPastikan semuanya memang dari sumber ini, karena tidak ada tombol batalkan.'))return;
+  try{
+    say('Menyimpan… 0/'+list.length);let done=0;
+    for(const n of list){
+      await updateDoc(doc(db,'news',n.id),{srcName:name});
+      n.srcName=name;done++;
+      if(done%5===0)say('Menyimpan… '+done+'/'+list.length);
+    }
+    say('Selesai: '+done+' berita diberi sumber "'+name+'".','#3DBA7A');
+  }catch(e){say('Gagal di tengah jalan: '+(e.message||e)+'. Sebagian mungkin sudah tersimpan, coba lagi.','#E05A5A');}
+};
+(function(){
+  function mount(){
+    const wrap=document.getElementById('news-form-wrap');
+    if(!wrap||document.getElementById('bulk-src-btn'))return;
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px';
+    d.innerHTML='<button type="button" class="btn-save-m" id="bulk-src-btn">Isi sumber ke berita lama</button><span id="bulk-src-msg" style="font-size:.7rem;color:var(--text3)">Hanya untuk berita yang kolom sumbernya masih kosong.</span>';
+    wrap.parentNode.insertBefore(d,wrap);
+    document.getElementById('bulk-src-btn').onclick=window.fillDefaultSource;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
