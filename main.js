@@ -1206,7 +1206,9 @@ window.closeNewsDetail = function(){
   document.getElementById('news-detail-view').style.display = '';
   history.pushState({ page: 'berita' }, '', '/berita');
   updateCanonical('https://mayoragoldfx.com/berita');
-  resetSeoMeta();
+  // Daftar berita memakai meta halaman /berita sendiri (bukan meta beranda)
+  var bm = (typeof PAGE_META!=='undefined' && PAGE_META.berita) || DEFAULT_META;
+  updateSeoMeta({ title: bm.title, desc: bm.desc, image: DEFAULT_META.image });
 };
 
 function fmtDate(ts){
