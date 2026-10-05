@@ -1188,3 +1188,39 @@ a.nav-link,a.nav-dropdown-item{text-decoration:none}a.nav-link{display:inline-bl
 #page-consult .cs-seg-b:hover{color:var(--gold)}
 #page-consult .cs-seg-b.on{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06060A;font-weight:600}
 @media(max-width:768px){#page-consult .cs-wrap{padding-left:16px;padding-right:16px}#page-consult .cs-b{max-width:94%}}
+
+/* ══════════════════════════════════════════════════════════════
+   PERFORMA HP — scroll lebih mulus di perangkat menengah/low-end.
+   backdrop-filter blur di puluhan kartu = paling berat di HP,
+   jadi dimatikan & diganti warna solid (tampilan hampir sama).
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width:900px), (hover:none) and (pointer:coarse){
+  .about-card,.testi-card,.news-card,.news-featured,.news-sidebar-card,.seo-col-card,.faq-item,
+  .seo-trust-card,.mod-card,.vip-price-card,.hero-chart-card,.scard,.note-card,.fp-card,
+  .auth-card,.price-widget,.nav-dropdown-menu,.mod-form-card,.feat-preview,.fp-overlay,
+  .mod-lock-overlay,.btn-hero-sec,.nav-btn-login,.btn-logout,.form-inp,#nav,#nav.solid{
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  }
+  .about-card,.testi-card,.news-card,.news-featured,.news-sidebar-card,.seo-col-card,.faq-item,
+  .seo-trust-card,.mod-card,.vip-price-card,.hero-chart-card,.scard,.note-card,.fp-card,
+  .auth-card,.price-widget,.mod-form-card,.feat-preview{
+    background-color:var(--bg3);
+    box-shadow:0 1px 0 0 rgba(255,255,255,.04) inset;
+  }
+  #nav.solid{background:rgba(10,10,13,.94)!important}
+  html.light #nav.solid{background:rgba(245,240,232,.96)!important}
+  .reveal,.reveal-scale{will-change:auto}
+  .seo-h1 span,.page-title .gold-text,h1 .gold-text{animation:none}
+  #hero::before{filter:none}
+}
+
+/* ══ HEADER ANCHOR — nav & sub-tab menempel rapi di atas, tanpa celah ══
+   Sebelumnya sub-tab nempel di 96px sementara nav selesai di 76px,
+   jadi konten kelihatan "nyelip" di antaranya. Berlaku di semua halaman. */
+:root{--nav-h:80px}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:84px;z-index:499;pointer-events:none;
+  background:linear-gradient(to bottom,var(--bg) 0,var(--bg) 78%,transparent 100%)}
+html{scroll-padding-top:calc(var(--nav-h) + 56px)}
+.app-header,.pricebar,.admin-header{position:static!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.app-tabs,.mod-app-tabs{position:sticky!important;top:var(--nav-h)!important;z-index:300;background:var(--bg2)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.mod-sidebar{top:calc(var(--nav-h) + 56px)}
