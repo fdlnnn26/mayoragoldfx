@@ -1395,6 +1395,7 @@ function ensureShareCard(){
   s.onerror=()=>{_shareLoaded=false;};
   document.head.appendChild(s);
   const r=document.createElement('script');r.src='/risk-sim.js?v=1';r.async=true;document.head.appendChild(r);
+  const u=document.createElement('script');u.src='/journal-ui.js?v=1';u.async=true;document.head.appendChild(u);
 }
 function renderAll(){renderStats();renderOpen();renderHistory();renderEquity();renderBkd();renderNotes();ensureShareCard();}
 
