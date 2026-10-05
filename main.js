@@ -85,13 +85,22 @@ window.toggleFaq = function(el){
   if(!isOpen) item.classList.add('open');
 };
 
-/* Background canvas */
+/* Background canvas — dimatikan di HP/reduced-motion, pause saat tab tidak aktif */
 (function(){
-  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
-  var W,H,pts,raf;
-  function init(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;pts=Array.from({length:55},function(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,a:Math.random()*.6}});}
-  function draw(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+p.a+')';ctx.fill()});for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(201,168,76,'+(0.08*(1-d/100))+')';ctx.lineWidth=.5;ctx.stroke()}}raf=requestAnimationFrame(draw);}
-  init();draw();window.addEventListener('resize',function(){cancelAnimationFrame(raf);init();draw();});
+  var c=document.getElementById('bg-canvas');
+  if(!c) return;
+  var isMobile = window.matchMedia('(max-width:900px), (hover:none) and (pointer:coarse)').matches;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(isMobile || reduce){ c.style.display='none'; return; }
+  var ctx=c.getContext('2d');
+  var W,H,pts,raf=0,lastW=0;
+  function init(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;lastW=W;pts=Array.from({length:40},function(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,a:Math.random()*.6}});}
+  function draw(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+p.a+')';ctx.fill()});for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=dx*dx+dy*dy;if(d<10000){d=Math.sqrt(d);ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(201,168,76,'+(0.08*(1-d/100))+')';ctx.lineWidth=.5;ctx.stroke()}}raf=requestAnimationFrame(draw);}
+  function start(){ if(!raf) raf=requestAnimationFrame(draw); }
+  function stop(){ if(raf){ cancelAnimationFrame(raf); raf=0; } }
+  init();start();
+  document.addEventListener('visibilitychange',function(){ document.hidden ? stop() : start(); });
+  window.addEventListener('resize',function(){ if(window.innerWidth===lastW) return; stop();init();start(); });
 })();
 
 /* Reveal observer */
@@ -147,7 +156,7 @@ motionMutObs.observe(document.body, {childList:true, subtree:true});
 window._enhanceMotion = enhanceMotion;
 
 /* Nav scroll */
-window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('solid',window.scrollY>30);});
+(function(){var nv=document.getElementById('nav');window.addEventListener('scroll',function(){nv.classList.toggle('solid',window.scrollY>30);},{passive:true});})();
 document.getElementById('nav').classList.add('solid');
 
 window.toggleMob=function(){
@@ -1151,6 +1160,21 @@ window.openNews = function(id){
   document.getElementById('nd-date').textContent  = fmtDate(n.date || n.createdAt);
   document.getElementById('nd-title').textContent = n.title || '';
   document.getElementById('nd-excerpt').textContent = n.excerpt || '';
+  (function(){
+    var ex=document.getElementById('nd-excerpt'),box=document.getElementById('nd-src');
+    if(!box){box=document.createElement('div');box.id='nd-src';box.className='nd-src';ex.parentNode.insertBefore(box,ex.nextSibling);}
+    box.textContent='';
+    var p=document.createElement('p');p.className='nd-src-line';
+    if(n.srcName||n.srcUrl){
+      p.appendChild(document.createTextNode('Sumber: '));
+      if(n.srcUrl&&/^https?:\/\//i.test(n.srcUrl)){var a=document.createElement('a');a.href=n.srcUrl;a.target='_blank';a.rel='nofollow noopener noreferrer';a.textContent=n.srcName||n.srcUrl;p.appendChild(a);}
+      else p.appendChild(document.createTextNode(n.srcName));
+      box.appendChild(p);
+    }
+    var c=document.createElement('p');c.className='nd-copy';
+    c.textContent='Ringkasan ini disusun ulang oleh tim Mayora Gold FX untuk tujuan informasi. Hak cipta artikel asli dimiliki penerbit sumbernya. Bukan saran finansial.';
+    box.appendChild(c);
+  })();
   document.getElementById('nd-body').textContent  = n.konten || 'Konten lengkap belum tersedia.';
 
   var imgWrap = document.getElementById('nd-img-wrap');
@@ -1211,6 +1235,7 @@ window.showNewsForm=function(){
   document.getElementById('nf-edit-id').value='';
   document.getElementById('nf-old-img-url').value='';
   document.getElementById('nf-judul').value='';
+  ['nf-src-name','nf-src-url'].forEach(function(i){var e=document.getElementById(i);if(e)e.value='';});
   document.getElementById('nf-excerpt').value='';
   document.getElementById('nf-konten').value='';
   document.getElementById('nf-tgl').value=new Date().toISOString().slice(0,10);
