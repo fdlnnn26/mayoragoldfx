@@ -120,6 +120,9 @@ window.saveNews = async ()=>{
   const tgl     = document.getElementById('nf-tgl').value;
   const kat     = document.getElementById('nf-kat').value;
   const featured= document.getElementById('nf-featured').checked;
+  const srcName = (document.getElementById('nf-src-name')?.value||'').trim().slice(0,80);
+  let srcUrl = (document.getElementById('nf-src-url')?.value||'').trim();
+  if(srcUrl && !/^https?:\/\//i.test(srcUrl)) srcUrl='';
   if(!judul||!excerpt||!tgl){
     errEl.textContent='⚠ Judul, Tanggal, dan Ringkasan wajib diisi.';
     errEl.style.display='block'; return;
@@ -149,7 +152,7 @@ window.saveNews = async ()=>{
         .map(d=>updateDoc(doc(db,'news',d.id),{featured:false})));
     }
     const payload={
-      title:judul, slug, cat:kat, date:tgl, excerpt, konten, featured, imageUrl,
+      title:judul, slug, cat:kat, date:tgl, excerpt, konten, featured, imageUrl, srcName, srcUrl,
       metaTitle:judul,
       metaDescription:excerpt.substring(0,200),
       updatedAt:serverTimestamp(),
@@ -1157,6 +1160,7 @@ window._editNews=async id=>{
   document.getElementById('nf-tgl').value=n.date||new Date().toISOString().slice(0,10);
   document.getElementById('nf-kat').value=n.cat||'Market Update';
   document.getElementById('nf-featured').checked=!!n.featured;
+  if(document.getElementById('nf-src-name')){document.getElementById('nf-src-name').value=n.srcName||'';document.getElementById('nf-src-url').value=n.srcUrl||'';}
   document.getElementById('nf-foto').value='';
   document.getElementById('nf-save-err').style.display='none';
   const exc=n.excerpt||'';
@@ -1508,3 +1512,36 @@ setInterval(()=>fetchPrices().then(()=>{ renderTicker(); updateHeroCard(window._
 // Fetch 24h high/low dari API — jalankan sekali saat load, lalu tiap 5 menit
 fetch24hXau();
 setInterval(fetch24hXau, 5*60*1000);
+
+
+/* ── Admin berita: kolom sumber + isi otomatis dari link (gagal = tanpa AI) ── */
+(function(){
+  function mount(){
+    const ex=document.getElementById('nf-excerpt');
+    if(!ex||document.getElementById('nf-src-url'))return;
+    const g=ex.closest('.form-group')||ex.parentNode;
+    const w=document.createElement('div');w.className='form-group';
+    w.innerHTML='<label class="form-lbl" for="nf-src-url">Link sumber (opsional)</label>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><input class="form-input" id="nf-src-url" type="url" placeholder="https://id.investing.com/news/..." style="flex:1;min-width:200px">'+
+      '<button type="button" class="btn-save-m" id="nf-src-auto" style="white-space:nowrap">Isi otomatis dari link</button></div>'+
+      '<input class="form-input" id="nf-src-name" placeholder="Nama sumber, mis. Investing.com" style="margin-top:8px">'+
+      '<div id="nf-src-msg" style="font-size:.7rem;margin-top:6px;color:var(--text3);line-height:1.6">Hanya mencoba mengambil artikel. Kalau gagal, AI tidak dipakai dan kamu isi manual. Tulis ulang dengan kata sendiri dan cantumkan sumber.</div>';
+    g.parentNode.insertBefore(w,g);
+    document.getElementById('nf-src-auto').onclick=async()=>{
+      const url=document.getElementById('nf-src-url').value.trim(),msg=document.getElementById('nf-src-msg');
+      if(!/^https?:\/\//i.test(url)){msg.textContent='Tempel link lengkap (https://...) dulu.';return;}
+      msg.style.color='var(--text3)';msg.textContent='Mengambil artikel…';
+      try{
+        const h={'Content-Type':'application/json'};
+        try{h['Authorization']='Bearer '+await window._curUser.getIdToken();}catch(_){}
+        const r=await fetch('/api/gemini',{method:'POST',headers:h,body:JSON.stringify({mode:'newsurl',prompt:url})});
+        const j=await r.json();if(!r.ok)throw new Error(j.error||'Gagal');
+        const d=JSON.parse(String(j.text).replace(/```json|```/g,'').trim());
+        const set=(id,v,force)=>{const e=document.getElementById(id);if(e&&v&&(force||!e.value)){e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}));}};
+        set('nf-judul',d.judul);set('nf-excerpt',String(d.excerpt||'').slice(0,200),true);set('nf-konten',d.konten);set('nf-src-name',d.sumber);
+        msg.style.color='#3DBA7A';msg.textContent='Terisi. Cek akurasi angka dan faktanya dulu sebelum simpan.';
+      }catch(e){msg.style.color='#E05A5A';msg.textContent=e.message;}
+    };
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
