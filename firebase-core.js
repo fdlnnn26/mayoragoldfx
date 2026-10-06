@@ -1577,3 +1577,39 @@ window.fillDefaultSource=async()=>{
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ── Admin berita: tempel teks artikel → AI olah ulang → isi judul/kategori/ringkasan/konten ── */
+(function(){
+  function mount(){
+    const anchor=document.getElementById('nf-src-msg');
+    if(!anchor||document.getElementById('nf-paste'))return false;
+    const w=document.createElement('div');w.className='form-group';
+    w.innerHTML='<label class="form-lbl" for="nf-paste">Atau tempel teks artikel (alternatif kalau link gagal)</label>'+
+      '<textarea class="form-input" id="nf-paste" rows="5" placeholder="Salin seluruh teks artikel dari sumber, tempel di sini…" style="resize:vertical"></textarea>'+
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px"><button type="button" class="btn-save-m" id="nf-paste-go">Olah dengan AI</button>'+
+      '<span id="nf-paste-msg" style="font-size:.7rem;color:var(--text3);line-height:1.6">AI mengambil poin penting dan menulis ulang. Mengisi judul, kategori, ringkasan, dan konten.</span></div>';
+    anchor.parentNode.parentNode.insertBefore(w,anchor.parentNode.nextSibling);
+    document.getElementById('nf-paste-go').onclick=async()=>{
+      const txt=document.getElementById('nf-paste').value.trim(),msg=document.getElementById('nf-paste-msg'),btn=document.getElementById('nf-paste-go');
+      if(txt.length<400){msg.style.color='#E05A5A';msg.textContent='Teks terlalu pendek. Salin seluruh isi artikel.';return;}
+      const cats=[...document.getElementById('nf-kat').options].map(o=>o.value).filter(Boolean);
+      msg.style.color='var(--text3)';msg.textContent='AI sedang mengolah…';btn.disabled=true;
+      try{
+        const h={'Content-Type':'application/json'};
+        try{h['Authorization']='Bearer '+await window._curUser.getIdToken();}catch(_){}
+        const r=await fetch('/api/gemini',{method:'POST',headers:h,body:JSON.stringify({mode:'newstext',prompt:'KATEGORI: '+cats.join(' | ')+'\n\nTEKS:\n'+txt})});
+        const j=await r.json();if(!r.ok)throw new Error(j.error||'Gagal');
+        const d=JSON.parse(String(j.text).replace(/```json|```/g,'').trim());
+        const set=(id,v)=>{const e=document.getElementById(id);if(e&&v){e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));}};
+        set('nf-judul',d.judul);set('nf-excerpt',String(d.excerpt||'').slice(0,200));set('nf-konten',d.konten);
+        if(cats.includes(d.kategori))set('nf-kat',d.kategori);
+        if(d.sumber&&!document.getElementById('nf-src-name').value)set('nf-src-name',d.sumber);
+        msg.style.color='#3DBA7A';msg.textContent='Terisi'+(cats.includes(d.kategori)?'':' (kategori pilih manual)')+'. Cek akurasi angka dan fakta dulu, lalu isi link sumber sebelum simpan.';
+      }catch(e){msg.style.color='#E05A5A';msg.textContent=e.message;}
+      btn.disabled=false;
+    };
+    return true;
+  }
+  if(!mount()){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(mount,0));else setTimeout(mount,0);}
+})();
