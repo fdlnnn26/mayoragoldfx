@@ -930,13 +930,37 @@ function ecalSubscribeFirestore(){
         if(!snap.exists())return;
         const cached=snap.data();
         if(cached&&Array.isArray(cached.data)&&cached.data.length){
-          if(cached.weekKey===getWeekKey()){window._ecalData=cached.data;window._ecalStale=false;}
+          if(cached.weekKey===getWeekKey()){window._ecalData=ecalMerge(cached.data);window._ecalStale=false;}
           else{window._ecalStale=true;}   // data minggu lalu: jangan ditampilkan sebagai jadwal minggu ini
           renderEcal();
         }
       });
     });
   }catch(e){console.warn('[ecal] onSnapshot error:',e);}
+}
+
+/* ── Kalender sebulan penuh: arsip bulanan di Firestore (_cache/ecal_month) digabung dengan data minggu berjalan ── */
+function ecalMonthKeyOf(iso){const w=new Date(new Date(iso).getTime()+7*3600*1000);return w.getUTCFullYear()+'-'+String(w.getUTCMonth()+1).padStart(2,'0');}
+window._ecalMonthBase=window._ecalMonthBase||[];
+function ecalMerge(cur){
+  const mk=ecalMonthKeyOf(new Date().toISOString()),m=new Map();
+  [...(window._ecalMonthBase||[]),...(cur||[])].forEach(e=>{if(e&&e.date&&ecalMonthKeyOf(e.date)===mk)m.set(e.id||(e.title+e.date),e);});
+  return [...m.values()].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+}
+async function ecalLoadMonth(){
+  try{
+    const snap=await getDoc(doc(getDB(),'_cache','ecal_month'));
+    const d=snap.exists()?snap.data():null;
+    window._ecalMonthBase=(d&&d.monthKey===ecalMonthKeyOf(new Date().toISOString())&&Array.isArray(d.data))?d.data:[];
+  }catch(e){window._ecalMonthBase=[];}
+}
+async function ecalArchiveMerge(cur){
+  try{
+    if(!isAdmin||!cur||!cur.length)return;
+    const merged=ecalMerge(cur);
+    await setDoc(doc(getDB(),'_cache','ecal_month'),{monthKey:ecalMonthKeyOf(new Date().toISOString()),data:merged,updatedAt:Date.now()});
+    window._ecalMonthBase=merged;
+  }catch(e){console.warn('[ecal] arsip bulanan gagal:',e.message||e);}
 }
 
 /* Cadangan: jadwal High-impact dari server (/api/ecal) kalau FCS gagal/limit. Tanpa nilai Actual. */
@@ -964,10 +988,11 @@ async function startEcalPolling(){
       l.innerHTML='<div class="ecal-empty">Memuat kalender ekonomi...</div>';
   });
 
-  /* 1. Baca cache Firestore dulu */
+  /* 1. Baca arsip bulan ini + cache Firestore dulu */
+  await ecalLoadMonth();
   const cached=await ecalReadFirestore();
   if(ecalCacheValid(cached)){
-    window._ecalData=cached.data;
+    window._ecalData=ecalMerge(cached.data);
     renderEcal();
   }
 
@@ -982,7 +1007,8 @@ async function startEcalPolling(){
       const data=await fetchFromFCS();
       if(data){
         await ecalWriteFirestore(data); // onSnapshot akan update semua user
-        window._ecalData=data;
+        await ecalArchiveMerge(data);
+        window._ecalData=ecalMerge(data);
         renderEcal();
       }else if(!window._ecalData.length){
         document.querySelectorAll('.ecal-list').forEach(l=>{
@@ -1006,8 +1032,8 @@ async function startEcalPolling(){
   if(!(window._ecalData||[]).length){
     const fb=await fetchFromServerFeed();
     if(fb){
-      window._ecalData=fb;window._ecalStale=false;renderEcal();
-      try{await ecalWriteFirestore(fb);}catch(_){}
+      window._ecalData=ecalMerge(fb);window._ecalStale=false;renderEcal();
+      try{await ecalWriteFirestore(fb);await ecalArchiveMerge(fb);}catch(_){}
     }
   }
 
@@ -1097,8 +1123,14 @@ function renderEcal(){
   const lists=document.querySelectorAll('.ecal-list');
   if(!lists.length)return;
   document.querySelectorAll('div').forEach(function(d){
-    if(d.children.length<=4&&d.textContent.length<200&&/Medium Impact/.test(d.textContent)&&!d.querySelector('div'))
-      d.innerHTML='<span style="color:var(--gold)">●</span> High Impact USD &nbsp;&nbsp;· Semua waktu dalam <strong style="color:var(--text)">WIB (UTC+7)</strong>';
+    if(d.dataset.ecalFixed||d.querySelector('div')||!/Medium Impact/.test(d.textContent)||d.textContent.length>260)return;
+    d.dataset.ecalFixed='1';
+    if(/padding:\s*10px 16px/.test(d.getAttribute('style')||'')){   // bar legenda di atas daftar
+      d.innerHTML='<span style="color:#FF6B6B">●</span> High Impact USD &nbsp;&nbsp;· Semua waktu dalam <strong style="color:var(--text)">WIB (UTC+7)</strong>';
+    }else{d.style.display='none';}                                  // penjelasan Medium di kotak "Cara Membaca"
+  });
+  document.querySelectorAll('p').forEach(function(p){
+    if(!p.dataset.ecalFixed&&/high-impact USD yang mempengaruhi pergerakan XAU\/USD minggu ini/i.test(p.textContent)){p.dataset.ecalFixed='1';p.innerHTML=p.innerHTML.replace('minggu ini','bulan ini');}
   });
   const data=(window._ecalData||[]).filter(e=>e.impact==='High');   // hanya High Impact
   if(!data.length){
