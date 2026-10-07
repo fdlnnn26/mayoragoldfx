@@ -1229,3 +1229,5 @@ html{scroll-padding-top:calc(var(--nav-h) + 56px)}
 .nd-src{margin:18px 0;padding:14px 16px;border-left:3px solid var(--gold);background:var(--bg3);border-radius:0 12px 12px 0}
 .nd-src-line{margin:0 0 6px;font-size:.82rem;color:var(--text2)}.nd-src-line a{color:var(--gold);text-decoration:underline}
 .nd-copy{margin:0;font-size:.7rem;line-height:1.7;color:var(--text3)}
+
+.ecal-sub{font-size:.68rem;line-height:1.5;color:var(--text3);margin:3px 0 7px}
