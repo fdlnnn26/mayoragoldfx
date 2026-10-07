@@ -930,12 +930,23 @@ function ecalSubscribeFirestore(){
         if(!snap.exists())return;
         const cached=snap.data();
         if(cached&&Array.isArray(cached.data)&&cached.data.length){
-          window._ecalData=cached.data;
+          if(cached.weekKey===getWeekKey()){window._ecalData=cached.data;window._ecalStale=false;}
+          else{window._ecalStale=true;}   // data minggu lalu: jangan ditampilkan sebagai jadwal minggu ini
           renderEcal();
         }
       });
     });
   }catch(e){console.warn('[ecal] onSnapshot error:',e);}
+}
+
+/* Cadangan: jadwal High-impact dari server (/api/ecal) kalau FCS gagal/limit. Tanpa nilai Actual. */
+async function fetchFromServerFeed(){
+  try{
+    const r=await fetch('/api/ecal');
+    if(!r.ok)return null;
+    const j=await r.json();
+    return Array.isArray(j.data)&&j.data.length?j.data:null;
+  }catch(e){console.warn('[ecal] feed cadangan gagal:',e);return null;}
 }
 
 /* Main entry */
@@ -987,9 +998,18 @@ async function startEcalPolling(){
   const now0=Date.now();
   const hasMissedActuals=ecalCacheValid(cached)&&(cached.data||[]).some(e=>{
     const t=new Date(e.date).getTime();
-    return (e.actual===''||e.actual==null)&&t<now0-10*60000;
+    return (e.actual===''||e.actual==null)&&t<now0-10*60000&&t>now0-6*3600*1000;
   });
   if(!ecalCacheValid(cached)||hasMissedActuals) await doFetchFCS();
+
+  /* FCS gagal & belum ada jadwal minggu ini → pakai feed cadangan (admin juga menyimpannya ke cache bersama) */
+  if(!(window._ecalData||[]).length){
+    const fb=await fetchFromServerFeed();
+    if(fb){
+      window._ecalData=fb;window._ecalStale=false;renderEcal();
+      try{await ecalWriteFirestore(fb);}catch(_){}
+    }
+  }
 
   /* 4. Smart schedule — hanya fetch FCS saat window aktif event
         Di luar window: onSnapshot Firestore sudah cukup untuk realtime update
@@ -1076,9 +1096,15 @@ function ecalDateLabel(iso){
 function renderEcal(){
   const lists=document.querySelectorAll('.ecal-list');
   if(!lists.length)return;
-  const data=window._ecalData||[];
+  document.querySelectorAll('div').forEach(function(d){
+    if(d.children.length<=4&&d.textContent.length<200&&/Medium Impact/.test(d.textContent)&&!d.querySelector('div'))
+      d.innerHTML='<span style="color:var(--gold)">●</span> High Impact USD &nbsp;&nbsp;· Semua waktu dalam <strong style="color:var(--text)">WIB (UTC+7)</strong>';
+  });
+  const data=(window._ecalData||[]).filter(e=>e.impact==='High');   // hanya High Impact
   if(!data.length){
-    lists.forEach(function(list){list.innerHTML='<div class="ecal-empty">Tidak ada event high-impact USD minggu ini.</div>';});
+    const ff='<a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" style="color:var(--gold)">Buka Forex Factory →</a>';
+    const m=window._ecalStale?'Jadwal minggu ini belum berhasil diperbarui. '+ff:'Tidak ada event high-impact USD minggu ini.';
+    lists.forEach(function(list){list.innerHTML='<div class="ecal-empty">'+m+'</div>';});
     return;
   }
   const now=Date.now();
