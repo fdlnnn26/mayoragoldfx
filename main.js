@@ -1196,6 +1196,18 @@ window.openNews = function(id){
   var shareText = encodeURIComponent(n.title + '\n\n' + (n.excerpt||'') + '\n\n' + shareUrl);
   document.getElementById('nd-share-wa').href = 'https://wa.me/?text=' + shareText;
 
+  /* Bagikan beserta gambar (HP/browser yang mendukung): file gambar disiapkan dulu supaya share instan */
+  window._ndShare = { file:null, title:n.title, text:n.title + '\n\n' + (n.excerpt||'') + '\n\n' + shareUrl };
+  if(n.imageUrl && navigator.canShare && navigator.share){
+    var _shareTok = shareUrl;
+    fetch(getOptUrl(n.imageUrl, 1080)).then(function(r){ return r.ok ? r.blob() : Promise.reject(); }).then(function(b){
+      if(!window._ndShare || window._ndShare.text.indexOf(_shareTok) < 0) return;
+      var ext = (b.type.split('/')[1] || 'jpg').replace('jpeg','jpg');
+      var f = new File([b], 'mayora-berita.' + ext, { type: b.type || 'image/jpeg' });
+      if(navigator.canShare({ files:[f] })) window._ndShare.file = f;
+    }).catch(function(){ /* gambar tidak bisa diambil (CORS/jaringan): tetap bagikan teks saja */ });
+  }
+
   document.getElementById('news-list-view').style.display  = 'none';
   document.getElementById('news-detail-view').style.display = 'block';
   window.scrollTo(0,0);
@@ -1357,3 +1369,15 @@ function updateHeroCard(p,prev){
   document.getElementById('hcc-pct').className='hcc-metric-v '+(chgPct>=0?'up':'dn');
 }
 window.updateHeroCard=updateHeroCard;
+
+
+/* Klik "WhatsApp" di detail berita: kalau gambar siap, buka menu bagikan sistem (gambar + teks + link);
+   kalau tidak (desktop / gambar gagal), tetap pakai link wa.me teks seperti biasa. */
+document.addEventListener('click', function(e){
+  var a = e.target.closest && e.target.closest('#nd-share-wa');
+  if(!a) return;
+  var s = window._ndShare;
+  if(!s || !s.file) return;
+  e.preventDefault();
+  navigator.share({ files:[s.file], title:s.title, text:s.text }).catch(function(){});
+});
