@@ -671,14 +671,7 @@ window._ecalData=[];
 window._ecalPoll=null;
 window._ecalUnsub=null; // Firestore onSnapshot unsubscribe
 
-/* FCS API keys — fallback otomatis kalau key 1 limit/error, coba key 2, lalu key 3 */
-const FCS_KEYS=[
-  'bo2IiWM3oqzDHapogHRNTg', // Key 1 (utama)
-  'qraH0LeaQTs8uA0lqHKe2lG106w6G4',  // Key 2 (cadangan 1)
-  'RbArIRNcpqR6tSpNo2La',  // Key 3 (cadangan 2)
-];
-/* Simpan index key aktif di memory (reset tiap reload) */
-window._fcsKeyIdx = window._fcsKeyIdx ?? 0;
+/* Key FCS sekarang di server (env Vercel FCS_KEYS) — dipanggil lewat /api/ecal?src=fcs */
 
 /* ===== DAFTAR NEWS HIGH IMPACT — hanya yang benar-benar market mover XAU/USD ===== */
 /*
@@ -799,7 +792,14 @@ function ecalNormalize(response){
   });
 }
 
-/* Fetch dari FCS API — dengan fallback 3 key otomatis */
+/* Rentang satu bulan penuh (tanggal 1 s/d akhir bulan) — cukup 1 permintaan FCS */
+function getMonthRange(){
+  const n=new Date(),y=n.getFullYear(),m=n.getMonth();
+  const f=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return{start:f(new Date(y,m,1)),end:f(new Date(y,m+1,0))};
+}
+
+/* Ambil kalender sebulan penuh dari FCS lewat server (key tidak lagi terlihat di browser) */
 async function fetchFromFCS(){
   const now=Date.now();
   if(window._lastFcsFetch && now-window._lastFcsFetch < 65000){
@@ -807,51 +807,14 @@ async function fetchFromFCS(){
     return null;
   }
   window._lastFcsFetch=now;
-  const{start,end}=getWeekRange();
-  /* Coba semua key mulai dari index aktif, muter jika perlu */
-  const total=FCS_KEYS.length;
-  for(let attempt=0;attempt<total;attempt++){
-    const idx=(window._fcsKeyIdx+attempt)%total;
-    const key=FCS_KEYS[idx];
-    /* Skip placeholder key yang belum diisi */
-    if(!key||key.startsWith('GANTI_'))continue;
-    try{
-      const url=`https://fcsapi.com/api-v3/forex/economy_cal?country=US&from=${start}&to=${end}&access_key=${key}`;
-      const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
-      if(!r.ok){
-        console.warn(`[ecal] Key ${idx+1} HTTP error ${r.status}, coba key berikutnya...`);
-        continue;
-      }
-      const json=await r.json();
-      /* Deteksi limit habis — FCS mengembalikan status false / pesan limit */
-      const isLimited=(
-        json.status===false||
-        json.status===0||
-        (typeof json.msg==='string'&&(
-          json.msg.toLowerCase().includes('limit')||
-          json.msg.toLowerCase().includes('exceed')||
-          json.msg.toLowerCase().includes('invalid')||
-          json.msg.toLowerCase().includes('credit')
-        ))
-      );
-      if(isLimited){
-        console.warn(`[ecal] Key ${idx+1} limit/invalid (${json.msg||'no msg'}), beralih ke key berikutnya...`);
-        /* Geser ke key berikutnya agar percobaan berikutnya langsung pakai key baru */
-        window._fcsKeyIdx=(idx+1)%total;
-        continue;
-      }
-      if(!json.response||!Array.isArray(json.response))return null;
-      /* Berhasil — simpan key yang sukses sebagai starting point berikutnya */
-      window._fcsKeyIdx=idx;
-      console.info(`[ecal] Berhasil dengan Key ${idx+1}`);
-      return ecalNormalize(json.response);
-    }catch(err){
-      console.warn(`[ecal] Key ${idx+1} error:`,err.message||err);
-    }
-  }
-  /* Semua key gagal */
-  console.error('[ecal] Semua FCS key gagal/limit.');
-  return null;
+  const{start,end}=getMonthRange();
+  try{
+    const r=await fetch(`/api/ecal?src=fcs&from=${start}&to=${end}`,{signal:AbortSignal.timeout(12000)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!Array.isArray(j.response)){console.warn('[ecal] FCS via server gagal:',j.error||r.status);return null;}
+    console.info('[ecal] FCS via server OK:',j.response.length,'event bulan ini');
+    return ecalNormalize(j.response);
+  }catch(err){console.warn('[ecal] FCS via server error:',err.message||err);return null;}
 }
 
 /* Baca cache dari Firestore */
@@ -945,7 +908,10 @@ window._ecalMonthBase=window._ecalMonthBase||[];
 function ecalMerge(cur){
   const mk=ecalMonthKeyOf(new Date().toISOString()),m=new Map();
   [...(window._ecalMonthBase||[]),...(cur||[])].forEach(e=>{if(e&&e.date&&ecalMonthKeyOf(e.date)===mk)m.set(e.id||(e.title+e.date),e);});
-  return [...m.values()].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const all=[...m.values()];
+  const real=all.filter(e=>!String(e.id).startsWith('sch-'));
+  const out=all.filter(e=>!String(e.id).startsWith('sch-')||!real.some(o=>Math.abs(new Date(o.date)-new Date(e.date))<=3*3600*1000));
+  return out.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
 }
 async function ecalLoadMonth(){
   try{
@@ -1036,6 +1002,18 @@ async function startEcalPolling(){
       try{await ecalWriteFirestore(fb);await ecalArchiveMerge(fb);}catch(_){}
     }
   }
+
+  /* Lengkapi ke depan (minggu depan) dari feed server, walau cache minggu ini masih valid.
+     Hanya event SETELAH event terakhir yang sudah ada, jadi tidak dobel dengan data FCS. */
+  try{
+    const cur=window._ecalData||[];
+    const fb2=await fetchFromServerFeed();
+    if(fb2&&cur.length){
+      const last=cur.reduce((m,e)=>Math.max(m,new Date(e.date).getTime()),0);
+      const extra=fb2.filter(e=>new Date(e.date).getTime()>last);
+      if(extra.length){window._ecalData=ecalMerge(cur.concat(extra));renderEcal();ecalArchiveMerge(extra);}
+    }
+  }catch(_){}
 
   /* 4. Smart schedule — hanya fetch FCS saat window aktif event
         Di luar window: onSnapshot Firestore sudah cukup untuk realtime update
