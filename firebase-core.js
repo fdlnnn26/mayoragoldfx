@@ -739,9 +739,66 @@ const TRUE_HIGH_KEYWORDS=[
 
 /* Exact-match mode: judul harus mengandung salah satu keyword di atas (case-insensitive)
    Tidak ada fuzzy matching — mencegah false positive */
+/* Normalisasi judul: huruf kecil, tanda baca & tanda hubung jadi spasi.
+   "Non-Farm Payrolls", "Non Farm Payroll", "NonFarm Payrolls (NFP)" semuanya dikenali. */
+const ecalNorm=t=>String(t||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+
+/* Nama lain / variasi penulisan (nama lengkap + singkatan). Dicocokkan per kata utuh. */
+const EXTRA_HIGH=[
+  /* Tenaga kerja */
+  'non farm payroll','non farm payrolls','nonfarm payroll','nonfarm payrolls','non farm employment change','nonfarm employment change',
+  'nfp','employment situation','average hourly earnings','unemployment rate','adp non farm employment change','adp nonfarm employment change',
+  /* Inflasi */
+  'consumer price index','cpi','core cpi','core consumer price index','inflation rate','core inflation rate',
+  'producer price index','ppi','core ppi','core producer price index',
+  'pce price index','core pce','core pce price index','personal income and outlays','pce',
+  /* The Fed */
+  'fomc rate decision','fomc statement','fomc press conference','fomc meeting minutes','fomc minutes','fomc economic projections','fomc projections',
+  'federal funds rate','interest rate decision','fed interest rate decision','fed chair','fed press conference','powell speaks','powell press conference',
+  /* Pertumbuhan & belanja */
+  'gdp q q','gdp qoq','gdp growth rate','gdp growth annualized','gdp annualized','advance gdp','gdp advance','gross domestic product','gross domestic product annualized',
+  'retail sales','retail sales m m','retail sales mom','retail sales ex autos','core retail sales','advance retail sales',
+  /* Survei */
+  'ism manufacturing pmi','ism manufacturing','ism services pmi','ism services','ism non manufacturing pmi',
+  'michigan consumer sentiment','umich consumer sentiment','cb consumer confidence','conference board consumer confidence','initial jobless claims'
+];
+
 function ecalIsHighImpact(title){
-  const tl=title.toLowerCase().trim();
-  return TRUE_HIGH_KEYWORDS.some(k=>tl.includes(k.toLowerCase()));
+  const tl=ecalNorm(title);
+  if(!tl)return false;
+  if(TRUE_HIGH_KEYWORDS.some(k=>tl.includes(ecalNorm(k))))return true;
+  const padded=' '+tl+' ';
+  return EXTRA_HIGH.some(k=>padded.includes(' '+k+' '));
+}
+
+/* Nama lengkap + penjelasan singkat (supaya tidak hanya singkatan) */
+const ECAL_FULLNAMES=[
+  [/non farm|nonfarm|\bnfp\b|employment situation/,'Non-Farm Payrolls (NFP) · jumlah lapangan kerja baru AS di luar sektor pertanian'],
+  [/unemployment rate/,'Tingkat pengangguran AS'],
+  [/average hourly earnings/,'Rata-rata upah per jam AS (indikator tekanan inflasi dari upah)'],
+  [/adp/,'ADP · estimasi tambahan lapangan kerja sektor swasta AS'],
+  [/core cpi|core consumer price/,'Core CPI · Indeks Harga Konsumen inti (di luar makanan & energi)'],
+  [/\bcpi\b|consumer price index|inflation rate/,'Consumer Price Index (CPI) · inflasi harga konsumen AS'],
+  [/core ppi|core producer/,'Core PPI · Indeks Harga Produsen inti (di luar makanan & energi)'],
+  [/\bppi\b|producer price/,'Producer Price Index (PPI) · inflasi di tingkat produsen AS'],
+  [/core pce/,'Core PCE · ukuran inflasi favorit The Fed (di luar makanan & energi)'],
+  [/\bpce\b|personal income and outlays/,'Personal Consumption Expenditures (PCE) · inflasi belanja pribadi AS'],
+  [/fomc.*minutes|meeting minutes/,'Risalah rapat FOMC · notulen pembahasan kebijakan The Fed'],
+  [/press conference/,'Konferensi pers ketua The Fed setelah rapat FOMC'],
+  [/rate decision|federal funds|fed interest|fomc statement/,'Keputusan suku bunga The Fed (FOMC)'],
+  [/fomc.*projection/,'Proyeksi ekonomi dan suku bunga FOMC (dot plot)'],
+  [/powell|fed chair/,'Pidato Ketua The Fed'],
+  [/gdp|gross domestic/,'Gross Domestic Product (GDP) · pertumbuhan ekonomi AS'],
+  [/retail sales/,'Penjualan ritel AS · indikator belanja konsumen'],
+  [/ism manufacturing/,'ISM Manufacturing PMI · aktivitas sektor manufaktur AS'],
+  [/ism (non manufacturing|services)/,'ISM Services PMI · aktivitas sektor jasa AS'],
+  [/jobless claims/,'Klaim tunjangan pengangguran mingguan AS'],
+  [/consumer sentiment|consumer confidence/,'Keyakinan konsumen AS']
+];
+function ecalFullName(title){
+  const t=ecalNorm(title);
+  for(const [re,label] of ECAL_FULLNAMES){if(re.test(t))return label;}
+  return '';
 }
 
 /* Hitung week key format YYYY-Www (misal 2026-W25) untuk deteksi ganti minggu */
@@ -1146,6 +1203,7 @@ function renderEcal(){
       <div class="ecal-impact"><span class="ecal-dot ${e.impact==='High'?'high':'medium'}" title="${e.impact} impact"></span></div>
       <div class="ecal-body">
         <div class="ecal-event-top"><span class="ecal-curr">${e.country}</span><span class="ecal-name">${e.title}</span></div>
+        ${ecalFullName(e.title)?`<div class="ecal-sub">${ecalFullName(e.title)}</div>`:''}
         <div class="ecal-vals">${valHtml}</div>
       </div>
     </div>`;
