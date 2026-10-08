@@ -2,7 +2,8 @@
   "cleanUrls": true,
   "functions": {
     "api/**/*.js": {
-      "includeFiles": "node_modules/@google/genai/**"
+      "includeFiles": "node_modules/@google/genai/**",
+      "maxDuration": 60
     }
   },
   "rewrites": [
