@@ -472,3 +472,55 @@ window.modEditModule=async function(id){
   document.getElementById('mod-form-card').classList.add('open');
   window.scrollTo(0,0);
 };
+
+
+/* ── Admin modul: susun modul dari arahan teks dengan AI (hasil jadi DRAFT di form, belum tersimpan) ── */
+(function(){
+  var OK={text:1,h2:1,h3:1,image:1,callout:1,tip:1,warning:1,list:1,term:1,quiz:1};
+  function mount(){
+    var t=document.getElementById('mf-form-title');
+    if(!t||document.getElementById('mai-panel'))return;
+    var d=document.createElement('div');d.id='mai-panel';
+    d.style.cssText='margin:14px 0 18px;padding:14px;border:1px dashed rgba(201,168,76,.5);border-radius:14px;background:rgba(201,168,76,.06)';
+    d.innerHTML='<div style="font-size:.78rem;font-weight:600;margin-bottom:6px">✨ Susun dengan AI</div>'+
+      '<div style="font-size:.68rem;color:var(--text3);line-height:1.7;margin-bottom:8px">Tulis arahan bebas, mis: <i>Judul: Dasar Market Structure. Isi: HH/HL, LH/LL, BOS, CHoCH. 4 pelajaran. Gambar: tiap pelajaran 1 ilustrasi. Soal: 2 kuis per pelajaran.</i> Hasilnya masuk ke form sebagai draft. Cek dan unggah gambarnya, lalu simpan.</div>'+
+      '<textarea id="mai-in" class="form-inp-m" rows="4" placeholder="Tulis arahan: judul, isi/poin yang dibahas, gambar, jumlah soal, level, dll." style="width:100%;resize:vertical"></textarea>'+
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px"><button type="button" id="mai-go" class="add-block-btn-m" style="padding:9px 16px">Susun dengan AI</button><span id="mai-st" style="font-size:.7rem;color:var(--text3);line-height:1.6">Butuh sekitar 20-60 detik.</span></div>';
+    t.parentNode.insertBefore(d,t.nextSibling);
+    document.getElementById('mai-go').onclick=run;
+  }
+  async function run(){
+    var inp=document.getElementById('mai-in').value.trim(),st=document.getElementById('mai-st'),btn=document.getElementById('mai-go');
+    if(inp.length<15){st.style.color='#E05A5A';st.textContent='Arahan terlalu pendek.';return;}
+    if((window._modFormBlocks||[]).some(function(b){return b.type==='_lesson'&&(b.lessonBlocks||[]).length})&&!confirm('Form sudah berisi pelajaran. Ganti semuanya dengan hasil AI?'))return;
+    st.style.color='var(--text3)';st.textContent='AI sedang menyusun modul…';btn.disabled=true;
+    try{
+      var h={'Content-Type':'application/json'};
+      try{h['Authorization']='Bearer '+await window._curUser.getIdToken();}catch(_){}
+      var r=await fetch('/api/gemini',{method:'POST',headers:h,body:JSON.stringify({mode:'modul',prompt:inp})});
+      var j=await r.json();if(!r.ok)throw new Error(j.error||'Gagal');
+      var d;try{d=JSON.parse(String(j.text).replace(/```json|```/g,'').trim());}catch(_){throw new Error('Hasil AI terpotong. Kurangi jumlah pelajaran atau pecah arahan jadi beberapa bagian.');}
+      var set=function(id,v){var e=document.getElementById(id);if(e&&v!==undefined&&v!==null&&v!=='')e.value=v;};
+      set('mf-title',d.title);set('mf-excerpt',String(d.excerpt||'').slice(0,300));set('mf-duration',Math.round(d.duration)||'');
+      var cat=document.getElementById('mf-cat'),lv=document.getElementById('mf-level');
+      if(cat&&[].some.call(cat.options,function(o){return o.value===d.cat}))cat.value=d.cat;
+      if(lv&&[].some.call(lv.options,function(o){return o.value===d.level}))lv.value=d.level;
+      var imgs=0;
+      window._modFormBlocks=(d.lessons||[]).map(function(l){
+        return{type:'_lesson',lessonTitle:String(l.title||'Pelajaran'),lessonDuration:Math.round(l.duration)||10,
+          lessonBlocks:(l.blocks||[]).filter(function(b){return b&&OK[b.type]}).map(function(b){
+            var o={type:b.type};
+            Object.keys(b).forEach(function(k){if(k!=='type'&&b[k]!=null)o[k]=Array.isArray(b[k])?b[k].join('\n'):String(b[k]);});
+            if(b.type==='image'){imgs++;o.imageUrl='';o.caption='Saran gambar: '+(o.caption||'');}
+            if(b.type==='quiz'&&!o.correct)o.correct='1';
+            return o;
+          })};
+      });
+      modRenderLessonBuilder();
+      st.style.color='#3DBA7A';
+      st.textContent='Draft terisi: '+window._modFormBlocks.length+' pelajaran'+(imgs?', '+imgs+' penanda gambar (unggah gambarnya di blok 🖼)':'')+'. Cek dulu isi dan faktanya sebelum simpan.';
+    }catch(e){st.style.color='#E05A5A';st.textContent=e.message||'Gagal';}
+    btn.disabled=false;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
