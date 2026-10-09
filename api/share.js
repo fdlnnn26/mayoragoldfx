@@ -2,13 +2,12 @@
    Crawler WhatsApp/Telegram/Facebook tidak menjalankan JavaScript, jadi di sini
    judul, deskripsi, dan GAMBAR artikel ditulis langsung ke HTML (Open Graph).
    Pengunjung manusia langsung diarahkan ke /berita?artikel=<slug>. */
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
 
 const SITE = 'https://mayoragoldfx.com';
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function initAdmin() {
+async function initAdmin() {
+  const { initializeApp, getApps, cert } = await import('firebase-admin/app');
   if (getApps().length) return;
   let raw = (process.env.FIREBASE_SERVICE_ACCOUNT || '').trim();
   if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT belum di-set');
@@ -29,15 +28,30 @@ export default async function handler(req, res) {
   const slug = String(req.query.slug || '').trim().slice(0, 200);
   const target = `${SITE}/berita${slug ? '?artikel=' + encodeURIComponent(slug) : ''}`;
   let n = null;
-  try {
-    if (slug) {
-      initAdmin();
-      const db = getFirestore();
-      const q = await db.collection('news').where('slug', '==', slug).limit(1).get();
-      if (!q.empty) n = q.docs[0].data();
-      else { const d = await db.doc('news/' + slug.replace(/\//g, '')).get(); if (d.exists) n = d.data(); }
+  if (slug) {
+    // Jalur cepat: REST Firestore (data berita publik) — tanpa memuat SDK admin
+    try {
+      const r = await fetch('https://firestore.googleapis.com/v1/projects/journal-97254/databases/(default)/documents:runQuery', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(3500),
+        body: JSON.stringify({ structuredQuery: { from: [{ collectionId: 'news' }], limit: 1,
+          where: { fieldFilter: { field: { fieldPath: 'slug' }, op: 'EQUAL', value: { stringValue: slug } } } } })
+      });
+      const j = r.ok ? await r.json() : [];
+      const f = j && j[0] && j[0].document && j[0].document.fields;
+      if (f) { const v = k => (f[k] && f[k].stringValue) || ''; n = { title: v('title'), excerpt: v('excerpt'), imageUrl: v('imageUrl') }; }
+    } catch (e) { console.warn('[share] REST gagal:', e.message); }
+    // Cadangan: Admin SDK
+    if (!n) {
+      try {
+        await initAdmin();
+        const { getFirestore } = await import('firebase-admin/firestore');
+        const db = getFirestore();
+        const q = await db.collection('news').where('slug', '==', slug).limit(1).get();
+        if (!q.empty) n = q.docs[0].data();
+        else { const d = await db.doc('news/' + slug.replace(/\//g, '')).get(); if (d.exists) n = d.data(); }
+      } catch (e) { console.warn('[share] admin gagal:', e.message); }
     }
-  } catch (e) { console.warn('[share]', e.message); }
+  }
 
   if (!n) { res.setHeader('Location', SITE + '/berita'); return res.status(302).end(); }
 
@@ -47,7 +61,7 @@ export default async function handler(req, res) {
   const shareUrl = `${SITE}/b/${encodeURIComponent(slug)}`;
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
   res.status(200).send(`<!DOCTYPE html>
 <html lang="id"><head><meta charset="UTF-8">
 <title>${esc(title)}</title>
@@ -65,7 +79,6 @@ export default async function handler(req, res) {
 <meta name="twitter:title" content="${esc(n.title)}">
 <meta name="twitter:description" content="${esc(desc)}">
 <meta name="twitter:image" content="${esc(img)}">
-<meta http-equiv="refresh" content="0;url=${esc(target)}">
 </head><body>
 <script>location.replace(${JSON.stringify(target)});</script>
 <noscript><p><a href="${esc(target)}">${esc(n.title)}</a></p></noscript>
