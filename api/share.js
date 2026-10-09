@@ -18,11 +18,11 @@ function initAdmin() {
   initializeApp({ credential: cert(sa) });
 }
 
-// Gambar 1200x630 JPG untuk preview (Cloudinary); sumber lain dipakai apa adanya
+// Gambar 1200x630 WebP (kecil) untuk preview (Cloudinary); sumber lain dipakai apa adanya
 function ogImage(url) {
   if (!url || !/^https:\/\//i.test(url)) return SITE + '/logomayora.jpeg';
   const m = url.match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/);
-  return m ? m[1] + 'c_fill,w_1200,h_630,f_jpg,q_auto/' + m[2].replace(/^(?:[a-z]_[^/]+,?)+\//, '') : url;
+  return m ? m[1] + 'c_fill,w_1200,h_630,f_webp,q_auto:eco/' + m[2].replace(/^(?:[a-z]_[^/]+,?)+\//, '') : url;
 }
 
 export default async function handler(req, res) {
@@ -59,6 +59,7 @@ export default async function handler(req, res) {
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${esc(shareUrl)}">
 <meta property="og:image" content="${esc(img)}">
+<meta property="og:image:type" content="image/webp">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(n.title)}">
