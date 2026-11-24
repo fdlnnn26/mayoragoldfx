@@ -451,7 +451,7 @@ Hubungi Admin
           <button class="flt-btn" onclick="modSetFilter('pemula',this)">Pemula</button>
           <button class="flt-btn" onclick="modSetFilter('intermediate',this)">Intermediate</button>
           <button class="flt-btn" onclick="modSetFilter('advanced',this)">Advanced</button>
-          <input class="mod-search" id="mod-search-inp" type="search" placeholder="Cari modul..." oninput="modRenderGrid()">
+          <input class="mod-search" id="mod-search-inp" name="modul-cari" type="search" placeholder="Cari modul..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-form-type="other" oninput="modRenderGrid()">
         </div>
         <div class="mod-grid" id="mod-grid-main">
           <div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--text3)"><div style="font-size:.72rem;line-height:1.85">Memuat modul...</div></div>

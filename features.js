@@ -61,7 +61,10 @@ function mesc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 window.modRenderGrid=function(){
   let mods=window._modAllModules||[];
   const lvl=window._modFilterLevel||'all';
-  const q=(document.getElementById('mod-search-inp')?.value||'').toLowerCase().trim();
+  const _si=document.getElementById('mod-search-inp');
+  /* Abaikan isi field yang diisi otomatis browser (mis. email dari password manager) — hanya pakai teks yang diketik user */
+  if(_si&&!_si.dataset.typed&&_si.value){_si.value='';}
+  const q=(_si?.value||'').toLowerCase().trim();
   if(lvl!=='all')mods=mods.filter(m=>m.level===lvl);
   if(q)mods=mods.filter(m=>(m.title||'').toLowerCase().includes(q)||(m.excerpt||'').toLowerCase().includes(q)||(m.cat||'').toLowerCase().includes(q));
   const grid=document.getElementById('mod-grid-main');if(!grid)return;
@@ -523,4 +526,19 @@ window.modEditModule=async function(id){
     btn.disabled=false;
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
+
+/* Search modul: tandai hanya jika user benar-benar mengetik/paste; bersihkan autofill browser */
+(function(){
+  function bind(){
+    const el=document.getElementById('mod-search-inp');
+    if(!el||el.dataset.bound)return;el.dataset.bound='1';
+    const mark=()=>{el.dataset.typed='1';};
+    el.addEventListener('keydown',mark);el.addEventListener('paste',mark);
+    el.addEventListener('search',()=>{if(!el.value)delete el.dataset.typed;});
+    const wipe=()=>{if(!el.dataset.typed&&el.value){el.value='';if(window.modRenderGrid)window.modRenderGrid();}};
+    [0,300,1000,2500].forEach(t=>setTimeout(wipe,t));
+    window.addEventListener('pageshow',wipe);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
